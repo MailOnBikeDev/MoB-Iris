@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api/auth/";
+const API_URL = "http://localhost:8080/hermes/";
 
 class AuthService {
 	login(user) {
 		return axios
-			.post(API_URL + "signin", {
+			.post(API_URL + "login", {
 				username: user.username,
 				password: user.password,
 			})
@@ -20,8 +20,8 @@ class AuthService {
 		localStorage.removeItem("user");
 	}
 	register(user) {
-		return axios.post(API_URL + "signup", {
-			nombre: user.nombre,
+		return axios.post(API_URL + "registro", {
+			fullName: user.fullName,
 			username: user.username,
 			email: user.email,
 			empresa: user.empresa,

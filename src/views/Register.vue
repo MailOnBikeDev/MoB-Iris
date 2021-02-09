@@ -12,22 +12,22 @@
 					<div class="flex flex-row">
 						<div class="my-6 pt-3 rounded  mr-10">
 							<label
-								for="nombre"
+								for="fullName"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>Nombre</label
+								>Nombre completo</label
 							>
 							<input
-								v-model="user.nombre"
+								v-model="user.fullName"
 								v-validate="'required|min:3|max:20'"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
-								name="nombre"
+								name="fullName"
 							/>
 							<div
-								v-if="submitted && errors.has('nombre')"
+								v-if="submitted && errors.has('fullName')"
 								class="alert-danger"
 							>
-								{{ errors.first("nombre") }}
+								{{ errors.first("fullName") }}
 							</div>
 						</div>
 						<div class="my-6 pt-3 rounded">
@@ -114,27 +114,21 @@
 					</div>
 
 					<div class="flex flex-row">
-						<div class="my-6 pt-3 rounded">
+						<div class="my-6 pt-3 rounded mx-auto">
 							<label
 								for="roles"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Seleccione un Rol</label
 							>
-							<select
-								name="roles"
-								v-model="user.roles"
-								multiple
-								class="bg-white rounded w-full text-gray-700 border-b-4 border-gray-300 px-3 py-3"
-							>
-								<option
-									class="w-full mx-auto
-									"
-									v-for="(rol, index) in roles"
-									:key="index"
+							<div v-for="(rol, index) in roles" :key="index">
+								<input
+									type="checkbox"
+									name="roles"
+									v-model="user.roles"
 									:value="rol"
-									>{{ roles[index] }}</option
-								>
-							</select>
+								/>
+								<label class="ml-4" :for="rol">{{ roles[index] }}</label>
+							</div>
 							<div v-if="submitted && errors.has('roles')" class="alert-danger">
 								{{ errors.first("roles") }}
 							</div>
@@ -178,11 +172,6 @@ export default {
 		loggedIn() {
 			return this.$store.state.auth.status.loggedIn;
 		},
-	},
-	mounted() {
-		if (this.loggedIn) {
-			this.$router.push("/profile");
-		}
 	},
 	methods: {
 		handleRegister() {

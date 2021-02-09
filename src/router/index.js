@@ -25,8 +25,8 @@ const routes = [
 		component: Register,
 	},
 	{
-		path: "/profile",
-		name: "Profile",
+		path: "/perfil",
+		name: "Perfil",
 		// lazy-loaded
 		component: () => import("@/views/Profile.vue"),
 	},
@@ -35,6 +35,26 @@ const routes = [
 		name: "User",
 		// lazy-loaded
 		component: () => import("@/views/BoardUser.vue"),
+	},
+	{
+		path: "/pedidos",
+		name: "Pedidos",
+		component: () => import("@/views/Pedidos.vue"),
+	},
+	{
+		path: "/mobikers",
+		name: "Mobikers",
+		component: () => import("@/views/Mobikers.vue"),
+	},
+	{
+		path: "/clientes",
+		name: "Clientes",
+		component: () => import("@/views/Clientes.vue"),
+	},
+	{
+		path: "/finanzas",
+		name: "Finanzas",
+		component: () => import("@/views/Finanzas.vue"),
 	},
 ];
 

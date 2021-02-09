@@ -4,12 +4,10 @@
 			<h3>
 				<strong>{{ currentUser.username }}</strong> Profile
 			</h3>
+			<p>
+				{{ currentUser.fullName }}
+			</p>
 		</header>
-		<p>
-			<strong>Token:</strong>
-			{{ currentUser.accessToken.substring(0, 20) }} ...
-			{{ currentUser.accessToken.substr(currentUser.accessToken.length - 20) }}
-		</p>
 		<p>
 			<strong>Id:</strong>
 			{{ currentUser.id }}
@@ -17,6 +15,10 @@
 		<p>
 			<strong>Email:</strong>
 			{{ currentUser.email }}
+		</p>
+		<p>
+			<strong>Empresa:</strong>
+			{{ currentUser.empresa }}
 		</p>
 		<strong>Authorities:</strong>
 		<ul>
@@ -29,7 +31,7 @@
 
 <script>
 export default {
-	name: "Profile",
+	name: "Perfil",
 	computed: {
 		currentUser() {
 			return this.$store.state.auth.user;

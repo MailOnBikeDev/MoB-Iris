@@ -6,21 +6,40 @@
 			</router-link>
 		</div>
 
-		<div class="ml-auto mr-4 content-center" v-if="!currentUser">
+		<div v-if="currentUser" class="flex flex-row ml-auto items-center">
+			<!-- Navigation -->
 			<ul class="flex mr-4">
-				<li class="mr-4">
-					<router-link to="/login">Login</router-link>
+				<li class="mr-6" v-for="nav in navigationMenu" :key="nav.title">
+					<router-link :to="nav.link">{{ nav.title }}</router-link>
 				</li>
-				<li class="mr-4">
-					<router-link to="/register">Register</router-link>
+			</ul>
+
+			<button
+				class="py-2 px-4 text-white bg-info rounded-xl font-bold"
+				@click="dropMenu = !dropMenu"
+			>
+				{{ currentUser.username }}
+			</button>
+
+			<!-- Dropdown Menu -->
+			<ul
+				v-if="dropMenu"
+				class="sub-menu flex flex-col bg-white text-black shadow-lg"
+			>
+				<li class="px-4 my-1" v-for="link in linksDropMenu" :key="link.title">
+					<router-link :to="link.link">{{ link.title }}</router-link>
+				</li>
+				<div class="divider"></div>
+				<li class="px-4 my-1">
+					<a href @click.prevent="logOut">Cerrar Sesión</a>
 				</li>
 			</ul>
 		</div>
 
-		<div v-if="currentUser" class="ml-auto content-center">
+		<div class="ml-auto mr-4 content-center" v-else>
 			<ul class="flex mr-4">
 				<li class="mr-4">
-					<a href @click.prevent="logOut">LogOut</a>
+					<router-link to="/login">Login</router-link>
 				</li>
 			</ul>
 		</div>
@@ -29,8 +48,26 @@
 
 <script>
 export default {
+	data() {
+		return {
+			dropMenu: false,
+			linksDropMenu: [
+				{ title: "Mi Perfil", link: "/perfil" },
+				{ title: "Crear usuario", link: "/register" },
+				{ title: "Gestionar usuarios", link: "/register" },
+				{ title: "Mis Estadísticas", link: "/register" },
+			],
+			navigationMenu: [
+				{ title: "Finanzas", link: "/finanzas" },
+				{ title: "Clientes", link: "/clientes" },
+				{ title: "MoBikers", link: "/mobikers" },
+				{ title: "Pedidos", link: "/pedidos" },
+			],
+		};
+	},
 	computed: {
 		currentUser() {
+			3;
 			return this.$store.state.auth.user;
 		},
 	},
@@ -42,3 +79,19 @@ export default {
 	},
 };
 </script>
+
+<style lang="scss" scoped>
+.sub-menu {
+	position: absolute;
+	top: 60px;
+	right: -7%;
+	transform: translateX(-50%);
+	width: max-content;
+
+	.divider {
+		width: 100%;
+		height: 2px;
+		background: #303868;
+	}
+}
+</style>
