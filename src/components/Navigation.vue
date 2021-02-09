@@ -34,7 +34,7 @@
 			<!-- Dropdown Menu -->
 			<ul
 				v-if="dropMenu"
-				class="sub-menu flex flex-col bg-white text-black shadow-lg rounded-lg"
+				class="sub-menu flex flex-col bg-white text-black shadow-xl rounded-sm"
 			>
 				<li class="px-4 my-1" v-for="link in linksDropMenu" :key="link.title">
 					<router-link

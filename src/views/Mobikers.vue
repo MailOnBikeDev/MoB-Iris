@@ -2,7 +2,7 @@
 	<div>
 		<h1 class="text-white">MoBikers</h1>
 
-		<h2 class="text-white">{{ content }}</h2>
+		<h2 class="text-white">{{ mobikers }}</h2>
 	</div>
 </template>
 
@@ -12,16 +12,16 @@ import SystemService from "@/services/system.service";
 export default {
 	data() {
 		return {
-			content: [],
+			mobikers: [],
 		};
 	},
 	mounted() {
 		SystemService.getMobikers().then(
 			(response) => {
-				this.content = response.data;
+				this.mobikers = response.data;
 			},
 			(error) => {
-				this.content =
+				this.mobikers =
 					(error.response && error.response.data) ||
 					error.message ||
 					error.toString();

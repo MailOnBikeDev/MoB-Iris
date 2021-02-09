@@ -13,10 +13,6 @@ const routes = [
 		component: Home,
 	},
 	{
-		path: "/home",
-		component: Home,
-	},
-	{
 		path: "/login",
 		component: Login,
 	},
@@ -56,6 +52,18 @@ const router = new VueRouter({
 	mode: "history",
 	base: process.env.BASE_URL,
 	routes,
+});
+
+router.beforeEach((to, from, next) => {
+	const publicPages = ["/login", "/"];
+	const authRequired = !publicPages.includes(to.path);
+	const loggedIn = localStorage.getItem("user");
+
+	if (authRequired && !loggedIn) {
+		next("/login");
+	} else {
+		next();
+	}
 });
 
 export default router;

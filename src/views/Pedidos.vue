@@ -2,7 +2,13 @@
 	<div>
 		<h1 class="text-white">Pedidos</h1>
 
-		<h2 class="text-white">{{ content }}</h2>
+		<ul v-for="pedido in pedidos" :key="pedido.id">
+			<li class="text-white">
+				{{ pedido.id }} / {{ pedido.fecha }} / {{ pedido.contactoRemitente }}
+			</li>
+		</ul>
+
+		<p class="text-white">{{ pedidos }}</p>
 	</div>
 </template>
 
@@ -13,16 +19,16 @@ export default {
 	name: "Pedidos",
 	data() {
 		return {
-			content: [],
+			pedidos: [],
 		};
 	},
 	mounted() {
 		SystemService.getPedidos().then(
 			(response) => {
-				this.content = response.data;
+				this.pedidos = response.data;
 			},
 			(error) => {
-				this.content =
+				this.pedidos =
 					(error.response && error.response.data) ||
 					error.message ||
 					error.toString();

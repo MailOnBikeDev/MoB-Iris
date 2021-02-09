@@ -2,7 +2,7 @@
 	<div>
 		<h1 class="text-white">Clientes</h1>
 
-		<h2 class="text-white">{{ content }}</h2>
+		<h2 class="text-white">{{ clientes }}</h2>
 	</div>
 </template>
 
@@ -12,16 +12,16 @@ import SystemService from "@/services/system.service";
 export default {
 	data() {
 		return {
-			content: [],
+			clientes: [],
 		};
 	},
 	mounted() {
 		SystemService.getClientes().then(
 			(response) => {
-				this.content = response.data;
+				this.clientes = response.data;
 			},
 			(error) => {
-				this.content =
+				this.clientes =
 					(error.response && error.response.data) ||
 					error.message ||
 					error.toString();
