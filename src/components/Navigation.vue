@@ -16,7 +16,7 @@
 			<!-- Navigation -->
 			<ul class="flex mr-4">
 				<li class="mr-6" v-for="nav in navigationMenu" :key="nav.title">
-					<router-link :to="nav.link" custom v-slot="{ navigate }">
+					<router-link :to="nav.link" custom v-slot="{ navigate }" class="link">
 						<span @click="navigate" role="link">
 							{{ nav.title }}
 						</span>
@@ -34,10 +34,15 @@
 			<!-- Dropdown Menu -->
 			<ul
 				v-if="dropMenu"
-				class="sub-menu flex flex-col bg-white text-black shadow-lg"
+				class="sub-menu flex flex-col bg-white text-black shadow-lg rounded-lg"
 			>
 				<li class="px-4 my-1" v-for="link in linksDropMenu" :key="link.title">
-					<router-link :to="link.link" custom v-slot="{ navigate }">
+					<router-link
+						:to="link.link"
+						custom
+						v-slot="{ navigate }"
+						class="link"
+					>
 						<span @click="navigate" role="link">
 							{{ link.title }}
 						</span>
@@ -53,7 +58,7 @@
 		<div class="ml-auto mr-4 content-center" v-else>
 			<ul class="flex mr-4">
 				<li class="mr-4">
-					<router-link to="/login" custom v-slot="{ navigate }">
+					<router-link to="/login" custom v-slot="{ navigate }" class="link">
 						<span @click="navigate" role="link">
 							Login
 						</span>
@@ -111,5 +116,9 @@ export default {
 		height: 2px;
 		background: #303868;
 	}
+}
+
+.link {
+	cursor: pointer;
 }
 </style>

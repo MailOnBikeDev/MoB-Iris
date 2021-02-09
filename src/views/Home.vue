@@ -7,7 +7,7 @@
 		<h3 class="mb-4">Por favor, inicia sesión aquí:</h3>
 		<router-link
 			to="/login"
-			class="bg-secondary px-4 py-2 text-white my-4"
+			class="bg-secondary px-4 py-2 text-white my-4 link rounded-lg"
 			custom
 			v-slot="{ navigate }"
 		>
@@ -23,3 +23,9 @@ export default {
 	name: "Home",
 };
 </script>
+
+<style lang="scss" scoped>
+.link {
+	cursor: pointer;
+}
+</style>
