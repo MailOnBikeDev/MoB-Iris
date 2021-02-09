@@ -10,7 +10,7 @@
 			>
 				<div v-if="!successful">
 					<div class="flex flex-row">
-						<div class="my-6 pt-3 rounded  mr-10">
+						<div class="my-4 pt-3 rounded  mr-10">
 							<label
 								for="fullName"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -30,7 +30,7 @@
 								{{ errors.first("fullName") }}
 							</div>
 						</div>
-						<div class="my-6 pt-3 rounded">
+						<div class="my-4 pt-3 rounded">
 							<label
 								for="username"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -53,7 +53,7 @@
 					</div>
 
 					<div class="flex flex-row">
-						<div class="my-6 pt-3 rounded mr-10">
+						<div class="my-4 pt-3 rounded mr-10">
 							<label
 								for="empresa"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -73,7 +73,7 @@
 								{{ errors.first("empresa") }}
 							</div>
 						</div>
-						<div class="my-6 pt-3 rounded">
+						<div class="my-4 pt-3 rounded">
 							<label
 								for="email"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -92,7 +92,7 @@
 						</div>
 					</div>
 
-					<div class="my-6 pt-3 rounded">
+					<div class="my-4 pt-3 rounded">
 						<label
 							for="password"
 							class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -114,7 +114,7 @@
 					</div>
 
 					<div class="flex flex-row">
-						<div class="my-6 pt-3 rounded mx-auto">
+						<div class="my-2 pt-3 rounded mx-auto">
 							<label
 								for="roles"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -136,9 +136,9 @@
 					</div>
 
 					<button
-						class="block w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 mb-6"
+						class="block w-full mt-4 bg-info hover:bg-blue-600 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 mb-6"
 					>
-						Registrarse
+						Crear Nuevo Usuario
 					</button>
 				</div>
 			</form>
