@@ -5,8 +5,15 @@
 		<h2 class="text-center mb-10">Bienvenidos a Iris</h2>
 
 		<h3 class="mb-4">Por favor, inicia sesión aquí:</h3>
-		<router-link to="/login" class="bg-secondary px-4 py-2 text-white my-4">
-			Iniciar Sesión
+		<router-link
+			to="/login"
+			class="bg-secondary px-4 py-2 text-white my-4"
+			custom
+			v-slot="{ navigate }"
+		>
+			<span @click="navigate" role="link">
+				Iniciar Sesión
+			</span>
 		</router-link>
 	</div>
 </template>

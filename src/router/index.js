@@ -31,12 +31,6 @@ const routes = [
 		component: () => import("@/views/Profile.vue"),
 	},
 	{
-		path: "/user",
-		name: "User",
-		// lazy-loaded
-		component: () => import("@/views/BoardUser.vue"),
-	},
-	{
 		path: "/pedidos",
 		name: "Pedidos",
 		component: () => import("@/views/Pedidos.vue"),

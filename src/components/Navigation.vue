@@ -1,8 +1,14 @@
 <template>
 	<nav class="bg-secondary flex px-4 py-2 text-white items-center">
 		<div>
-			<router-link to="/">
-				<img class="w-14" src="@/assets/MoB-logo.png" alt="Mail On Bike Logo" />
+			<router-link to="/" custom v-slot="{ navigate }">
+				<img
+					@click="navigate"
+					role="link"
+					class="w-14"
+					src="@/assets/MoB-logo.png"
+					alt="Mail On Bike Logo"
+				/>
 			</router-link>
 		</div>
 
@@ -10,7 +16,11 @@
 			<!-- Navigation -->
 			<ul class="flex mr-4">
 				<li class="mr-6" v-for="nav in navigationMenu" :key="nav.title">
-					<router-link :to="nav.link">{{ nav.title }}</router-link>
+					<router-link :to="nav.link" custom v-slot="{ navigate }">
+						<span @click="navigate" role="link">
+							{{ nav.title }}
+						</span>
+					</router-link>
 				</li>
 			</ul>
 
@@ -27,7 +37,11 @@
 				class="sub-menu flex flex-col bg-white text-black shadow-lg"
 			>
 				<li class="px-4 my-1" v-for="link in linksDropMenu" :key="link.title">
-					<router-link :to="link.link">{{ link.title }}</router-link>
+					<router-link :to="link.link" custom v-slot="{ navigate }">
+						<span @click="navigate" role="link">
+							{{ link.title }}
+						</span>
+					</router-link>
 				</li>
 				<div class="divider"></div>
 				<li class="px-4 my-1">
@@ -39,7 +53,11 @@
 		<div class="ml-auto mr-4 content-center" v-else>
 			<ul class="flex mr-4">
 				<li class="mr-4">
-					<router-link to="/login">Login</router-link>
+					<router-link to="/login" custom v-slot="{ navigate }">
+						<span @click="navigate" role="link">
+							Login
+						</span>
+					</router-link>
 				</li>
 			</ul>
 		</div>
