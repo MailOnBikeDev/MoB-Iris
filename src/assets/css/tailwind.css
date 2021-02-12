@@ -14,3 +14,8 @@ body {
     background-repeat: no-repeat;
     min-height: 100vh;
 }
+
+.resalta {
+    color: #303868;
+    font-weight: bold;
+}

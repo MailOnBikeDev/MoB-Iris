@@ -1,13 +1,11 @@
 <template>
-	<div class="container">
-		<header class="jumbotron">
-			<h3>
-				<strong>{{ currentUser.username }}</strong> Profile
-			</h3>
-			<p>
-				{{ currentUser.fullName }}
-			</p>
-		</header>
+	<div class="w-96 bg-white p-4 mt-20 mx-auto">
+		<h2>
+			<strong>{{ currentUser.username }}</strong> Profile
+		</h2>
+		<p>
+			{{ currentUser.fullName }}
+		</p>
 		<p>
 			<strong>Id:</strong>
 			{{ currentUser.id }}

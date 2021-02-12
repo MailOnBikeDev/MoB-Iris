@@ -1,8 +1,76 @@
 <template>
-	<div>
-		<h1 class="text-white">Clientes</h1>
+	<div class="w-full p-4">
+		<h1 class="text-primary bg-white w-full font-bold text-2xl p-2">
+			Clientes
+		</h1>
 
-		<h2 class="text-white">{{ clientes }}</h2>
+		<div
+			class="flex w-1/3 flex-row flex-wrap my-4 bg-white p-8"
+			v-for="cliente in clientes"
+			:key="cliente.id"
+		>
+			<div class="block ">
+				<p>
+					<span class="resalta">ID: </span>
+					<span>{{ cliente.id }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Contacto: </span>
+					<span>{{ cliente.contacto }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Empresa: </span>
+					<span>{{ cliente.empresa }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Dirección: </span>
+					<span>{{ cliente.direccion }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Distrito: </span>
+					<span>{{ cliente.distritoCliente }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Teléfono: </span>
+					<span>{{ cliente.telefono }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Otro Dato: </span>
+					<span>{{ cliente.otroDato }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Tipo de Carga: </span>
+					<span>{{ cliente.tipoCarga }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Rol: </span>
+					<span>{{ cliente.rolDelCliente }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Facturación: </span>
+					<span>{{ cliente.facturacion }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Forma de Pago: </span>
+					<span>{{ cliente.formaDePagoId }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Comprobante: </span>
+					<span>{{ cliente.tipoComprobante }}</span>
+				</p>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -30,5 +98,3 @@ export default {
 	},
 };
 </script>
-
-<style></style>
