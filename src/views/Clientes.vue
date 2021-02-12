@@ -32,7 +32,7 @@
 
 				<p>
 					<span class="resalta">Distrito: </span>
-					<span>{{ cliente.distritoCliente }}</span>
+					<span>{{ cliente.distrito.distrito }}</span>
 				</p>
 
 				<p>
@@ -47,12 +47,12 @@
 
 				<p>
 					<span class="resalta">Tipo de Carga: </span>
-					<span>{{ cliente.tipoCarga }}</span>
+					<span>{{ cliente.tipoDeCarga.tipo }}</span>
 				</p>
 
 				<p>
 					<span class="resalta">Rol: </span>
-					<span>{{ cliente.rolDelCliente }}</span>
+					<span>{{ cliente.rolCliente.rol }}</span>
 				</p>
 
 				<p>
@@ -62,12 +62,12 @@
 
 				<p>
 					<span class="resalta">Forma de Pago: </span>
-					<span>{{ cliente.formaDePagoId }}</span>
+					<span>{{ cliente.formaDePago.pago }}</span>
 				</p>
 
 				<p>
 					<span class="resalta">Comprobante: </span>
-					<span>{{ cliente.tipoComprobante }}</span>
+					<span>{{ cliente.comprobante.tipo }}</span>
 				</p>
 			</div>
 		</div>
