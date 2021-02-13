@@ -56,18 +56,13 @@
 				</p>
 
 				<p>
-					<span class="resalta">Facturación: </span>
-					<span>{{ cliente.facturacion }}</span>
-				</p>
-
-				<p>
 					<span class="resalta">Forma de Pago: </span>
 					<span>{{ cliente.formaDePago.pago }}</span>
 				</p>
 
 				<p>
 					<span class="resalta">Comprobante: </span>
-					<span>{{ cliente.comprobante.tipo }}</span>
+					<span>{{ cliente.tipoDeComprobante.tipo }}</span>
 				</p>
 			</div>
 		</div>
