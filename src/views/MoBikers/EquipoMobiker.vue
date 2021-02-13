@@ -17,12 +17,7 @@
 
 				<p>
 					<span class="resalta">Nombres: </span>
-					<span>{{ mobiker.nombres }}</span>
-				</p>
-
-				<p>
-					<span class="resalta">Apellidos: </span>
-					<span>{{ mobiker.apellidos }}</span>
+					<span>{{ mobiker.nombres }} </span>{{ mobiker.apellidos }}
 				</p>
 			</div>
 		</div>

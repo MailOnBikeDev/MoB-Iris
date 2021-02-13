@@ -23,7 +23,6 @@ const routes = [
 	{
 		path: "/perfil",
 		name: "Perfil",
-		// lazy-loaded
 		component: () => import("@/views/Profile.vue"),
 	},
 	{
@@ -40,6 +39,11 @@ const routes = [
 		path: "/clientes/tablero-clientes",
 		name: "TableroClientes",
 		component: () => import("@/views/Clientes/TableroClientes.vue"),
+	},
+	{
+		path: "/clientes/nuevo-cliente",
+		name: "TableroClientes",
+		component: () => import("@/views/Clientes/NuevoCliente.vue"),
 	},
 	{
 		path: "/finanzas/finanzas",

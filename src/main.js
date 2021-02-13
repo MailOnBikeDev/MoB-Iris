@@ -7,15 +7,9 @@ import VeeValidate from "vee-validate";
 import vClickOutside from "v-click-outside";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import {
-	faHome,
-	faUser,
-	faUserPlus,
-	faSignInAlt,
-	faSignOutAlt,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
+library.add(faChevronDown);
 
 Vue.config.productionTip = false;
 

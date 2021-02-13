@@ -14,7 +14,11 @@
 
 		<div v-if="currentUser" class="flex flex-row ml-auto items-center">
 			<!-- Navigation -->
-			<div v-for="nav in navigationMenu" :key="nav.title" mr-4>
+			<div v-for="nav in navigationMenu" :key="nav.title">
+				<!-- <button class="mr-6">
+					<span>{{ nav.title }}</span> <i class="fas fa-chevron-down"></i>
+				</button> -->
+
 				<router-link
 					:to="nav.link"
 					custom
@@ -24,6 +28,7 @@
 					<span @click="navigate" role="link">
 						{{ nav.title }}
 					</span>
+					<font-awesome-icon icon="chevron-down" class="ml-1" />
 				</router-link>
 			</div>
 
@@ -38,7 +43,7 @@
 
 				<div
 					v-if="dropMenu"
-					class="sub-menu flex flex-col bg-white text-black shadow-xl rounded mt-1 text-sm absolute"
+					class="sub-menu flex flex-col bg-white text-black shadow-xl rounded mt-1 text-sm absolute -translate-x-1/2"
 					v-click-outside="clickExterno"
 				>
 					<div
@@ -89,10 +94,30 @@ export default {
 				{ title: "Mis Estadísticas", link: "/register" },
 			],
 			navigationMenu: [
-				{ title: "Finanzas", link: "/finanzas/finanzas" },
-				{ title: "Clientes", link: "/clientes/tablero-clientes" },
-				{ title: "MoBikers", link: "/mobikers/equipo-mobiker" },
-				{ title: "Pedidos", link: "/pedidos/tablero-pedidos" },
+				{
+					title: "Finanzas",
+					link: "/finanzas/finanzas",
+					subMenu: [{ title: "f", subLink: "/" }],
+				},
+				{
+					title: "Clientes",
+					link: "/clientes/tablero-clientes",
+					subMenu: [
+						{ title: "Perfiles", subLink: "/clientes/tablero-clientes" },
+						{ title: "Nuevo Cliente", subLink: "/clientes/nuevo-cliente" },
+						{ title: "Nuevo Cliente", subLink: "/clientes/nuevo-cliente" },
+					],
+				},
+				{
+					title: "MoBikers",
+					link: "/mobikers/equipo-mobiker",
+					subMenu: [{ title: "f", subLink: "/" }],
+				},
+				{
+					title: "Pedidos",
+					link: "/pedidos/tablero-pedidos",
+					subMenu: [{ title: "f", subLink: "/" }],
+				},
 			],
 		};
 	},
