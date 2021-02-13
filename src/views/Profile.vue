@@ -1,24 +1,26 @@
 <template>
-	<div class="w-96 bg-white p-4 mt-20 mx-auto">
+	<div class="w-96 bg-white p-4 mt-20 mx-auto rounded">
 		<h2>
-			<strong>{{ currentUser.username }}</strong> Profile
+			<strong class="resalta">Perfil:</strong>
+			{{ currentUser.username }}
 		</h2>
 		<p>
+			<strong class="resalta">Nombre:</strong>
 			{{ currentUser.fullName }}
 		</p>
 		<p>
-			<strong>Id:</strong>
+			<strong class="resalta">Id:</strong>
 			{{ currentUser.id }}
 		</p>
 		<p>
-			<strong>Email:</strong>
+			<strong class="resalta">Email:</strong>
 			{{ currentUser.email }}
 		</p>
 		<p>
-			<strong>Empresa:</strong>
+			<strong class="resalta">Empresa:</strong>
 			{{ currentUser.empresa }}
 		</p>
-		<strong>Authorities:</strong>
+		<strong class="resalta">Autorizaciones:</strong>
 		<ul>
 			<li v-for="(role, index) in currentUser.roles" :key="index">
 				{{ role }}
