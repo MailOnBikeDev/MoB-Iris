@@ -15,6 +15,7 @@ module.exports = {
 	},
 	variants: {
 		extend: {
+			maxHeight: ["focus"],
 			backgroundColor: ["active"],
 		},
 	},

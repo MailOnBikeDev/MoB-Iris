@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import "./assets/css/tailwind.css";
 import VeeValidate from "vee-validate";
+import vClickOutside from "v-click-outside";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
@@ -19,6 +20,7 @@ library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
 Vue.config.productionTip = false;
 
 Vue.use(VeeValidate);
+Vue.use(vClickOutside);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 
 new Vue({
