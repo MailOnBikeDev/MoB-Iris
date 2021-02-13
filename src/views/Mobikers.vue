@@ -4,7 +4,28 @@
 			MoBikers
 		</h1>
 
-		<h2 class="text-white">{{ mobikers }}</h2>
+		<div
+			class="flex w-1/3 flex-row flex-wrap my-4 bg-white p-8"
+			v-for="mobiker in mobikers"
+			:key="mobiker.id"
+		>
+			<div class="block">
+				<p>
+					<span class="resalta">ID: </span>
+					<span>{{ mobiker.id }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Nombres: </span>
+					<span>{{ mobiker.nombres }}</span>
+				</p>
+
+				<p>
+					<span class="resalta">Apellidos: </span>
+					<span>{{ mobiker.apellidos }}</span>
+				</p>
+			</div>
+		</div>
 	</div>
 </template>
 

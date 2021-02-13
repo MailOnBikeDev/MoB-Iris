@@ -9,7 +9,7 @@
 			v-for="cliente in clientes"
 			:key="cliente.id"
 		>
-			<div class="block ">
+			<div class="block">
 				<p>
 					<span class="resalta">ID: </span>
 					<span>{{ cliente.id }}</span>
