@@ -89,10 +89,10 @@ export default {
 				{ title: "Mis Estadísticas", link: "/register" },
 			],
 			navigationMenu: [
-				{ title: "Finanzas", link: "/finanzas" },
-				{ title: "Clientes", link: "/clientes" },
-				{ title: "MoBikers", link: "/mobikers" },
-				{ title: "Pedidos", link: "/pedidos" },
+				{ title: "Finanzas", link: "/finanzas/finanzas" },
+				{ title: "Clientes", link: "/clientes/tablero-clientes" },
+				{ title: "MoBikers", link: "/mobikers/equipo-mobiker" },
+				{ title: "Pedidos", link: "/pedidos/tablero-pedidos" },
 			],
 		};
 	},

@@ -27,24 +27,24 @@ const routes = [
 		component: () => import("@/views/Profile.vue"),
 	},
 	{
-		path: "/pedidos",
-		name: "Pedidos",
-		component: () => import("@/views/Pedidos.vue"),
+		path: "/pedidos/tablero-pedidos",
+		name: "TableroPedidos",
+		component: () => import("@/views/Pedidos/TableroPedidos.vue"),
 	},
 	{
-		path: "/mobikers",
-		name: "Mobikers",
-		component: () => import("@/views/Mobikers.vue"),
+		path: "/mobikers/equipo-mobiker",
+		name: "EquipoMobikers",
+		component: () => import("@/views/MoBikers/EquipoMobiker.vue"),
 	},
 	{
-		path: "/clientes",
-		name: "Clientes",
-		component: () => import("@/views/Clientes.vue"),
+		path: "/clientes/tablero-clientes",
+		name: "TableroClientes",
+		component: () => import("@/views/Clientes/TableroClientes.vue"),
 	},
 	{
-		path: "/finanzas",
+		path: "/finanzas/finanzas",
 		name: "Finanzas",
-		component: () => import("@/views/Finanzas.vue"),
+		component: () => import("@/views/Finanzas/Finanzas.vue"),
 	},
 ];
 
