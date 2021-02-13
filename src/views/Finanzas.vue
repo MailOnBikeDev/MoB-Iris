@@ -1,6 +1,8 @@
 <template>
-	<div>
-		<h1 class="text-white">Finanzas</h1>
+	<div class="w-full p-4">
+		<h1 class="text-primary bg-white w-full font-bold text-2xl p-2">
+			Finanzas
+		</h1>
 	</div>
 </template>
 

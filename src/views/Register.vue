@@ -25,7 +25,7 @@
 							/>
 							<div
 								v-if="submitted && errors.has('fullName')"
-								class="alert-danger"
+								class="bg-red-500 text-white text-sm rounded p-2"
 							>
 								{{ errors.first("fullName") }}
 							</div>
@@ -45,7 +45,7 @@
 							/>
 							<div
 								v-if="submitted && errors.has('username')"
-								class="alert-danger"
+								class="bg-red-500 text-white text-sm rounded p-2"
 							>
 								{{ errors.first("username") }}
 							</div>
@@ -68,7 +68,7 @@
 							/>
 							<div
 								v-if="submitted && errors.has('empresa')"
-								class="alert-danger"
+								class="bg-red-500 text-white text-sm rounded p-2"
 							>
 								{{ errors.first("empresa") }}
 							</div>
@@ -86,7 +86,10 @@
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
 								name="email"
 							/>
-							<div v-if="submitted && errors.has('email')" class="alert-danger">
+							<div
+								v-if="submitted && errors.has('email')"
+								class="bg-red-500 text-white text-sm rounded p-2"
+							>
 								{{ errors.first("email") }}
 							</div>
 						</div>
@@ -107,7 +110,7 @@
 						/>
 						<div
 							v-if="submitted && errors.has('password')"
-							class="alert-danger"
+							class="bg-red-500 text-white text-sm rounded p-2"
 						>
 							{{ errors.first("password") }}
 						</div>
@@ -127,9 +130,12 @@
 									v-model="user.roles"
 									:value="rol"
 								/>
-								<label class="ml-4" :for="rol">{{ roles[index] }}</label>
+								<label class="ml-4" :for="rol">{{ roles[index].name }}</label>
 							</div>
-							<div v-if="submitted && errors.has('roles')" class="alert-danger">
+							<div
+								v-if="submitted && errors.has('roles')"
+								class="bg-red-500 text-white text-sm rounded p-2"
+							>
 								{{ errors.first("roles") }}
 							</div>
 						</div>
@@ -156,6 +162,7 @@
 
 <script>
 import User from "../models/user";
+import AuxiliarService from "@/services/auxiliares.service";
 
 export default {
 	name: "Register",
@@ -165,8 +172,21 @@ export default {
 			submitted: false,
 			successful: false,
 			message: "",
-			roles: ["administrador", "operador", "auditor", "cliente", "mobiker"],
+			roles: [],
 		};
+	},
+	mounted() {
+		AuxiliarService.getRolesUsers().then(
+			(response) => {
+				this.roles = response.data;
+			},
+			(error) => {
+				this.roles =
+					(error.response && error.response.data) ||
+					error.message ||
+					error.toString();
+			}
+		);
 	},
 	computed: {
 		loggedIn() {

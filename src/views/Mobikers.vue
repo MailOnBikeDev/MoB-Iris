@@ -1,6 +1,8 @@
 <template>
-	<div>
-		<h1 class="text-white">MoBikers</h1>
+	<div class="w-full p-4">
+		<h1 class="text-primary bg-white w-full font-bold text-2xl p-2">
+			MoBikers
+		</h1>
 
 		<h2 class="text-white">{{ mobikers }}</h2>
 	</div>

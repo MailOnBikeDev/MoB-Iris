@@ -25,7 +25,7 @@
 			</ul>
 
 			<button
-				class="py-2 px-4 text-white bg-info rounded-xl font-bold"
+				class="py-2 px-4 text-white bg-info rounded-xl font-bold active:bg-green-500"
 				@click="dropMenu = !dropMenu"
 			>
 				{{ currentUser.username }}
@@ -107,7 +107,7 @@ export default {
 .sub-menu {
 	position: absolute;
 	top: 60px;
-	right: -7%;
+	right: -6%;
 	transform: translateX(-50%);
 	width: max-content;
 

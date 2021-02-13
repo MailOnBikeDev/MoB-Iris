@@ -1,4 +1,3 @@
-import authService from "../services/auth.service";
 import AuthService from "../services/auth.service";
 
 const user = JSON.parse(localStorage.getItem("user"));
@@ -23,11 +22,11 @@ export const auth = {
 			);
 		},
 		logout({ commit }) {
-			authService.logout();
+			AuthService.logout();
 			commit("logout");
 		},
 		register({ commit }, user) {
-			return authService.register(user).then(
+			return AuthService.register(user).then(
 				(response) => {
 					commit("registerSuccess");
 					return Promise.resolve(response.data);
