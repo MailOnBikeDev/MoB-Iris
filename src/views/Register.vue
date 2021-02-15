@@ -4,7 +4,7 @@
 			class="max-w-lg bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 mt-10"
 		>
 			<form
-				name="flex flex-col"
+				class="flex flex-col"
 				@submit.prevent="handleRegister"
 				autocomplete="off"
 			>

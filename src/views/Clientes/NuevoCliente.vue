@@ -1,15 +1,182 @@
 <template>
-	<div class="w-full flex flex-col justify-center items-center mt-10 mb-40">
+	<div class="w-full justify-center items-center">
 		<div
-			class="max-w-lg bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 mt-10 "
+			class="bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 mt-6 "
 		>
-			<h1 class="bg-primary text-white font-bold px-4 py-2 rounded-xl">
-				Nuevo Cliente
-			</h1>
+			<div class="flex justify-end">
+				<h1
+					class="inline-block bg-primary text-white text-center font-bold px-4 py-2 rounded-xl"
+				>
+					Nuevo Cliente
+				</h1>
+			</div>
 
-			<form>
-				<div>
-					<input type="text" />
+			<form class="mt-6">
+				<div v-if="!successful">
+					<div class="grid grid-cols-3 mb-4">
+						<div class="flex flex-col mr-4">
+							<label
+								for="fullName"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Contacto</label
+							>
+							<input
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
+						</div>
+
+						<div class="flex flex-col mr-4">
+							<label
+								for="fullName"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Razón Social</label
+							>
+							<input
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
+						</div>
+
+						<div class="flex flex-col">
+							<label
+								for="fullName"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Teléfono</label
+							>
+							<input
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-3 mb-4">
+						<div class="flex flex-col mr-4">
+							<label
+								for="fullName"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Email</label
+							>
+							<input
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
+						</div>
+
+						<div class="flex flex-col mr-4">
+							<label
+								for="fullName"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>RUC</label
+							>
+							<input
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
+						</div>
+
+						<div class="flex flex-col">
+							<label
+								for="distrito"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Distrito</label
+							>
+							<model-list-select
+								name="distrito"
+								v-model="nuevoCliente.distrito"
+								placeholder="Buscar distrito..."
+								:list="distritos"
+								option-text="distrito"
+								option-value="distrito"
+							>
+							</model-list-select>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-2 mb-4">
+						<div class="flex flex-col mr-4">
+							<label
+								for="fullName"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Dirección</label
+							>
+							<input
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
+						</div>
+
+						<div class="flex flex-col">
+							<label
+								for="fullName"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Otro Dato</label
+							>
+							<input
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-4 mb-6">
+						<div class="flex flex-col mr-4">
+							<label
+								for="fullName"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Tipo de Carga</label
+							>
+							<input
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+							/>
+						</div>
+
+						<div class="flex flex-col mr-4">
+							<label
+								for="fullName"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Forma de Pago</label
+							>
+							<input
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+							/>
+						</div>
+
+						<div class="flex flex-col mr-4">
+							<label
+								for="fullName"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Comprobante</label
+							>
+							<input
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+							/>
+						</div>
+
+						<div class="flex flex-col">
+							<label
+								for="fullName"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Rol</label
+							>
+							<input
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+							/>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 mb-4">
+						<button
+							class="block w-full bg-info hover:bg-blue-600 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
+						>
+							Crear Nuevo Cliente
+						</button>
+					</div>
 				</div>
 			</form>
 		</div>
@@ -17,7 +184,37 @@
 </template>
 
 <script>
+import Cliente from "@/models/cliente";
+import { ModelListSelect } from "vue-search-select";
+import AuxiliarService from "@/services/auxiliares.service";
+
 export default {
 	name: "NuevoCliente",
+	data() {
+		return {
+			nuevoCliente: new Cliente("", "", "", "", "", "", "", "", "", "", "", ""),
+			submitted: false,
+			successful: false,
+			message: "",
+			distritos: [],
+		};
+	},
+	mounted() {
+		AuxiliarService.getDistritos().then(
+			(response) => {
+				this.distritos = response.data;
+			},
+			(error) => {
+				this.roles =
+					(error.response && error.response.data) ||
+					error.message ||
+					error.toString();
+			}
+		);
+	},
+	methods: {},
+	components: {
+		ModelListSelect,
+	},
 };
 </script>

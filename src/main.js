@@ -5,6 +5,7 @@ import store from "./store";
 import "./assets/css/tailwind.css";
 import VeeValidate from "vee-validate";
 import vClickOutside from "v-click-outside";
+import "vue-search-select/dist/VueSearchSelect.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
