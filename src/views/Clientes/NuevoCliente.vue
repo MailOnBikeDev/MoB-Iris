@@ -11,16 +11,21 @@
 				</h1>
 			</div>
 
-			<form class="mt-6">
+			<form
+				class="mt-6"
+				@submit.prevent="handleNuevoCliente"
+				autocomplete="off"
+			>
 				<div v-if="!successful">
 					<div class="grid grid-cols-3 mb-4">
 						<div class="flex flex-col mr-4">
 							<label
-								for="fullName"
+								for="contacto"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Contacto</label
 							>
 							<input
+								v-model="nuevoCliente.contacto"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -28,11 +33,12 @@
 
 						<div class="flex flex-col mr-4">
 							<label
-								for="fullName"
+								for="empresa"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Razón Social</label
 							>
 							<input
+								v-model="nuevoCliente.empresa"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -40,11 +46,12 @@
 
 						<div class="flex flex-col">
 							<label
-								for="fullName"
+								for="telefono"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Teléfono</label
 							>
 							<input
+								v-model="nuevoCliente.telefono"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -54,11 +61,12 @@
 					<div class="grid grid-cols-3 mb-4">
 						<div class="flex flex-col mr-4">
 							<label
-								for="fullName"
+								for="email"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Email</label
 							>
 							<input
+								v-model="nuevoCliente.email"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -66,11 +74,12 @@
 
 						<div class="flex flex-col mr-4">
 							<label
-								for="fullName"
+								for="ruc"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>RUC</label
 							>
 							<input
+								v-model="nuevoCliente.ruc"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -89,19 +98,19 @@
 								:list="distritos"
 								option-text="distrito"
 								option-value="distrito"
-							>
-							</model-list-select>
+							/>
 						</div>
 					</div>
 
 					<div class="grid grid-cols-2 mb-4">
 						<div class="flex flex-col mr-4">
 							<label
-								for="fullName"
+								for="direccion"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Dirección</label
 							>
 							<input
+								v-model="nuevoCliente.direccion"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -109,68 +118,81 @@
 
 						<div class="flex flex-col">
 							<label
-								for="fullName"
+								for="otroDato"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Otro Dato</label
 							>
 							<input
+								v-model="nuevoCliente.otroDato"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
 						</div>
 					</div>
 
-					<div class="grid grid-cols-4 mb-6">
+					<div class="grid grid-cols-4 mb-10">
 						<div class="flex flex-col mr-4">
 							<label
-								for="fullName"
+								for="carga"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Tipo de Carga</label
 							>
-							<input
-								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+							<model-list-select
+								name="carga"
+								v-model="nuevoCliente.carga"
+								:list="tiposDeCarga"
+								option-text="tipo"
+								option-value="tipo"
 							/>
 						</div>
 
 						<div class="flex flex-col mr-4">
 							<label
-								for="fullName"
+								for="pago"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Forma de Pago</label
 							>
-							<input
-								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+							<model-list-select
+								name="pago"
+								v-model="nuevoCliente.pago"
+								:list="formasDePago"
+								option-text="pago"
+								option-value="pago"
 							/>
 						</div>
 
 						<div class="flex flex-col mr-4">
 							<label
-								for="fullName"
+								for="comprobante"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Comprobante</label
 							>
-							<input
-								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+							<model-list-select
+								name="pago"
+								v-model="nuevoCliente.comprobante"
+								:list="comprobantes"
+								option-text="tipo"
+								option-value="tipo"
 							/>
 						</div>
 
 						<div class="flex flex-col">
 							<label
-								for="fullName"
+								for="rol"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Rol</label
 							>
-							<input
-								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+							<model-list-select
+								name="pago"
+								v-model="nuevoCliente.rol"
+								:list="rolesCliente"
+								option-text="rol"
+								option-value="rol"
 							/>
 						</div>
 					</div>
 
-					<div class="grid grid-cols-1 mb-4">
+					<div class="grid grid-cols-1 mb-6">
 						<button
 							class="block w-full bg-info hover:bg-blue-600 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
 						>
@@ -187,6 +209,7 @@
 import Cliente from "@/models/cliente";
 import { ModelListSelect } from "vue-search-select";
 import AuxiliarService from "@/services/auxiliares.service";
+import ClienteService from "@/services/cliente.service";
 
 export default {
 	name: "NuevoCliente",
@@ -197,9 +220,28 @@ export default {
 			successful: false,
 			message: "",
 			distritos: [],
+			tiposDeCarga: [],
+			formasDePago: [],
+			comprobantes: [],
+			rolesCliente: [],
 		};
 	},
-	mounted() {
+	async mounted() {
+		try {
+			let resDistritos = await AuxiliarService.getDistritos();
+			let resCarga = await AuxiliarService.getTipoCarga();
+			let pagos = await AuxiliarService.getFormasPago();
+			let comp = await AuxiliarService.getTipoComprobante();
+			let roles = await AuxiliarService.getRolCliente();
+
+			this.distritos = resDistritos.data;
+			this.tiposDeCarga = resCarga.data;
+			this.formasDePago = pagos.data;
+			this.comprobantes = comp.data;
+			this.rolesCliente = roles.data;
+		} catch (error) {
+			console.log(error);
+		}
 		AuxiliarService.getDistritos().then(
 			(response) => {
 				this.distritos = response.data;
@@ -212,7 +254,16 @@ export default {
 			}
 		);
 	},
-	methods: {},
+	methods: {
+		handleNuevoCliente() {
+			ClienteService.storageNuevoCliente(this.nuevoCliente).then(
+				() => {
+					this.$router.push("/clientes/tablero-clientes");
+				},
+				(err) => console.log(err)
+			);
+		},
+	},
 	components: {
 		ModelListSelect,
 	},

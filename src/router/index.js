@@ -42,7 +42,7 @@ const routes = [
 	},
 	{
 		path: "/clientes/nuevo-cliente",
-		name: "TableroClientes",
+		name: "NuevoCliente",
 		component: () => import("@/views/Clientes/NuevoCliente.vue"),
 	},
 	{

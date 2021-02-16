@@ -4,73 +4,77 @@
 			Clientes
 		</h1>
 
-		<div
-			class="flex w-1/3 flex-row flex-wrap my-4 bg-white p-8"
-			v-for="cliente in clientes"
-			:key="cliente.id"
-		>
-			<div class="block">
-				<p>
-					<span class="resalta">ID: </span>
-					<span>{{ cliente.id }}</span>
-				</p>
+		<div class="grid grid-cols-1 bg-white">
+			<router-link to="/clientes/nuevo-cliente" custom v-slot="{ navigate }">
+				<span @click="navigate" role="link">Crear nuevo cliente</span>
+			</router-link>
+		</div>
 
-				<p>
-					<span class="resalta">Contacto: </span>
-					<span>{{ cliente.contacto }}</span>
-				</p>
+		<div class="grid grid-cols-3 gap-4 mt-4">
+			<div class="bg-white p-8" v-for="cliente in clientes" :key="cliente.id">
+				<div class="block">
+					<p>
+						<span class="resalta">ID: </span>
+						<span>{{ cliente.id }}</span>
+					</p>
 
-				<p>
-					<span class="resalta">Empresa: </span>
-					<span>{{ cliente.empresa }}</span>
-				</p>
+					<p>
+						<span class="resalta">Contacto: </span>
+						<span>{{ cliente.contacto }}</span>
+					</p>
 
-				<p>
-					<span class="resalta">Dirección: </span>
-					<span>{{ cliente.direccion }}</span>
-				</p>
+					<p>
+						<span class="resalta">Empresa: </span>
+						<span>{{ cliente.empresa }}</span>
+					</p>
 
-				<p>
-					<span class="resalta">Distrito: </span>
-					<span>{{ cliente.distrito.distrito }}</span>
-				</p>
+					<p>
+						<span class="resalta">Dirección: </span>
+						<span>{{ cliente.direccion }}</span>
+					</p>
 
-				<p>
-					<span class="resalta">Teléfono: </span>
-					<span>{{ cliente.telefono }}</span>
-				</p>
+					<p>
+						<span class="resalta">Distrito: </span>
+						<span>{{ cliente.distrito.distrito }}</span>
+					</p>
 
-				<p>
-					<span class="resalta">Otro Dato: </span>
-					<span>{{ cliente.otroDato }}</span>
-				</p>
+					<p>
+						<span class="resalta">Teléfono: </span>
+						<span>{{ cliente.telefono }}</span>
+					</p>
 
-				<p>
-					<span class="resalta">Tipo de Carga: </span>
-					<span>{{ cliente.tipoDeCarga.tipo }}</span>
-				</p>
+					<p>
+						<span class="resalta">Otro Dato: </span>
+						<span>{{ cliente.otroDato }}</span>
+					</p>
 
-				<p>
-					<span class="resalta">Rol: </span>
-					<span>{{ cliente.rolCliente.rol }}</span>
-				</p>
+					<p>
+						<span class="resalta">Tipo de Carga: </span>
+						<span>{{ cliente.tipoDeCarga.tipo }}</span>
+					</p>
 
-				<p>
-					<span class="resalta">Forma de Pago: </span>
-					<span>{{ cliente.formaDePago.pago }}</span>
-				</p>
+					<p>
+						<span class="resalta">Rol: </span>
+						<span>{{ cliente.rolCliente.rol }}</span>
+					</p>
 
-				<p>
-					<span class="resalta">Comprobante: </span>
-					<span>{{ cliente.tipoDeComprobante.tipo }}</span>
-				</p>
+					<p>
+						<span class="resalta">Forma de Pago: </span>
+						<span>{{ cliente.formaDePago.pago }}</span>
+					</p>
+
+					<p>
+						<span class="resalta">Comprobante: </span>
+						<span>{{ cliente.tipoDeComprobante.tipo }}</span>
+					</p>
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import SystemService from "@/services/system.service";
+import ClienteService from "@/services/cliente.service";
 
 export default {
 	data() {
@@ -79,7 +83,7 @@ export default {
 		};
 	},
 	mounted() {
-		SystemService.getClientes().then(
+		ClienteService.getClientes().then(
 			(response) => {
 				this.clientes = response.data;
 			},

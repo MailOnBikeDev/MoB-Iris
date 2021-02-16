@@ -1,26 +1,21 @@
-import axios from "axios";
+import http from "@/http-common";
 import authHeader from "./auth-header";
-
-const API_URL = "http://localhost:8080/hermes/";
 
 class SystemService {
 	getPedidos() {
-		return axios.get(API_URL + "pedidos/tablero-pedidos", {
+		return http.get("pedidos/tablero-pedidos", {
 			headers: authHeader(),
 		});
 	}
-	getClientes() {
-		return axios.get(API_URL + "clientes/tablero-clientes", {
-			headers: authHeader(),
-		});
-	}
+
 	getMobikers() {
-		return axios.get(API_URL + "mobikers/equipo-mobiker", {
+		return http.get("mobikers/equipo-mobiker", {
 			headers: authHeader(),
 		});
 	}
+
 	getFinanzas() {
-		return axios.get(API_URL + "admin", { headers: authHeader() });
+		return http.get("admin", { headers: authHeader() });
 	}
 }
 

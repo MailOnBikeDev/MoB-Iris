@@ -15,10 +15,6 @@
 		<div v-if="currentUser" class="flex flex-row ml-auto items-center">
 			<!-- Navigation -->
 			<div v-for="nav in navigationMenu" :key="nav.title">
-				<!-- <button class="mr-6">
-					<span>{{ nav.title }}</span> <i class="fas fa-chevron-down"></i>
-				</button> -->
-
 				<router-link
 					:to="nav.link"
 					custom
@@ -28,7 +24,6 @@
 					<span @click="navigate" role="link">
 						{{ nav.title }}
 					</span>
-					<font-awesome-icon icon="chevron-down" class="ml-1" />
 				</router-link>
 			</div>
 
@@ -97,33 +92,25 @@ export default {
 				{
 					title: "Finanzas",
 					link: "/finanzas/finanzas",
-					subMenu: [{ title: "f", subLink: "/" }],
 				},
 				{
 					title: "Clientes",
 					link: "/clientes/tablero-clientes",
-					subMenu: [
-						{ title: "Perfiles", subLink: "/clientes/tablero-clientes" },
-						{ title: "Nuevo Cliente", subLink: "/clientes/nuevo-cliente" },
-						{ title: "Nuevo Cliente", subLink: "/clientes/nuevo-cliente" },
-					],
 				},
 				{
 					title: "MoBikers",
 					link: "/mobikers/equipo-mobiker",
-					subMenu: [{ title: "f", subLink: "/" }],
 				},
 				{
 					title: "Pedidos",
 					link: "/pedidos/tablero-pedidos",
-					subMenu: [{ title: "f", subLink: "/" }],
 				},
 			],
 		};
 	},
 	computed: {
 		currentUser() {
-			return this.$store.state.auth.user;
+			return this.$store.state.user;
 		},
 	},
 	directives: {
@@ -131,7 +118,7 @@ export default {
 	},
 	methods: {
 		logOut() {
-			this.$store.dispatch("auth/logout");
+			this.$store.dispatch("logout");
 			this.dropMenu = false;
 			this.$router.push("/login");
 		},

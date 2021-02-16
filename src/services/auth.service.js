@@ -1,11 +1,9 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:8080/hermes/";
+import http from "@/http-common";
 
 class AuthService {
 	login(user) {
-		return axios
-			.post(API_URL + "login", {
+		return http
+			.post("login", {
 				username: user.username,
 				password: user.password,
 			})
@@ -20,7 +18,7 @@ class AuthService {
 		localStorage.removeItem("user");
 	}
 	register(user) {
-		return axios.post(API_URL + "registro", {
+		return http.post("registro", {
 			fullName: user.fullName,
 			username: user.username,
 			email: user.email,

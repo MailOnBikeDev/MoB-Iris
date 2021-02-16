@@ -34,7 +34,7 @@ export default {
 	name: "Perfil",
 	computed: {
 		currentUser() {
-			return this.$store.state.auth.user;
+			return this.$store.state.user;
 		},
 	},
 	mounted() {

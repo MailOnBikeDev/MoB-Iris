@@ -1,59 +1,57 @@
-import axios from "axios";
+import http from "@/http-common";
 import authHeader from "./auth-header";
-
-const API_URL = "http://localhost:8080/hermes/";
 
 class AuxiliarService {
 	getRolesUsers() {
-		return axios.get(API_URL + "auxiliares/roles-usuarios", {
+		return http.get("auxiliares/roles-usuarios", {
 			headers: authHeader(),
 		});
 	}
 
 	getDistritos() {
-		return axios.get(API_URL + "auxiliares/distritos", {
+		return http.get("auxiliares/distritos", {
 			headers: authHeader(),
 		});
 	}
 
 	getTipoCarga() {
-		return axios.get(API_URL + "auxiliares/tipos-de-carga", {
+		return http.get("auxiliares/tipos-de-carga", {
 			headers: authHeader(),
 		});
 	}
 
 	getTipoComprobante() {
-		return axios.get(API_URL + "auxiliares/tipos-de-comprobantes", {
+		return http.get("auxiliares/tipos-de-comprobantes", {
 			headers: authHeader(),
 		});
 	}
 
 	getTipoEnvio() {
-		return axios.get(API_URL + "auxiliares/tipos-de-envios", {
+		return http.get("auxiliares/tipos-de-envios", {
 			headers: authHeader(),
 		});
 	}
 
 	getFormasPago() {
-		return axios.get(API_URL + "auxiliares/formas-de-pago", {
+		return http.get("auxiliares/formas-de-pago", {
 			headers: authHeader(),
 		});
 	}
 
 	getModalidad() {
-		return axios.get(API_URL + "auxiliares/modalidad", {
+		return http.get("auxiliares/modalidad", {
 			headers: authHeader(),
 		});
 	}
 
 	getRangosMoB() {
-		return axios.get(API_URL + "auxiliares/rangos-MoBiker", {
+		return http.get("auxiliares/rangos-MoBiker", {
 			headers: authHeader(),
 		});
 	}
 
 	getRolCliente() {
-		return axios.get(API_URL + "auxiliares/roles-clientes", {
+		return http.get("auxiliares/roles-clientes", {
 			headers: authHeader(),
 		});
 	}
