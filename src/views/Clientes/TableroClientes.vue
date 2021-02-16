@@ -4,9 +4,11 @@
 			Clientes
 		</h1>
 
-		<div class="grid grid-cols-1 bg-white">
+		<div class="grid grid-cols-1 bg-gray-200">
 			<router-link to="/clientes/nuevo-cliente" custom v-slot="{ navigate }">
-				<span @click="navigate" role="link">Crear nuevo cliente</span>
+				<span @click="navigate" role="link" class="text-center cursor-pointer"
+					>Crear nuevo cliente</span
+				>
 			</router-link>
 		</div>
 

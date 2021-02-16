@@ -1,7 +1,7 @@
 <template>
-	<div class="w-full flex flex-col justify-center items-center mt-10 mb-40">
+	<div class="w-full flex flex-col justify-center items-center mt-6 mb-40">
 		<div
-			class="max-w-lg bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 mt-10 flex flex-col justify-center"
+			class="max-w-lg bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 flex flex-col justify-center"
 		>
 			<img
 				id="profile-img"
