@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full flex flex-col justify-center items-center mt-10 mb-40">
 		<div
-			class="max-w-lg bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 mt-10"
+			class="max-w-lg bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8"
 		>
 			<form
 				class="flex flex-col"
@@ -10,7 +10,7 @@
 			>
 				<div v-if="!successful">
 					<div class="flex flex-row">
-						<div class="my-4 pt-3 rounded  mr-10">
+						<div class="mb-4 pt-3 rounded mr-10">
 							<label
 								for="fullName"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -30,7 +30,7 @@
 								{{ errors.first("fullName") }}
 							</div>
 						</div>
-						<div class="my-4 pt-3 rounded">
+						<div class="mb-4 pt-3 rounded">
 							<label
 								for="username"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -53,7 +53,7 @@
 					</div>
 
 					<div class="flex flex-row">
-						<div class="my-4 pt-3 rounded mr-10">
+						<div class="mb-4 pt-3 rounded mr-10">
 							<label
 								for="empresa"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -73,7 +73,7 @@
 								{{ errors.first("empresa") }}
 							</div>
 						</div>
-						<div class="my-4 pt-3 rounded">
+						<div class="mb-4 pt-3 rounded">
 							<label
 								for="email"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -95,7 +95,7 @@
 						</div>
 					</div>
 
-					<div class="my-4 pt-3 rounded">
+					<div class="mb-4 pt-3 rounded">
 						<label
 							for="password"
 							class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -117,7 +117,7 @@
 					</div>
 
 					<div class="flex flex-row">
-						<div class="my-2 pt-3 rounded mx-auto">
+						<div class="mb-2 pt-3 rounded mx-auto">
 							<label
 								for="roles"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -142,7 +142,7 @@
 					</div>
 
 					<button
-						class="block w-full mt-4 bg-info hover:bg-blue-600 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 mb-6"
+						class="block w-full mt-4 bg-info hover:bg-blue-600 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 mb-4"
 					>
 						Crear Nuevo Usuario
 					</button>
@@ -190,7 +190,7 @@ export default {
 	},
 	computed: {
 		loggedIn() {
-			return this.$store.state.auth.status.loggedIn;
+			return this.$store.state.status.loggedIn;
 		},
 	},
 	methods: {

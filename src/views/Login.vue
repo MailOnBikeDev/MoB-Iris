@@ -71,7 +71,7 @@ export default {
 	},
 	computed: {
 		loggedIn() {
-			return this.$store.state.auth.status.loggedIn;
+			return this.$store.state.status.loggedIn;
 		},
 	},
 	created() {
@@ -84,7 +84,6 @@ export default {
 			this.loading = true;
 			this.$validator.validateAll().then((isValid) => {
 				if (!isValid) {
-					this.loading = false;
 					return;
 				}
 				if (this.user.username && this.user.password) {
