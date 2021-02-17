@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full justify-center items-center">
 		<div
-			class="bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 mt-6 "
+			class="bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 mt-6"
 		>
 			<div class="flex justify-end">
 				<h1
@@ -12,13 +12,13 @@
 			</div>
 
 			<form
-				class="mt-6"
+				class="mt-4"
 				@submit.prevent="handleNuevoCliente"
 				autocomplete="off"
 			>
 				<div v-if="!successful">
-					<div class="grid grid-cols-3 mb-4">
-						<div class="flex flex-col mr-4">
+					<div class="grid grid-cols-3 gap-4 mb-4">
+						<div class="flex flex-col">
 							<label
 								for="contacto"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -31,7 +31,7 @@
 							/>
 						</div>
 
-						<div class="flex flex-col mr-4">
+						<div class="flex flex-col">
 							<label
 								for="empresa"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -58,8 +58,8 @@
 						</div>
 					</div>
 
-					<div class="grid grid-cols-3 mb-4">
-						<div class="flex flex-col mr-4">
+					<div class="grid grid-cols-3 gap-4 mb-4">
+						<div class="flex flex-col">
 							<label
 								for="email"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -72,7 +72,7 @@
 							/>
 						</div>
 
-						<div class="flex flex-col mr-4">
+						<div class="flex flex-col">
 							<label
 								for="ruc"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -102,8 +102,8 @@
 						</div>
 					</div>
 
-					<div class="grid grid-cols-2 mb-4">
-						<div class="flex flex-col mr-4">
+					<div class="grid grid-cols-2 gap-4 mb-4">
+						<div class="flex flex-col">
 							<label
 								for="direccion"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -130,8 +130,8 @@
 						</div>
 					</div>
 
-					<div class="grid grid-cols-4 mb-10">
-						<div class="flex flex-col mr-4">
+					<div class="grid grid-cols-4 gap-4 mb-10">
+						<div class="flex flex-col">
 							<label
 								for="carga"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -146,7 +146,7 @@
 							/>
 						</div>
 
-						<div class="flex flex-col mr-4">
+						<div class="flex flex-col">
 							<label
 								for="pago"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -161,7 +161,7 @@
 							/>
 						</div>
 
-						<div class="flex flex-col mr-4">
+						<div class="flex flex-col">
 							<label
 								for="comprobante"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -240,19 +240,8 @@ export default {
 			this.comprobantes = comp.data;
 			this.rolesCliente = roles.data;
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 		}
-		AuxiliarService.getDistritos().then(
-			(response) => {
-				this.distritos = response.data;
-			},
-			(error) => {
-				this.roles =
-					(error.response && error.response.data) ||
-					error.message ||
-					error.toString();
-			}
-		);
 	},
 	methods: {
 		handleNuevoCliente() {

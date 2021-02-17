@@ -32,8 +32,13 @@ const routes = [
 	},
 	{
 		path: "/mobikers/equipo-mobiker",
-		name: "EquipoMobikers",
+		name: "EquipoMobiker",
 		component: () => import("@/views/MoBikers/EquipoMobiker.vue"),
+	},
+	{
+		path: "/mobikers/nuevo-mobiker",
+		name: "NuevoMobiker",
+		component: () => import("@/views/MoBikers/NuevoMobiker.vue"),
 	},
 	{
 		path: "/clientes/tablero-clientes",

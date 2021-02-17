@@ -8,12 +8,6 @@ class SystemService {
 		});
 	}
 
-	getMobikers() {
-		return http.get("mobikers/equipo-mobiker", {
-			headers: authHeader(),
-		});
-	}
-
 	getFinanzas() {
 		return http.get("admin", { headers: authHeader() });
 	}

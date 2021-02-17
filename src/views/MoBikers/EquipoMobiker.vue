@@ -4,6 +4,14 @@
 			MoBikers
 		</h1>
 
+		<div class="grid grid-cols-1 bg-gray-200">
+			<router-link to="/mobikers/nuevo-mobiker" custom v-slot="{ navigate }">
+				<span @click="navigate" role="link" class="text-center cursor-pointer"
+					>Crear nuevo mobiker</span
+				>
+			</router-link>
+		</div>
+
 		<div
 			class="flex w-1/3 flex-row flex-wrap my-4 bg-white p-8"
 			v-for="mobiker in mobikers"
@@ -25,7 +33,7 @@
 </template>
 
 <script>
-import SystemService from "@/services/system.service";
+import MobikerService from "@/services/mobiker.service";
 
 export default {
 	data() {
@@ -34,7 +42,7 @@ export default {
 		};
 	},
 	mounted() {
-		SystemService.getMobikers().then(
+		MobikerService.getMobikers().then(
 			(response) => {
 				this.mobikers = response.data;
 			},
