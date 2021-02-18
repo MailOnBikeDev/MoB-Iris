@@ -31,6 +31,11 @@ const routes = [
 		component: () => import("@/views/Pedidos/TableroPedidos.vue"),
 	},
 	{
+		path: "/pedidos/nuevo-pedido",
+		name: "NuevoPedido",
+		component: () => import("@/views/Pedidos/NuevoPedido.vue"),
+	},
+	{
 		path: "/mobikers/equipo-mobiker",
 		name: "EquipoMobiker",
 		component: () => import("@/views/MoBikers/EquipoMobiker.vue"),
@@ -49,6 +54,11 @@ const routes = [
 		path: "/clientes/nuevo-cliente",
 		name: "NuevoCliente",
 		component: () => import("@/views/Clientes/NuevoCliente.vue"),
+	},
+	{
+		path: "/clientes/buscar-cliente",
+		name: "BuscarCliente",
+		component: () => import("@/views/Clientes/BuscarCliente.vue"),
 	},
 	{
 		path: "/finanzas/finanzas",

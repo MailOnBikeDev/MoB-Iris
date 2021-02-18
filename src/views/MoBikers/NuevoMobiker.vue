@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full justify-center items-center">
 		<div
-			class="bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 mt-6 "
+			class="bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 mt-6"
 		>
 			<div class="flex justify-end">
 				<h1

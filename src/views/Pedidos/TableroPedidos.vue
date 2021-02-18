@@ -4,6 +4,14 @@
 			Pedidos
 		</h1>
 
+		<div class="grid grid-cols-1 bg-gray-200">
+			<router-link to="/pedidos/nuevo-pedido" custom v-slot="{ navigate }">
+				<span @click="navigate" role="link" class="text-center cursor-pointer"
+					>Crear nuevo pedido</span
+				>
+			</router-link>
+		</div>
+
 		<ul v-for="pedido in pedidos" :key="pedido.id">
 			<li class="text-white">
 				{{ pedido.id }} / {{ pedido.fecha }} / {{ pedido.contactoRemitente }}

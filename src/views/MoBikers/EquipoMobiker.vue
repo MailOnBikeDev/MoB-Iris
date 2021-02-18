@@ -25,7 +25,32 @@
 
 				<p>
 					<span class="resalta">Nombres: </span>
-					<span>{{ mobiker.nombres }} </span>{{ mobiker.apellidos }}
+					<span>{{ mobiker.fullName }} </span>
+				</p>
+
+				<p>
+					<span class="resalta">Equipo: </span>
+					<span>{{ mobiker.equipo }} </span>
+				</p>
+
+				<p>
+					<span class="resalta">Bicicleta: </span>
+					<span>{{ mobiker.tipoBicicleta }} </span>
+				</p>
+
+				<p>
+					<span class="resalta">Distrito: </span>
+					<span>{{ mobiker.distrito.distrito }} </span>
+				</p>
+
+				<p>
+					<span class="resalta">Bicienvios: </span>
+					<span>{{ mobiker.biciEnvios }} </span>
+				</p>
+
+				<p>
+					<span class="resalta">Kilómetros recorridos: </span>
+					<span>{{ mobiker.kilometros }} </span>
 				</p>
 			</div>
 		</div>

@@ -36,6 +36,16 @@ class ClienteService {
 			console.error(error);
 		}
 	}
+
+	async searchCliente(findCliente) {
+		try {
+			let cliente = await http.get("clientes/buscador-clientes", findCliente);
+
+			return cliente;
+		} catch (error) {
+			console.error(error);
+		}
+	}
 }
 
 export default new ClienteService();
