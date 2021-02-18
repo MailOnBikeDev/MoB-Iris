@@ -55,6 +55,12 @@ class AuxiliarService {
 			headers: authHeader(),
 		});
 	}
+
+	getEntidadesBancarias() {
+		return http.get("auxiliares/entidades-financieras", {
+			headers: authHeader(),
+		});
+	}
 }
 
 export default new AuxiliarService();

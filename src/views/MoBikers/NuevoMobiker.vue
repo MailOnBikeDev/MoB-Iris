@@ -219,9 +219,11 @@
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Entidad Financiera</label
 							>
-							<input
-								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							<model-list-select
+								v-model="nuevoMobiker.banco"
+								:list="entidadesBancarias"
+								option-text="banco"
+								option-value="banco"
 							/>
 						</div>
 
@@ -325,13 +327,16 @@ export default {
 				{ cuenta: "Cuenta de Ahorros" },
 				{ cuenta: "Cuenta Corriente" },
 			],
+			entidadesBancarias: [],
 		};
 	},
 	async mounted() {
 		try {
 			let resDistritos = await AuxiliarService.getDistritos();
+			let resBancos = await AuxiliarService.getEntidadesBancarias();
 
 			this.distritos = resDistritos.data;
+			this.entidadesBancarias = resBancos.data;
 		} catch (error) {
 			console.error(error);
 		}
