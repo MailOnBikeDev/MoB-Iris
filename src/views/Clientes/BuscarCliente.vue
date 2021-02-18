@@ -1,11 +1,32 @@
 <template>
 	<div class="bg-white">
 		<h1>buscar cliente</h1>
-		<form @submit.prevent="handleSearchCliente">
-			<input type="text" class="bg-gray-600" v-model="findCliente" />
-			<button>Buscar</button>
-		</form>
+		<div>
+			<input
+				type="text"
+				class="bg-blue-100 text-white"
+				v-model="findCliente"
+				v-on:keyup.enter="searchCliente"
+			/>
 
+			<button type="button" @click="searchCliente">
+				Buscar
+			</button>
+		</div>
+
+		<div class="grid grid-cols-3 bg-gray-300">
+			<div class="p-8" v-for="cliente in clientes" :key="cliente.id">
+				<div>
+					<h2>Contacto: {{ cliente.contacto }}</h2>
+				</div>
+				<div>
+					<p>Empresa: {{ cliente.empresa }}</p>
+				</div>
+				<div>
+					<p>Distrito: {{ cliente.distrito.distrito }}</p>
+				</div>
+			</div>
+		</div>
 		{{ clientes }}
 	</div>
 </template>
@@ -21,7 +42,7 @@ export default {
 		};
 	},
 	methods: {
-		async handleSearchCliente() {
+		async searchCliente() {
 			try {
 				let clientes = await ClienteService.searchCliente(this.findCliente);
 

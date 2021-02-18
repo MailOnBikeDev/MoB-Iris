@@ -39,7 +39,7 @@ class ClienteService {
 
 	async searchCliente(findCliente) {
 		try {
-			let cliente = await http.get("clientes/buscador-clientes", findCliente);
+			let cliente = await http.get(`clientes?contacto=${findCliente}`);
 
 			return cliente;
 		} catch (error) {
