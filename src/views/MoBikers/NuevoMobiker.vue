@@ -278,25 +278,7 @@ export default {
 	name: "NuevoMobiker",
 	data() {
 		return {
-			nuevoMobiker: new Mobiker(
-				"",
-				"",
-				"",
-				"",
-				"",
-				"",
-				"",
-				"",
-				"",
-				"",
-				"",
-				"",
-				"",
-				"",
-				"",
-				"",
-				""
-			),
+			nuevoMobiker: new Mobiker(),
 			submitted: false,
 			successful: false,
 			message: "",

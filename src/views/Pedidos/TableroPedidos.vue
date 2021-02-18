@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import SystemService from "@/services/system.service";
+import PedidoService from "@/services/pedido.service";
 
 export default {
 	name: "Pedidos",
@@ -33,7 +33,7 @@ export default {
 		};
 	},
 	mounted() {
-		SystemService.getPedidos().then(
+		PedidoService.getPedidos().then(
 			(response) => {
 				this.pedidos = response.data;
 			},

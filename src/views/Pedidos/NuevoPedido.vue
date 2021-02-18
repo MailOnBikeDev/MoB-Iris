@@ -11,18 +11,32 @@
 				</h1>
 			</div>
 
-			<form class="mt-4">
+			<form class="mt-4" @submit.prevent="handleNuevoPedido" autocomplete="off">
 				<div v-if="!successful" class="grid grid-cols-2 grid-flow-col gap-4">
 					<div class="grid-cols-6 grid-flow-col">
 						<h2>Cliente (Origen)</h2>
 
 						<div class="grid-cols-6 grid-flow-col gap-4 mb-4">
 							<label
-								for="contacto"
+								for="fecha"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>contacto</label
+								>Fecha</label
 							>
 							<input
+								v-model="nuevoPedido.fecha"
+								type="date"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
+						</div>
+
+						<div class="grid-cols-6 grid-flow-col gap-4 mb-4">
+							<label
+								for="contactoRemitente"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Contacto</label
+							>
+							<input
+								v-model="nuevoPedido.contactoRemitente"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -30,11 +44,12 @@
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="contacto"
+								for="empresaRemitente"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>empresa</label
+								>Empresa</label
 							>
 							<input
+								v-model="nuevoPedido.empresaRemitente"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -42,11 +57,12 @@
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="contacto"
+								for="telefonoRemitente"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>telefono</label
+								>Telefono</label
 							>
 							<input
+								v-model="nuevoPedido.telefonoRemitente"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -54,11 +70,12 @@
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="contacto"
+								for="direccionRemitente"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>direccion</label
+								>Direccion</label
 							>
 							<input
+								v-model="nuevoPedido.direccionRemitente"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -66,23 +83,28 @@
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="contacto"
+								for="distritoRemitente"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>distrito</label
+								>Distrito</label
 							>
-							<input
-								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							<model-list-select
+								name="distrito"
+								v-model="nuevoPedido.distritoRemitente"
+								placeholder="Buscar distrito..."
+								:list="distritos"
+								option-text="distrito"
+								option-value="distrito"
 							/>
 						</div>
 
 						<div class="ggrid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="contacto"
+								for="otroDatoRemitente"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>otro Dato</label
+								>Otro Dato</label
 							>
 							<input
+								v-model="nuevoPedido.otroDatoRemitente"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -90,51 +112,65 @@
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="contacto"
+								for="tipoCarga"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>tipo de carga</label
+								>Tipo de Carga</label
 							>
-							<input
-								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							<model-list-select
+								name="carga"
+								v-model="nuevoPedido.tipoCarga"
+								:list="tiposDeCarga"
+								option-text="tipo"
+								option-value="tipo"
 							/>
 						</div>
 
-						<div class="grid-cols-2 grid-flow-row gap-4 mb-4">
+						<div class="grid-cols-2 gap-4 mb-4">
 							<label
-								for="contacto"
+								for="tarifa"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Tarifa</label
 							>
+							<input
+								v-model="nuevoPedido.tarifa"
+								type="number"
+								class="bg-white rounded  text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
 
 							<label
-								for="contacto"
+								for="tarifaSugerida"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Tarifa Sugerida</label
 							>
+							<p></p>
 						</div>
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="contacto"
+								for="formaPago"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>forma de pago</label
+								>Forma de pago</label
 							>
-							<input
-								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							<model-list-select
+								name="pago"
+								v-model="nuevoPedido.formaPago"
+								:list="formasDePago"
+								option-text="pago"
+								option-value="pago"
 							/>
 						</div>
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="contacto"
+								for="rol"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Rol</label
 							>
-							<input
-								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							<model-list-select
+								name="pago"
+								:list="rolesCliente"
+								option-text="rol"
+								option-value="rol"
 							/>
 						</div>
 					</div>
@@ -144,11 +180,12 @@
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="nombres"
+								for="contactoConsignado"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Contacto</label
 							>
 							<input
+								v-model="nuevoPedido.contactoConsignado"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -156,11 +193,12 @@
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="nombres"
+								for="empresaConsignado"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Empresa</label
 							>
 							<input
+								v-model="nuevoPedido.empresaConsignado"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -168,11 +206,12 @@
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="nombres"
+								for="direccionConsignado"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>dirección</label
+								>Dirección</label
 							>
 							<input
+								v-model="nuevoPedido.direccionConsignado"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -180,23 +219,28 @@
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="nombres"
+								for="distritoConsignado"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Distrito</label
 							>
-							<input
-								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							<model-list-select
+								name="distrito"
+								v-model="nuevoPedido.distritoConsignado"
+								placeholder="Buscar distrito..."
+								:list="distritos"
+								option-text="distrito"
+								option-value="distrito"
 							/>
 						</div>
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="nombres"
+								for="telefonoConsignado"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Teléfono</label
 							>
 							<input
+								v-model="nuevoPedido.telefonoConsignado"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -204,11 +248,12 @@
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="nombres"
+								for="otroDatoConsignado"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Otro Dato</label
 							>
 							<input
+								v-model="nuevoPedido.otroDatoConsignado"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -216,23 +261,28 @@
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="nombres"
+								for="mobiker"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Mobiker</label
 							>
-							<input
-								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							<model-list-select
+								name="distrito"
+								v-model="nuevoPedido.mobiker"
+								placeholder="Buscar distrito..."
+								:list="mobikers"
+								option-text="fullName"
+								option-value="fullName"
 							/>
 						</div>
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="nombres"
+								for="comision"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Comisión</label
 							>
 							<input
+								v-model="nuevoPedido.comision"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
@@ -240,16 +290,92 @@
 
 						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
-								for="nombres"
+								for="modalidad"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
 								>Modalidad</label
 							>
+							<model-list-select
+								name="distrito"
+								v-model="nuevoPedido.modalidad"
+								:list="modalidades"
+								option-text="tipo"
+								option-value="tipo"
+							/>
+						</div>
+
+						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
+							<label
+								for="distancia"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Distancia</label
+							>
 							<input
+								v-model="nuevoPedido.distancia"
 								type="text"
 								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
 							/>
 						</div>
+
+						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
+							<label
+								for="CO2Ahorrado"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>CO2 Ahorrado</label
+							>
+							<input
+								v-model="nuevoPedido.CO2Ahorrado"
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
+						</div>
+
+						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
+							<label
+								for="ruido"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Ruido Ahorrado</label
+							>
+							<input
+								v-model="nuevoPedido.ruido"
+								type="text"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
+						</div>
+
+						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
+							<label
+								for="status"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Estado</label
+							>
+							<input
+								v-model="nuevoPedido.status"
+								type="number"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
+						</div>
+
+						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
+							<label
+								for="statusFinanciero"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Estado Financiero</label
+							>
+							<input
+								v-model="nuevoPedido.statusFinanciero"
+								type="number"
+								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+							/>
+						</div>
 					</div>
+				</div>
+
+				<div class="grid grid-cols-1 mb-4">
+					<button
+						class="block w-full bg-info hover:bg-blue-600 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
+					>
+						Crear Nuevo Pedido
+					</button>
 				</div>
 			</form>
 		</div>
@@ -257,5 +383,60 @@
 </template>
 
 <script>
-export default {};
+import Pedido from "@/models/pedido";
+import { ModelListSelect } from "vue-search-select";
+import AuxiliarService from "@/services/auxiliares.service";
+import MobikerService from "@/services/mobiker.service";
+import PedidoService from "@/services/pedido.service";
+
+export default {
+	data() {
+		return {
+			nuevoPedido: new Pedido(),
+			submitted: false,
+			successful: false,
+			message: "",
+			distritos: [],
+			tiposDeCarga: [],
+			formasDePago: [],
+			rolesCliente: [],
+			modalidades: [],
+			mobikers: [],
+		};
+	},
+	async mounted() {
+		try {
+			let resDistritos = await AuxiliarService.getDistritos();
+			let resCarga = await AuxiliarService.getTipoCarga();
+			let pagos = await AuxiliarService.getFormasPago();
+			let roles = await AuxiliarService.getRolCliente();
+			let modalidad = await AuxiliarService.getModalidad();
+
+			let mobiker = await MobikerService.getMobikers();
+
+			this.distritos = resDistritos.data;
+			this.tiposDeCarga = resCarga.data;
+			this.formasDePago = pagos.data;
+			this.rolesCliente = roles.data;
+			this.modalidades = modalidad.data;
+
+			this.mobikers = mobiker.data;
+		} catch (error) {
+			console.error(error);
+		}
+	},
+	methods: {
+		handleNuevoPedido() {
+			PedidoService.storageNuevoPedido(this.nuevoPedido).then(
+				() => {
+					this.$router.push("/pedidos/tablero-pedidos");
+				},
+				(err) => console.log(err)
+			);
+		},
+	},
+	components: {
+		ModelListSelect,
+	},
+};
 </script>

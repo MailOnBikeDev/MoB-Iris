@@ -215,7 +215,7 @@ export default {
 	name: "NuevoCliente",
 	data() {
 		return {
-			nuevoCliente: new Cliente("", "", "", "", "", "", "", "", "", "", "", ""),
+			nuevoCliente: new Cliente(),
 			submitted: false,
 			successful: false,
 			message: "",
