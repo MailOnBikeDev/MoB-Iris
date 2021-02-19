@@ -12,46 +12,48 @@
 			</router-link>
 		</div>
 
-		<div
-			class="flex w-1/3 flex-row flex-wrap my-4 bg-white p-8"
-			v-for="mobiker in mobikers"
-			:key="mobiker.id"
-		>
-			<div class="block">
-				<p>
-					<span class="resalta">ID: </span>
-					<span>{{ mobiker.id }}</span>
-				</p>
+		<div class="grid grid-cols-3 gap-4">
+			<div
+				class="mt-4 bg-white p-8"
+				v-for="mobiker in mobikers"
+				:key="mobiker.id"
+			>
+				<div class="block">
+					<p>
+						<span class="resalta">ID: </span>
+						<span>{{ mobiker.id }}</span>
+					</p>
 
-				<p>
-					<span class="resalta">Nombres: </span>
-					<span>{{ mobiker.fullName }} </span>
-				</p>
+					<p>
+						<span class="resalta">Nombres: </span>
+						<span>{{ mobiker.fullName }} </span>
+					</p>
 
-				<p>
-					<span class="resalta">Equipo: </span>
-					<span>{{ mobiker.equipo }} </span>
-				</p>
+					<p>
+						<span class="resalta">Equipo: </span>
+						<span>{{ mobiker.equipo }} </span>
+					</p>
 
-				<p>
-					<span class="resalta">Bicicleta: </span>
-					<span>{{ mobiker.tipoBicicleta }} </span>
-				</p>
+					<p>
+						<span class="resalta">Bicicleta: </span>
+						<span>{{ mobiker.tipoBicicleta }} </span>
+					</p>
 
-				<p>
-					<span class="resalta">Distrito: </span>
-					<span>{{ mobiker.distrito.distrito }} </span>
-				</p>
+					<p>
+						<span class="resalta">Distrito: </span>
+						<span>{{ mobiker.distrito.distrito }} </span>
+					</p>
 
-				<p>
-					<span class="resalta">Bicienvios: </span>
-					<span>{{ mobiker.biciEnvios }} </span>
-				</p>
+					<p>
+						<span class="resalta">Bicienvios: </span>
+						<span>{{ mobiker.biciEnvios }} </span>
+					</p>
 
-				<p>
-					<span class="resalta">Kilómetros recorridos: </span>
-					<span>{{ mobiker.kilometros }} </span>
-				</p>
+					<p>
+						<span class="resalta">Kilómetros recorridos: </span>
+						<span>{{ mobiker.kilometros }} </span>
+					</p>
+				</div>
 			</div>
 		</div>
 	</div>

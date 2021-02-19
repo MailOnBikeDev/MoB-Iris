@@ -12,13 +12,22 @@
 			</router-link>
 		</div>
 
-		<ul v-for="pedido in pedidos" :key="pedido.id">
-			<li class="text-white">
-				{{ pedido.id }} / {{ pedido.fecha }} / {{ pedido.contactoRemitente }}
-			</li>
-		</ul>
+		<div class="flex-row text-center bg-white p-4 mt-2">
+			<p>
+				id / fecha / cliente / origen / destinatario / destino / mobiker
+			</p>
+		</div>
 
-		<p class="text-white">{{ pedidos }}</p>
+		<div>
+			<ul v-for="pedido in pedidos" :key="pedido.id">
+				<li class="bg-white text-blue-600 p-4 mt-2">
+					{{ pedido.id }} / {{ pedido.fecha }} /
+					{{ pedido.contactoRemitente }} / {{ pedido.distritoRemitente }} /
+					{{ pedido.contactoConsignado }} / {{ pedido.distrito.distrito }} /
+					{{ pedido.mobiker.fullName }}
+				</li>
+			</ul>
+		</div>
 	</div>
 </template>
 

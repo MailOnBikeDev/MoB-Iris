@@ -10,6 +10,18 @@
 					Nuevo Pedido
 				</h1>
 			</div>
+			<div>
+				<input
+					type="text"
+					class="bg-blue-100 text-white"
+					v-model="cliente"
+					v-on:keyup.enter="searchCliente"
+				/>
+
+				<button type="button" @click="searchCliente">
+					Buscar
+				</button>
+			</div>
 
 			<form class="mt-4" @submit.prevent="handleNuevoPedido" autocomplete="off">
 				<div v-if="!successful" class="grid grid-cols-2 grid-flow-col gap-4">
@@ -97,7 +109,7 @@
 							/>
 						</div>
 
-						<div class="ggrid-cols-1 grid-flow-col gap-4 mb-4">
+						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
 							<label
 								for="otroDatoRemitente"
 								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
@@ -152,7 +164,7 @@
 								>Forma de pago</label
 							>
 							<model-list-select
-								name="pago"
+								name="formaPago"
 								v-model="nuevoPedido.formaPago"
 								:list="formasDePago"
 								option-text="pago"
@@ -171,6 +183,21 @@
 								:list="rolesCliente"
 								option-text="rol"
 								option-value="rol"
+							/>
+						</div>
+
+						<div class="grid-cols-1 grid-flow-col gap-4 mb-4">
+							<label
+								for="tipoEnvio"
+								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								>Tipo de Envío</label
+							>
+							<model-list-select
+								name="tipoEnvio"
+								v-model="nuevoPedido.tipoEnvio"
+								:list="tiposDeEnvio"
+								option-text="tipo"
+								option-value="tipo"
 							/>
 						</div>
 					</div>
@@ -387,6 +414,7 @@ import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
 import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
+import ClienteService from "@/services/cliente.service";
 import PedidoService from "@/services/pedido.service";
 
 export default {
@@ -396,12 +424,14 @@ export default {
 			submitted: false,
 			successful: false,
 			message: "",
+			cliente: "",
 			distritos: [],
 			tiposDeCarga: [],
 			formasDePago: [],
 			rolesCliente: [],
 			modalidades: [],
 			mobikers: [],
+			tiposDeEnvio: [],
 		};
 	},
 	async mounted() {
@@ -411,6 +441,7 @@ export default {
 			let pagos = await AuxiliarService.getFormasPago();
 			let roles = await AuxiliarService.getRolCliente();
 			let modalidad = await AuxiliarService.getModalidad();
+			let envios = await AuxiliarService.getTipoEnvio();
 
 			let mobiker = await MobikerService.getMobikers();
 
@@ -419,6 +450,7 @@ export default {
 			this.formasDePago = pagos.data;
 			this.rolesCliente = roles.data;
 			this.modalidades = modalidad.data;
+			this.tiposDeEnvio = envios.data;
 
 			this.mobikers = mobiker.data;
 		} catch (error) {
@@ -433,6 +465,25 @@ export default {
 				},
 				(err) => console.log(err)
 			);
+		},
+
+		async searchCliente() {
+			try {
+				let findCliente = await ClienteService.searchCliente(this.cliente);
+
+				// console.log(findCliente.data[0]);
+				this.cliente = findCliente.data[0];
+				this.nuevoPedido.contactoRemitente = this.cliente.contacto;
+				this.nuevoPedido.empresaRemitente = this.cliente.empresa;
+				this.nuevoPedido.telefonoRemitente = this.cliente.telefono;
+				this.nuevoPedido.direccionRemitente = this.cliente.direccion;
+				this.nuevoPedido.distritoRemitente = this.cliente.distrito.distrito;
+				this.nuevoPedido.otroDatoRemitente = this.cliente.otroDato;
+				this.nuevoPedido.tipoCarga = this.cliente.tipoDeCarga.tipo;
+				this.nuevoPedido.formaPago = this.cliente.formaDePago.pago;
+			} catch (error) {
+				console.error(error);
+			}
 		},
 	},
 	components: {
