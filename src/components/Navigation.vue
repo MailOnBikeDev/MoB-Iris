@@ -1,5 +1,5 @@
 <template>
-	<nav class="bg-secondary flex px-6 py-2 text-white items-center">
+	<nav class="bg-secondary flex px-6 py-2 text-white items-center z-40">
 		<div>
 			<router-link to="/" custom v-slot="{ navigate }">
 				<img
@@ -30,7 +30,7 @@
 			<!-- Dropdown Menu -->
 			<div>
 				<button
-					class="py-2 px-4 text-white bg-info rounded-xl font-bold active:bg-blue-400 focus:oultine-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50"
+					class="py-2 px-4 text-white bg-info rounded-xl font-bold focus:outline-none"
 					@click="dropMenu = !dropMenu"
 				>
 					{{ currentUser.username }}
@@ -38,7 +38,7 @@
 
 				<div
 					v-if="dropMenu"
-					class="sub-menu flex flex-col bg-white text-black shadow-xl rounded mt-1 text-sm absolute -translate-x-1/2"
+					class="sub-menu flex flex-col bg-white text-black shadow-xl rounded mt-1 text-sm absolute -translate-x-1/2 z-40"
 					v-click-outside="clickExterno"
 				>
 					<div

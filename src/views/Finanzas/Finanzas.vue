@@ -1,9 +1,5 @@
 <template>
-	<div class="w-full p-4">
-		<h1 class="text-primary bg-white w-full font-bold text-2xl p-2">
-			Finanzas
-		</h1>
-	</div>
+	<div class="w-full max-h-screen p-10 bg-white mt-10 bg-opacity-30"></div>
 </template>
 
 <script>

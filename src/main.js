@@ -8,15 +8,17 @@ import vClickOutside from "v-click-outside";
 import "vue-search-select/dist/VueSearchSelect.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
+import VueDayjs from "vue-dayjs-plugin";
 
-library.add(faChevronDown);
+library.add(faPencilAlt);
 
 Vue.config.productionTip = false;
 
 Vue.use(VeeValidate);
 Vue.use(vClickOutside);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
+Vue.use(VueDayjs);
 
 new Vue({
 	router,
