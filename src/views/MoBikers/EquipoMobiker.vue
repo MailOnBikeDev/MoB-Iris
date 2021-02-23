@@ -53,6 +53,11 @@
 						<span class="resalta">Kilómetros recorridos: </span>
 						<span>{{ mobiker.kilometros }} </span>
 					</p>
+
+					<p>
+						<span class="resalta">Rango: </span>
+						<span>{{ mobiker.rango.rangoMoBiker }} </span>
+					</p>
 				</div>
 			</div>
 		</div>

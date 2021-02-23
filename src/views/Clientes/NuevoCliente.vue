@@ -1,16 +1,6 @@
 <template>
-	<div class="w-full justify-center items-center">
-		<div
-			class="bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 mt-6"
-		>
-			<div class="flex justify-end">
-				<h1
-					class="inline-block bg-primary text-white text-center font-bold px-4 py-2 rounded-xl"
-				>
-					Nuevo Cliente
-				</h1>
-			</div>
-
+	<div class="w-full">
+		<div class="bg-gray-100 shadow-lg rounded-xl mx-auto py-4 px-8 mt-6">
 			<form
 				class="mt-4"
 				@submit.prevent="handleNuevoCliente"
@@ -21,39 +11,39 @@
 						<div class="flex flex-col">
 							<label
 								for="contacto"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								class="block text-primary text-sm font-bold mb-1 ml-1"
 								>Contacto</label
 							>
 							<input
 								v-model="nuevoCliente.contacto"
 								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+								class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
 							/>
 						</div>
 
 						<div class="flex flex-col">
 							<label
 								for="empresa"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								class="block text-primary text-sm font-bold mb-1 ml-1"
 								>Razón Social</label
 							>
 							<input
 								v-model="nuevoCliente.empresa"
 								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+								class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
 							/>
 						</div>
 
 						<div class="flex flex-col">
 							<label
 								for="telefono"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								class="block text-primary text-sm font-bold mb-1 ml-1"
 								>Teléfono</label
 							>
 							<input
 								v-model="nuevoCliente.telefono"
 								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+								class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
 							/>
 						</div>
 					</div>
@@ -62,33 +52,33 @@
 						<div class="flex flex-col">
 							<label
 								for="email"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								class="block text-primary text-sm font-bold mb-1 ml-1"
 								>Email</label
 							>
 							<input
 								v-model="nuevoCliente.email"
 								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+								class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
 							/>
 						</div>
 
 						<div class="flex flex-col">
 							<label
 								for="ruc"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								class="block text-primary text-sm font-bold mb-1 ml-1"
 								>RUC</label
 							>
 							<input
 								v-model="nuevoCliente.ruc"
 								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+								class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
 							/>
 						</div>
 
 						<div class="flex flex-col">
 							<label
 								for="distrito"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								class="block text-primary text-sm font-bold mb-1 ml-1"
 								>Distrito</label
 							>
 							<model-list-select
@@ -106,26 +96,26 @@
 						<div class="flex flex-col">
 							<label
 								for="direccion"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								class="block text-primary text-sm font-bold mb-1 ml-1"
 								>Dirección</label
 							>
 							<input
 								v-model="nuevoCliente.direccion"
 								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+								class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
 							/>
 						</div>
 
 						<div class="flex flex-col">
 							<label
 								for="otroDato"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								class="block text-primary text-sm font-bold mb-1 ml-1"
 								>Otro Dato</label
 							>
 							<input
 								v-model="nuevoCliente.otroDato"
 								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-2 py-2"
+								class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
 							/>
 						</div>
 					</div>
@@ -134,7 +124,7 @@
 						<div class="flex flex-col">
 							<label
 								for="carga"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								class="block text-primary text-sm font-bold mb-1 ml-1"
 								>Tipo de Carga</label
 							>
 							<model-list-select
@@ -149,7 +139,7 @@
 						<div class="flex flex-col">
 							<label
 								for="pago"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								class="block text-primary text-sm font-bold mb-1 ml-1"
 								>Forma de Pago</label
 							>
 							<model-list-select
@@ -164,7 +154,7 @@
 						<div class="flex flex-col">
 							<label
 								for="comprobante"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								class="block text-primary text-sm font-bold mb-1 ml-1"
 								>Comprobante</label
 							>
 							<model-list-select
@@ -179,7 +169,7 @@
 						<div class="flex flex-col">
 							<label
 								for="rol"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
+								class="block text-primary text-sm font-bold mb-1 ml-1"
 								>Rol</label
 							>
 							<model-list-select
@@ -245,6 +235,8 @@ export default {
 	},
 	methods: {
 		handleNuevoCliente() {
+			this.message = "";
+			this.submitted = true;
 			ClienteService.storageNuevoCliente(this.nuevoCliente).then(
 				() => {
 					this.$router.push("/clientes/tablero-clientes");

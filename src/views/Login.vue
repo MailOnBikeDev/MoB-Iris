@@ -1,51 +1,57 @@
 <template>
-	<div class="w-full flex flex-col justify-center items-center mt-6 mb-40">
+	<div class="w-full flex flex-col justify-center items-center mt-28">
 		<div
-			class="max-w-lg bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 flex flex-col justify-center"
+			class="max-w-lg bg-gray-100 shadow-lg rounded-xl mx-auto py-4 px-8 flex flex-col justify-center"
 		>
 			<img
 				id="profile-img"
 				src="@/assets/MoB-logo.png"
 				alt="Mail On Bike Logo"
-				class="w-40 mx-auto"
+				class="w-40 mx-auto relative -top-24"
 			/>
-			<form name="form" @submit.prevent="handleLogin" autocomplete="off">
-				<div class="my-6 pt-3 rounded">
+			<form class="-mt-16" @submit.prevent="handleLogin" autocomplete="off">
+				<div class="rounded">
 					<label
 						for="username"
-						class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-						>Username</label
+						class="block text-primary text-sm font-bold mb-1 ml-1"
+						>Usuario</label
 					>
 					<input
 						v-model="user.username"
 						v-validate="'required'"
 						type="text"
 						name="username"
-						class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
 					/>
-					<div v-if="errors.has('username')">
-						Username is required!
+					<div
+						v-if="errors.has('username')"
+						class="bg-red-500 text-white text-sm rounded p-2"
+					>
+						<p>El usuario es requerido</p>
 					</div>
 				</div>
 
-				<div class="my-6 pt-3 rounded">
+				<div class="my-6 rounded">
 					<label
 						for="password"
-						class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-						>Password</label
+						class="block text-primary text-sm font-bold mb-1 ml-1"
+						>Contraseña</label
 					>
 					<input
 						v-model="user.password"
 						v-validate="'required'"
 						type="password"
 						name="password"
-						class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
 					/>
-					<div v-if="errors.has('password')">
-						Password is required!
+					<div
+						v-if="errors.has('password')"
+						class="bg-red-500 text-white text-sm rounded p-2"
+					>
+						<p>La contraseña es requerida</p>
 					</div>
 					<button
-						class="flex-row w-full mt-10 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
+						class="block w-full my-6 bg-info hover:bg-secondary text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 					>
 						<span>Iniciar Sesión</span>
 					</button>

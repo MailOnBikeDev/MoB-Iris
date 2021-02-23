@@ -1,8 +1,8 @@
 <template>
-	<div class="w-full max-h-screen p-10 bg-white mt-10 bg-opacity-30">
+	<div class="w-full max-h-screen p-4 bg-white mt-10 bg-opacity-30">
 		<div class="flex justify-end">
 			<h1
-				class="inline-block bg-primary text-white text-center font-bold px-4 py-2 rounded-xl relative -top-14"
+				class="inline-block bg-primary text-white text-center font-bold px-4 py-2 rounded-xl relative -top-8"
 			>
 				Tablero de Pedidos
 			</h1>
@@ -13,14 +13,29 @@
 				buscador
 			</div>
 			<div
-				class="col-span-3 flex flex-row text-sm justify-between pr-20 font-bold"
+				class="col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center"
 			>
-				<p># Pedido</p>
-				<p>Origen</p>
-				<p>Destino</p>
-				<p>MoBiker</p>
-				<p>Estado</p>
-				<p>Fecha</p>
+				<div>
+					<p># Pedido</p>
+				</div>
+				<div>
+					<p>Origen</p>
+				</div>
+				<div>
+					<p>Destino</p>
+				</div>
+				<div>
+					<p>MoBiker</p>
+				</div>
+				<div>
+					<p>Estado</p>
+				</div>
+				<div>
+					<p>Fecha</p>
+				</div>
+				<div>
+					<p>Editar</p>
+				</div>
 			</div>
 			<div class="bg-white p-4">
 				<h2 class="text-3xl text-primary font-bold mb-4">
@@ -54,18 +69,34 @@
 
 			<div class="bg-white col-span-3 overscroll-auto">
 				<div
-					class="flex flex-row justify-between px-4 text-sm mt-2 hover:bg-blue-400"
+					class="inline-grid grid-cols-7 gap-x-1 text-center text-sm py-1 hover:bg-blue-400 items-center"
 					v-for="pedido in pedidos"
 					:key="pedido.id"
 					@click="expandPedido"
 				>
-					<p class="mx-4">{{ pedido.id }}</p>
-					<p>{{ pedido.distritoRemitente }}</p>
-					<p>{{ pedido.distrito.distrito }}</p>
-					<p>{{ pedido.mobiker.fullName }}</p>
-					<p>{{ pedido.status.codigo }}</p>
-					<p>{{ $date(pedido.fecha).format("DD/MM/YYYY") }}</p>
-					<font-awesome-icon icon="pencil-alt" />
+					<div>
+						<p>{{ pedido.id }}</p>
+					</div>
+					<div>
+						<p>{{ pedido.distritoRemitente }}</p>
+					</div>
+					<div>
+						<p>{{ pedido.distrito.distrito }}</p>
+					</div>
+					<div>
+						<p>{{ pedido.mobiker.fullName }}</p>
+					</div>
+					<div>
+						<p class="bg-red-400 rounded inline px-4 py-1">
+							{{ pedido.status.codigo }}
+						</p>
+					</div>
+					<div>
+						<p>{{ $date(pedido.fecha).format("DD/MM/YYYY") }}</p>
+					</div>
+					<div>
+						<font-awesome-icon icon="pencil-alt" />
+					</div>
 				</div>
 			</div>
 		</div>
