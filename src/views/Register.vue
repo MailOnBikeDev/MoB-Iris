@@ -117,7 +117,7 @@
 					</div>
 
 					<div class="flex flex-row">
-						<div class="mb-2 rounded mx-auto">
+						<div class="mx-auto">
 							<label
 								for="roles"
 								class="block text-primary text-sm font-bold mb-2 ml-1"
@@ -142,7 +142,7 @@
 					</div>
 
 					<button
-						class="block w-full mt-4 bg-info hover:bg-secondary text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 mb-4 focus:outline-none"
+						class="block mx-auto my-4 bg-info hover:bg-secondary text-white font-bold px-8 py-2 rounded shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 					>
 						Crear Nuevo Usuario
 					</button>
