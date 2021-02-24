@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full max-h-screen p-4 bg-white mt-10 bg-opacity-30">
+	<div class="w-full max-h-screen p-4 bg-white mt-6 bg-opacity-30">
 		<div class="flex justify-end">
 			<h1
 				class="inline-block bg-primary text-white text-center font-bold px-4 py-2 rounded-xl relative -top-8"
@@ -42,37 +42,76 @@
 					Cliente
 				</h2>
 
-				<div class="flex flex-col text-sm">
+				<div class="flex flex-col text-sm h-80" v-if="currentPedido">
 					<p class="mb-2">
-						<span class="resalta">Contacto: </span>Patricia Guerrero
+						<span class="resalta">Contacto: </span>
+						{{ currentPedido.contactoRemitente }}
 					</p>
 					<p class="mb-2">
-						<span class="resalta">Empresa: </span> Funny Market
+						<span class="resalta">Empresa: </span
+						>{{ currentPedido.empresaRemitente }}
 					</p>
 					<p class="mb-2">
-						<span class="resalta">Dirección: </span>Calle Delucchi 101 B
-					</p>
-					<p class="mb-2"><span class="resalta">Distrito: </span>Barranco</p>
-					<p class="mb-2"><span class="resalta">Teléfono: </span>909141303</p>
-					<p class="mb-2">
-						<span class="resalta">Otro dato: </span>Recoger antes de las 10:30
-						am
+						<span class="resalta">Dirección: </span
+						>{{ currentPedido.direccionRemitente }}
 					</p>
 					<p class="mb-2">
-						<span class="resalta">Forma de Pago: </span>Transferencia
+						<span class="resalta">Distrito: </span
+						>{{ currentPedido.distritoRemitente }}
 					</p>
-					<p class="mb-2"><span class="resalta">Tarifa: </span>S/. 7.00</p>
-					<p class="mb-2"><span class="resalta">Modalidad: </span>Una vía</p>
+					<p class="mb-2">
+						<span class="resalta">Teléfono: </span
+						>{{ currentPedido.telefonoRemitente }}
+					</p>
+					<p class="mb-2">
+						<span class="resalta">Otro dato: </span
+						>{{ currentPedido.otroDatoRemitente }}
+					</p>
+					<p class="mb-2">
+						<span class="resalta">Forma de Pago: </span
+						>{{ currentPedido.formaPago }}
+					</p>
+					<p class="mb-2">
+						<span class="resalta">Tarifa: </span>S/.
+						{{ currentPedido.tarifa }}
+					</p>
+					<p class="mb-2">
+						<span class="resalta">Modalidad: </span
+						>{{ currentPedido.modalidad.tipo }}
+					</p>
 					<p class="mb-2"><span class="resalta">Rol: </span>Remitente</p>
+				</div>
+
+				<div class="flex flex-col text-sm h-80" v-else>
+					<p class="mb-2">
+						<span class="resalta">Contacto: </span>
+					</p>
+					<p class="mb-2">
+						<span class="resalta">Empresa: </span>
+					</p>
+					<p class="mb-2">
+						<span class="resalta">Dirección: </span>
+					</p>
+					<p class="mb-2"><span class="resalta">Distrito: </span></p>
+					<p class="mb-2"><span class="resalta">Teléfono: </span></p>
+					<p class="mb-2">
+						<span class="resalta">Otro dato: </span>
+					</p>
+					<p class="mb-2">
+						<span class="resalta">Forma de Pago: </span>
+					</p>
+					<p class="mb-2"><span class="resalta">Tarifa: </span>S/.</p>
+					<p class="mb-2"><span class="resalta">Modalidad: </span></p>
+					<p class="mb-2"><span class="resalta">Rol: </span></p>
 				</div>
 			</div>
 
 			<div class="bg-white col-span-3 overscroll-auto">
 				<div
-					class="inline-grid grid-cols-7 gap-x-1 text-center text-sm py-1 hover:bg-blue-400 items-center"
+					class="grid grid-cols-7 gap-x-1 text-center text-sm py-1 hover:bg-info items-center"
 					v-for="pedido in pedidos"
 					:key="pedido.id"
-					@click="expandPedido"
+					@click="setActiveCliente(pedido, pedido.id)"
 				>
 					<div>
 						<p>{{ pedido.id }}</p>
@@ -119,7 +158,8 @@ export default {
 	data() {
 		return {
 			pedidos: [],
-			clienteActual: {},
+			currentPedido: null,
+			currentIndex: -1,
 		};
 	},
 	mounted() {
@@ -136,8 +176,10 @@ export default {
 		);
 	},
 	methods: {
-		expandPedido() {
-			console.log(event);
+		setActiveCliente(pedido, index) {
+			this.currentPedido = pedido;
+			this.currentIndex = index;
+			console.log("Pedido actual", this.currentPedido);
 		},
 	},
 };

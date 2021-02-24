@@ -37,9 +37,47 @@ class ClienteService {
 		}
 	}
 
+	async getClienteById(id) {
+		try {
+			let cliente = await http.get(`clientes/tablero-clientes/${id}`, {
+				headers: authHeader(),
+			});
+
+			return cliente;
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	async editCliente(id, clienteEditado) {
+		try {
+			let editarCliente = await http.put(`clientes/tablero-clientes/${id}`, {
+				contacto: clienteEditado.contacto,
+				empresa: clienteEditado.empresa,
+				telefono: clienteEditado.telefono,
+				email: clienteEditado.email,
+				ruc: clienteEditado.ruc,
+				distrito: clienteEditado.distrito,
+				direccion: clienteEditado.direccion,
+				otroDato: clienteEditado.otroDato,
+				carga: clienteEditado.carga,
+				pago: clienteEditado.pago,
+				comprobante: clienteEditado.comprobante,
+				rol: clienteEditado.rol,
+			});
+
+			return editarCliente;
+		} catch (error) {
+			console.log(clienteEditado);
+			console.error(error.message);
+		}
+	}
+
 	async searchCliente(findCliente) {
 		try {
-			let cliente = await http.get(`clientes?contacto=${findCliente}`);
+			let cliente = await http.get(`clientes?contacto=${findCliente}`, {
+				headers: authHeader(),
+			});
 
 			return cliente;
 		} catch (error) {

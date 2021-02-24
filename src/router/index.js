@@ -56,6 +56,11 @@ const routes = [
 		component: () => import("@/views/Clientes/NuevoCliente.vue"),
 	},
 	{
+		path: "/clientes/tablero-clientes/:id",
+		name: "EditarCliente",
+		component: () => import("@/views/Clientes/EditarCliente.vue"),
+	},
+	{
 		path: "/clientes/buscar-cliente",
 		name: "BuscarCliente",
 		component: () => import("@/views/Clientes/BuscarCliente.vue"),
