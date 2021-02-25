@@ -329,8 +329,10 @@ export default {
 					return;
 				} else {
 					ClienteService.storageNuevoCliente(this.nuevoCliente).then(
-						() => {
+						(response) => {
 							this.$router.push("/clientes/tablero-clientes");
+							console.log(response.data.message);
+							this.message = response.data.message;
 						},
 						(err) => console.log(err)
 					);

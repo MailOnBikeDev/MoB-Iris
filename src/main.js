@@ -8,10 +8,10 @@ import vClickOutside from "v-click-outside";
 import "vue-search-select/dist/VueSearchSelect.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
+import { faPencilAlt, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import VueDayjs from "vue-dayjs-plugin";
 
-library.add(faPencilAlt);
+library.add(faPencilAlt, faSyncAlt);
 
 Vue.config.productionTip = false;
 

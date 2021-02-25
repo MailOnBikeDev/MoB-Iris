@@ -57,7 +57,7 @@ class ClienteService {
 				telefono: clienteEditado.telefono,
 				email: clienteEditado.email,
 				ruc: clienteEditado.ruc,
-				distrito: clienteEditado.distrito,
+				distrito: clienteEditado.distrito.distrito,
 				direccion: clienteEditado.direccion,
 				otroDato: clienteEditado.otroDato,
 				carga: clienteEditado.carga,
@@ -68,7 +68,6 @@ class ClienteService {
 
 			return editarCliente;
 		} catch (error) {
-			console.log(clienteEditado);
 			console.error(error.message);
 		}
 	}

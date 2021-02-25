@@ -61,11 +61,6 @@ const routes = [
 		component: () => import("@/views/Clientes/EditarCliente.vue"),
 	},
 	{
-		path: "/clientes/buscar-cliente",
-		name: "BuscarCliente",
-		component: () => import("@/views/Clientes/BuscarCliente.vue"),
-	},
-	{
 		path: "/finanzas/finanzas",
 		name: "Finanzas",
 		component: () => import("@/views/Finanzas/Finanzas.vue"),

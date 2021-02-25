@@ -278,7 +278,9 @@
 			</div>
 		</form>
 
-		{{ editarCliente }}
+		<div v-if="message" class="bg-green-500 p-4 text-white text-center">
+			{{ message }}
+		</div>
 	</div>
 </template>
 
@@ -343,9 +345,9 @@ export default {
 				} else {
 					ClienteService.editCliente(this.$route.params.id, this.editarCliente)
 						.then((response) => {
-							// this.$router.push("/clientes/tablero-clientes");
-							console.log(this.editarCliente.id, this.editarCliente);
-							console.log(response);
+							this.$router.push("/clientes/tablero-clientes");
+							console.log(response.data.message);
+							this.message = response.data.message;
 						})
 						.catch((err) => {
 							console.log(err);
