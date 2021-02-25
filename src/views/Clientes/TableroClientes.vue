@@ -20,7 +20,7 @@
 
 				<button
 					type="button"
-					class="bg-white ml-2 py-1 px-2 rounded font-bold hover:bg-info hover:text-white"
+					class="bg-white ml-2 py-1 px-2 rounded font-bold hover:bg-info hover:text-white focus:outline-none"
 					@click="searchCliente"
 				>
 					Buscar
@@ -28,8 +28,8 @@
 			</div>
 
 			<button
-				class="bg-yellow-600 px-4 rounded-full focus:outline-none"
-				@click="retrieveClientes"
+				class="bg-yellow-600 hover:bg-yellow-500 px-4 rounded-full focus:outline-none"
+				@click="refreshList"
 			>
 				<font-awesome-icon class="text-white" icon="sync-alt" />
 			</button>
@@ -167,6 +167,7 @@ export default {
 				let clientes = await ClienteService.searchCliente(this.buscador);
 
 				this.clientes = clientes.data;
+				this.buscador = "";
 			} catch (error) {
 				console.error(error);
 			}

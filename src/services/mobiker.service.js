@@ -41,6 +41,58 @@ class MobikerService {
 			console.error(error);
 		}
 	}
+
+	async getMobikerById(id) {
+		try {
+			let mobiker = await http.get(`mobikers/equipo-mobiker/${id}`, {
+				headers: authHeader(),
+			});
+
+			return mobiker;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async editMobiker(id, editarMobiker) {
+		try {
+			let mobikerEditado = await http.put(`mobikers/equipo-mobiker/${id}`, {
+				nombres: editarMobiker.nombres,
+				apellidos: editarMobiker.apellidos,
+				telefono: editarMobiker.telefono,
+				telegram: editarMobiker.telegram,
+				direccion: editarMobiker.direccion,
+				distrito: editarMobiker.distrito.distrito,
+				tipoDocumento: editarMobiker.tipoDocumento,
+				numeroDocumento: editarMobiker.numeroDocumento,
+				email: editarMobiker.email,
+				genero: editarMobiker.genero,
+				banco: editarMobiker.banco,
+				tipoCuenta: editarMobiker.tipoCuenta,
+				numeroCuentaBancaria: editarMobiker.numeroCuentaBancaria,
+				equipo: editarMobiker.equipo,
+				tipoBicicleta: editarMobiker.tipoBicicleta,
+				fechaNacimiento: editarMobiker.fechaNacimiento,
+				fechaIngreso: editarMobiker.fechaIngreso,
+			});
+
+			return mobikerEditado;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async searchMobiker(findMobiker) {
+		try {
+			let mobiker = await http.get(`mobikers?fullName=${findMobiker}`, {
+				headers: authHeader(),
+			});
+
+			return mobiker;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
 }
 
 export default new MobikerService();

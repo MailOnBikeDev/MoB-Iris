@@ -3,7 +3,7 @@
 		<div class="bg-gray-100 shadow-lg rounded-xl mx-auto py-4 px-8 mt-6">
 			<form
 				class="mt-4"
-				@submit.prevent="handleNuevoMobiker"
+				@submit.prevent="handleEditarMobiker"
 				autocomplete="off"
 			>
 				<div class="grid grid-cols-4 gap-4 mb-4">
@@ -14,7 +14,7 @@
 							>Nombres</label
 						>
 						<input
-							v-model="nuevoMobiker.nombres"
+							v-model="editarMobiker.nombres"
 							v-validate="'required'"
 							type="text"
 							name="nombres"
@@ -35,7 +35,7 @@
 							>Apellidos</label
 						>
 						<input
-							v-model="nuevoMobiker.apellidos"
+							v-model="editarMobiker.apellidos"
 							type="text"
 							v-validate="'required'"
 							name="apellidos"
@@ -56,7 +56,7 @@
 							>Teléfono</label
 						>
 						<input
-							v-model="nuevoMobiker.telefono"
+							v-model="editarMobiker.telefono"
 							type="text"
 							v-validate="'required|length:9'"
 							name="telefono"
@@ -77,7 +77,7 @@
 							>Usuario Telegram</label
 						>
 						<input
-							v-model="nuevoMobiker.telegram"
+							v-model="editarMobiker.telegram"
 							type="text"
 							v-validate="'required'"
 							name="telegram"
@@ -100,7 +100,7 @@
 							>Dirección</label
 						>
 						<input
-							v-model="nuevoMobiker.direccion"
+							v-model="editarMobiker.direccion"
 							type="text"
 							v-validate="'required'"
 							name="direccion"
@@ -122,7 +122,7 @@
 						>
 						<model-list-select
 							name="distrito"
-							v-model="nuevoMobiker.distrito"
+							v-model="editarMobiker.distrito"
 							v-validate="'required'"
 							placeholder="Buscar distrito..."
 							:list="distritos"
@@ -144,7 +144,7 @@
 							>Tipo de Documento</label
 						>
 						<model-list-select
-							v-model="nuevoMobiker.tipoDocumento"
+							v-model="editarMobiker.tipoDocumento"
 							v-validate="'required'"
 							name="tipoDocumento"
 							:list="tiposDocumentos"
@@ -166,7 +166,7 @@
 							>Número de Documento</label
 						>
 						<input
-							v-model="nuevoMobiker.numeroDocumento"
+							v-model="editarMobiker.numeroDocumento"
 							type="text"
 							v-validate="'required|min:8|max:10'"
 							name="numeroDocumento"
@@ -189,7 +189,7 @@
 							>Género</label
 						>
 						<model-list-select
-							v-model="nuevoMobiker.genero"
+							v-model="editarMobiker.genero"
 							:list="generos"
 							v-validate="'required'"
 							name="genero"
@@ -211,7 +211,7 @@
 							>Fecha de Nacimiento</label
 						>
 						<input
-							v-model="nuevoMobiker.fechaNacimiento"
+							v-model="editarMobiker.fechaNacimiento"
 							type="date"
 							v-validate="'required'"
 							name="fechaNacimiento"
@@ -232,7 +232,7 @@
 							>Email</label
 						>
 						<input
-							v-model="nuevoMobiker.email"
+							v-model="editarMobiker.email"
 							type="email"
 							v-validate="'required'"
 							name="email"
@@ -253,7 +253,7 @@
 							>Tipo de Bicicleta</label
 						>
 						<model-list-select
-							v-model="nuevoMobiker.tipoBicicleta"
+							v-model="editarMobiker.tipoBicicleta"
 							:list="tipoBicicletas"
 							v-validate="'required'"
 							name="tipoBicicleta"
@@ -275,7 +275,7 @@
 							>Equipo</label
 						>
 						<model-list-select
-							v-model="nuevoMobiker.equipo"
+							v-model="editarMobiker.equipo"
 							:list="equipoDeTrabajo"
 							v-validate="'required'"
 							name="equipo"
@@ -299,7 +299,7 @@
 							>Fecha de Ingreso</label
 						>
 						<input
-							v-model="nuevoMobiker.fechaIngreso"
+							v-model="editarMobiker.fechaIngreso"
 							v-validate="'required'"
 							name="fechaIngreso"
 							type="date"
@@ -320,7 +320,7 @@
 							>Entidad Financiera</label
 						>
 						<model-list-select
-							v-model="nuevoMobiker.banco"
+							v-model="editarMobiker.banco"
 							v-validate="'required'"
 							name="banco"
 							:list="entidadesBancarias"
@@ -342,7 +342,7 @@
 							>Tipo de Cuenta Bancaria</label
 						>
 						<model-list-select
-							v-model="nuevoMobiker.tipoCuenta"
+							v-model="editarMobiker.tipoCuenta"
 							:list="cuentaBancaria"
 							v-validate="'required'"
 							name="tipoCuenta"
@@ -364,7 +364,7 @@
 							>Número de Cuenta Bancaria</label
 						>
 						<input
-							v-model="nuevoMobiker.numeroCuentaBancaria"
+							v-model="editarMobiker.numeroCuentaBancaria"
 							type="text"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
@@ -384,7 +384,7 @@
 						type="submit"
 						class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-10 py-4 rounded-lg shadow-lg hover:shadow-xl transition duration-200"
 					>
-						Crear Nuevo Cliente
+						Modificar MoBiker
 					</button>
 				</div>
 			</form>
@@ -399,10 +399,10 @@ import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
 
 export default {
-	name: "NuevoMobiker",
+	name: "EditarMobiker",
 	data() {
 		return {
-			nuevoMobiker: new Mobiker(),
+			editarMobiker: new Mobiker(),
 			message: "",
 			distritos: [],
 			tiposDocumentos: [
@@ -436,6 +436,8 @@ export default {
 	},
 	async mounted() {
 		try {
+			this.getMobiker(this.$route.params.id);
+
 			let resDistritos = await AuxiliarService.getDistritos();
 			let resBancos = await AuxiliarService.getEntidadesBancarias();
 
@@ -446,16 +448,37 @@ export default {
 		}
 	},
 	methods: {
-		handleNuevoMobiker() {
+		async getMobiker(id) {
+			try {
+				let response = await MobikerService.getMobikerById(id);
+
+				this.editarMobiker = response.data;
+				this.editarMobiker.fechaNacimiento = this.$date(
+					response.data.fechaNacimiento
+				).format("YYYY-MM-DD");
+				this.editarMobiker.fechaIngreso = this.$date(
+					response.data.fechaIngreso
+				).format("YYYY-MM-DD");
+			} catch (error) {
+				console.error("Mensaje de error:", error);
+			}
+		},
+
+		handleEditarMobiker() {
 			this.$validator
 				.validateAll()
 				.then((isValid) => {
 					if (!isValid) {
 						return;
 					} else {
-						MobikerService.storageNuevoMobiker(this.nuevoMobiker).then(
-							() => {
+						MobikerService.editMobiker(
+							this.$route.params.id,
+							this.editarMobiker
+						).then(
+							(response) => {
 								this.$router.push("/mobikers/equipo-mobiker");
+								console.log(response.data.message);
+								this.message = response.data.message;
 							},
 							(err) => console.error(err)
 						);

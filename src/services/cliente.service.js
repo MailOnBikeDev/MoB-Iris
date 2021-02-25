@@ -10,7 +10,7 @@ class ClienteService {
 
 			return clientes;
 		} catch (error) {
-			console.error(error);
+			console.error("Mensaje de error: ", error.message);
 		}
 	}
 
@@ -33,7 +33,7 @@ class ClienteService {
 
 			return cliente;
 		} catch (error) {
-			console.error(error);
+			console.error("Mensaje de error: ", error.message);
 		}
 	}
 
@@ -45,7 +45,7 @@ class ClienteService {
 
 			return cliente;
 		} catch (error) {
-			console.error(error);
+			console.error("Mensaje de error: ", error.message);
 		}
 	}
 
@@ -68,7 +68,7 @@ class ClienteService {
 
 			return editarCliente;
 		} catch (error) {
-			console.error(error.message);
+			console.error("Mensaje de error: ", error.message);
 		}
 	}
 
@@ -80,7 +80,7 @@ class ClienteService {
 
 			return cliente;
 		} catch (error) {
-			console.error(error);
+			console.error("Mensaje de error: ", error.message);
 		}
 	}
 }

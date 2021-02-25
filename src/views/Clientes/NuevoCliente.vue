@@ -18,7 +18,7 @@
 							v-validate="'required'"
 							type="text"
 							name="contacto"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 						<div
 							v-if="errors.has('contacto')"
@@ -39,7 +39,7 @@
 							v-validate="'required'"
 							type="text"
 							name="empresa"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 						<div
 							v-if="errors.has('empresa')"
@@ -60,7 +60,7 @@
 							v-validate="'required|length:9'"
 							type="text"
 							name="telefono"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 						<div
 							v-if="errors.has('telefono')"
@@ -83,7 +83,7 @@
 							v-validate="'required'"
 							type="text"
 							name="email"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 						<div
 							v-if="errors.has('email')"
@@ -104,7 +104,7 @@
 							v-validate="'length:11'"
 							name="ruc"
 							type="text"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 						<div
 							v-if="errors.has('ruc')"
@@ -150,7 +150,7 @@
 							v-validate="'required'"
 							name="direccion"
 							type="text"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 						<div
 							v-if="errors.has('direccion')"
@@ -170,7 +170,7 @@
 							v-model="nuevoCliente.otroDato"
 							name="otroDato"
 							type="text"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 					</div>
 				</div>
