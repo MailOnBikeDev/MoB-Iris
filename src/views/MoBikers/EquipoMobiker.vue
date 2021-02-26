@@ -53,8 +53,8 @@
 				<p>Nombres</p>
 				<p>Distrito</p>
 				<p>Equipamiento</p>
-				<p>Rango</p>
 				<p>Bicienvios</p>
+				<p>Rango</p>
 				<p>Editar</p>
 			</div>
 

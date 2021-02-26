@@ -10,7 +10,7 @@ class MobikerService {
 
 			return mobikers;
 		} catch (error) {
-			console.error(error);
+			console.error("Mensaje de error: ", error.message);
 		}
 	}
 
@@ -38,7 +38,7 @@ class MobikerService {
 
 			return mobiker;
 		} catch (error) {
-			console.error(error);
+			console.error("Mensaje de error: ", error.message);
 		}
 	}
 

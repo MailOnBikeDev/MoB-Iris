@@ -36,6 +36,11 @@ const routes = [
 		component: () => import("@/views/Pedidos/NuevoPedido.vue"),
 	},
 	{
+		path: "/pedidos/editar-pedido",
+		name: "EditarPedido",
+		component: () => import("@/views/Pedidos/EditarPedido.vue"),
+	},
+	{
 		path: "/mobikers/equipo-mobiker",
 		name: "EquipoMobiker",
 		component: () => import("@/views/MoBikers/EquipoMobiker.vue"),

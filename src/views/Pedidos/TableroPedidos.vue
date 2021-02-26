@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full max-h-screen p-4 bg-white mt-6 bg-opacity-30">
+	<div class="w-full max-h-screen py-4 px-2 bg-white mt-6 bg-opacity-30">
 		<div class="flex justify-end">
 			<h1
 				class="inline-block bg-primary text-white text-center font-bold px-4 py-2 rounded-xl relative -top-8"
@@ -9,11 +9,8 @@
 		</div>
 
 		<div class="grid grid-cols-4 gap-2">
-			<div class="bg-white">
-				buscador
-			</div>
 			<div
-				class="col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center"
+				class="col-start-2 col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center"
 			>
 				<div>
 					<p># Pedido</p>
@@ -108,7 +105,7 @@
 
 			<div class="bg-white col-span-3 overscroll-auto">
 				<div
-					class="grid grid-cols-7 gap-x-1 text-center text-sm py-1 hover:bg-info items-center"
+					class="grid grid-cols-7 gap-x-1 text-center text-sm py-1 border-b-2 border-primary hover:bg-info items-center"
 					v-for="pedido in pedidos"
 					:key="pedido.id"
 					@click="setActiveCliente(pedido, pedido.id)"
@@ -126,7 +123,7 @@
 						<p>{{ pedido.mobiker.fullName }}</p>
 					</div>
 					<div>
-						<p class="bg-red-400 rounded inline px-4 py-1">
+						<p class="bg-red-400 rounded inline px-4 py-1 font-bold text-white">
 							{{ pedido.status.codigo }}
 						</p>
 					</div>

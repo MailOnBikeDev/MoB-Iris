@@ -10,7 +10,7 @@ class PedidoService {
 
 			return pedidos;
 		} catch (error) {
-			console.error(error);
+			console.error("Mensaje de error: ", error.message);
 		}
 	}
 
@@ -46,7 +46,67 @@ class PedidoService {
 
 			return pedido;
 		} catch (error) {
-			console.error(error);
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async getPedidoById(id) {
+		try {
+			let pedido = await http.get(`pedidos/tablero-pedidos/${id}`, {
+				headers: authHeader(),
+			});
+
+			return pedido;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async editPedido(id, editarPedido) {
+		try {
+			let pedidoEditado = await http.put(`pedidos/tablero-pedidos/${id}`, {
+				fecha: editarPedido.fecha,
+				contactoRemitente: editarPedido.contactoRemitente,
+				empresaRemitente: editarPedido.empresaRemitente,
+				direccionRemitente: editarPedido.direccionRemitente,
+				distritoRemitente: editarPedido.distritoRemitente,
+				telefonoRemitente: editarPedido.telefonoRemitente,
+				otroDatoRemitente: editarPedido.otroDatoRemitente,
+				contactoConsignado: editarPedido.contactoConsignado,
+				empresaConsignado: editarPedido.empresaConsignado,
+				direccionConsignado: editarPedido.direccionConsignado,
+				telefonoConsignado: editarPedido.telefonoConsignado,
+				otroDatoConsignado: editarPedido.otroDatoConsignado,
+				tipoCarga: editarPedido.tipoCarga,
+				formaPago: editarPedido.formaPago,
+				tarifa: editarPedido.tarifa,
+				comision: editarPedido.comision,
+				distancia: editarPedido.distancia,
+				CO2Ahorrado: editarPedido.CO2Ahorrado,
+				ruido: editarPedido.ruido,
+				// status: editarPedido.status,
+				// statusFinanciero: editarPedido.statusFinanciero,
+				distritoConsignado: editarPedido.distrito.distrito,
+				mobiker: editarPedido.mobiker.fullName,
+				tipoEnvio: editarPedido.tipoDeEnvio.tipo,
+				modalidad: editarPedido.modalidad.tipo,
+			});
+
+			return pedidoEditado;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async searchPedido(findPedido) {
+		try {
+			let pedido = await http.get(`pedidos?id=${findPedido}`, {
+				headers: authHeader(),
+			});
+
+			return pedido;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
 		}
 	}
 }
