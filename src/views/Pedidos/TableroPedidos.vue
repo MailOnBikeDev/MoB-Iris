@@ -8,6 +8,41 @@
 			</h1>
 		</div>
 
+		<div class="flex flex-row justify-evenly -mt-10 mb-4">
+			<div>
+				<button
+					class="bg-primary text-white px-4 py-2 rounded-xl focus:outline-none font-bold"
+					@click="showBuscador = true"
+				>
+					Buscar cliente
+				</button>
+			</div>
+
+			<BuscadorCliente
+				:showBuscador="showBuscador"
+				@cerrarBuscador="showBuscador = false"
+				@activarCliente="activarCliente"
+			/>
+
+			<button
+				class="bg-yellow-600 hover:bg-yellow-500 px-4 rounded-full focus:outline-none"
+				@click="refreshList"
+			>
+				<font-awesome-icon class="text-white" icon="sync-alt" />
+			</button>
+
+			<router-link
+				to="/pedidos/nuevo-pedido"
+				class="bg-green-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-green-500"
+				custom
+				v-slot="{ navigate }"
+			>
+				<span @click="navigate" role="link" class="text-center cursor-pointer"
+					>Crear nuevo Pedido</span
+				>
+			</router-link>
+		</div>
+
 		<div class="grid grid-cols-4 gap-2">
 			<div
 				class="col-start-2 col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center"
@@ -105,7 +140,8 @@
 
 			<div class="bg-white col-span-3 overscroll-auto border-black border">
 				<div
-					class="grid grid-cols-7 gap-x-1 text-center text-sm py-1 border-b-2 border-primary hover:bg-info items-center"
+					class="grid grid-cols-7 gap-x-1 text-center text-sm py-2 border-b-2 border-primary hover:bg-info items-center"
+					:class="{ 'bg-info': pedido.id == currentIndex }"
 					v-for="pedido in pedidos"
 					:key="pedido.id"
 					@click="setActiveCliente(pedido, pedido.id)"
@@ -123,63 +159,86 @@
 						<p>{{ pedido.mobiker.fullName }}</p>
 					</div>
 					<div>
-						<p class="bg-red-400 rounded inline px-4 py-1 font-bold text-white">
-							{{ pedido.status.codigo }}
+						<p
+							class="bg-red-400 rounded-full inline px-2 py-1 font-bold text-white"
+						>
+							{{ pedido.status.tag }}
 						</p>
 					</div>
 					<div>
 						<p>{{ $date(pedido.fecha).format("DD/MM/YYYY") }}</p>
 					</div>
-					<div>
-						<font-awesome-icon icon="pencil-alt" />
+					<div class="flex justify-center">
+						<router-link
+							:to="`/pedidos/tablero-pedidos/${pedido.id}`"
+							custom
+							v-slot="{ navigate }"
+							class="cursor-pointer"
+						>
+							<font-awesome-icon
+								class="text-primary"
+								icon="pencil-alt"
+								@click="navigate"
+								role="link"
+							/>
+						</router-link>
 					</div>
 				</div>
 			</div>
-		</div>
-
-		<div class="grid grid-cols-1 bg-gray-200">
-			<router-link to="/pedidos/nuevo-pedido" custom v-slot="{ navigate }">
-				<span @click="navigate" role="link" class="text-center cursor-pointer"
-					>Crear nuevo pedido</span
-				>
-			</router-link>
 		</div>
 	</div>
 </template>
 
 <script>
 import PedidoService from "@/services/pedido.service";
+import BuscadorCliente from "@/components/BuscadorCliente";
 
 export default {
 	name: "Pedidos",
+	components: { BuscadorCliente },
 	data() {
 		return {
 			pedidos: [],
+			showBuscador: false,
 			currentPedido: null,
 			currentIndex: -1,
 		};
 	},
 	mounted() {
-		PedidoService.getPedidos().then(
-			(response) => {
-				this.pedidos = response.data;
-			},
-			(error) => {
-				this.pedidos =
-					(error.response && error.response.data) ||
-					error.message ||
-					error.toString();
-			}
-		);
+		this.retrievePedidos();
 	},
 	methods: {
+		retrievePedidos() {
+			PedidoService.getPedidos().then(
+				(response) => {
+					this.pedidos = response.data;
+				},
+				(error) => {
+					this.pedidos =
+						(error.response && error.response.data) ||
+						error.message ||
+						error.toString();
+				}
+			);
+		},
+
 		setActiveCliente(pedido, index) {
 			this.currentPedido = pedido;
 			this.currentIndex = index;
-			console.log("Pedido actual", this.currentPedido);
+			// console.log("Pedido actual", this.currentPedido);
+			// console.log("index:", this.currentIndex);
+		},
+
+		refreshList() {
+			this.retrievePedidos();
+
+			this.currentPedido = null;
+			this.currentIndex = -1;
+		},
+
+		activarCliente(cliente) {
+			console.log(cliente);
 		},
 	},
 };
 </script>
-
-<style></style>

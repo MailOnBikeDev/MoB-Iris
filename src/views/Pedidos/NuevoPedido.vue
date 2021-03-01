@@ -8,28 +8,25 @@
 			</h1>
 		</div>
 
-		<div class="px-4 flex flex-row justify-between -mt-12">
+		<div class="px-4 flex flex-row justify-around -mt-12">
 			<div>
-				<input
-					type="text"
-					class="rounded text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-1"
-					placeholder="Buscar cliente..."
-					v-model="buscador"
-					v-on:keyup.enter="searchCliente"
-				/>
-
 				<button
-					type="button"
-					class="bg-white ml-2 py-1 px-2 rounded font-bold hover:bg-info hover:text-white focus:outline-none"
-					@click="searchCliente"
+					class="bg-primary text-white px-4 py-1 rounded-xl focus:outline-none font-bold"
+					@click="showBuscador = true"
 				>
-					Buscar
+					Buscar cliente
 				</button>
 			</div>
 
+			<BuscadorCliente
+				:showBuscador="showBuscador"
+				@cerrarBuscador="showBuscador = false"
+				@activarCliente="activarCliente"
+			/>
+
 			<div>
 				<button
-					class="bg-primary text-white px-4 py-1 rounded"
+					class="bg-primary text-white px-4 py-1 rounded-xl focus:outline-none font-bold"
 					@click="calcularDistancia"
 				>
 					Calcular distancia
@@ -521,14 +518,14 @@
 				<button
 					@click="cancelar"
 					type="button"
-					class="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold px-10 py-4 rounded-lg shadow-lg hover:shadow-xl transition duration-200"
+					class="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200"
 				>
 					Cancelar
 				</button>
 
 				<button
 					type="submit"
-					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-10 py-4 rounded-lg shadow-lg hover:shadow-xl transition duration-200"
+					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200"
 				>
 					Crear Nuevo Pedido
 				</button>
@@ -542,15 +539,15 @@ import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
 import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
-import ClienteService from "@/services/cliente.service";
 import PedidoService from "@/services/pedido.service";
+import BuscadorCliente from "@/components/BuscadorCliente";
 
 export default {
 	data() {
 		return {
 			nuevoPedido: new Pedido(),
+			showBuscador: false,
 			message: "",
-			buscador: "",
 			distritos: [],
 			tiposDeCarga: [],
 			formasDePago: [],
@@ -635,34 +632,23 @@ export default {
 			this.$router.push("/pedidos/tablero-pedidos");
 		},
 
-		async searchCliente() {
-			try {
-				let findCliente = await ClienteService.searchCliente(this.buscador);
-
-				// console.log(findCliente.data[0]);
-				this.cliente = findCliente.data[0];
-				this.nuevoPedido.contactoRemitente = this.cliente.contacto;
-				this.nuevoPedido.empresaRemitente = this.cliente.empresa;
-				this.nuevoPedido.telefonoRemitente = this.cliente.telefono;
-				this.nuevoPedido.direccionRemitente = this.cliente.direccion;
-				this.nuevoPedido.distritoRemitente = this.cliente.distrito.distrito;
-				this.nuevoPedido.otroDatoRemitente = this.cliente.otroDato;
-				this.nuevoPedido.tipoCarga = this.cliente.tipoDeCarga.tipo;
-				this.nuevoPedido.formaPago = this.cliente.formaDePago.pago;
-
-				this.nuevoPedido.status = 100;
-				this.nuevoPedido.statusFinanciero = 1;
-
-				this.rolDelCliente = this.cliente.rolCliente.rol;
-
-				this.buscador = "";
-			} catch (error) {
-				console.error(error);
-			}
+		activarCliente(cliente) {
+			this.nuevoPedido.contactoRemitente = cliente.contacto;
+			this.nuevoPedido.empresaRemitente = cliente.empresa;
+			this.nuevoPedido.telefonoRemitente = cliente.telefono;
+			this.nuevoPedido.direccionRemitente = cliente.direccion;
+			this.nuevoPedido.distritoRemitente = cliente.distrito.distrito;
+			this.nuevoPedido.otroDatoRemitente = cliente.otroDato;
+			this.nuevoPedido.tipoCarga = cliente.tipoDeCarga.tipo;
+			this.nuevoPedido.formaPago = cliente.formaDePago.pago;
+			this.nuevoPedido.status = 100;
+			this.nuevoPedido.statusFinanciero = 1;
+			this.rolDelCliente = cliente.rolCliente.rol;
 		},
 	},
 	components: {
 		ModelListSelect,
+		BuscadorCliente,
 	},
 };
 </script>

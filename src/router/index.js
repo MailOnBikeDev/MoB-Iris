@@ -36,7 +36,7 @@ const routes = [
 		component: () => import("@/views/Pedidos/NuevoPedido.vue"),
 	},
 	{
-		path: "/pedidos/editar-pedido",
+		path: "/pedidos/tablero-pedidos/:id",
 		name: "EditarPedido",
 		component: () => import("@/views/Pedidos/EditarPedido.vue"),
 	},

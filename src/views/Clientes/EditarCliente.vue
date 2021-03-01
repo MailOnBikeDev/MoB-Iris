@@ -276,14 +276,14 @@
 				<button
 					type="button"
 					@click="cancelar"
-					class="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold px-10 py-4 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
+					class="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 				>
 					Cancelar
 				</button>
 
 				<button
 					type="submit"
-					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-10 py-4 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
+					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 				>
 					Editar Cliente
 				</button>

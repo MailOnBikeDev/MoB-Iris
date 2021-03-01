@@ -64,10 +64,10 @@
 				<p>Ecoamigable</p>
 			</div>
 
-			<div class="bg-white overscroll-auto">
+			<div class="bg-white overscroll-auto border border-black">
 				<div
 					class="grid grid-cols-4 text-center text-sm py-2 hover:bg-info border-b-2 border-primary items-center cursor-default"
-					:class="{ active: cliente.id == currentIndex }"
+					:class="{ 'bg-info': cliente.id == currentIndex }"
 					v-for="cliente in clientes"
 					:key="cliente.id"
 					@click="setActiveCliente(cliente, cliente.id)"
@@ -105,7 +105,9 @@
 				</div>
 			</div>
 
-			<div class="flex justify-center items-center bg-blue-500 h-96">
+			<div
+				class="flex justify-center items-center bg-blue-500 h-96 border border-black"
+			>
 				<div>
 					Graficas van aqui
 					<div v-if="currentCliente">
@@ -128,7 +130,6 @@ export default {
 			clientes: [],
 			currentCliente: null,
 			currentIndex: -1,
-			editModal: false,
 			buscador: "",
 		};
 	},
