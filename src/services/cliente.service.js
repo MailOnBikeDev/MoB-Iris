@@ -74,7 +74,7 @@ class ClienteService {
 
 	async searchCliente(findCliente) {
 		try {
-			let cliente = await http.get(`clientes?contacto=${findCliente}`, {
+			let cliente = await http.get(`clientes?q=${findCliente}`, {
 				headers: authHeader(),
 			});
 

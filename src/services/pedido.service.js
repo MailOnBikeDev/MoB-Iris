@@ -100,7 +100,7 @@ class PedidoService {
 
 	async searchPedido(findPedido) {
 		try {
-			let pedido = await http.get(`pedidos?id=${findPedido}`, {
+			let pedido = await http.get(`pedidos?q=${findPedido}`, {
 				headers: authHeader(),
 			});
 

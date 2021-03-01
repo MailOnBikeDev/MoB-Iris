@@ -84,7 +84,7 @@ class MobikerService {
 
 	async searchMobiker(findMobiker) {
 		try {
-			let mobiker = await http.get(`mobikers?fullName=${findMobiker}`, {
+			let mobiker = await http.get(`mobikers?q=${findMobiker}`, {
 				headers: authHeader(),
 			});
 
