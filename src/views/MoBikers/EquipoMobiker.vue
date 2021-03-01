@@ -1,14 +1,14 @@
 <template>
-	<div class="w-full max-h-screen p-4 bg-white mt-6 bg-opacity-30">
+	<div class="w-full max-h-screen p-4 bg-gray-100 rounded-xl mt-10">
 		<div class="flex justify-end">
 			<h1
-				class="inline-block bg-primary text-white text-center font-bold px-4 py-2 rounded-xl relative -top-8"
+				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded relative -top-12 py-2 bg-gray-100 px-6"
 			>
 				Equipo MoBiker
 			</h1>
 		</div>
 
-		<div class="flex flex-row justify-evenly -mt-6 mb-4">
+		<div class="flex flex-row justify-evenly -mt-10 mb-4">
 			<div>
 				<input
 					type="text"

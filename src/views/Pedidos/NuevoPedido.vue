@@ -1,6 +1,14 @@
 <template>
-	<div class="bg-gray-100 shadow-lg rounded-xl mx-auto p-4 my-6">
-		<div class="px-4 flex flex-row justify-between">
+	<div class="bg-gray-100 shadow-lg rounded-xl mx-auto p-4 my-12">
+		<div class="flex justify-end">
+			<h1
+				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded relative -top-12 py-2 bg-gray-100 px-6"
+			>
+				Nuevo Pedido
+			</h1>
+		</div>
+
+		<div class="px-4 flex flex-row justify-between -mt-12">
 			<div>
 				<input
 					type="text"
@@ -608,7 +616,8 @@ export default {
 
 		calcularDistancia() {
 			this.nuevoPedido.distancia = 6.7;
-			return this.nuevoPedido.distancia;
+			this.nuevoPedido.tarifa = 7.0;
+			return this.nuevoPedido.distancia, this.nuevoPedido.tarifa;
 		},
 
 		cancelar() {

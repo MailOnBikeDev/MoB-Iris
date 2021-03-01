@@ -1,8 +1,8 @@
 <template>
-	<div class="w-full max-h-screen py-4 px-2 bg-white mt-6 bg-opacity-30">
+	<div class="w-full max-h-screen p-4 bg-gray-100 rounded-xl mt-10">
 		<div class="flex justify-end">
 			<h1
-				class="inline-block bg-primary text-white text-center font-bold px-4 py-2 rounded-xl relative -top-8"
+				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded relative -top-10 bg-gray-100 px-6"
 			>
 				Tablero de Pedidos
 			</h1>
@@ -34,7 +34,7 @@
 					<p>Editar</p>
 				</div>
 			</div>
-			<div class="bg-white p-4">
+			<div class="bg-white p-4 border-black border">
 				<h2 class="text-3xl text-primary font-bold mb-4">
 					Cliente
 				</h2>
@@ -103,7 +103,7 @@
 				</div>
 			</div>
 
-			<div class="bg-white col-span-3 overscroll-auto">
+			<div class="bg-white col-span-3 overscroll-auto border-black border">
 				<div
 					class="grid grid-cols-7 gap-x-1 text-center text-sm py-1 border-b-2 border-primary hover:bg-info items-center"
 					v-for="pedido in pedidos"

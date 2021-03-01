@@ -1,6 +1,18 @@
 <template>
-	<div class="bg-gray-100 shadow-lg rounded-xl mx-auto py-4 px-8 mt-6">
-		<form class="mt-4" @submit.prevent="handleEditarCliente" autocomplete="off">
+	<div class="bg-gray-100 shadow-lg rounded-xl mx-auto py-4 px-8 mt-10">
+		<div class="flex justify-end">
+			<h1
+				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded relative -top-12 py-2 bg-gray-100 px-6"
+			>
+				Editar Cliente
+			</h1>
+		</div>
+
+		<form
+			class="-mt-10"
+			@submit.prevent="handleEditarCliente"
+			autocomplete="off"
+		>
 			<div class="grid grid-cols-3 gap-4 mb-4">
 				<div class="flex flex-col">
 					<label
@@ -273,7 +285,7 @@
 					type="submit"
 					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-10 py-4 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 				>
-					Modificar Cliente
+					Editar Cliente
 				</button>
 			</div>
 		</form>
