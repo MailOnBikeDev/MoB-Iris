@@ -491,24 +491,28 @@
 
 					<div>
 						<label
-							for="CO2Ahorrado"
+							for="recaudo"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
-							>CO2 Ahorrado</label
+							>Recaudo</label
 						>
-						<p class="bg-white rounded w-full h-10 tex-gray-700 p-2">
-							{{ (nuevoPedido.CO2Ahorrado = calcularCO2) }}
-						</p>
+						<input
+							v-model.number="nuevoPedido.recaudo"
+							type="number"
+							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+						/>
 					</div>
 
 					<div>
 						<label
-							for="ruido"
+							for="tramite"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
-							>Ruido Ahorrado</label
+							>Trámite</label
 						>
-						<p class="bg-white rounded w-full h-10 tex-gray-700 p-2">
-							{{ (nuevoPedido.ruido = calcularRuido) }}
-						</p>
+						<input
+							v-model.number="nuevoPedido.tramite"
+							type="number"
+							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+						/>
 					</div>
 				</div>
 			</div>
@@ -589,14 +593,6 @@ export default {
 		sugerirTarifa() {
 			return this.nuevoPedido.tarifa + 5;
 		},
-
-		calcularCO2() {
-			return this.nuevoPedido.distancia / 12;
-		},
-
-		calcularRuido() {
-			return this.nuevoPedido.distancia / 24;
-		},
 	},
 	methods: {
 		handleNuevoPedido() {
@@ -617,7 +613,22 @@ export default {
 		calcularDistancia() {
 			this.nuevoPedido.distancia = 6.7;
 			this.nuevoPedido.tarifa = 7.0;
-			return this.nuevoPedido.distancia, this.nuevoPedido.tarifa;
+			this.nuevoPedido.CO2Ahorrado = this.nuevoPedido.distancia / 12;
+			this.nuevoPedido.ruido = this.nuevoPedido.distancia / 24;
+			this.nuevoPedido.recaudo = 0;
+			this.nuevoPedido.tramite = 0;
+
+			console.log(`
+				'distancia:' ${this.nuevoPedido.distancia},
+				\n 'CO2:' ${this.nuevoPedido.CO2Ahorrado},
+				\n 'ruido:' ${this.nuevoPedido.ruido}`);
+
+			return (
+				this.nuevoPedido.distancia,
+				this.nuevoPedido.tarifa,
+				this.nuevoPedido.CO2Ahorrado,
+				this.nuevoPedido.ruido
+			);
 		},
 
 		cancelar() {

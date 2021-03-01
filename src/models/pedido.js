@@ -15,6 +15,8 @@ export default class Pedido {
 		tipoCarga,
 		formaPago,
 		tarifa,
+		recaudo,
+		tramite,
 		comision,
 		distancia,
 		CO2Ahorrado,
@@ -41,6 +43,8 @@ export default class Pedido {
 		this.tipoCarga = tipoCarga;
 		this.formaPago = formaPago;
 		this.tarifa = tarifa;
+		this.recaudo = recaudo;
+		this.tramite = tramite;
 		this.comision = comision;
 		this.distancia = distancia;
 		this.CO2Ahorrado = CO2Ahorrado;
