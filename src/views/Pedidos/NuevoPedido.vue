@@ -50,15 +50,33 @@
 
 				<!-- FORMULARIO ORIGEN -->
 				<div class="grid grid-cols-3 gap-2 p-2">
-					<div class="col-span-3 ">
-						<label for="fecha" class="block text-primary text-sm font-bold ml-1"
-							>Fecha</label
+					<div>
+						<button
+							class="mt-5 bg-secondary py-2 w-full rounded text-white font-bold focus:outline-none"
+							@click="asignarHoy()"
+							type="button"
 						>
-						<input
-							v-model="nuevoPedido.fecha"
-							type="date"
-							class="rounded text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
-						/>
+							Para hoy
+						</button>
+					</div>
+
+					<div>
+						<button
+							class="mt-5 bg-secondary py-2 w-full rounded text-white font-bold focus:outline-none"
+							@click="asignarMañana()"
+							type="button"
+						>
+							Para mañana
+						</button>
+					</div>
+
+					<div>
+						<label for="fecha" class="block text-primary text-sm font-bold ml-1"
+							>Fecha Seleccionada</label
+						>
+						<p class="bg-white rounded w-full h-10 tex-gray-700 p-2">
+							{{ $date(nuevoPedido.fecha).format("DD/MM/YYYY") }}
+						</p>
 					</div>
 
 					<div>
@@ -398,7 +416,7 @@
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 						<div
-							v-if="errors.has('direccionConsignado')"
+							v-if="errors.has('direccionConsignado') || errorCalcularDistancia"
 							class="bg-red-500 text-white text-sm rounded p-2"
 						>
 							<p>La dirección es requerida</p>
@@ -421,7 +439,7 @@
 							option-value="distrito"
 						/>
 						<div
-							v-if="errors.has('distritoConsignado')"
+							v-if="errors.has('distritoConsignado') || errorCalcularDistancia"
 							class="bg-red-500 text-white text-sm rounded p-2"
 						>
 							<p>El distrito es requerido</p>
@@ -452,7 +470,7 @@
 						</p>
 					</div>
 
-					<div class=" col-span-2">
+					<div class="col-span-2">
 						<label
 							for="mobiker"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -518,14 +536,14 @@
 				<button
 					@click="cancelar"
 					type="button"
-					class="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200"
+					class="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 				>
 					Cancelar
 				</button>
 
 				<button
 					type="submit"
-					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200"
+					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 				>
 					Crear Nuevo Pedido
 				</button>
@@ -535,12 +553,14 @@
 </template>
 
 <script>
+import axios from "axios";
 import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
 import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
+import mapQuest_API from "@/mapQuest-API";
 
 export default {
 	data() {
@@ -548,6 +568,7 @@ export default {
 			nuevoPedido: new Pedido(),
 			showBuscador: false,
 			message: "",
+			errorCalcularDistancia: false,
 			distritos: [],
 			tiposDeCarga: [],
 			formasDePago: [],
@@ -556,7 +577,7 @@ export default {
 			mobikers: [],
 			tiposDeEnvio: [],
 			rolDelCliente: "",
-			tarifaSugerida: "",
+			tarifaSugerida: null,
 		};
 	},
 	async mounted() {
@@ -584,11 +605,14 @@ export default {
 	},
 	computed: {
 		calcularComision() {
-			return this.nuevoPedido.tarifa * 0.6;
+			let comision = this.nuevoPedido.tarifa * 0.6;
+			return comision.toFixed(2);
 		},
 
 		sugerirTarifa() {
-			return this.nuevoPedido.tarifa + 5;
+			let tarifaPorKm = 0.8;
+			let tarifaSugerida = this.nuevoPedido.distancia * tarifaPorKm;
+			return tarifaSugerida.toFixed(2);
 		},
 	},
 	methods: {
@@ -607,25 +631,56 @@ export default {
 			});
 		},
 
-		calcularDistancia() {
-			this.nuevoPedido.distancia = 6.7;
-			this.nuevoPedido.tarifa = 7.0;
-			this.nuevoPedido.CO2Ahorrado = this.nuevoPedido.distancia / 12;
-			this.nuevoPedido.ruido = this.nuevoPedido.distancia / 24;
-			this.nuevoPedido.recaudo = 0;
-			this.nuevoPedido.tramite = 0;
+		async calcularDistancia() {
+			try {
+				if (
+					!(
+						this.nuevoPedido.direccionRemitente &&
+						this.nuevoPedido.distritoRemitente &&
+						this.nuevoPedido.direccionConsignado &&
+						this.nuevoPedido.distritoConsignado
+					)
+				) {
+					this.errorCalcularDistancia = true;
+					console.error("Mensaje de error: No se pudo calcular la distancia");
+					return;
+				}
 
-			console.log(`
-				'distancia:' ${this.nuevoPedido.distancia},
-				\n 'CO2:' ${this.nuevoPedido.CO2Ahorrado},
-				\n 'ruido:' ${this.nuevoPedido.ruido}`);
+				let origen = `${this.nuevoPedido.direccionRemitente.replace(
+					" ",
+					"+"
+				)}2%C+${this.nuevoPedido.distritoRemitente}`;
+				let destino = `${this.nuevoPedido.direccionConsignado.replace(
+					" ",
+					"+"
+				)}2%C+${this.nuevoPedido.distritoConsignado}`;
 
-			return (
-				this.nuevoPedido.distancia,
-				this.nuevoPedido.tarifa,
-				this.nuevoPedido.CO2Ahorrado,
-				this.nuevoPedido.ruido
-			);
+				const API_URL = `${mapQuest_API.BASE_URL}?key=${process.env.VUE_APP_MAPQUEST_API_KEY}&from=${origen}&to=${destino}&outFormat=json&ambiguities=ignore&routeType=pedestrian&doReverseGeocode=false&enhancedNarrative=false&avoidTimedConditions=false&unit=k`;
+
+				let distancia = await axios.get(API_URL);
+				this.nuevoPedido.distancia = distancia.data.route.distance.toFixed(3);
+				this.nuevoPedido.tarifa = 7.0;
+				this.nuevoPedido.CO2Ahorrado = (
+					this.nuevoPedido.distancia / 12
+				).toFixed(1);
+				this.nuevoPedido.ruido = (this.nuevoPedido.distancia / 24).toFixed(2);
+				this.nuevoPedido.recaudo = 0;
+				this.nuevoPedido.tramite = 0;
+
+				console.log(`
+					\n distancia: ${this.nuevoPedido.distancia} Km,
+					\n CO2: ${this.nuevoPedido.CO2Ahorrado} Kg,
+					\n ruido: ${this.nuevoPedido.ruido} h`);
+
+				return (
+					this.nuevoPedido.distancia,
+					this.nuevoPedido.tarifa,
+					this.nuevoPedido.CO2Ahorrado,
+					this.nuevoPedido.ruido
+				);
+			} catch (error) {
+				console.error("Mensaje de error: ", error.message);
+			}
 		},
 
 		cancelar() {
@@ -633,17 +688,33 @@ export default {
 		},
 
 		activarCliente(cliente) {
-			this.nuevoPedido.contactoRemitente = cliente.contacto;
-			this.nuevoPedido.empresaRemitente = cliente.empresa;
-			this.nuevoPedido.telefonoRemitente = cliente.telefono;
-			this.nuevoPedido.direccionRemitente = cliente.direccion;
-			this.nuevoPedido.distritoRemitente = cliente.distrito.distrito;
-			this.nuevoPedido.otroDatoRemitente = cliente.otroDato;
-			this.nuevoPedido.tipoCarga = cliente.tipoDeCarga.tipo;
-			this.nuevoPedido.formaPago = cliente.formaDePago.pago;
-			this.nuevoPedido.status = 100;
-			this.nuevoPedido.statusFinanciero = 1;
-			this.rolDelCliente = cliente.rolCliente.rol;
+			if (cliente) {
+				this.nuevoPedido.contactoRemitente = cliente.contacto;
+				this.nuevoPedido.empresaRemitente = cliente.empresa;
+				this.nuevoPedido.telefonoRemitente = cliente.telefono;
+				this.nuevoPedido.direccionRemitente = cliente.direccion;
+				this.nuevoPedido.distritoRemitente = cliente.distrito.distrito;
+				this.nuevoPedido.otroDatoRemitente = cliente.otroDato;
+				this.nuevoPedido.tipoCarga = cliente.tipoDeCarga.tipo;
+				this.nuevoPedido.formaPago = cliente.formaDePago.pago;
+				this.nuevoPedido.status = 100;
+				this.nuevoPedido.statusFinanciero = 1;
+				this.rolDelCliente = cliente.rolCliente.rol;
+			}
+		},
+
+		asignarHoy() {
+			let hoy = new Date();
+			console.log(`Fecha de hoy: ${this.$date(hoy).format("DD/MM/YYYY")}`);
+			return (this.nuevoPedido.fecha = this.$date(hoy).format("YYYY/MM/DD"));
+		},
+
+		asignarMañana() {
+			let hoy = new Date();
+			let DIA_EN_MS = 24 * 60 * 60 * 1000;
+			let manana = new Date(hoy.getTime() + DIA_EN_MS);
+			console.log(`Fecha mañana: ${this.$date(manana).format("DD/MM/YYYY")}`);
+			return (this.nuevoPedido.fecha = this.$date(manana).format("YYYY/MM/DD"));
 		},
 	},
 	components: {
