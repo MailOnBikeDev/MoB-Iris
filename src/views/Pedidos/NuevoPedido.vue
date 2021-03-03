@@ -34,11 +34,7 @@
 			</div>
 		</div>
 
-		<form
-			class="mt-2 h-full p-2"
-			@submit.prevent="handleNuevoPedido"
-			autocomplete="off"
-		>
+		<form class="mt-2 h-full p-2" autocomplete="off">
 			<div class="grid grid-cols-2 h-full">
 				<div class="text-3xl text-primary font-bold px-1 text-center">
 					<h2>Origen</h2>
@@ -156,7 +152,7 @@
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 						<div
-							v-if="errors.has('direccionRemitente')"
+							v-if="errors.has('direccionRemitente') || errorCalcularDistancia"
 							class="bg-red-500 text-white text-sm rounded p-2"
 						>
 							<p>La dirección es requerida</p>
@@ -180,7 +176,7 @@
 							option-value="distrito"
 						/>
 						<div
-							v-if="errors.has('distritoRemitente')"
+							v-if="errors.has('distritoRemitente') || errorCalcularDistancia"
 							class="bg-red-500 text-white text-sm rounded p-2"
 						>
 							<p>El distrito es requerido</p>
@@ -543,6 +539,15 @@
 
 				<button
 					type="submit"
+					@click.prevent="handleAnadirPedido"
+					class="block mx-auto bg-green-500 hover:bg-green-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
+				>
+					Añadir otro Pedido
+				</button>
+
+				<button
+					type="submit"
+					@click.prevent="handleNuevoPedido"
 					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 				>
 					Crear Nuevo Pedido
@@ -560,7 +565,7 @@ import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
-import mapQuest_API from "@/mapQuest-API";
+import googleMaps_API from "@/googleMaps-API";
 
 export default {
 	data() {
@@ -619,13 +624,37 @@ export default {
 		handleNuevoPedido() {
 			this.$validator.validateAll().then((isValid) => {
 				if (!isValid) {
+					console.error("Mensaje de error: No se pudo crear el Pedido");
 					return;
 				} else {
 					PedidoService.storageNuevoPedido(this.nuevoPedido).then(
 						() => {
 							this.$router.push("/pedidos/tablero-pedidos");
 						},
-						(err) => console.log(err)
+						(err) => console.error(`Mensaje de error: ${err.message}`)
+					);
+				}
+			});
+		},
+
+		handleAnadirPedido() {
+			this.$validator.validateAll().then((isValid) => {
+				if (!isValid) {
+					console.error("Mensaje de error: No se pudo crear el Pedido");
+					return;
+				} else {
+					PedidoService.storageNuevoPedido(this.nuevoPedido).then(
+						() => {
+							console.log("El pedido fue añadido correctamente");
+
+							this.nuevoPedido.contactoConsignado = "";
+							this.nuevoPedido.empresaConsignado = "";
+							this.nuevoPedido.telefonoConsignado = "";
+							this.nuevoPedido.direccionConsignado = "";
+							this.nuevoPedido.distritoConsignado = "";
+							this.nuevoPedido.otroDatoConsignado = "";
+						},
+						(err) => console.error(`Mensaje de error: ${err.message}`)
 					);
 				}
 			});
@@ -649,13 +678,13 @@ export default {
 				let origen = `${this.nuevoPedido.direccionRemitente.replace(
 					" ",
 					"+"
-				)}2%C+${this.nuevoPedido.distritoRemitente}`;
+				)}+${this.nuevoPedido.distritoRemitente}`;
 				let destino = `${this.nuevoPedido.direccionConsignado.replace(
 					" ",
 					"+"
-				)}2%C+${this.nuevoPedido.distritoConsignado}`;
+				)}+${this.nuevoPedido.distritoConsignado}`;
 
-				const API_URL = `${mapQuest_API.BASE_URL}?key=${process.env.VUE_APP_MAPQUEST_API_KEY}&from=${origen}&to=${destino}&outFormat=json&ambiguities=ignore&routeType=pedestrian&doReverseGeocode=false&enhancedNarrative=false&avoidTimedConditions=false&unit=k`;
+				const API_URL = `${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
 
 				let distancia = await axios.get(API_URL);
 				this.nuevoPedido.distancia = distancia.data.route.distance.toFixed(3);
