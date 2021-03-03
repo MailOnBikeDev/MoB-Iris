@@ -676,17 +676,21 @@ export default {
 				}
 
 				let origen = `${this.nuevoPedido.direccionRemitente.replace(
-					" ",
-					"+"
-				)}+${this.nuevoPedido.distritoRemitente}`;
+					/ /g,
+					"%20"
+				)}%20${this.nuevoPedido.distritoRemitente.replace(/ /g, "%20")}`;
 				let destino = `${this.nuevoPedido.direccionConsignado.replace(
-					" ",
-					"+"
-				)}+${this.nuevoPedido.distritoConsignado}`;
+					/ /g,
+					"%20"
+				)}%20${this.nuevoPedido.distritoConsignado.replace(/ /g, "%20")}`;
+
+				console.log("Origen:", origen);
+				console.log("Destino:", destino);
 
 				const API_URL = `${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
 
 				let distancia = await axios.get(API_URL);
+				console.log(distancia);
 				this.nuevoPedido.distancia = distancia.data.route.distance.toFixed(3);
 				this.nuevoPedido.tarifa = 7.0;
 				this.nuevoPedido.CO2Ahorrado = (

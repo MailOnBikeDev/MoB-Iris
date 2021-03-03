@@ -46,9 +46,9 @@
 			</router-link>
 		</div>
 
-		<div class="grid grid-cols-2 gap-2">
+		<div class="grid grid-cols-2 gap-x-2">
 			<div
-				class="inline-grid grid-cols-4 text-sm text-center font-bold items-center mb-2"
+				class="inline-grid grid-cols-4 text-sm text-center font-bold items-center"
 			>
 				<p>Empresa</p>
 				<p>Contacto</p>
@@ -57,11 +57,33 @@
 			</div>
 
 			<div
-				class="inline-grid grid-cols-3 text-sm text-center font-bold items-center mb-2"
+				class="inline-grid grid-cols-3 text-sm text-center font-bold items-center"
 			>
-				<p>Estadisticas</p>
-				<p>Bicienvios</p>
-				<p>Ecoamigable</p>
+				<div
+					class="hover:bg-info py-2 hover:text-white rounded-t-xl"
+					:class="{ 'bg-info text-white': activeTabName === tabNames.detalles }"
+					@click="handleTabClick(tabNames.detalles)"
+				>
+					Detalles
+				</div>
+				<div
+					class="hover:bg-info py-2 hover:text-white rounded-t-xl"
+					:class="{
+						'bg-info text-white': activeTabName === tabNames.biciEnvios,
+					}"
+					@click="handleTabClick(tabNames.biciEnvios)"
+				>
+					Bicienvios
+				</div>
+				<div
+					class="hover:bg-info py-2 hover:text-white rounded-t-xl"
+					:class="{
+						'bg-info text-white': activeTabName === tabNames.ecoamigable,
+					}"
+					@click="handleTabClick(tabNames.ecoamigable)"
+				>
+					Ecoamigable
+				</div>
 			</div>
 
 			<div class="bg-white overscroll-auto border border-black">
@@ -105,17 +127,8 @@
 				</div>
 			</div>
 
-			<div
-				class="flex justify-center items-center bg-blue-500 h-96 border border-black"
-			>
-				<div>
-					Graficas van aqui
-					<div v-if="currentCliente">
-						{{ currentCliente.empresa }}
-						{{ currentCliente.contacto }}
-						{{ currentCliente.distrito.distrito }}
-					</div>
-				</div>
+			<div class="h-96 border border-black">
+				<Component :is="currentTab" :estadisticas="currentCliente" />
 			</div>
 		</div>
 	</div>
@@ -123,6 +136,15 @@
 
 <script>
 import ClienteService from "@/services/cliente.service";
+import ClienteDetalles from "@/components/ClienteDetalles.vue";
+import BaseBiciEnvios from "@/components/BaseBiciEnvios.vue";
+import BaseEcoamigable from "@/components/BaseEcoamigable.vue";
+
+const tabNames = {
+	detalles: "detalles",
+	biciEnvios: "bicienvios",
+	ecoamigable: "ecoamigable",
+};
 
 export default {
 	data() {
@@ -131,10 +153,24 @@ export default {
 			currentCliente: null,
 			currentIndex: -1,
 			buscador: "",
+			currentTab: null,
+			tabNames,
+			tabs: {
+				[tabNames.detalles]: ClienteDetalles,
+				[tabNames.biciEnvios]: BaseBiciEnvios,
+				[tabNames.ecoamigable]: BaseEcoamigable,
+			},
+			activeTabName: null,
 		};
+	},
+	components: {
+		ClienteDetalles,
+		BaseBiciEnvios,
+		BaseEcoamigable,
 	},
 	mounted() {
 		this.retrieveClientes();
+		this.currentTab = this.tabs[tabNames.detalles];
 	},
 	methods: {
 		retrieveClientes() {
@@ -149,6 +185,11 @@ export default {
 						error.toString();
 				}
 			);
+		},
+
+		handleTabClick(tabName) {
+			this.activeTabName = tabName;
+			this.currentTab = this.tabs[tabName];
 		},
 
 		refreshList() {
