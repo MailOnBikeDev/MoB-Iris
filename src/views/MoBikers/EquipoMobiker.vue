@@ -2,7 +2,7 @@
 	<div class="w-full max-h-screen p-4 bg-gray-100 rounded-xl mt-10">
 		<div class="flex justify-end">
 			<h1
-				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded relative -top-12 py-2 bg-gray-100 px-6"
+				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded-xl relative -top-12 py-2 bg-gray-100 px-6"
 			>
 				Equipo MoBiker
 			</h1>
@@ -46,9 +46,9 @@
 			</router-link>
 		</div>
 
-		<div class="grid grid-cols-5 gap-2">
+		<div class="grid grid-cols-5 gap-x-2">
 			<div
-				class="inline-grid col-span-3 grid-cols-6 text-sm text-center font-bold items-center mb-2"
+				class="inline-grid col-span-3 grid-cols-6 text-sm text-center font-bold items-center"
 			>
 				<p>Nombres</p>
 				<p>Distrito</p>
@@ -59,11 +59,33 @@
 			</div>
 
 			<div
-				class="inline-grid col-span-2 grid-cols-3 text-sm text-center font-bold items-center mb-2"
+				class="inline-grid col-span-2 grid-cols-3 text-sm text-center font-bold items-center cursor-pointer"
 			>
-				<p>Estadisticas</p>
-				<p>Bicienvios</p>
-				<p>Ecoamigable</p>
+				<div
+					class="hover:bg-info py-2 hover:text-white rounded-t-xl"
+					:class="{ 'bg-info text-white': activeTabName === tabNames.detalles }"
+					@click="handleTabClick(tabNames.detalles)"
+				>
+					Detalles
+				</div>
+				<div
+					class="hover:bg-info py-2 hover:text-white rounded-t-xl"
+					:class="{
+						'bg-info text-white': activeTabName === tabNames.biciEnvios,
+					}"
+					@click="handleTabClick(tabNames.biciEnvios)"
+				>
+					Bicienvios
+				</div>
+				<div
+					class="hover:bg-info py-2 hover:text-white rounded-t-xl"
+					:class="{
+						'bg-info text-white': activeTabName === tabNames.ecoamigable,
+					}"
+					@click="handleTabClick(tabNames.ecoamigable)"
+				>
+					Ecoamigable
+				</div>
 			</div>
 
 			<div class="bg-white overscroll-auto col-span-3 border border-black">
@@ -117,17 +139,8 @@
 				</div>
 			</div>
 
-			<div
-				class="flex justify-center items-center bg-blue-500 h-96 col-span-2 border border-black"
-			>
-				<div>
-					Graficas van aqui
-					<div v-if="currentMobiker">
-						{{ currentMobiker.fullName }}
-						{{ currentMobiker.biciEnvios }}
-						{{ currentMobiker.distrito.distrito }}
-					</div>
-				</div>
+			<div class="h-96 col-span-2 border border-black">
+				<Component :is="currentTab" :estadisticas="currentMobiker" />
 			</div>
 		</div>
 	</div>
@@ -135,6 +148,15 @@
 
 <script>
 import MobikerService from "@/services/mobiker.service";
+import MoBDetalles from "@/components/MoBDetalles.vue";
+import BaseBiciEnvios from "@/components/BaseBiciEnvios.vue";
+import BaseEcoamigable from "@/components/BaseEcoamigable.vue";
+
+const tabNames = {
+	detalles: "detalles",
+	biciEnvios: "bicienvios",
+	ecoamigable: "ecoamigable",
+};
 
 export default {
 	data() {
@@ -144,10 +166,24 @@ export default {
 			currentIndex: -1,
 			editModal: false,
 			buscador: "",
+			currentTab: null,
+			tabNames,
+			tabs: {
+				[tabNames.detalles]: MoBDetalles,
+				[tabNames.biciEnvios]: BaseBiciEnvios,
+				[tabNames.ecoamigable]: BaseEcoamigable,
+			},
+			activeTabName: null,
 		};
+	},
+	components: {
+		MoBDetalles,
+		BaseBiciEnvios,
+		BaseEcoamigable,
 	},
 	mounted() {
 		this.retrieveMobikers();
+		this.currentTab = this.tabs[tabNames.detalles];
 	},
 	methods: {
 		retrieveMobikers() {
@@ -162,6 +198,11 @@ export default {
 						error.toString();
 				}
 			);
+		},
+
+		handleTabClick(tabName) {
+			this.activeTabName = tabName;
+			this.currentTab = this.tabs[tabName];
 		},
 
 		refreshList() {
