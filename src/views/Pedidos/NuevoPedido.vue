@@ -2,7 +2,7 @@
 	<div class="bg-gray-100 shadow-lg rounded-xl mx-auto p-4 my-12">
 		<div class="flex justify-end">
 			<h1
-				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded relative -top-12 py-2 bg-gray-100 px-6"
+				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded-xl relative -top-12 py-2 bg-gray-100 px-6"
 			>
 				Nuevo Pedido
 			</h1>
