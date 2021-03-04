@@ -628,8 +628,10 @@ export default {
 					return;
 				} else {
 					PedidoService.storageNuevoPedido(this.nuevoPedido).then(
-						() => {
+						(response) => {
 							this.$router.push("/pedidos/tablero-pedidos");
+							console.log(response.data.message);
+							this.message = response.data.message;
 						},
 						(err) => console.error(`Mensaje de error: ${err.message}`)
 					);

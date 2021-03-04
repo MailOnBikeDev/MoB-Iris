@@ -225,6 +225,7 @@
 							name="fechaNacimiento"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
+						{{ editarMobiker.fechaNacimiento }}
 						<div
 							v-if="errors.has('fechaNacimiento')"
 							class="bg-red-500 text-white text-sm rounded p-2"
@@ -452,7 +453,7 @@ export default {
 			this.distritos = resDistritos.data;
 			this.entidadesBancarias = resBancos.data;
 		} catch (error) {
-			console.error(error);
+			console.error("Mensaje de error:", error);
 		}
 	},
 	methods: {
@@ -477,6 +478,7 @@ export default {
 				.validateAll()
 				.then((isValid) => {
 					if (!isValid) {
+						console.error("Mensaje de error: No se pudo editar el MoBiker");
 						return;
 					} else {
 						MobikerService.editMobiker(
