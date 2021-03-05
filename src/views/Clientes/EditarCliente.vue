@@ -182,7 +182,7 @@
 				</div>
 			</div>
 
-			<div class="grid grid-cols-4 gap-4 mb-10">
+			<div class="grid grid-cols-5 gap-4 mb-10">
 				<div class="flex flex-col">
 					<label
 						for="carga"
@@ -246,6 +246,28 @@
 						class="bg-red-500 text-white text-sm rounded p-2"
 					>
 						<p>El comprobante es requerido</p>
+					</div>
+				</div>
+
+				<div>
+					<label
+						for="tipoEnvio"
+						class="block text-primary text-sm font-bold mb-1 ml-1"
+						>Tipo de Envío</label
+					>
+					<model-list-select
+						name="tipoEnvio"
+						v-model="editarCliente.tipoEnvio"
+						v-validate="'required'"
+						:list="tiposDeEnvio"
+						option-text="tipo"
+						option-value="tipo"
+					/>
+					<div
+						v-if="errors.has('tipoEnvio')"
+						class="bg-red-500 text-white text-sm rounded p-2"
+					>
+						<p>El tipo de Envío es requerido</p>
 					</div>
 				</div>
 
@@ -313,6 +335,7 @@ export default {
 			formasDePago: [],
 			comprobantes: [],
 			rolesCliente: [],
+			tiposDeEnvio: [],
 		};
 	},
 	async mounted() {
@@ -324,12 +347,14 @@ export default {
 			let pagos = await AuxiliarService.getFormasPago();
 			let comp = await AuxiliarService.getTipoComprobante();
 			let roles = await AuxiliarService.getRolCliente();
+			let envios = await AuxiliarService.getTipoEnvio();
 
 			this.distritos = resDistritos.data;
 			this.tiposDeCarga = resCarga.data;
 			this.formasDePago = pagos.data;
 			this.comprobantes = comp.data;
 			this.rolesCliente = roles.data;
+			this.tiposDeEnvio = envios.data;
 		} catch (error) {
 			console.error(error);
 		}
@@ -338,7 +363,6 @@ export default {
 		async getCliente(id) {
 			try {
 				let response = await ClienteService.getClienteById(id);
-
 				this.editarCliente = response.data;
 
 				this.editarCliente.carga = response.data.tipoDeCarga["tipo"];
@@ -346,6 +370,7 @@ export default {
 				this.editarCliente.comprobante =
 					response.data.tipoDeComprobante["tipo"];
 				this.editarCliente.rol = response.data.rolCliente["rol"];
+				this.editarCliente.tipoEnvio = response.data.tipoDeEnvio["tipo"];
 			} catch (error) {
 				console.error("Mensaje de error:", error);
 			}

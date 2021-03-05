@@ -29,6 +29,7 @@ class ClienteService {
 				pago: nuevoCliente.pago,
 				ruc: nuevoCliente.ruc,
 				email: nuevoCliente.email,
+				tipoEnvio: nuevoCliente.tipoEnvio,
 			});
 
 			return cliente;
@@ -64,6 +65,7 @@ class ClienteService {
 				pago: clienteEditado.pago,
 				comprobante: clienteEditado.comprobante,
 				rol: clienteEditado.rol,
+				tipoEnvio: clienteEditado.tipoDeEnvio.tipo,
 			});
 
 			return editarCliente;

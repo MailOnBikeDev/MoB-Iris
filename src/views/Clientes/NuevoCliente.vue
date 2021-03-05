@@ -15,7 +15,7 @@
 				autocomplete="off"
 			>
 				<div class="grid grid-cols-3 gap-4 mb-4">
-					<div class="flex flex-col">
+					<div>
 						<label
 							for="contacto"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -36,7 +36,7 @@
 						</div>
 					</div>
 
-					<div class="flex flex-col">
+					<div>
 						<label
 							for="empresa"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -57,7 +57,7 @@
 						</div>
 					</div>
 
-					<div class="flex flex-col">
+					<div>
 						<label
 							for="telefono"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -80,7 +80,7 @@
 				</div>
 
 				<div class="grid grid-cols-3 gap-4 mb-4">
-					<div class="flex flex-col">
+					<div>
 						<label
 							for="email"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -101,7 +101,7 @@
 						</div>
 					</div>
 
-					<div class="flex flex-col">
+					<div>
 						<label
 							for="ruc"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -122,7 +122,7 @@
 						</div>
 					</div>
 
-					<div class="flex flex-col">
+					<div>
 						<label
 							for="distrito"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -147,7 +147,7 @@
 				</div>
 
 				<div class="grid grid-cols-2 gap-4 mb-4">
-					<div class="flex flex-col">
+					<div>
 						<label
 							for="direccion"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -168,7 +168,7 @@
 						</div>
 					</div>
 
-					<div class="flex flex-col">
+					<div>
 						<label
 							for="otroDato"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -183,8 +183,8 @@
 					</div>
 				</div>
 
-				<div class="grid grid-cols-4 gap-4 mb-10">
-					<div class="flex flex-col">
+				<div class="grid grid-cols-5 gap-4 mb-10">
+					<div>
 						<label
 							for="carga"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -206,7 +206,7 @@
 						</div>
 					</div>
 
-					<div class="flex flex-col">
+					<div>
 						<label
 							for="pago"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -228,7 +228,7 @@
 						</div>
 					</div>
 
-					<div class="flex flex-col">
+					<div>
 						<label
 							for="comprobante"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -250,7 +250,29 @@
 						</div>
 					</div>
 
-					<div class="flex flex-col">
+					<div>
+						<label
+							for="tipoEnvio"
+							class="block text-primary text-sm font-bold mb-1 ml-1"
+							>Tipo de Envío</label
+						>
+						<model-list-select
+							name="tipoEnvio"
+							v-model="nuevoCliente.tipoEnvio"
+							v-validate="'required'"
+							:list="tiposDeEnvio"
+							option-text="tipo"
+							option-value="tipo"
+						/>
+						<div
+							v-if="errors.has('tipoEnvio')"
+							class="bg-red-500 text-white text-sm rounded p-2"
+						>
+							<p>El tipo de Envío es requerido</p>
+						</div>
+					</div>
+
+					<div>
 						<label
 							for="rol"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -311,6 +333,7 @@ export default {
 			formasDePago: [],
 			comprobantes: [],
 			rolesCliente: [],
+			tiposDeEnvio: [],
 		};
 	},
 	async mounted() {
@@ -320,12 +343,14 @@ export default {
 			let pagos = await AuxiliarService.getFormasPago();
 			let comp = await AuxiliarService.getTipoComprobante();
 			let roles = await AuxiliarService.getRolCliente();
+			let envios = await AuxiliarService.getTipoEnvio();
 
 			this.distritos = resDistritos.data;
 			this.tiposDeCarga = resCarga.data;
 			this.formasDePago = pagos.data;
 			this.comprobantes = comp.data;
 			this.rolesCliente = roles.data;
+			this.tiposDeEnvio = envios.data;
 		} catch (error) {
 			console.error(error);
 		}

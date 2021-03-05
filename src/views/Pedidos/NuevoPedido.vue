@@ -558,14 +558,14 @@
 </template>
 
 <script>
-import axios from "axios";
 import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
 import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
-import googleMaps_API from "@/googleMaps-API";
+// import axios from "axios";
+// import googleMaps_API from "@/googleMaps-API";
 
 export default {
 	data() {
@@ -676,24 +676,25 @@ export default {
 					console.error("Mensaje de error: No se pudo calcular la distancia");
 					return;
 				}
+				this.errorCalcularDistancia = false;
+				// let origen = `${this.nuevoPedido.direccionRemitente.replace(
+				// 	/ /g,
+				// 	"%20"
+				// )}%20${this.nuevoPedido.distritoRemitente.replace(/ /g, "%20")}`;
+				// let destino = `${this.nuevoPedido.direccionConsignado.replace(
+				// 	/ /g,
+				// 	"%20"
+				// )}%20${this.nuevoPedido.distritoConsignado.replace(/ /g, "%20")}`;
 
-				let origen = `${this.nuevoPedido.direccionRemitente.replace(
-					/ /g,
-					"%20"
-				)}%20${this.nuevoPedido.distritoRemitente.replace(/ /g, "%20")}`;
-				let destino = `${this.nuevoPedido.direccionConsignado.replace(
-					/ /g,
-					"%20"
-				)}%20${this.nuevoPedido.distritoConsignado.replace(/ /g, "%20")}`;
+				// console.log("Origen:", origen);
+				// console.log("Destino:", destino);
 
-				console.log("Origen:", origen);
-				console.log("Destino:", destino);
+				// const API_URL = `${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
 
-				const API_URL = `${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
-
-				let distancia = await axios.get(API_URL);
-				console.log(distancia);
-				this.nuevoPedido.distancia = distancia.data.route.distance.toFixed(3);
+				// let distancia = await axios.get(API_URL);
+				// console.log(distancia);
+				// this.nuevoPedido.distancia = distancia.data.route.distance.toFixed(3);
+				this.nuevoPedido.distancia = 6.7; // Mientras se arregla la API de Google Maps
 				this.nuevoPedido.tarifa = 7.0;
 				this.nuevoPedido.CO2Ahorrado = (
 					this.nuevoPedido.distancia / 12
@@ -735,6 +736,8 @@ export default {
 				this.nuevoPedido.status = 100;
 				this.nuevoPedido.statusFinanciero = 1;
 				this.rolDelCliente = cliente.rolCliente.rol;
+				this.nuevoPedido.tipoEnvio = cliente.tipoDeEnvio.tipo;
+				this.nuevoPedido.modalidad = "Una vía";
 			}
 		},
 

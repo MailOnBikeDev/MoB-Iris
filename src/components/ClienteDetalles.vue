@@ -35,6 +35,10 @@
 			{{ estadisticas.tipoDeCarga.tipo }}
 		</p>
 		<p class="mb-2">
+			<span class="resalta">Tipo de Envío por defecto: </span>
+			{{ estadisticas.tipoDeEnvio.tipo }}
+		</p>
+		<p class="mb-2">
 			<span class="resalta">Forma de Pago: </span>
 			{{ estadisticas.formaDePago.pago }}
 		</p>

@@ -462,8 +462,10 @@ export default {
 						return;
 					} else {
 						MobikerService.storageNuevoMobiker(this.nuevoMobiker).then(
-							() => {
+							(response) => {
 								this.$router.push("/mobikers/equipo-mobiker");
+								console.log(response.data.message);
+								this.message = response.data.message;
 							},
 							(err) => console.error(err)
 						);
