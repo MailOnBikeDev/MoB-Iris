@@ -225,7 +225,6 @@
 							name="fechaNacimiento"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
-						{{ editarMobiker.fechaNacimiento }}
 						<div
 							v-if="errors.has('fechaNacimiento')"
 							class="bg-red-500 text-white text-sm rounded p-2"
