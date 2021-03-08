@@ -652,24 +652,30 @@ export default {
 					console.error("Mensaje de error: No se pudo calcular la distancia");
 					return;
 				}
-
+				this.errorCalcularDistancia = false;
 				let origen = `${this.nuevoPedido.direccionRemitente.replace(
 					/ /g,
-					"%20"
-				)}%20${this.nuevoPedido.distritoRemitente.replace(/ /g, "%20")}`;
+					"+"
+				)}+${this.nuevoPedido.distritoRemitente.replace(/ /g, "+")}`;
 				let destino = `${this.nuevoPedido.direccionConsignado.replace(
 					/ /g,
-					"%20"
-				)}%20${this.nuevoPedido.distritoConsignado.replace(/ /g, "%20")}`;
+					"+"
+				)}+${this.nuevoPedido.distritoConsignado.replace(/ /g, "+")}`;
 
-				console.log("Origen:", origen);
-				console.log("Destino:", destino);
+				// console.log("Origen:", origen);
+				// console.log("Destino:", destino);
 
-				const API_URL = `${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
+				const API_URL = `https://cors-anywhere.herokuapp.com/${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
 
 				let distancia = await axios.get(API_URL);
-				console.log(distancia);
-				this.nuevoPedido.distancia = distancia.data.route.distance.toFixed(3);
+				// console.log(`Distancia: ${distancia}`);
+
+				let distanciaCalculada =
+					distancia.data.rows[0].elements[0].distance.value / 1000;
+
+				// console.log(`distancia calculada: ${distanciaCalculada}`);
+
+				this.nuevoPedido.distancia = distanciaCalculada.toFixed(3);
 				this.nuevoPedido.tarifa = 7.0;
 				this.nuevoPedido.CO2Ahorrado = (
 					this.nuevoPedido.distancia / 12

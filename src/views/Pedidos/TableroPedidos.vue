@@ -237,7 +237,9 @@ export default {
 		},
 
 		activarCliente(cliente) {
-			console.log(cliente);
+			if (cliente) {
+				console.log(cliente);
+			}
 		},
 	},
 };
