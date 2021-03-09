@@ -8,10 +8,10 @@
 			</h1>
 		</div>
 
-		<div class="px-4 flex flex-row justify-around -mt-12">
+		<div class="px-4 flex flex-row -mt-12">
 			<div>
 				<button
-					class="bg-primary text-white px-4 py-1 rounded-xl focus:outline-none font-bold"
+					class="bg-primary relative left-56 text-white px-4 py-1 rounded-xl focus:outline-none font-bold"
 					@click="showBuscador = true"
 				>
 					Buscar cliente
@@ -23,15 +23,6 @@
 				@cerrarBuscador="showBuscador = false"
 				@activarCliente="activarCliente"
 			/>
-
-			<div>
-				<button
-					class="bg-primary text-white px-4 py-1 rounded-xl focus:outline-none font-bold"
-					@click="calcularDistancia"
-				>
-					Calcular distancia
-				</button>
-			</div>
 		</div>
 
 		<form class="mt-2 h-full p-2" autocomplete="off">
@@ -70,9 +61,13 @@
 						<label for="fecha" class="block text-primary text-sm font-bold ml-1"
 							>Fecha Seleccionada</label
 						>
-						<p class="bg-white rounded w-full h-10 tex-gray-700 p-2">
-							{{ $date(nuevoPedido.fecha).format("DD/MM/YYYY") }}
-						</p>
+						<input
+							v-model="nuevoPedido.fecha"
+							type="date"
+							v-validate="'required'"
+							name="fechaNacimiento"
+							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+						/>
 					</div>
 
 					<div>
@@ -125,7 +120,7 @@
 						>
 						<input
 							v-model="nuevoPedido.telefonoRemitente"
-							type="text"
+							type="number"
 							v-validate="'required|length:9'"
 							name="telefonoRemitente"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
@@ -282,7 +277,7 @@
 						<model-list-select
 							name="rolCliente"
 							:list="rolesCliente"
-							v-model="rolDelCliente"
+							v-model="nuevoPedido.rolCliente"
 							v-validate="'required'"
 							option-text="rol"
 							option-value="rol"
@@ -320,7 +315,7 @@
 						</div>
 					</div>
 
-					<div class="col-span-2">
+					<div>
 						<label
 							for="modalidad"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -340,6 +335,22 @@
 						>
 							<p>La modalidad es requerida</p>
 						</div>
+					</div>
+
+					<div>
+						<label
+							for="status"
+							class="block text-primary text-sm font-bold mb-1 ml-1"
+							>Estado del Pedido</label
+						>
+						<model-list-select
+							name="status"
+							v-model="nuevoPedido.status"
+							:list="estadosPedido"
+							v-validate="'required'"
+							option-text="tag"
+							option-value="id"
+						/>
 					</div>
 
 					<div>
@@ -385,7 +396,7 @@
 						>
 						<input
 							v-model="nuevoPedido.telefonoConsignado"
-							type="text"
+							type="number"
 							v-validate="'required|length:9'"
 							name="telefonoConsignado"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
@@ -466,7 +477,7 @@
 						</p>
 					</div>
 
-					<div class="col-span-2">
+					<div>
 						<label
 							for="mobiker"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -487,6 +498,15 @@
 						>
 							<p>El MoBiker es requerido</p>
 						</div>
+					</div>
+
+					<div class="text-center">
+						<button
+							class="bg-primary text-white mt-6 p-2 rounded-xl focus:outline-none font-bold"
+							@click.prevent="calcularDistancia"
+						>
+							Calcular distancia
+						</button>
 					</div>
 
 					<div>
@@ -546,11 +566,21 @@
 				</button>
 
 				<button
+					v-if="nuevoPedido.mobiker === 'Asignar MoBiker'"
+					type="submit"
+					@click.prevent="handleNuevoPedido"
+					class="block mx-auto bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
+				>
+					Programar Pedido
+				</button>
+
+				<button
+					v-else
 					type="submit"
 					@click.prevent="handleNuevoPedido"
 					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 				>
-					Crear Nuevo Pedido
+					Asignar Pedido
 				</button>
 			</div>
 		</form>
@@ -564,8 +594,8 @@ import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
-import axios from "axios";
-import googleMaps_API from "@/googleMaps-API";
+// import axios from "axios";
+// import googleMaps_API from "@/googleMaps-API";
 
 export default {
 	data() {
@@ -581,6 +611,7 @@ export default {
 			modalidades: [],
 			mobikers: [],
 			tiposDeEnvio: [],
+			estadosPedido: [],
 			rolDelCliente: "",
 			tarifaSugerida: null,
 		};
@@ -593,6 +624,7 @@ export default {
 			let roles = await AuxiliarService.getRolCliente();
 			let modalidad = await AuxiliarService.getModalidad();
 			let envios = await AuxiliarService.getTipoEnvio();
+			let estados = await AuxiliarService.getStatusPedidos();
 
 			let mobiker = await MobikerService.getMobikers();
 
@@ -602,6 +634,7 @@ export default {
 			this.rolesCliente = roles.data;
 			this.modalidades = modalidad.data;
 			this.tiposDeEnvio = envios.data;
+			this.estadosPedido = estados.data;
 
 			this.mobikers = mobiker.data;
 		} catch (error) {
@@ -618,6 +651,15 @@ export default {
 			let tarifaPorKm = 0.8;
 			let tarifaSugerida = this.nuevoPedido.distancia * tarifaPorKm;
 			return tarifaSugerida.toFixed(2);
+		},
+	},
+	watch: {
+		"nuevoPedido.mobiker": function() {
+			if (this.nuevoPedido.mobiker === "Asignar MoBiker") {
+				this.nuevoPedido.status = 1;
+			} else {
+				this.nuevoPedido.status = 2;
+			}
 		},
 	},
 	methods: {
@@ -677,27 +719,29 @@ export default {
 					return;
 				}
 				this.errorCalcularDistancia = false;
-				let origen = `${this.nuevoPedido.direccionRemitente.replace(
-					/ /g,
-					"+"
-				)}+${this.nuevoPedido.distritoRemitente.replace(/ /g, "+")}`;
-				let destino = `${this.nuevoPedido.direccionConsignado.replace(
-					/ /g,
-					"+"
-				)}+${this.nuevoPedido.distritoConsignado.replace(/ /g, "+")}`;
+				// let origen = `${this.nuevoPedido.direccionRemitente.replace(
+				// 	/ /g,
+				// 	"+"
+				// )}+${this.nuevoPedido.distritoRemitente.replace(/ /g, "+")}`;
+				// let destino = `${this.nuevoPedido.direccionConsignado.replace(
+				// 	/ /g,
+				// 	"+"
+				// )}+${this.nuevoPedido.distritoConsignado.replace(/ /g, "+")}`;
 
 				// console.log("Origen:", origen);
 				// console.log("Destino:", destino);
 
-				const API_URL = `https://cors-anywhere.herokuapp.com/${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
+				// const API_URL = `https://cors-anywhere.herokuapp.com/${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
 
-				let distancia = await axios.get(API_URL);
+				// let distancia = await axios.get(API_URL);
 				// console.log(`Distancia: ${distancia}`);
 
-				let distanciaCalculada =
-					distancia.data.rows[0].elements[0].distance.value / 1000;
+				// let distanciaCalculada =
+				// 	distancia.data.rows[0].elements[0].distance.value / 1000;
 
 				// console.log(`distancia calculada: ${distanciaCalculada}`);
+
+				let distanciaCalculada = 6.754; // Mientras no funciona la API
 
 				this.nuevoPedido.distancia = distanciaCalculada.toFixed(3);
 				this.nuevoPedido.tarifa = 7.0;
@@ -739,9 +783,8 @@ export default {
 				this.nuevoPedido.otroDatoRemitente = cliente.otroDato;
 				this.nuevoPedido.tipoCarga = cliente.tipoDeCarga.tipo;
 				this.nuevoPedido.formaPago = cliente.formaDePago.pago;
-				this.nuevoPedido.status = 100;
 				this.nuevoPedido.statusFinanciero = 1;
-				this.rolDelCliente = cliente.rolCliente.rol;
+				this.nuevoPedido.rolCliente = cliente.rolCliente.rol;
 				this.nuevoPedido.tipoEnvio = cliente.tipoDeEnvio.tipo;
 				this.nuevoPedido.modalidad = "Una vía";
 			}
@@ -749,16 +792,16 @@ export default {
 
 		asignarHoy() {
 			let hoy = new Date();
-			console.log(`Fecha de hoy: ${this.$date(hoy).format("DD/MM/YYYY")}`);
-			return (this.nuevoPedido.fecha = this.$date(hoy).format("YYYY/MM/DD"));
+			// console.log(`Fecha de hoy: ${this.$date(hoy).format("DD/MM/YYYY")}`);
+			return (this.nuevoPedido.fecha = this.$date(hoy).format("YYYY-MM-DD"));
 		},
 
 		asignarMañana() {
 			let hoy = new Date();
 			let DIA_EN_MS = 24 * 60 * 60 * 1000;
 			let manana = new Date(hoy.getTime() + DIA_EN_MS);
-			console.log(`Fecha mañana: ${this.$date(manana).format("DD/MM/YYYY")}`);
-			return (this.nuevoPedido.fecha = this.$date(manana).format("YYYY/MM/DD"));
+			// console.log(`Fecha mañana: ${this.$date(manana).format("DD/MM/YYYY")}`);
+			return (this.nuevoPedido.fecha = this.$date(manana).format("YYYY-MM-DD"));
 		},
 	},
 	components: {

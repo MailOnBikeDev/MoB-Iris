@@ -74,7 +74,7 @@
 					Cliente
 				</h2>
 
-				<div class="flex flex-col text-sm h-80" v-if="currentPedido">
+				<div class="flex flex-col text-sm max-h-96" v-if="currentPedido">
 					<p class="mb-2">
 						<span class="resalta">Contacto: </span>
 						{{ currentPedido.contactoRemitente }}
@@ -114,7 +114,7 @@
 					<p class="mb-2"><span class="resalta">Rol: </span>Remitente</p>
 				</div>
 
-				<div class="flex flex-col text-sm h-80" v-else>
+				<div class="flex flex-col text-sm max-h-96" v-else>
 					<p class="mb-2">
 						<span class="resalta">Contacto: </span>
 					</p>
@@ -138,7 +138,9 @@
 				</div>
 			</div>
 
-			<div class="bg-white col-span-3 overscroll-auto border-black border">
+			<div
+				class="bg-white col-span-3 max-h-96 overflow-y-auto border-black border"
+			>
 				<div
 					class="grid grid-cols-7 gap-x-1 text-center text-sm py-2 border-b-2 border-primary hover:bg-info items-center"
 					:class="{ 'bg-info': pedido.id == currentIndex }"
@@ -160,7 +162,41 @@
 					</div>
 					<div>
 						<p
-							class="bg-red-400 rounded-full inline px-2 py-1 font-bold text-white"
+							v-if="pedido.status.id === 1"
+							class="bg-purple-400 rounded-full inline px-2 py-1 font-bold text-white"
+						>
+							{{ pedido.status.tag }}
+						</p>
+						<p
+							v-if="pedido.status.id === 2"
+							class="bg-yellow-400 rounded-full inline px-2 py-1 font-bold text-white"
+						>
+							{{ pedido.status.tag }}
+						</p>
+						<p
+							v-if="pedido.status.id === 3"
+							class="bg-indigo-400 rounded-full inline px-2 py-1 font-bold text-white"
+						>
+							{{ pedido.status.tag }}
+						</p>
+						<p
+							v-if="pedido.status.id === (4 || 5 || 6)"
+							class="bg-green-700 rounded-full inline px-2 py-1 font-bold text-white"
+						>
+							{{ pedido.status.tag }}
+						</p>
+						<p
+							v-if="
+								pedido.status.id ===
+									(7 || 8 || 9 || 10 || 11 || 12 || 13 || 14 || 15 || 16)
+							"
+							class="bg-red-600 rounded-full inline px-2 py-1 font-bold text-white"
+						>
+							{{ pedido.status.tag }}
+						</p>
+						<p
+							v-if="pedido.status.id === (17 || 18 || 19)"
+							class="bg-yellow-700 rounded-full inline px-2 py-1 font-bold text-white"
 						>
 							{{ pedido.status.tag }}
 						</p>

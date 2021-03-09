@@ -61,6 +61,12 @@ class AuxiliarService {
 			headers: authHeader(),
 		});
 	}
+
+	getStatusPedidos() {
+		return http.get("auxiliares/status", {
+			headers: authHeader(),
+		});
+	}
 }
 
 export default new AuxiliarService();

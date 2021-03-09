@@ -65,7 +65,7 @@
 					<input
 						v-model="editarCliente.telefono"
 						v-validate="'required|length:9'"
-						type="text"
+						type="number"
 						name="telefono"
 						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
 					/>
@@ -88,7 +88,7 @@
 					<input
 						v-model="editarCliente.email"
 						v-validate="'required'"
-						type="text"
+						type="email"
 						name="email"
 						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
 					/>
@@ -110,7 +110,7 @@
 						v-model="editarCliente.ruc"
 						v-validate="'length:11'"
 						name="ruc"
-						type="text"
+						type="number"
 						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
 					/>
 					<div

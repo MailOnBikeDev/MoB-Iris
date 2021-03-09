@@ -44,6 +44,7 @@ class PedidoService {
 				mobiker: nuevoPedido.mobiker,
 				tipoEnvio: nuevoPedido.tipoEnvio,
 				modalidad: nuevoPedido.modalidad,
+				rolCliente: nuevoPedido.rolCliente,
 			});
 
 			return pedido;
@@ -88,12 +89,13 @@ class PedidoService {
 				distancia: editarPedido.distancia,
 				CO2Ahorrado: editarPedido.CO2Ahorrado,
 				ruido: editarPedido.ruido,
-				// status: editarPedido.status,
+				status: editarPedido.status,
 				// statusFinanciero: editarPedido.statusFinanciero,
 				distritoConsignado: editarPedido.distrito.distrito,
 				mobiker: editarPedido.mobiker.fullName,
 				tipoEnvio: editarPedido.tipoDeEnvio.tipo,
 				modalidad: editarPedido.modalidad.tipo,
+				rolCliente: editarPedido.rolCliente,
 			});
 
 			return pedidoEditado;

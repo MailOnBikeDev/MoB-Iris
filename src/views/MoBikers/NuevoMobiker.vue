@@ -65,7 +65,7 @@
 						>
 						<input
 							v-model="nuevoMobiker.telefono"
-							type="text"
+							type="number"
 							v-validate="'required|length:9'"
 							name="telefono"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
@@ -175,7 +175,7 @@
 						>
 						<input
 							v-model="nuevoMobiker.numeroDocumento"
-							type="text"
+							type="number"
 							v-validate="'required|min:8|max:10'"
 							name="numeroDocumento"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"

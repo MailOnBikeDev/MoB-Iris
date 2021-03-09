@@ -8,10 +8,10 @@
 			</h1>
 		</div>
 
-		<div class="px-4 flex flex-row justify-around -mt-12">
+		<div class="px-4 flex flex-row -mt-12">
 			<div>
 				<button
-					class="bg-primary text-white px-4 py-1 rounded-xl focus:outline-none font-bold"
+					class="bg-primary relative left-56 text-white px-4 py-1 rounded-xl focus:outline-none font-bold"
 					@click="showBuscador = true"
 				>
 					Buscar cliente
@@ -23,15 +23,6 @@
 				@cerrarBuscador="showBuscador = false"
 				@activarCliente="activarCliente"
 			/>
-
-			<div>
-				<button
-					class="bg-primary text-white px-4 py-1 rounded-xl focus:outline-none font-bold"
-					@click="calcularDistancia"
-				>
-					Calcular distancia
-				</button>
-			</div>
 		</div>
 
 		<form class="mt-2 h-full p-2" autocomplete="off">
@@ -46,13 +37,36 @@
 
 				<!-- FORMULARIO ORIGEN -->
 				<div class="grid grid-cols-3 gap-2 p-2">
-					<div class="col-span-3">
+					<div>
+						<button
+							class="mt-5 bg-secondary py-2 w-full rounded text-white font-bold focus:outline-none"
+							@click="asignarHoy()"
+							type="button"
+						>
+							Para hoy
+						</button>
+					</div>
+
+					<div>
+						<button
+							class="mt-5 bg-secondary py-2 w-full rounded text-white font-bold focus:outline-none"
+							@click="asignarMañana()"
+							type="button"
+						>
+							Para mañana
+						</button>
+					</div>
+					<div>
 						<label for="fecha" class="block text-primary text-sm font-bold ml-1"
 							>Fecha</label
 						>
-						<p class="bg-white rounded w-full h-10 tex-gray-700 p-2">
-							{{ $date(editarPedido.fecha).format("DD/MM/YYYY") }}
-						</p>
+						<input
+							v-model="editarPedido.fecha"
+							type="date"
+							v-validate="'required'"
+							name="fechaNacimiento"
+							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+						/>
 					</div>
 
 					<div>
@@ -105,7 +119,7 @@
 						>
 						<input
 							v-model="editarPedido.telefonoRemitente"
-							type="text"
+							type="number"
 							v-validate="'required|length:9'"
 							name="telefonoRemitente"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
@@ -262,7 +276,7 @@
 						<model-list-select
 							name="rolCliente"
 							:list="rolesCliente"
-							v-model="rolDelCliente"
+							v-model="editarPedido.rolCliente"
 							v-validate="'required'"
 							option-text="rol"
 							option-value="rol"
@@ -365,7 +379,7 @@
 						>
 						<input
 							v-model="editarPedido.telefonoConsignado"
-							type="text"
+							type="number"
 							v-validate="'required|length:9'"
 							name="telefonoConsignado"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
@@ -446,7 +460,7 @@
 						</p>
 					</div>
 
-					<div class="col-span-2">
+					<div>
 						<label
 							for="mobiker"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -467,6 +481,15 @@
 						>
 							<p>El MoBiker es requerido</p>
 						</div>
+					</div>
+
+					<div class="text-center">
+						<button
+							class="bg-primary text-white mt-6 p-2 rounded-xl focus:outline-none font-bold"
+							@click.prevent="calcularDistancia"
+						>
+							Calcular distancia
+						</button>
 					</div>
 
 					<div>
@@ -519,6 +542,7 @@
 
 				<button
 					type="button"
+					@click.prevent="anularPedido"
 					class="block mx-auto bg-yellow-500 hover:bg-yellow-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 				>
 					Anular
@@ -610,7 +634,7 @@ export default {
 				this.editarPedido.distritoConsignado = response.data.distrito.distrito;
 				this.editarPedido.tipoEnvio = response.data.tipoDeEnvio.tipo;
 				this.editarPedido.fecha = this.$date(response.data.fecha).format(
-					"DD/MM/YYYY"
+					"YYYY-MM-DD"
 				);
 			} catch (error) {
 				console.error("Mensaje de error:", error);
@@ -623,7 +647,7 @@ export default {
 					console.error("Mensaje de error: No se pudo editar el Pedido");
 					return;
 				} else {
-					PedidoService.EditarPedido(
+					PedidoService.editPedido(
 						this.$route.params.id,
 						this.editarPedido
 					).then(
@@ -706,18 +730,56 @@ export default {
 
 		activarCliente(cliente) {
 			if (cliente) {
-				this.nuevoPedido.contactoRemitente = cliente.contacto;
-				this.nuevoPedido.empresaRemitente = cliente.empresa;
-				this.nuevoPedido.telefonoRemitente = cliente.telefono;
-				this.nuevoPedido.direccionRemitente = cliente.direccion;
-				this.nuevoPedido.distritoRemitente = cliente.distrito.distrito;
-				this.nuevoPedido.otroDatoRemitente = cliente.otroDato;
-				this.nuevoPedido.tipoCarga = cliente.tipoDeCarga.tipo;
-				this.nuevoPedido.formaPago = cliente.formaDePago.pago;
-				this.nuevoPedido.status = 100;
-				this.nuevoPedido.statusFinanciero = 1;
-				this.rolDelCliente = cliente.rolCliente.rol;
+				this.editarPedido.contactoRemitente = cliente.contacto;
+				this.editarPedido.empresaRemitente = cliente.empresa;
+				this.editarPedido.telefonoRemitente = cliente.telefono;
+				this.editarPedido.direccionRemitente = cliente.direccion;
+				this.editarPedido.distritoRemitente = cliente.distrito.distrito;
+				this.editarPedido.otroDatoRemitente = cliente.otroDato;
+				this.editarPedido.tipoCarga = cliente.tipoDeCarga.tipo;
+				this.editarPedido.formaPago = cliente.formaDePago.pago;
+				this.editarPedido.statusFinanciero = 1;
+				this.editarPedido.rolCliente = cliente.rolCliente.rol;
 			}
+		},
+
+		anularPedido() {
+			this.$validator.validateAll().then((isValid) => {
+				if (!isValid) {
+					console.error("Mensaje de error: No se pudo editar el Pedido");
+					return;
+				} else {
+					this.editarPedido.status = 17;
+					console.log(this.editarPedido.status);
+					PedidoService.editPedido(
+						this.$route.params.id,
+						this.editarPedido
+					).then(
+						(response) => {
+							this.$router.push("/pedidos/tablero-pedidos");
+							console.log(response.data.message);
+							this.message = response.data.message;
+						},
+						(err) => console.error(`Mensaje de error: ${err.message}`)
+					);
+				}
+			});
+		},
+
+		asignarHoy() {
+			let hoy = new Date();
+			// console.log(`Fecha de hoy: ${this.$date(hoy).format("DD/MM/YYYY")}`);
+			return (this.editarPedido.fecha = this.$date(hoy).format("YYYY-MM-DD"));
+		},
+
+		asignarMañana() {
+			let hoy = new Date();
+			let DIA_EN_MS = 24 * 60 * 60 * 1000;
+			let manana = new Date(hoy.getTime() + DIA_EN_MS);
+			// console.log(`Fecha mañana: ${this.$date(manana).format("DD/MM/YYYY")}`);
+			return (this.editarPedido.fecha = this.$date(manana).format(
+				"YYYY-MM-DD"
+			));
 		},
 	},
 	components: {
