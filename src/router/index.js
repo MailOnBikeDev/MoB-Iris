@@ -31,6 +31,11 @@ const routes = [
 		component: () => import("@/views/Pedidos/TableroPedidos.vue"),
 	},
 	{
+		path: "/pedidos/pedidos-programados",
+		name: "TableroAsignacion",
+		component: () => import("@/views/Pedidos/TableroAsignacion.vue"),
+	},
+	{
 		path: "/pedidos/nuevo-pedido",
 		name: "NuevoPedido",
 		component: () => import("@/views/Pedidos/NuevoPedido.vue"),

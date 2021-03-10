@@ -4,36 +4,25 @@
 			<h1
 				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded-xl relative -top-12 py-2 bg-gray-100 px-6"
 			>
-				Tablero de Pedidos
+				Asignación de Pedidos
 			</h1>
 		</div>
 
-		<div class="flex flex-row justify-evenly -mt-10 mb-4">
-			<router-link
-				to="/pedidos/pedidos-programados"
-				class="bg-indigo-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-indigo-500"
-				custom
-				v-slot="{ navigate }"
-			>
-				<span @click="navigate" role="link" class="text-center cursor-pointer"
-					>Asignar Pedidos</span
-				>
-			</router-link>
-
-			<!-- <div>
+		<!-- <div class="flex flex-row justify-evenly -mt-10 mb-4">
+			<div>
 				<button
 					class="bg-primary text-white px-4 py-2 rounded-xl focus:outline-none font-bold"
 					@click="showBuscador = true"
 				>
 					Buscar cliente
 				</button>
-			</div> -->
+			</div>
 
-			<!-- <BuscadorCliente
+			<BuscadorCliente
 				:showBuscador="showBuscador"
 				@cerrarBuscador="showBuscador = false"
 				@activarCliente="activarCliente"
-			/> -->
+			/>
 
 			<button
 				class="bg-yellow-600 hover:bg-yellow-500 px-4 rounded-full focus:outline-none"
@@ -52,9 +41,9 @@
 					>Crear nuevo Pedido</span
 				>
 			</router-link>
-		</div>
+		</div> -->
 
-		<div class="grid grid-cols-4 gap-2">
+		<div class="grid grid-cols-4 gap-2 -mt-10">
 			<div
 				class="col-start-2 col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center"
 			>
@@ -178,55 +167,6 @@
 						>
 							{{ pedido.status.tag }}
 						</p>
-						<p
-							v-if="pedido.status.id === 2"
-							class="bg-yellow-400 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="pedido.status.id === 3"
-							class="bg-indigo-400 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="
-								pedido.status.id === 4 ||
-									pedido.status.id === 5 ||
-									pedido.status.id === 6
-							"
-							class="bg-green-700 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="
-								pedido.status.id === 7 ||
-									pedido.status.id === 8 ||
-									pedido.status.id === 9 ||
-									pedido.status.id === 10 ||
-									pedido.status.id === 11 ||
-									pedido.status.id === 12 ||
-									pedido.status.id === 13 ||
-									pedido.status.id === 14 ||
-									pedido.status.id === 15 ||
-									pedido.status.id === 16
-							"
-							class="bg-red-600 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="
-								pedido.status.id === 17 ||
-									pedido.status.id === 18 ||
-									pedido.status.id === 19
-							"
-							class="bg-yellow-700 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
 					</div>
 					<div>
 						<p>{{ $date(pedido.fecha).format("DD/MM/YYYY") }}</p>
@@ -272,7 +212,7 @@ export default {
 	},
 	methods: {
 		retrievePedidos() {
-			PedidoService.getPedidos().then(
+			PedidoService.searchPedidoProgramado(1).then(
 				(response) => {
 					this.pedidos = response.data;
 				},

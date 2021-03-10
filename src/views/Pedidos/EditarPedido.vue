@@ -291,7 +291,7 @@
 				</div>
 
 				<!-- FORMULARIO DESTINO -->
-				<div class="grid grid-cols-3 gap-2  p-2">
+				<div class="grid grid-cols-3 gap-2 p-2">
 					<div>
 						<label
 							for="tipoEnvio"
@@ -314,7 +314,7 @@
 						</div>
 					</div>
 
-					<div class="col-span-2">
+					<div>
 						<label
 							for="modalidad"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
@@ -334,6 +334,22 @@
 						>
 							<p>La modalidad es requerida</p>
 						</div>
+					</div>
+
+					<div>
+						<label
+							for="status"
+							class="block text-primary text-sm font-bold mb-1 ml-1"
+							>Estado del Pedido</label
+						>
+						<model-list-select
+							name="status"
+							v-model="editarPedido.statusId"
+							:list="estadosPedido"
+							v-validate="'required'"
+							option-text="tag"
+							option-value="id"
+						/>
 					</div>
 
 					<div>
@@ -584,6 +600,7 @@ export default {
 			modalidades: [],
 			mobikers: [],
 			tiposDeEnvio: [],
+			estadosPedido: [],
 			rolDelCliente: "",
 			tarifaSugerida: null,
 		};
@@ -598,6 +615,7 @@ export default {
 			let roles = await AuxiliarService.getRolCliente();
 			let modalidad = await AuxiliarService.getModalidad();
 			let envios = await AuxiliarService.getTipoEnvio();
+			let estados = await AuxiliarService.getStatusPedidos();
 
 			let mobiker = await MobikerService.getMobikers();
 
@@ -607,6 +625,7 @@ export default {
 			this.rolesCliente = roles.data;
 			this.modalidades = modalidad.data;
 			this.tiposDeEnvio = envios.data;
+			this.estadosPedido = estados.data;
 
 			this.mobikers = mobiker.data;
 		} catch (error) {
@@ -749,8 +768,8 @@ export default {
 					console.error("Mensaje de error: No se pudo editar el Pedido");
 					return;
 				} else {
-					this.editarPedido.status = 17;
-					console.log(this.editarPedido.status);
+					this.editarPedido.statusId = 17;
+					// console.log(this.editarPedido.status);
 					PedidoService.editPedido(
 						this.$route.params.id,
 						this.editarPedido

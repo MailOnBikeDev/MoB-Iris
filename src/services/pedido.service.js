@@ -89,7 +89,7 @@ class PedidoService {
 				distancia: editarPedido.distancia,
 				CO2Ahorrado: editarPedido.CO2Ahorrado,
 				ruido: editarPedido.ruido,
-				status: editarPedido.status,
+				status: editarPedido.statusId,
 				// statusFinanciero: editarPedido.statusFinanciero,
 				distritoConsignado: editarPedido.distrito.distrito,
 				mobiker: editarPedido.mobiker.fullName,
@@ -107,6 +107,18 @@ class PedidoService {
 	async searchPedido(findPedido) {
 		try {
 			let pedido = await http.get(`pedidos?q=${findPedido}`, {
+				headers: authHeader(),
+			});
+
+			return pedido;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async searchPedidoProgramado(status) {
+		try {
+			let pedido = await http.get(`pedidos-programados?q=${status}`, {
 				headers: authHeader(),
 			});
 
