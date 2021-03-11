@@ -48,13 +48,14 @@
 
 		<div class="grid grid-cols-5 gap-x-2">
 			<div
-				class="inline-grid col-span-3 grid-cols-6 text-sm text-center font-bold items-center"
+				class="inline-grid col-span-3 grid-cols-7 text-sm text-center font-bold items-center"
 			>
 				<p>Nombres</p>
 				<p>Distrito</p>
-				<p>Equipamiento</p>
+				<p>Equipo</p>
 				<p>Bicienvios</p>
 				<p>Rango</p>
+				<p>Estado</p>
 				<p>Editar</p>
 			</div>
 
@@ -90,7 +91,7 @@
 
 			<div class="bg-white overscroll-auto col-span-3 border border-black">
 				<div
-					class="grid grid-cols-6 text-center text-sm py-2 hover:bg-info border-b-2 border-primary items-center cursor-default"
+					class="grid grid-cols-7 text-center text-sm py-2 hover:bg-info border-b-2 border-primary items-center cursor-default"
 					:class="{ 'bg-info': mobiker.id == currentIndex }"
 					v-for="mobiker in mobikers"
 					:key="mobiker.id"
@@ -119,6 +120,20 @@
 					<div>
 						<p>
 							{{ mobiker.rango.rangoMoBiker }}
+						</p>
+					</div>
+					<div>
+						<p
+							v-if="mobiker.status === 'Activo'"
+							class="bg-green-500 inline-block rounded-full px-2 text-white font-bold"
+						>
+							{{ mobiker.status }}
+						</p>
+						<p
+							v-else
+							class="bg-gray-500 inline-block rounded-full px-2 text-white font-bold"
+						>
+							{{ mobiker.status }}
 						</p>
 					</div>
 					<div class="flex justify-center">

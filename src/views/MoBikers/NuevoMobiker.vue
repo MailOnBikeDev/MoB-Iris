@@ -14,7 +14,7 @@
 				@submit.prevent="handleNuevoMobiker"
 				autocomplete="off"
 			>
-				<div class="grid grid-cols-4 gap-4 mb-4">
+				<div class="grid grid-cols-5 gap-4 mb-4">
 					<div class="flex flex-col">
 						<label
 							for="nombres"
@@ -96,6 +96,28 @@
 							class="bg-red-500 text-white text-sm rounded p-2"
 						>
 							<p>El Telegram es requerido</p>
+						</div>
+					</div>
+
+					<div class="flex flex-col">
+						<label
+							for="genero"
+							class="block text-primary text-sm font-bold mb-1 ml-1"
+							>Género</label
+						>
+						<model-list-select
+							v-model="nuevoMobiker.genero"
+							:list="generos"
+							v-validate="'required'"
+							name="genero"
+							option-text="gen"
+							option-value="gen"
+						/>
+						<div
+							v-if="errors.has('genero')"
+							class="bg-red-500 text-white text-sm rounded p-2"
+						>
+							<p>El Género es requerido</p>
 						</div>
 					</div>
 				</div>
@@ -192,28 +214,6 @@
 				<div class="grid grid-cols-5 gap-4 mb-4">
 					<div class="flex flex-col">
 						<label
-							for="genero"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
-							>Género</label
-						>
-						<model-list-select
-							v-model="nuevoMobiker.genero"
-							:list="generos"
-							v-validate="'required'"
-							name="genero"
-							option-text="gen"
-							option-value="gen"
-						/>
-						<div
-							v-if="errors.has('genero')"
-							class="bg-red-500 text-white text-sm rounded p-2"
-						>
-							<p>El Género es requerido</p>
-						</div>
-					</div>
-
-					<div class="flex flex-col">
-						<label
 							for="fechaNacimiento"
 							class="block text-primary text-sm font-bold mb-1 ml-1"
 							>Fecha de Nacimiento</label
@@ -297,9 +297,31 @@
 							<p>El equipo es requerido</p>
 						</div>
 					</div>
+
+					<div class="flex flex-col">
+						<label
+							for="rango"
+							class="block text-primary text-sm font-bold mb-1 ml-1"
+							>Rango</label
+						>
+						<model-list-select
+							v-model="nuevoMobiker.rango"
+							:list="rangosMoBiker"
+							v-validate="'required'"
+							name="rango"
+							option-text="rangoMoBiker"
+							option-value="rangoMoBiker"
+						/>
+						<div
+							v-if="errors.has('equipo')"
+							class="bg-red-500 text-white text-sm rounded p-2"
+						>
+							<p>El Rango es requerido</p>
+						</div>
+					</div>
 				</div>
 
-				<div class="grid grid-cols-4 gap-4 mb-10">
+				<div class="grid grid-cols-5 gap-4 mb-10">
 					<div class="flex flex-col">
 						<label
 							for="fechaIngreso"
@@ -377,6 +399,28 @@
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 					</div>
+
+					<div class="flex flex-col">
+						<label
+							for="status"
+							class="block text-primary text-sm font-bold mb-1 ml-1"
+							>Estado del MoBiker</label
+						>
+						<model-list-select
+							v-model="nuevoMobiker.status"
+							:list="estadosMoBiker"
+							v-validate="'required'"
+							name="status"
+							option-text="status"
+							option-value="status"
+						/>
+						<div
+							v-if="errors.has('equipo')"
+							class="bg-red-500 text-white text-sm rounded p-2"
+						>
+							<p>El estado es requerido</p>
+						</div>
+					</div>
 				</div>
 
 				<div class="flex flex-row justify-between mb-6">
@@ -440,15 +484,32 @@ export default {
 				{ cuenta: "Cuenta Corriente" },
 			],
 			entidadesBancarias: [],
+			rangosMoBiker: [],
+			estadosMoBiker: [
+				{
+					id: 1,
+					status: "Activo",
+				},
+				{
+					id: 2,
+					status: "Inactivo",
+				},
+				{
+					id: 3,
+					status: "Retirado",
+				},
+			],
 		};
 	},
 	async mounted() {
 		try {
 			let resDistritos = await AuxiliarService.getDistritos();
 			let resBancos = await AuxiliarService.getEntidadesBancarias();
+			let resRangos = await AuxiliarService.getRangosMoB();
 
 			this.distritos = resDistritos.data;
 			this.entidadesBancarias = resBancos.data;
+			this.rangosMoBiker = resRangos.data;
 		} catch (error) {
 			console.error(error);
 		}

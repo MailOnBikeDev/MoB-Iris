@@ -34,6 +34,8 @@ class MobikerService {
 				tipoBicicleta: nuevoMobiker.tipoBicicleta,
 				fechaNacimiento: nuevoMobiker.fechaNacimiento,
 				fechaIngreso: nuevoMobiker.fechaIngreso,
+				status: nuevoMobiker.status,
+				rango: nuevoMobiker.rango,
 			});
 
 			return mobiker;
@@ -74,6 +76,8 @@ class MobikerService {
 				tipoBicicleta: editarMobiker.tipoBicicleta,
 				fechaNacimiento: editarMobiker.fechaNacimiento,
 				fechaIngreso: editarMobiker.fechaIngreso,
+				status: editarMobiker.status,
+				rango: editarMobiker.rango,
 			});
 
 			return mobikerEditado;
