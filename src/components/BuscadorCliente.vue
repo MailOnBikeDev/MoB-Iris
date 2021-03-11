@@ -5,7 +5,7 @@ vue.<template>
 	>
 		<div class="absolute -top-4 -right-2">
 			<button
-				class="rounded-full bg-info px-2 text-2xl focus:outline-none text-white"
+				class="rounded-full bg-info hover:bg-secondary px-2 text-2xl focus:outline-none text-white"
 				@click.prevent="cerrarBuscador"
 			>
 				<font-awesome-icon icon="times" />

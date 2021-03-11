@@ -44,8 +44,14 @@
 		</div> -->
 
 		<div class="grid grid-cols-4 gap-2 -mt-10">
+			<div class="flex flex-row justify-center">
+				<p>
+					<span class="resalta">Número de Pedidos:</span> {{ pedidos.length }}
+				</p>
+			</div>
+
 			<div
-				class="col-start-2 col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center"
+				class="col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center"
 			>
 				<div>
 					<p># Pedido</p>

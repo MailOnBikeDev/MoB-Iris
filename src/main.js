@@ -12,10 +12,14 @@ import {
 	faPencilAlt,
 	faSyncAlt,
 	faTimes,
+	faReceipt,
 } from "@fortawesome/free-solid-svg-icons";
 import VueDayjs from "vue-dayjs-plugin";
+import VueClipboard from "vue-clipboard2";
 
-library.add(faPencilAlt, faSyncAlt, faTimes);
+Vue.use(VueClipboard);
+
+library.add(faPencilAlt, faSyncAlt, faTimes, faReceipt);
 
 Vue.config.productionTip = false;
 

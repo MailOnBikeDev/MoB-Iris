@@ -8,6 +8,12 @@
 			</h1>
 		</div>
 
+		<ReporteComanda
+			:showComanda="showComanda"
+			@cerrarComanda="showComanda = false"
+			:currentPedido="currentPedido"
+		/>
+
 		<div class="flex flex-row justify-evenly -mt-10 mb-4">
 			<router-link
 				to="/pedidos/pedidos-programados"
@@ -55,8 +61,13 @@
 		</div>
 
 		<div class="grid grid-cols-4 gap-2">
+			<div class="flex flex-row justify-center">
+				<p>
+					<span class="resalta">Número de Pedidos:</span> {{ pedidos.length }}
+				</p>
+			</div>
 			<div
-				class="col-start-2 col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center"
+				class="col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center"
 			>
 				<div>
 					<p># Pedido</p>
@@ -77,7 +88,7 @@
 					<p>Fecha</p>
 				</div>
 				<div>
-					<p>Editar</p>
+					<p>Acciones</p>
 				</div>
 			</div>
 			<div class="bg-white p-4 border-black border">
@@ -231,7 +242,7 @@
 					<div>
 						<p>{{ $date(pedido.fecha).format("DD/MM/YYYY") }}</p>
 					</div>
-					<div class="flex justify-center">
+					<div class="flex justify-center items-center">
 						<router-link
 							:to="`/pedidos/tablero-pedidos/${pedido.id}`"
 							custom
@@ -245,6 +256,10 @@
 								role="link"
 							/>
 						</router-link>
+
+						<button class="focus:outline-none" @click="showComanda = true">
+							<font-awesome-icon class="text-primary ml-4" icon="receipt" />
+						</button>
 					</div>
 				</div>
 			</div>
@@ -254,15 +269,17 @@
 
 <script>
 import PedidoService from "@/services/pedido.service";
+import ReporteComanda from "@/components/ReporteComanda";
 // import BuscadorCliente from "@/components/BuscadorCliente";
 
 export default {
 	name: "Pedidos",
-	// components: { BuscadorCliente },
+	components: { ReporteComanda },
 	data() {
 		return {
 			pedidos: [],
 			showBuscador: false,
+			showComanda: false,
 			currentPedido: null,
 			currentIndex: -1,
 		};
