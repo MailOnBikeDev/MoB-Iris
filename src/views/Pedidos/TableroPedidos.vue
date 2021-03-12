@@ -14,6 +14,12 @@
 			:currentPedido="currentPedido"
 		/>
 
+		<DetallePedido
+			:showDetalle="showDetalle"
+			@cerrarDetalle="showDetalle = false"
+			:currentPedido="currentPedido"
+		/>
+
 		<div class="flex flex-row justify-evenly -mt-10 mb-4">
 			<router-link
 				to="/pedidos/pedidos-programados"
@@ -258,6 +264,13 @@
 						<button class="focus:outline-none" @click="showComanda = true">
 							<font-awesome-icon class="text-primary ml-4" icon="receipt" />
 						</button>
+
+						<button class="focus:outline-none" @click="showDetalle = true">
+							<font-awesome-icon
+								class="text-primary ml-4"
+								icon="window-maximize"
+							/>
+						</button>
 					</div>
 				</div>
 			</div>
@@ -268,16 +281,18 @@
 <script>
 import PedidoService from "@/services/pedido.service";
 import ReporteComanda from "@/components/ReporteComanda";
+import DetallePedido from "@/components/DetallePedido";
 // import BuscadorCliente from "@/components/BuscadorCliente";
 
 export default {
 	name: "Pedidos",
-	components: { ReporteComanda },
+	components: { ReporteComanda, DetallePedido },
 	data() {
 		return {
 			pedidos: [],
 			showBuscador: false,
 			showComanda: false,
+			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
 		};
