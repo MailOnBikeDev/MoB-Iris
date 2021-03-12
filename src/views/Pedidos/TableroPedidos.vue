@@ -96,7 +96,7 @@
 					Cliente
 				</h2>
 
-				<div class="flex flex-col text-sm max-h-96" v-if="currentPedido">
+				<div class="flex flex-col text-sm h-80" v-if="currentPedido">
 					<p class="mb-2">
 						<span class="resalta">Contacto: </span>
 						{{ currentPedido.contactoRemitente }}
@@ -136,7 +136,7 @@
 					<p class="mb-2"><span class="resalta">Rol: </span>Remitente</p>
 				</div>
 
-				<div class="flex flex-col text-sm max-h-96" v-else>
+				<div class="flex flex-col text-sm h-80" v-else>
 					<p class="mb-2">
 						<span class="resalta">Contacto: </span>
 					</p>
@@ -160,9 +160,7 @@
 				</div>
 			</div>
 
-			<div
-				class="bg-white col-span-3 max-h-96 overflow-y-auto border-black border"
-			>
+			<div class="bg-white col-span-3 overflow-y-auto border-black border">
 				<div
 					class="grid grid-cols-7 gap-x-1 text-center text-sm py-2 border-b-2 border-primary hover:bg-info items-center"
 					:class="{ 'bg-info': pedido.id == currentIndex }"
@@ -240,7 +238,7 @@
 						</p>
 					</div>
 					<div>
-						<p>{{ $date(pedido.fecha).format("DD/MM/YYYY") }}</p>
+						<p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
 					</div>
 					<div class="flex justify-center items-center">
 						<router-link

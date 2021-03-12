@@ -218,12 +218,13 @@
 							class="block text-primary text-sm font-bold mb-1 ml-1"
 							>Fecha de Nacimiento</label
 						>
-						<input
+						<datepicker
 							v-model="editarMobiker.fechaNacimiento"
 							type="date"
 							v-validate="'required'"
 							name="fechaNacimiento"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							monday-first="true"
 						/>
 						<div
 							v-if="errors.has('fechaNacimiento')"
@@ -328,12 +329,13 @@
 							class="block text-primary text-sm font-bold mb-1 ml-1"
 							>Fecha de Ingreso</label
 						>
-						<input
+						<datepicker
 							v-model="editarMobiker.fechaIngreso"
 							v-validate="'required'"
 							name="fechaIngreso"
 							type="date"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							monday-first="true"
 						/>
 						<div
 							v-if="errors.has('fechaIngreso')"
@@ -449,6 +451,7 @@ import Mobiker from "@/models/mobiker";
 import { ModelListSelect } from "vue-search-select";
 import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
+import Datepicker from "vuejs-datepicker";
 
 export default {
 	name: "EditarMobiker",
@@ -522,12 +525,6 @@ export default {
 				let response = await MobikerService.getMobikerById(id);
 
 				this.editarMobiker = response.data;
-				this.editarMobiker.fechaNacimiento = this.$date(
-					response.data.fechaNacimiento
-				).format("YYYY-MM-DD");
-				this.editarMobiker.fechaIngreso = this.$date(
-					response.data.fechaIngreso
-				).format("YYYY-MM-DD");
 				this.editarMobiker.rango = response.data.rango.rangoMoBiker;
 			} catch (error) {
 				console.error("Mensaje de error:", error);
@@ -564,6 +561,7 @@ export default {
 	},
 	components: {
 		ModelListSelect,
+		Datepicker,
 	},
 };
 </script>

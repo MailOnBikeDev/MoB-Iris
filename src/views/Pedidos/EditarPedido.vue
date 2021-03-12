@@ -60,12 +60,11 @@
 						<label for="fecha" class="block text-primary text-sm font-bold ml-1"
 							>Fecha</label
 						>
-						<input
+						<datepicker
 							v-model="editarPedido.fecha"
-							type="date"
 							v-validate="'required'"
 							name="fechaNacimiento"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 					</div>
 
@@ -583,14 +582,15 @@
 </template>
 
 <script>
-import axios from "axios";
 import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
 import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
-import googleMaps_API from "@/googleMaps-API";
+import Datepicker from "vuejs-datepicker";
+// import axios from "axios";
+// import googleMaps_API from "@/googleMaps-API";
 
 export default {
 	data() {
@@ -672,9 +672,6 @@ export default {
 				this.editarPedido = response.data;
 				this.editarPedido.distritoConsignado = response.data.distrito.distrito;
 				this.editarPedido.tipoEnvio = response.data.tipoDeEnvio.tipo;
-				this.editarPedido.fecha = this.$date(response.data.fecha).format(
-					"YYYY-MM-DD"
-				);
 			} catch (error) {
 				console.error("Mensaje de error:", error);
 			}
@@ -716,27 +713,29 @@ export default {
 					return;
 				}
 				this.errorCalcularDistancia = false;
-				let origen = `${this.nuevoPedido.direccionRemitente.replace(
-					/ /g,
-					"+"
-				)}+${this.nuevoPedido.distritoRemitente.replace(/ /g, "+")}`;
-				let destino = `${this.nuevoPedido.direccionConsignado.replace(
-					/ /g,
-					"+"
-				)}+${this.nuevoPedido.distritoConsignado.replace(/ /g, "+")}`;
+				// let origen = `${this.nuevoPedido.direccionRemitente.replace(
+				// 	/ /g,
+				// 	"+"
+				// )}+${this.nuevoPedido.distritoRemitente.replace(/ /g, "+")}`;
+				// let destino = `${this.nuevoPedido.direccionConsignado.replace(
+				// 	/ /g,
+				// 	"+"
+				// )}+${this.nuevoPedido.distritoConsignado.replace(/ /g, "+")}`;
 
-				// console.log("Origen:", origen);
-				// console.log("Destino:", destino);
+				// // console.log("Origen:", origen);
+				// // console.log("Destino:", destino);
 
-				const API_URL = `https://cors-anywhere.herokuapp.com/${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
+				// const API_URL = `https://cors-anywhere.herokuapp.com/${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
 
-				let distancia = await axios.get(API_URL);
-				// console.log(`Distancia: ${distancia}`);
+				// let distancia = await axios.get(API_URL);
+				// // console.log(`Distancia: ${distancia}`);
 
-				let distanciaCalculada =
-					distancia.data.rows[0].elements[0].distance.value / 1000;
+				// let distanciaCalculada =
+				// 	distancia.data.rows[0].elements[0].distance.value / 1000;
 
 				// console.log(`distancia calculada: ${distanciaCalculada}`);
+
+				let distanciaCalculada = 3.765;
 
 				this.nuevoPedido.distancia = distanciaCalculada.toFixed(3);
 				this.nuevoPedido.tarifa = 7.0;
@@ -807,23 +806,20 @@ export default {
 
 		asignarHoy() {
 			let hoy = new Date();
-			// console.log(`Fecha de hoy: ${this.$date(hoy).format("DD/MM/YYYY")}`);
-			return (this.editarPedido.fecha = this.$date(hoy).format("YYYY-MM-DD"));
+			return (this.editarPedido.fecha = hoy);
 		},
 
 		asignarMañana() {
 			let hoy = new Date();
 			let DIA_EN_MS = 24 * 60 * 60 * 1000;
 			let manana = new Date(hoy.getTime() + DIA_EN_MS);
-			// console.log(`Fecha mañana: ${this.$date(manana).format("DD/MM/YYYY")}`);
-			return (this.editarPedido.fecha = this.$date(manana).format(
-				"YYYY-MM-DD"
-			));
+			return (this.editarPedido.fecha = manana);
 		},
 	},
 	components: {
 		ModelListSelect,
 		BuscadorCliente,
+		Datepicker,
 	},
 };
 </script>

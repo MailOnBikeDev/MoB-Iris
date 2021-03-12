@@ -22,14 +22,14 @@
 
 		<div class="bg-white rounded-xl">
 			<!-- Texto formateado como mensaje de Telegram a copiar -->
-			<div class="flex-col p-4 hidden">
-				<span> Tipo Envío: **{{ currentPedido.tipoDeEnvio.tipo }}** </span>
+			<div class="flex-col p-4 flex">
+				<span>Tipo Envío: **{{ currentPedido.tipoDeEnvio.tipo }}**</span>
 				<span>
 					__Origen:__
 					{{ currentPedido.direccionRemitente }} -
 					{{ currentPedido.distritoRemitente }}
 				</span>
-				<span> __Empresa:__ {{ currentPedido.empresaRemitente }} </span>
+				<span>__Empresa:__ {{ currentPedido.empresaRemitente }}</span>
 				<span>
 					__Contacto:__
 					{{ currentPedido.contactoRemitente }} -
@@ -43,14 +43,14 @@
 					__Destino:__ {{ currentPedido.direccionConsignado }} -
 					{{ currentPedido.distrito.distrito }}
 				</span>
-				<span> __Contacto:__ {{ currentPedido.contactoConsignado }} </span>
-				<span v-if="currentPedido.empresaConsignado !== null"
-					>__Empresa:__ {{ currentPedido.empresaConsignado }}</span
-				>
+				<span>__Contacto:__ {{ currentPedido.contactoConsignado }}</span>
+				<span v-if="currentPedido.empresaConsignado !== null">
+					__Empresa:__ {{ currentPedido.empresaConsignado }}
+				</span>
 				<span v-if="currentPedido.otroDatoConsignado !== null">
 					**IMPORTANTE: {{ currentPedido.otroDatoConsignado }}**
 				</span>
-				<span> __Teléfono:__ {{ currentPedido.telefonoConsignado }} </span>
+				<span>__Teléfono:__ {{ currentPedido.telefonoConsignado }}</span>
 				<span>__Llevar:__ {{ currentPedido.tipoCarga }}</span>
 				<span>__Modalidad:__ {{ currentPedido.modalidad.tipo }}</span>
 				<br />
@@ -62,7 +62,7 @@
 			</div>
 
 			<!-- Texto de ejemplo para que el operador confirme la comanda -->
-			<div class="flex flex-col p-4">
+			<div class="hidden flex-col p-4">
 				<p>
 					<span class="resalta">Tipo Envío: </span
 					>{{ currentPedido.tipoDeEnvio.tipo }}
@@ -182,7 +182,8 @@ export default {
 		},
 
 		copiarComanda() {
-			this.$copyText(this.$el.children[2].children[1].innerText).then(() => {
+			console.log(this.$el.children[2].children[0].innerText);
+			this.$copyText(this.$el.children[2].children[0].innerText).then(() => {
 				this.comandaCopiada = true;
 				console.log("Texto copiado");
 			});
@@ -190,5 +191,3 @@ export default {
 	},
 };
 </script>
-
-<style></style>

@@ -218,12 +218,11 @@
 							class="block text-primary text-sm font-bold mb-1 ml-1"
 							>Fecha de Nacimiento</label
 						>
-						<input
+						<datepicker
 							v-model="nuevoMobiker.fechaNacimiento"
-							type="date"
 							v-validate="'required'"
 							name="fechaNacimiento"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 						<div
 							v-if="errors.has('fechaNacimiento')"
@@ -328,12 +327,11 @@
 							class="block text-primary text-sm font-bold mb-1 ml-1"
 							>Fecha de Ingreso</label
 						>
-						<input
+						<datepicker
 							v-model="nuevoMobiker.fechaIngreso"
 							v-validate="'required'"
 							name="fechaIngreso"
-							type="date"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
 						<div
 							v-if="errors.has('fechaIngreso')"
@@ -449,6 +447,7 @@ import Mobiker from "@/models/mobiker";
 import { ModelListSelect } from "vue-search-select";
 import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
+import Datepicker from "vuejs-datepicker";
 
 export default {
 	name: "NuevoMobiker",
@@ -541,6 +540,13 @@ export default {
 	},
 	components: {
 		ModelListSelect,
+		Datepicker,
 	},
 };
 </script>
+
+<style lang="scss" scoped>
+wrapper-class {
+	padding: 1rem 0rem 1rem 0rem !important;
+}
+</style>

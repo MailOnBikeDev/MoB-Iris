@@ -61,13 +61,18 @@
 						<label for="fecha" class="block text-primary text-sm font-bold ml-1"
 							>Fecha Seleccionada</label
 						>
-						<input
+						<datepicker
 							v-model="nuevoPedido.fecha"
-							type="date"
 							v-validate="'required'"
-							name="fechaNacimiento"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							name="fecha"
+							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
+						<div
+							v-if="errors.has('fecha')"
+							class="bg-red-500 text-white text-sm rounded p-2"
+						>
+							<p>La fecha es requerida</p>
+						</div>
 					</div>
 
 					<div>
@@ -594,6 +599,7 @@ import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
+import Datepicker from "vuejs-datepicker";
 // import axios from "axios";
 // import googleMaps_API from "@/googleMaps-API";
 
@@ -798,21 +804,20 @@ export default {
 
 		asignarHoy() {
 			let hoy = new Date();
-			// console.log(`Fecha de hoy: ${this.$date(hoy).format("DD/MM/YYYY")}`);
-			return (this.nuevoPedido.fecha = this.$date(hoy).format("YYYY-MM-DD"));
+			return (this.nuevoPedido.fecha = hoy);
 		},
 
 		asignarMañana() {
 			let hoy = new Date();
 			let DIA_EN_MS = 24 * 60 * 60 * 1000;
 			let manana = new Date(hoy.getTime() + DIA_EN_MS);
-			// console.log(`Fecha mañana: ${this.$date(manana).format("DD/MM/YYYY")}`);
-			return (this.nuevoPedido.fecha = this.$date(manana).format("YYYY-MM-DD"));
+			return (this.nuevoPedido.fecha = manana);
 		},
 	},
 	components: {
 		ModelListSelect,
 		BuscadorCliente,
+		Datepicker,
 	},
 };
 </script>
