@@ -643,7 +643,8 @@ export default {
 	},
 	computed: {
 		calcularComision() {
-			let comision = this.nuevoPedido.tarifa * 0.6;
+			let comisionMoBiker = 0.6;
+			let comision = this.nuevoPedido.tarifa * comisionMoBiker;
 			return comision.toFixed(2);
 		},
 
@@ -659,6 +660,11 @@ export default {
 				this.nuevoPedido.status = 1;
 			} else {
 				this.nuevoPedido.status = 2;
+			}
+		},
+		"nuevoPedido.status": function() {
+			if (this.nuevoPedido.status === 1) {
+				this.nuevoPedido.mobiker = "Asignar MoBiker";
 			}
 		},
 	},

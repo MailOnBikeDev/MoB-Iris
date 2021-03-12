@@ -350,6 +350,12 @@
 							option-text="tag"
 							option-value="id"
 						/>
+						<div
+							v-if="errors.has('status')"
+							class="bg-red-500 text-white text-sm rounded p-2"
+						>
+							<p>El estado es requerido</p>
+						</div>
 					</div>
 
 					<div>
@@ -642,6 +648,20 @@ export default {
 			let tarifaPorKm = 0.8;
 			let tarifaSugerida = this.editarPedido.distancia * tarifaPorKm;
 			return tarifaSugerida.toFixed(2);
+		},
+	},
+	watch: {
+		"editarPedido.mobiker": function() {
+			if (this.editarPedido.mobiker.fullName === "Asignar MoBiker") {
+				this.editarPedido.statusId = 1;
+			} else {
+				this.editarPedido.statusId = 2;
+			}
+		},
+		"editarPedido.statusId": function() {
+			if (this.editarPedido.statusId === 1) {
+				this.editarPedido.mobiker.fullName = "Asignar MoBiker";
+			}
 		},
 	},
 	methods: {
