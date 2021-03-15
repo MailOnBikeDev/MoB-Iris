@@ -223,6 +223,7 @@
 							v-validate="'required'"
 							name="fechaNacimiento"
 							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							monday-first="true"
 						/>
 						<div
 							v-if="errors.has('fechaNacimiento')"
@@ -332,6 +333,7 @@
 							v-validate="'required'"
 							name="fechaIngreso"
 							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							monday-first="true"
 						/>
 						<div
 							v-if="errors.has('fechaIngreso')"

@@ -92,7 +92,9 @@
 			<div class="bg-white overscroll-auto col-span-3 border border-black">
 				<div
 					class="grid grid-cols-7 text-center text-sm py-2 hover:bg-info border-b-2 border-primary items-center cursor-default"
-					:class="{ 'bg-info': mobiker.id == currentIndex }"
+					:class="{
+						'bg-info text-white font-bold': mobiker.id == currentIndex,
+					}"
 					v-for="mobiker in mobikers"
 					:key="mobiker.id"
 					@click="setActiveMobiker(mobiker, mobiker.id)"

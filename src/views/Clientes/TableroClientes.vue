@@ -89,7 +89,9 @@
 			<div class="bg-white overscroll-auto border border-black">
 				<div
 					class="grid grid-cols-4 text-center text-sm py-2 hover:bg-info border-b-2 border-primary items-center cursor-default"
-					:class="{ 'bg-info': cliente.id == currentIndex }"
+					:class="{
+						'bg-info text-white font-bold': cliente.id == currentIndex,
+					}"
 					v-for="cliente in clientes"
 					:key="cliente.id"
 					@click="setActiveCliente(cliente, cliente.id)"

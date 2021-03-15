@@ -17,6 +17,7 @@
 		<DetallePedido
 			:showDetalle="showDetalle"
 			@cerrarDetalle="showDetalle = false"
+			@emitirComanda="showComanda = true"
 			:currentPedido="currentPedido"
 		/>
 
@@ -73,7 +74,7 @@
 				</p>
 			</div>
 			<div
-				class="col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center"
+				class="col-span-3 inline-grid grid-cols-7 text-sm text-center text-primary font-bold items-center"
 			>
 				<div>
 					<p># Pedido</p>
@@ -168,8 +169,8 @@
 
 			<div class="bg-white col-span-3 overflow-y-auto border-black border">
 				<div
-					class="grid grid-cols-7 gap-x-1 text-center text-sm py-2 border-b-2 border-primary hover:bg-info items-center"
-					:class="{ 'bg-info': pedido.id == currentIndex }"
+					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
+					:class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
 					v-for="pedido in pedidos"
 					:key="pedido.id"
 					@click="setActiveCliente(pedido, pedido.id)"
@@ -247,27 +248,13 @@
 						<p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
 					</div>
 					<div class="flex justify-center items-center">
-						<router-link
-							:to="`/pedidos/tablero-pedidos/${pedido.id}`"
-							custom
-							v-slot="{ navigate }"
-							class="cursor-pointer"
-						>
-							<font-awesome-icon
-								class="text-primary"
-								icon="pencil-alt"
-								@click="navigate"
-								role="link"
-							/>
-						</router-link>
-
 						<button class="focus:outline-none" @click="showComanda = true">
-							<font-awesome-icon class="text-primary ml-4" icon="receipt" />
+							<font-awesome-icon class="text-primary" icon="receipt" />
 						</button>
 
 						<button class="focus:outline-none" @click="showDetalle = true">
 							<font-awesome-icon
-								class="text-primary ml-4"
+								class="text-primary ml-6"
 								icon="window-maximize"
 							/>
 						</button>

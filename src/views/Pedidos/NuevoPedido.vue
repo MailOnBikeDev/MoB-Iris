@@ -66,6 +66,7 @@
 							v-validate="'required'"
 							name="fecha"
 							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							monday-first="true"
 						/>
 						<div
 							v-if="errors.has('fecha')"

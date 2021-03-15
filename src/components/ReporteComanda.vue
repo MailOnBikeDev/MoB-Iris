@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-if="showComanda"
-		class="bg-primary w-auto h-auto absolute top-14 left-1/3 z-40 py-4 px-10 rounded-xl shadow-xl"
+		class="bg-primary w-1/2 h-auto absolute top-14 left-1/4 z-40 py-4 px-10 rounded-xl shadow-xl"
 	>
 		<div class="absolute -top-4 -right-2">
 			<button
@@ -14,13 +14,13 @@
 
 		<div class="flex justify-center">
 			<h1
-				class=" bg-white inline-block text-2xl text-primary font-bold px-6 pt-1 rounded-t-xl"
+				class="bg-white inline-block text-2xl text-primary font-bold px-6 pt-1 rounded-t-xl"
 			>
 				Pedido #<span class="text-red-500">{{ currentPedido.id }}</span>
 			</h1>
 		</div>
 
-		<div class="bg-white rounded-xl">
+		<div class="bg-white rounded-xl justify-center">
 			<!-- Texto formateado como mensaje de Telegram a copiar -->
 			<div class="flex-col p-4 flex">
 				<span>Tipo Envío: **{{ currentPedido.tipoDeEnvio.tipo }}**</span>
@@ -182,7 +182,7 @@ export default {
 		},
 
 		copiarComanda() {
-			console.log(this.$el.children[2].children[0].innerText);
+			// console.log(this.$el.children[2].children[0].innerText);
 			this.$copyText(this.$el.children[2].children[0].innerText).then(() => {
 				this.comandaCopiada = true;
 				console.log("Texto copiado");
