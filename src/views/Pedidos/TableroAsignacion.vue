@@ -8,22 +8,13 @@
 			</h1>
 		</div>
 
-		<!-- <div class="flex flex-row justify-evenly -mt-10 mb-4">
-			<div>
-				<button
-					class="bg-primary text-white px-4 py-2 rounded-xl focus:outline-none font-bold"
-					@click="showBuscador = true"
-				>
-					Buscar cliente
-				</button>
-			</div>
+		<DetallePedidoProgramado
+			:showDetalle="showDetalle"
+			@cerrarDetalle="showDetalle = false"
+			:currentPedido="currentPedido"
+		/>
 
-			<BuscadorCliente
-				:showBuscador="showBuscador"
-				@cerrarBuscador="showBuscador = false"
-				@activarCliente="activarCliente"
-			/>
-
+		<div class="flex flex-row justify-evenly -mt-10 mb-4">
 			<button
 				class="bg-yellow-600 hover:bg-yellow-500 px-4 rounded-full focus:outline-none"
 				@click="refreshList"
@@ -32,18 +23,18 @@
 			</button>
 
 			<router-link
-				to="/pedidos/nuevo-pedido"
+				to="/pedidos/tablero-pedidos"
 				class="bg-green-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-green-500"
 				custom
 				v-slot="{ navigate }"
 			>
 				<span @click="navigate" role="link" class="text-center cursor-pointer"
-					>Crear nuevo Pedido</span
+					>Regresar al Tablero</span
 				>
 			</router-link>
-		</div> -->
+		</div>
 
-		<div class="grid grid-cols-4 gap-2 -mt-10">
+		<div class="grid grid-cols-4 gap-2">
 			<div class="flex flex-row justify-center">
 				<p>
 					<span class="resalta">Número de Pedidos:</span> {{ pedidos.length }}
@@ -51,7 +42,7 @@
 			</div>
 
 			<div
-				class="col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center"
+				class="col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center text-primary"
 			>
 				<div>
 					<p># Pedido</p>
@@ -72,7 +63,7 @@
 					<p>Fecha</p>
 				</div>
 				<div>
-					<p>Editar</p>
+					<p>Asignar</p>
 				</div>
 			</div>
 			<div class="bg-white p-4 border-black border">
@@ -144,12 +135,10 @@
 				</div>
 			</div>
 
-			<div
-				class="bg-white col-span-3 max-h-96 overflow-y-auto border-black border"
-			>
+			<div class="bg-white col-span-3 overflow-y-auto border-black border">
 				<div
-					class="grid grid-cols-7 gap-x-1 text-center text-sm py-2 border-b-2 border-primary hover:bg-info items-center"
-					:class="{ 'bg-info': pedido.id == currentIndex }"
+					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
+					:class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
 					v-for="pedido in pedidos"
 					:key="pedido.id"
 					@click="setActiveCliente(pedido, pedido.id)"
@@ -178,19 +167,9 @@
 						<p>{{ $date(pedido.fecha).format("DD/MM/YYYY") }}</p>
 					</div>
 					<div class="flex justify-center">
-						<router-link
-							:to="`/pedidos/tablero-pedidos/${pedido.id}`"
-							custom
-							v-slot="{ navigate }"
-							class="cursor-pointer"
-						>
-							<font-awesome-icon
-								class="text-primary"
-								icon="pencil-alt"
-								@click="navigate"
-								role="link"
-							/>
-						</router-link>
+						<button class="focus:outline-none" @click="showDetalle = true">
+							<font-awesome-icon class="text-primary" icon="window-maximize" />
+						</button>
 					</div>
 				</div>
 			</div>
@@ -200,15 +179,15 @@
 
 <script>
 import PedidoService from "@/services/pedido.service";
-// import BuscadorCliente from "@/components/BuscadorCliente";
+import DetallePedidoProgramado from "@/components/DetallePedidoProgramado";
 
 export default {
 	name: "Pedidos",
-	// components: { BuscadorCliente },
+	components: { DetallePedidoProgramado },
 	data() {
 		return {
 			pedidos: [],
-			showBuscador: false,
+			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
 		};
@@ -218,9 +197,11 @@ export default {
 	},
 	methods: {
 		retrievePedidos() {
-			PedidoService.searchPedidoProgramado(1).then(
+			PedidoService.getPedidos().then(
 				(response) => {
-					this.pedidos = response.data;
+					this.pedidos = response.data.filter(
+						(pedido) => pedido.status.tag === "Programado"
+					);
 				},
 				(error) => {
 					this.pedidos =

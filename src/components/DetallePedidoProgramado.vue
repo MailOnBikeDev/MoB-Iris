@@ -139,22 +139,15 @@
 
 		<div class="mt-6 flex flex-row justify-around">
 			<router-link
-				:to="`/pedidos/tablero-pedidos/${currentPedido.id}`"
+				:to="`/pedidos/pedidos-programados/${currentPedido.id}`"
 				custom
 				v-slot="{ navigate }"
 				class="bg-green-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-green-500"
 			>
 				<span @click="navigate" role="link" class="text-center cursor-pointer"
-					>Editar Pedido</span
+					>Asignar Pedido</span
 				>
 			</router-link>
-
-			<button
-				@click.prevent="emitirComanda"
-				class="bg-secondary rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-info"
-			>
-				Emitir comanda
-			</button>
 		</div>
 	</div>
 </template>
@@ -177,10 +170,6 @@ export default {
 	methods: {
 		cerrarDetalle() {
 			this.$emit("cerrarDetalle");
-		},
-		emitirComanda() {
-			this.$emit("cerrarDetalle");
-			this.$emit("emitirComanda");
 		},
 	},
 };

@@ -634,7 +634,9 @@ export default {
 			this.tiposDeEnvio = envios.data;
 			this.estadosPedido = estados.data;
 
-			this.mobikers = mobiker.data;
+			this.mobikers = mobiker.data.filter(
+				(mobiker) => mobiker.status === "Activo"
+			);
 		} catch (error) {
 			console.error("Mensaje de error:", error);
 		}

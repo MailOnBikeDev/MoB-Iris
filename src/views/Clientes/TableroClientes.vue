@@ -204,6 +204,7 @@ export default {
 		setActiveCliente(cliente, index) {
 			this.currentCliente = cliente;
 			this.currentIndex = index;
+			this.handleTabClick(tabNames.detalles);
 		},
 
 		async searchCliente() {

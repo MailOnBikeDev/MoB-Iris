@@ -232,6 +232,7 @@ export default {
 		setActiveMobiker(mobiker, index) {
 			this.currentMobiker = mobiker;
 			this.currentIndex = index;
+			this.handleTabClick(tabNames.detalles);
 		},
 
 		async searchMobiker() {

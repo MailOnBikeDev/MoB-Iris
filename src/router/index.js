@@ -46,6 +46,11 @@ const routes = [
 		component: () => import("@/views/Pedidos/EditarPedido.vue"),
 	},
 	{
+		path: "/pedidos/pedidos-programados/:id",
+		name: "AsignarPedido",
+		component: () => import("@/views/Pedidos/AsignarPedido.vue"),
+	},
+	{
 		path: "/mobikers/equipo-mobiker",
 		name: "EquipoMobiker",
 		component: () => import("@/views/MoBikers/EquipoMobiker.vue"),

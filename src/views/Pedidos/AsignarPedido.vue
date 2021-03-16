@@ -4,7 +4,7 @@
 			<h1
 				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded-xl relative -top-12 py-2 bg-gray-100 px-6"
 			>
-				Nuevo Pedido
+				Asignar Pedido
 			</h1>
 		</div>
 
@@ -56,24 +56,17 @@
 							Para mañana
 						</button>
 					</div>
-
 					<div>
 						<label for="fecha" class="block text-primary text-sm font-bold ml-1"
-							>Fecha Seleccionada</label
+							>Fecha</label
 						>
 						<datepicker
-							v-model="nuevoPedido.fecha"
+							v-model="editarPedido.fecha"
 							v-validate="'required'"
-							name="fecha"
+							name="fechaNacimiento"
 							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 							monday-first="true"
 						/>
-						<div
-							v-if="errors.has('fecha')"
-							class="bg-red-500 text-white text-sm rounded p-2"
-						>
-							<p>La fecha es requerida</p>
-						</div>
 					</div>
 
 					<div>
@@ -83,7 +76,7 @@
 							>Contacto</label
 						>
 						<input
-							v-model="nuevoPedido.contactoRemitente"
+							v-model="editarPedido.contactoRemitente"
 							type="text"
 							v-validate="'required'"
 							name="contactoRemitente"
@@ -104,7 +97,7 @@
 							>Empresa</label
 						>
 						<input
-							v-model="nuevoPedido.empresaRemitente"
+							v-model="editarPedido.empresaRemitente"
 							type="text"
 							v-validate="'required'"
 							name="empresaRemitente"
@@ -125,7 +118,7 @@
 							>Teléfono</label
 						>
 						<input
-							v-model="nuevoPedido.telefonoRemitente"
+							v-model="editarPedido.telefonoRemitente"
 							type="number"
 							v-validate="'required|length:9'"
 							name="telefonoRemitente"
@@ -146,7 +139,7 @@
 							>Direccion</label
 						>
 						<input
-							v-model="nuevoPedido.direccionRemitente"
+							v-model="editarPedido.direccionRemitente"
 							type="text"
 							v-validate="'required'"
 							name="direccionRemitente"
@@ -168,7 +161,7 @@
 						>
 						<model-list-select
 							name="distritoRemitente"
-							v-model="nuevoPedido.distritoRemitente"
+							v-model="editarPedido.distritoRemitente"
 							v-validate="'required'"
 							placeholder="Buscar distrito..."
 							class="w-full"
@@ -191,7 +184,7 @@
 							>Otro Dato</label
 						>
 						<input
-							v-model="nuevoPedido.otroDatoRemitente"
+							v-model="editarPedido.otroDatoRemitente"
 							type="text"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
@@ -205,7 +198,7 @@
 						>
 						<model-list-select
 							name="formaPago"
-							v-model="nuevoPedido.formaPago"
+							v-model="editarPedido.formaPago"
 							class="w-full"
 							v-validate="'required'"
 							:list="formasDePago"
@@ -227,7 +220,7 @@
 							>Tarifa</label
 						>
 						<input
-							v-model.number="nuevoPedido.tarifa"
+							v-model.number="editarPedido.tarifa"
 							type="number"
 							v-validate="'required'"
 							name="tarifa"
@@ -260,7 +253,7 @@
 						>
 						<model-list-select
 							name="tipoCarga"
-							v-model="nuevoPedido.tipoCarga"
+							v-model="editarPedido.tipoCarga"
 							:list="tiposDeCarga"
 							v-validate="'required'"
 							option-text="tipo"
@@ -283,7 +276,7 @@
 						<model-list-select
 							name="rolCliente"
 							:list="rolesCliente"
-							v-model="nuevoPedido.rolCliente"
+							v-model="editarPedido.rolCliente"
 							v-validate="'required'"
 							option-text="rol"
 							option-value="rol"
@@ -298,7 +291,7 @@
 				</div>
 
 				<!-- FORMULARIO DESTINO -->
-				<div class="grid grid-cols-3 gap-2  p-2">
+				<div class="grid grid-cols-3 gap-2 p-2">
 					<div>
 						<label
 							for="tipoEnvio"
@@ -307,7 +300,7 @@
 						>
 						<model-list-select
 							name="tipoEnvio"
-							v-model="nuevoPedido.tipoEnvio"
+							v-model="editarPedido.tipoEnvio"
 							v-validate="'required'"
 							:list="tiposDeEnvio"
 							option-text="tipo"
@@ -329,7 +322,7 @@
 						>
 						<model-list-select
 							name="modalidad"
-							v-model="nuevoPedido.modalidad"
+							v-model="editarPedido.modalidad"
 							v-validate="'required'"
 							:list="modalidades"
 							option-text="tipo"
@@ -351,12 +344,18 @@
 						>
 						<model-list-select
 							name="status"
-							v-model="nuevoPedido.status"
+							v-model="editarPedido.statusId"
 							:list="estadosPedido"
 							v-validate="'required'"
 							option-text="tag"
 							option-value="id"
 						/>
+						<div
+							v-if="errors.has('status')"
+							class="bg-red-500 text-white text-sm rounded p-2"
+						>
+							<p>El estado es requerido</p>
+						</div>
 					</div>
 
 					<div>
@@ -366,7 +365,7 @@
 							>Contacto</label
 						>
 						<input
-							v-model="nuevoPedido.contactoConsignado"
+							v-model="editarPedido.contactoConsignado"
 							type="text"
 							v-validate="'required'"
 							name="contactoConsignado"
@@ -387,7 +386,7 @@
 							>Empresa</label
 						>
 						<input
-							v-model="nuevoPedido.empresaConsignado"
+							v-model="editarPedido.empresaConsignado"
 							type="text"
 							name="empresaConsignado"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
@@ -401,7 +400,7 @@
 							>Teléfono</label
 						>
 						<input
-							v-model="nuevoPedido.telefonoConsignado"
+							v-model="editarPedido.telefonoConsignado"
 							type="number"
 							v-validate="'required|length:9'"
 							name="telefonoConsignado"
@@ -422,7 +421,7 @@
 							>Dirección</label
 						>
 						<input
-							v-model="nuevoPedido.direccionConsignado"
+							v-model="editarPedido.direccionConsignado"
 							type="text"
 							v-validate="'required'"
 							name="direccionConsignado"
@@ -444,7 +443,7 @@
 						>
 						<model-list-select
 							name="distritoConsignado"
-							v-model="nuevoPedido.distritoConsignado"
+							v-model="editarPedido.distritoConsignado"
 							placeholder="Buscar distrito..."
 							v-validate="'required'"
 							:list="distritos"
@@ -466,7 +465,7 @@
 							>Otro Dato</label
 						>
 						<input
-							v-model="nuevoPedido.otroDatoConsignado"
+							v-model="editarPedido.otroDatoConsignado"
 							type="text"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
@@ -479,7 +478,7 @@
 							>Comisión</label
 						>
 						<p class="bg-white rounded w-full h-10 tex-gray-700 p-2">
-							{{ (nuevoPedido.comision = calcularComision) }}
+							{{ (editarPedido.comision = calcularComision) }}
 						</p>
 					</div>
 
@@ -491,7 +490,7 @@
 						>
 						<model-list-select
 							name="mobiker"
-							v-model="nuevoPedido.mobiker"
+							v-model="editarPedido.mobiker"
 							placeholder="Buscar distrito..."
 							:list="mobikers"
 							v-validate="'required'"
@@ -522,7 +521,7 @@
 							>Distancia</label
 						>
 						<p class="bg-white rounded w-full h-10 tex-gray-700 p-2">
-							{{ nuevoPedido.distancia }}
+							{{ editarPedido.distancia }}
 						</p>
 					</div>
 
@@ -533,7 +532,7 @@
 							>Recaudo</label
 						>
 						<input
-							v-model.number="nuevoPedido.recaudo"
+							v-model.number="editarPedido.recaudo"
 							type="number"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
@@ -546,7 +545,7 @@
 							>Trámite</label
 						>
 						<input
-							v-model.number="nuevoPedido.tramite"
+							v-model.number="editarPedido.tramite"
 							type="number"
 							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
 						/>
@@ -564,26 +563,16 @@
 				</button>
 
 				<button
-					type="submit"
-					@click.prevent="handleAnadirPedido"
-					class="block mx-auto bg-green-500 hover:bg-green-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
+					type="button"
+					@click.prevent="anularPedido"
+					class="block mx-auto bg-yellow-500 hover:bg-yellow-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 				>
-					Añadir otro Pedido
+					Anular
 				</button>
 
 				<button
-					v-if="nuevoPedido.mobiker === 'Asignar MoBiker'"
 					type="submit"
-					@click.prevent="handleNuevoPedido"
-					class="block mx-auto bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
-				>
-					Programar Pedido
-				</button>
-
-				<button
-					v-else
-					type="submit"
-					@click.prevent="handleNuevoPedido"
+					@click.prevent="handleEditarPedido"
 					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 				>
 					Asignar Pedido
@@ -607,7 +596,7 @@ import Datepicker from "vuejs-datepicker";
 export default {
 	data() {
 		return {
-			nuevoPedido: new Pedido(),
+			editarPedido: new Pedido(),
 			showBuscador: false,
 			message: "",
 			errorCalcularDistancia: false,
@@ -625,6 +614,8 @@ export default {
 	},
 	async mounted() {
 		try {
+			this.getPedido(this.$route.params.id);
+
 			let resDistritos = await AuxiliarService.getDistritos();
 			let resCarga = await AuxiliarService.getTipoCarga();
 			let pagos = await AuxiliarService.getFormasPago();
@@ -647,71 +638,62 @@ export default {
 				(mobiker) => mobiker.status === "Activo"
 			);
 		} catch (error) {
-			console.error(error);
+			console.error("Mensaje de error:", error);
 		}
 	},
 	computed: {
 		calcularComision() {
-			let comisionMoBiker = 0.6;
-			let comision = this.nuevoPedido.tarifa * comisionMoBiker;
+			let comision = this.editarPedido.tarifa * 0.6;
 			return comision.toFixed(2);
 		},
 
 		sugerirTarifa() {
 			let tarifaPorKm = 0.8;
-			let tarifaSugerida = this.nuevoPedido.distancia * tarifaPorKm;
+			let tarifaSugerida = this.editarPedido.distancia * tarifaPorKm;
 			return tarifaSugerida.toFixed(2);
 		},
 	},
 	watch: {
-		"nuevoPedido.mobiker": function() {
-			if (this.nuevoPedido.mobiker === "Asignar MoBiker") {
-				this.nuevoPedido.status = 1;
+		"editarPedido.mobiker": function() {
+			if (this.editarPedido.mobiker.fullName === "Asignar MoBiker") {
+				this.editarPedido.statusId = 1;
 			} else {
-				this.nuevoPedido.status = 2;
+				this.editarPedido.statusId = 2;
 			}
 		},
-		"nuevoPedido.status": function() {
-			if (this.nuevoPedido.status === 1) {
-				this.nuevoPedido.mobiker = "Asignar MoBiker";
+		"editarPedido.statusId": function() {
+			if (this.editarPedido.statusId === 1) {
+				this.editarPedido.mobiker.fullName = "Asignar MoBiker";
 			}
 		},
 	},
 	methods: {
-		handleNuevoPedido() {
-			this.$validator.validateAll().then((isValid) => {
-				if (!isValid) {
-					console.error("Mensaje de error: No se pudo crear el Pedido");
-					return;
-				} else {
-					PedidoService.storageNuevoPedido(this.nuevoPedido).then(
-						(response) => {
-							this.$router.push("/pedidos/tablero-pedidos");
-							console.log(response.data.message);
-							this.message = response.data.message;
-						},
-						(err) => console.error(`Mensaje de error: ${err.message}`)
-					);
-				}
-			});
+		async getPedido(id) {
+			try {
+				let response = await PedidoService.getPedidoById(id);
+
+				this.editarPedido = response.data;
+				this.editarPedido.distritoConsignado = response.data.distrito.distrito;
+				this.editarPedido.tipoEnvio = response.data.tipoDeEnvio.tipo;
+			} catch (error) {
+				console.error("Mensaje de error:", error);
+			}
 		},
 
-		handleAnadirPedido() {
+		handleEditarPedido() {
 			this.$validator.validateAll().then((isValid) => {
 				if (!isValid) {
-					console.error("Mensaje de error: No se pudo crear el Pedido");
+					console.error("Mensaje de error: No se pudo editar el Pedido");
 					return;
 				} else {
-					PedidoService.storageNuevoPedido(this.nuevoPedido).then(
-						() => {
-							console.log("El pedido fue añadido correctamente");
-
-							this.nuevoPedido.contactoConsignado = "";
-							this.nuevoPedido.empresaConsignado = "";
-							this.nuevoPedido.telefonoConsignado = "";
-							this.nuevoPedido.direccionConsignado = "";
-							this.nuevoPedido.distritoConsignado = "";
-							this.nuevoPedido.otroDatoConsignado = "";
+					PedidoService.editPedido(
+						this.$route.params.id,
+						this.editarPedido
+					).then(
+						(response) => {
+							this.$router.push("/pedidos/pedidos-programados");
+							console.log(response.data.message);
+							this.message = response.data.message;
 						},
 						(err) => console.error(`Mensaje de error: ${err.message}`)
 					);
@@ -743,20 +725,20 @@ export default {
 				// 	"+"
 				// )}+${this.nuevoPedido.distritoConsignado.replace(/ /g, "+")}`;
 
-				// console.log("Origen:", origen);
-				// console.log("Destino:", destino);
+				// // console.log("Origen:", origen);
+				// // console.log("Destino:", destino);
 
 				// const API_URL = `https://cors-anywhere.herokuapp.com/${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
 
 				// let distancia = await axios.get(API_URL);
-				// console.log(`Distancia: ${distancia}`);
+				// // console.log(`Distancia: ${distancia}`);
 
 				// let distanciaCalculada =
 				// 	distancia.data.rows[0].elements[0].distance.value / 1000;
 
 				// console.log(`distancia calculada: ${distanciaCalculada}`);
 
-				let distanciaCalculada = 6.754; // Mientras no funciona la API
+				let distanciaCalculada = 3.765;
 
 				this.nuevoPedido.distancia = distanciaCalculada.toFixed(3);
 				this.nuevoPedido.tarifa = 7.0;
@@ -784,37 +766,57 @@ export default {
 		},
 
 		cancelar() {
-			console.log("Creación de Pedido cancelada");
-			this.$router.push("/pedidos/tablero-pedidos");
+			this.$router.push("/pedidos/pedidos-programados");
 		},
 
 		activarCliente(cliente) {
 			if (cliente) {
-				this.nuevoPedido.contactoRemitente = cliente.contacto;
-				this.nuevoPedido.empresaRemitente = cliente.empresa;
-				this.nuevoPedido.telefonoRemitente = cliente.telefono;
-				this.nuevoPedido.direccionRemitente = cliente.direccion;
-				this.nuevoPedido.distritoRemitente = cliente.distrito.distrito;
-				this.nuevoPedido.otroDatoRemitente = cliente.otroDato;
-				this.nuevoPedido.tipoCarga = cliente.tipoDeCarga.tipo;
-				this.nuevoPedido.formaPago = cliente.formaDePago.pago;
-				this.nuevoPedido.statusFinanciero = 1;
-				this.nuevoPedido.rolCliente = cliente.rolCliente.rol;
-				this.nuevoPedido.tipoEnvio = cliente.tipoDeEnvio.tipo;
-				this.nuevoPedido.modalidad = "Una vía";
+				this.editarPedido.contactoRemitente = cliente.contacto;
+				this.editarPedido.empresaRemitente = cliente.empresa;
+				this.editarPedido.telefonoRemitente = cliente.telefono;
+				this.editarPedido.direccionRemitente = cliente.direccion;
+				this.editarPedido.distritoRemitente = cliente.distrito.distrito;
+				this.editarPedido.otroDatoRemitente = cliente.otroDato;
+				this.editarPedido.tipoCarga = cliente.tipoDeCarga.tipo;
+				this.editarPedido.formaPago = cliente.formaDePago.pago;
+				this.editarPedido.statusFinanciero = 1;
+				this.editarPedido.rolCliente = cliente.rolCliente.rol;
 			}
+		},
+
+		anularPedido() {
+			this.$validator.validateAll().then((isValid) => {
+				if (!isValid) {
+					console.error("Mensaje de error: No se pudo editar el Pedido");
+					return;
+				} else {
+					this.editarPedido.statusId = 17;
+					// console.log(this.editarPedido.status);
+					PedidoService.editPedido(
+						this.$route.params.id,
+						this.editarPedido
+					).then(
+						(response) => {
+							this.$router.push("/pedidos/pedidos-programados");
+							console.log(response.data.message);
+							this.message = response.data.message;
+						},
+						(err) => console.error(`Mensaje de error: ${err.message}`)
+					);
+				}
+			});
 		},
 
 		asignarHoy() {
 			let hoy = new Date();
-			return (this.nuevoPedido.fecha = hoy);
+			return (this.editarPedido.fecha = hoy);
 		},
 
 		asignarMañana() {
 			let hoy = new Date();
 			let DIA_EN_MS = 24 * 60 * 60 * 1000;
 			let manana = new Date(hoy.getTime() + DIA_EN_MS);
-			return (this.nuevoPedido.fecha = manana);
+			return (this.editarPedido.fecha = manana);
 		},
 	},
 	components: {

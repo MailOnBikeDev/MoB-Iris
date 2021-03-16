@@ -33,21 +33,6 @@
 				>
 			</router-link>
 
-			<!-- <div>
-				<button
-					class="bg-primary text-white px-4 py-2 rounded-xl focus:outline-none font-bold"
-					@click="showBuscador = true"
-				>
-					Buscar cliente
-				</button>
-			</div> -->
-
-			<!-- <BuscadorCliente
-				:showBuscador="showBuscador"
-				@cerrarBuscador="showBuscador = false"
-				@activarCliente="activarCliente"
-			/> -->
-
 			<button
 				class="bg-yellow-600 hover:bg-yellow-500 px-4 rounded-full focus:outline-none"
 				@click="refreshList"
@@ -269,7 +254,6 @@
 import PedidoService from "@/services/pedido.service";
 import ReporteComanda from "@/components/ReporteComanda";
 import DetallePedido from "@/components/DetallePedido";
-// import BuscadorCliente from "@/components/BuscadorCliente";
 
 export default {
 	name: "Pedidos",
@@ -277,7 +261,6 @@ export default {
 	data() {
 		return {
 			pedidos: [],
-			showBuscador: false,
 			showComanda: false,
 			showDetalle: false,
 			currentPedido: null,
