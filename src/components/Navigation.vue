@@ -91,7 +91,7 @@ export default {
 			navigationMenu: [
 				{
 					title: "Finanzas",
-					link: "/finanzas/finanzas",
+					link: "/finanzas/historial-Pedidos",
 				},
 				{
 					title: "Clientes",

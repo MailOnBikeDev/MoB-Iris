@@ -81,9 +81,9 @@ const routes = [
 		component: () => import("@/views/Clientes/EditarCliente.vue"),
 	},
 	{
-		path: "/finanzas/finanzas",
-		name: "Finanzas",
-		component: () => import("@/views/Finanzas/Finanzas.vue"),
+		path: "/finanzas/historial-pedidos",
+		name: "HistorialPedidos",
+		component: () => import("@/views/Finanzas/HistorialPedidos.vue"),
 	},
 ];
 

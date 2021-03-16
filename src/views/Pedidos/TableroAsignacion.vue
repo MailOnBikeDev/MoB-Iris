@@ -24,7 +24,7 @@
 
 			<router-link
 				to="/pedidos/tablero-pedidos"
-				class="bg-green-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-green-500"
+				class="bg-indigo-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-indigo-500"
 				custom
 				v-slot="{ navigate }"
 			>
@@ -44,24 +44,24 @@
 			<div
 				class="col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center text-primary"
 			>
-				<div>
-					<p># Pedido</p>
-				</div>
-				<div>
-					<p>Origen</p>
-				</div>
-				<div>
-					<p>Destino</p>
-				</div>
-				<div>
-					<p>MoBiker</p>
-				</div>
-				<div>
-					<p>Estado</p>
-				</div>
-				<div>
-					<p>Fecha</p>
-				</div>
+				<button @click="sortPorId" class="focus:outline-none">
+					<p class="font-bold"># Pedido</p>
+				</button>
+				<button @click="sortPorOrigen" class="focus:outline-none">
+					<p class="font-bold">Origen</p>
+				</button>
+				<button @click="sortPorDestino" class="focus:outline-none">
+					<p class="font-bold">Destino</p>
+				</button>
+				<button @click="sortPorMobiker" class="focus:outline-none">
+					<p class="font-bold">MoBiker</p>
+				</button>
+				<button @click="sortPorEstado" class="focus:outline-none">
+					<p class="font-bold">Estado</p>
+				</button>
+				<button @click="sortPorFecha" class="focus:outline-none">
+					<p class="font-bold">Fecha</p>
+				</button>
 				<div>
 					<p>Asignar</p>
 				</div>
@@ -164,7 +164,7 @@
 						</p>
 					</div>
 					<div>
-						<p>{{ $date(pedido.fecha).format("DD/MM/YYYY") }}</p>
+						<p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
 					</div>
 					<div class="flex justify-center">
 						<button class="focus:outline-none" @click="showDetalle = true">
@@ -215,8 +215,6 @@ export default {
 		setActiveCliente(pedido, index) {
 			this.currentPedido = pedido;
 			this.currentIndex = index;
-			// console.log("Pedido actual", this.currentPedido);
-			// console.log("index:", this.currentIndex);
 		},
 
 		refreshList() {
@@ -226,10 +224,49 @@ export default {
 			this.currentIndex = -1;
 		},
 
-		activarCliente(cliente) {
-			if (cliente) {
-				console.log(cliente);
-			}
+		sortPorId() {
+			this.pedidos.sort((a, b) => {
+				return a.id > b.id ? 1 : -1;
+			});
+		},
+
+		sortPorOrigen() {
+			this.pedidos.sort((a, b) => {
+				return a.distritoRemitente.toLowerCase() >
+					b.distritoRemitente.toLowerCase()
+					? 1
+					: -1;
+			});
+		},
+
+		sortPorDestino() {
+			this.pedidos.sort((a, b) => {
+				return a.distrito.distrito.toLowerCase() >
+					b.distrito.distrito.toLowerCase()
+					? 1
+					: -1;
+			});
+		},
+
+		sortPorMobiker() {
+			this.pedidos.sort((a, b) => {
+				return a.mobiker.fullName.toLowerCase() >
+					b.mobiker.fullName.toLowerCase()
+					? 1
+					: -1;
+			});
+		},
+
+		sortPorEstado() {
+			this.pedidos.sort((a, b) => {
+				return a.status.tag.toLowerCase() > b.status.tag.toLowerCase() ? 1 : -1;
+			});
+		},
+
+		sortPorFecha() {
+			this.pedidos.sort((a, b) => {
+				return a.fecha > b.fecha ? -1 : 1;
+			});
 		},
 	},
 };

@@ -4,35 +4,17 @@
 			<h1
 				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded-xl relative -top-12 py-2 bg-gray-100 px-6"
 			>
-				Tablero de Pedidos
+				Historial de Pedidos
 			</h1>
 		</div>
 
-		<ReporteComanda
-			:showComanda="showComanda"
-			@cerrarComanda="showComanda = false"
-			:currentPedido="currentPedido"
-		/>
-
-		<DetallePedido
+		<DetallePedidoProgramado
 			:showDetalle="showDetalle"
 			@cerrarDetalle="showDetalle = false"
-			@emitirComanda="showComanda = true"
 			:currentPedido="currentPedido"
 		/>
 
-		<div class="flex flex-row justify-evenly items-center -mt-10 mb-4">
-			<router-link
-				to="/pedidos/pedidos-programados"
-				class="bg-indigo-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-indigo-500"
-				custom
-				v-slot="{ navigate }"
-			>
-				<span @click="navigate" role="link" class="text-center cursor-pointer"
-					>Asignar Pedidos</span
-				>
-			</router-link>
-
+		<div class="flex flex-row justify-evenly -mt-10 mb-4">
 			<button
 				class="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded-full focus:outline-none"
 				@click="refreshList"
@@ -40,16 +22,16 @@
 				<font-awesome-icon class="text-white" icon="sync-alt" />
 			</button>
 
-			<router-link
-				to="/pedidos/nuevo-pedido"
-				class="bg-green-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-green-500"
+			<!-- <router-link
+				to="/pedidos/tablero-pedidos"
+				class="bg-indigo-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-indigo-500"
 				custom
 				v-slot="{ navigate }"
 			>
 				<span @click="navigate" role="link" class="text-center cursor-pointer"
-					>Crear nuevo Pedido</span
+					>Regresar al Tablero</span
 				>
-			</router-link>
+			</router-link> -->
 		</div>
 
 		<div class="grid grid-cols-4 gap-2">
@@ -58,8 +40,9 @@
 					<span class="resalta">Número de Pedidos:</span> {{ pedidos.length }}
 				</p>
 			</div>
+
 			<div
-				class="col-span-3 inline-grid grid-cols-7 text-sm text-center text-primary items-center"
+				class="col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center text-primary"
 			>
 				<button @click="sortPorId" class="focus:outline-none">
 					<p class="font-bold"># Pedido</p>
@@ -80,7 +63,7 @@
 					<p class="font-bold">Fecha</p>
 				</button>
 				<div>
-					<p class="font-bold">Acciones</p>
+					<p>Reporte</p>
 				</div>
 			</div>
 			<div class="bg-white p-4 border-black border">
@@ -88,7 +71,7 @@
 					Cliente
 				</h2>
 
-				<div class="flex flex-col text-sm h-80" v-if="currentPedido">
+				<div class="flex flex-col text-sm max-h-96" v-if="currentPedido">
 					<p class="mb-2">
 						<span class="resalta">Contacto: </span>
 						{{ currentPedido.contactoRemitente }}
@@ -128,7 +111,7 @@
 					<p class="mb-2"><span class="resalta">Rol: </span>Remitente</p>
 				</div>
 
-				<div class="flex flex-col text-sm h-80" v-else>
+				<div class="flex flex-col text-sm max-h-96" v-else>
 					<p class="mb-2">
 						<span class="resalta">Contacto: </span>
 					</p>
@@ -158,7 +141,7 @@
 					:class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
 					v-for="pedido in pedidos"
 					:key="pedido.id"
-					@click="setActivePedido(pedido, pedido.id)"
+					@click="setActiveCliente(pedido, pedido.id)"
 				>
 					<div>
 						<p>{{ pedido.id }}</p>
@@ -232,16 +215,9 @@
 					<div>
 						<p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
 					</div>
-					<div class="flex justify-center items-center">
-						<button class="focus:outline-none" @click="showComanda = true">
-							<font-awesome-icon class="text-primary" icon="receipt" />
-						</button>
-
+					<div class="flex justify-center">
 						<button class="focus:outline-none" @click="showDetalle = true">
-							<font-awesome-icon
-								class="text-primary ml-6"
-								icon="window-maximize"
-							/>
+							<font-awesome-icon class="text-primary" icon="window-maximize" />
 						</button>
 					</div>
 				</div>
@@ -252,17 +228,14 @@
 
 <script>
 import PedidoService from "@/services/pedido.service";
-import ReporteComanda from "@/components/ReporteComanda";
-import DetallePedido from "@/components/DetallePedido";
+import DetallePedidoProgramado from "@/components/DetallePedidoProgramado";
 
 export default {
 	name: "Pedidos",
-	components: { ReporteComanda, DetallePedido },
+	components: { DetallePedidoProgramado },
 	data() {
 		return {
 			pedidos: [],
-			buscador: "",
-			showComanda: false,
 			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
@@ -275,12 +248,7 @@ export default {
 		retrievePedidos() {
 			PedidoService.getPedidos().then(
 				(response) => {
-					let hoy = new Date();
-					this.pedidos = response.data.filter(
-						(pedido) =>
-							this.$date(pedido.fecha).format("DD MMM YYYY") ===
-							this.$date(hoy).format("DD MMM YYYY")
-					);
+					this.pedidos = response.data;
 				},
 				(error) => {
 					this.pedidos =
@@ -291,7 +259,7 @@ export default {
 			);
 		},
 
-		setActivePedido(pedido, index) {
+		setActiveCliente(pedido, index) {
 			this.currentPedido = pedido;
 			this.currentIndex = index;
 		},
