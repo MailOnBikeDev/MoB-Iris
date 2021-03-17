@@ -66,7 +66,7 @@
 							v-validate="'required'"
 							name="fecha"
 							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
-							monday-first="true"
+							:monday-first="true"
 						/>
 						<div
 							v-if="errors.has('fecha')"
@@ -621,6 +621,7 @@ export default {
 			estadosPedido: [],
 			rolDelCliente: "",
 			tarifaSugerida: null,
+			memoriaCliente: null,
 		};
 	},
 	async mounted() {
@@ -706,12 +707,32 @@ export default {
 						() => {
 							console.log("El pedido fue añadido correctamente");
 
-							this.nuevoPedido.contactoConsignado = "";
-							this.nuevoPedido.empresaConsignado = "";
-							this.nuevoPedido.telefonoConsignado = "";
-							this.nuevoPedido.direccionConsignado = "";
-							this.nuevoPedido.distritoConsignado = "";
-							this.nuevoPedido.otroDatoConsignado = "";
+							this.nuevoPedido.fecha = new Date();
+							this.nuevoPedido.contactoRemitente = this.memoriaCliente.contacto;
+							this.nuevoPedido.empresaRemitente = this.memoriaCliente.empresa;
+							this.nuevoPedido.telefonoRemitente = this.memoriaCliente.telefono;
+							this.nuevoPedido.direccionRemitente = this.memoriaCliente.direccion;
+							this.nuevoPedido.distritoRemitente = this.memoriaCliente.distrito.distrito;
+							this.nuevoPedido.otroDatoRemitente = this.memoriaCliente.otroDato;
+							this.nuevoPedido.formaPago = this.memoriaCliente.formaDePago.pago;
+							this.nuevoPedido.tarifa = null;
+							this.nuevoPedido.tarifaSugerida = 0;
+							this.nuevoPedido.tipoCarga = this.memoriaCliente.tipoDeCarga.tipo;
+							this.nuevoPedido.rolCliente = this.memoriaCliente.rolCliente.rol;
+							this.nuevoPedido.tipoEnvio = this.memoriaCliente.tipoDeEnvio.tipo;
+							this.nuevoPedido.modalidad = "Una vía";
+							this.nuevoPedido.status = null;
+							this.nuevoPedido.contactoConsignado = null;
+							this.nuevoPedido.empresaConsignado = null;
+							this.nuevoPedido.telefonoConsignado = null;
+							this.nuevoPedido.direccionConsignado = null;
+							this.nuevoPedido.distritoConsignado = null;
+							this.nuevoPedido.otroDatoConsignado = null;
+							this.nuevoPedido.comision = 0;
+							this.nuevoPedido.mobiker = null;
+							this.nuevoPedido.distancia = 0;
+							this.nuevoPedido.recaudo = null;
+							this.nuevoPedido.tramite = null;
 						},
 						(err) => console.error(`Mensaje de error: ${err.message}`)
 					);
@@ -802,6 +823,8 @@ export default {
 				this.nuevoPedido.rolCliente = cliente.rolCliente.rol;
 				this.nuevoPedido.tipoEnvio = cliente.tipoDeEnvio.tipo;
 				this.nuevoPedido.modalidad = "Una vía";
+
+				this.memoriaCliente = cliente;
 			}
 		},
 

@@ -1,0 +1,2 @@
+#Llave para Google Maps Platform
+VUE_APP_GOOGLEMAPS_API_KEY=Aqui-va-la-API-KEY-de-Google

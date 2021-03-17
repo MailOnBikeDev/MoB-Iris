@@ -135,7 +135,9 @@
 				</div>
 			</div>
 
-			<div class="bg-white col-span-3 overflow-y-auto border-black border">
+			<div
+				class="bg-white col-span-3 max-h-96 overflow-y-auto border-black border"
+			>
 				<div
 					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
 					:class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
