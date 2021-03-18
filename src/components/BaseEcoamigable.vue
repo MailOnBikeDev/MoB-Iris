@@ -3,6 +3,9 @@
 		<div class="bg-green-500 text-white text-center font-bold">
 			Un mensaje verde para cuidar el ambiente
 		</div>
+		{{ estadisticas.kilometros }}
+		{{ estadisticas.CO2Ahorrado }}
+		{{ estadisticas.ruido }}
 	</div>
 </template>
 
