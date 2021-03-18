@@ -648,7 +648,7 @@ export default {
 				(mobiker) => mobiker.status === "Activo"
 			);
 		} catch (error) {
-			console.error(error);
+			console.error("Mensaje de error: ", error);
 		}
 	},
 	computed: {

@@ -223,7 +223,8 @@
 							v-validate="'required'"
 							name="fechaNacimiento"
 							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
-							monday-first="true"
+							:monday-first="true"
+							:language="es"
 						/>
 						<div
 							v-if="errors.has('fechaNacimiento')"
@@ -333,7 +334,8 @@
 							v-validate="'required'"
 							name="fechaIngreso"
 							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
-							monday-first="true"
+							:monday-first="true"
+							:language="es"
 						/>
 						<div
 							v-if="errors.has('fechaIngreso')"
@@ -427,14 +429,14 @@
 					<button
 						@click="cancelar"
 						type="button"
-						class="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200"
+						class="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 					>
 						Cancelar
 					</button>
 
 					<button
 						type="submit"
-						class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200"
+						class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 					>
 						Crear Nuevo MoBiker
 					</button>
@@ -450,6 +452,7 @@ import { ModelListSelect } from "vue-search-select";
 import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
 import Datepicker from "vuejs-datepicker";
+import { es } from "vuejs-datepicker/dist/locale";
 
 export default {
 	name: "NuevoMobiker",
@@ -500,6 +503,7 @@ export default {
 					status: "Retirado",
 				},
 			],
+			es: es,
 		};
 	},
 	async mounted() {

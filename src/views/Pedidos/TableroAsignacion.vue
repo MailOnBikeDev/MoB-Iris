@@ -136,7 +136,7 @@
 			</div>
 
 			<div
-				class="bg-white col-span-3 max-h-96 overflow-y-auto border-black border"
+				class="pedidos-scroll bg-white col-span-3 max-h-96 overflow-y-auto border-black border"
 			>
 				<div
 					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
@@ -181,6 +181,7 @@
 
 <script>
 import PedidoService from "@/services/pedido.service";
+import MobikerService from "@/services/mobiker.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado";
 
 export default {
@@ -189,13 +190,23 @@ export default {
 	data() {
 		return {
 			pedidos: [],
+			mobikers: [],
 			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
 		};
 	},
-	mounted() {
-		this.retrievePedidos();
+	async mounted() {
+		try {
+			this.retrievePedidos();
+			let mobiker = await MobikerService.getMobikers();
+
+			this.mobikers = mobiker.data.filter(
+				(mobiker) => mobiker.status === "Activo"
+			);
+		} catch (error) {
+			console.error("Mensaje de error: ", error);
+		}
 	},
 	methods: {
 		retrievePedidos() {
@@ -273,3 +284,15 @@ export default {
 	},
 };
 </script>
+
+<style lang="scss" scoped>
+.pedidos-scroll::-webkit-scrollbar {
+	width: 0.5rem;
+	background: white;
+
+	&-thumb {
+		background: #52678e;
+		border-radius: 1rem;
+	}
+}
+</style>

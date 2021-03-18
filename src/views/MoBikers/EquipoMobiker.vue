@@ -89,7 +89,9 @@
 				</div>
 			</div>
 
-			<div class="bg-white overscroll-auto col-span-3 border border-black">
+			<div
+				class="pedidos-scroll bg-white overscroll-auto col-span-3 border border-black"
+			>
 				<div
 					class="grid grid-cols-7 text-center text-sm py-2 hover:bg-info border-b-2 border-primary items-center cursor-default"
 					:class="{
@@ -248,3 +250,15 @@ export default {
 	},
 };
 </script>
+
+<style lang="scss" scoped>
+.pedidos-scroll::-webkit-scrollbar {
+	width: 0.5rem;
+	background: white;
+
+	&-thumb {
+		background: #52678e;
+		border-radius: 1rem;
+	}
+}
+</style>

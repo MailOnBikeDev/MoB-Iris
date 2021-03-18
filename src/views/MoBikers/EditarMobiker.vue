@@ -224,7 +224,7 @@
 							v-validate="'required'"
 							name="fechaNacimiento"
 							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
-							monday-first="true"
+							:monday-first="true"
 						/>
 						<div
 							v-if="errors.has('fechaNacimiento')"
@@ -335,7 +335,7 @@
 							name="fechaIngreso"
 							type="date"
 							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
-							monday-first="true"
+							:monday-first="true"
 						/>
 						<div
 							v-if="errors.has('fechaIngreso')"
@@ -429,14 +429,14 @@
 					<button
 						@click="cancelar"
 						type="button"
-						class="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200"
+						class="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 					>
 						Cancelar
 					</button>
 
 					<button
 						type="submit"
-						class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200"
+						class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 					>
 						Editar MoBiker
 					</button>
