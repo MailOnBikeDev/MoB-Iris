@@ -50,6 +50,18 @@ class ClienteService {
 		}
 	}
 
+	async getPedidosDelCliente(id) {
+		try {
+			let pedidos = await http.get(`clientes/pedidos/${id}`, {
+				headers: authHeader(),
+			});
+
+			return pedidos;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
 	async editCliente(id, clienteEditado) {
 		try {
 			let editarCliente = await http.put(`clientes/tablero-clientes/${id}`, {

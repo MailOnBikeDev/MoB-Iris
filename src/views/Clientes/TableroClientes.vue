@@ -130,7 +130,11 @@
 			</div>
 
 			<div class="h-96 border border-black">
-				<Component :is="currentTab" :estadisticas="currentCliente" />
+				<Component
+					:is="currentTab"
+					:estadisticas="currentCliente"
+					:pedidos="pedidosCliente"
+				/>
 			</div>
 		</div>
 	</div>
@@ -152,6 +156,7 @@ export default {
 	data() {
 		return {
 			clientes: [],
+			pedidosCliente: [],
 			currentCliente: null,
 			currentIndex: -1,
 			buscador: "",
@@ -189,6 +194,20 @@ export default {
 			);
 		},
 
+		retrievePedidosCliente(id) {
+			ClienteService.getPedidosDelCliente(id).then(
+				(response) => {
+					this.pedidosCliente = response.data;
+				},
+				(error) => {
+					this.pedidosCliente =
+						(error.response && error.response.data) ||
+						error.message ||
+						error.toString();
+				}
+			);
+		},
+
 		handleTabClick(tabName) {
 			this.activeTabName = tabName;
 			this.currentTab = this.tabs[tabName];
@@ -205,6 +224,7 @@ export default {
 			this.currentCliente = cliente;
 			this.currentIndex = index;
 			this.handleTabClick(tabNames.detalles);
+			this.retrievePedidosCliente(index);
 		},
 
 		async searchCliente() {

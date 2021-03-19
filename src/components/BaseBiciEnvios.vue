@@ -17,8 +17,8 @@
 			</div>
 
 			<div class="mb-2 text-center">
-				<span class="resalta">Kilómetros recorridos: </span>
-				<span class="select-all">{{ estadisticas.kilometros }}</span>
+				<span class="resalta">Total de kilómetros: </span>
+				<span class="select-all">{{ estadisticas.kilometros }} km</span>
 			</div>
 		</div>
 	</div>
@@ -32,17 +32,14 @@ export default {
 		pedidos: Array,
 	},
 	data() {
-		return { indicesValidos: [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] };
+		return {};
 	},
 	computed: {
 		contarEcommerce() {
 			let contador = 0;
 
 			this.pedidos.map((pedido) => {
-				if (
-					pedido.tipoDeEnvioId === 1 &&
-					this.indicesValidos.includes(pedido.statusId)
-				) {
+				if (pedido.tipoDeEnvioId === 1) {
 					contador++;
 				}
 			});
