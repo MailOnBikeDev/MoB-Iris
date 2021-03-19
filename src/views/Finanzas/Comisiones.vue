@@ -4,25 +4,26 @@
 			<h1
 				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded-xl relative -top-12 py-2 bg-gray-100 px-6"
 			>
-				Historial de Pedidos
+				Comisiones de Pedidos
 			</h1>
 		</div>
 
-		<DetallePedidoProgramado
+		<ReporteComisiones
 			:showDetalle="showDetalle"
 			@cerrarDetalle="showDetalle = false"
-			:currentPedido="currentPedido"
+			:detalles="pedidosMobiker"
+			:mobiker="currentMobiker"
 		/>
 
 		<div class="flex flex-row justify-evenly -mt-10 mb-4">
 			<router-link
-				to="/finanzas/comisiones"
+				to="/finanzas/historial-pedidos"
 				class="bg-indigo-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-indigo-500"
 				custom
 				v-slot="{ navigate }"
 			>
 				<span @click="navigate" role="link" class="text-center cursor-pointer"
-					>Comisiones</span
+					>Volver al Historial</span
 				>
 			</router-link>
 
@@ -32,17 +33,25 @@
 			>
 				<font-awesome-icon class="text-white" icon="sync-alt" />
 			</button>
+
+			<button
+				class="bg-green-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-green-500"
+				@click="showDetalle = true"
+			>
+				Enviar reporte
+			</button>
 		</div>
 
 		<div class="grid grid-cols-4 gap-2">
 			<div class="flex flex-row justify-center">
 				<p>
-					<span class="resalta">Número de Pedidos:</span> {{ pedidos.length }}
+					<span class="resalta">Número de Pedidos:</span>
+					{{ pedidosMobiker.length }}
 				</p>
 			</div>
 
 			<div
-				class="col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center text-primary"
+				class="col-span-3 inline-grid grid-cols-5 text-sm text-center font-bold items-center text-primary"
 			>
 				<button @click="sortPorId" class="focus:outline-none">
 					<p class="font-bold"># Pedido</p>
@@ -53,86 +62,32 @@
 				<button @click="sortPorDestino" class="focus:outline-none">
 					<p class="font-bold">Destino</p>
 				</button>
-				<button @click="sortPorMobiker" class="focus:outline-none">
-					<p class="font-bold">MoBiker</p>
-				</button>
 				<button @click="sortPorEstado" class="focus:outline-none">
 					<p class="font-bold">Estado</p>
 				</button>
 				<button @click="sortPorFecha" class="focus:outline-none">
 					<p class="font-bold">Fecha</p>
 				</button>
-				<div>
-					<p>Reporte</p>
-				</div>
 			</div>
+			<div
+				class="bg-white max-h-96 overflow-y-auto h-96 border-black border pedidos-scroll"
+			>
+				<div
+					class="grid grid-cols-3 gap-x-1 text-center text-sm h-14 px-2 border-b-2 border-primary hover:bg-info items-center"
+					:class="{
+						'bg-info text-white font-bold': mobiker.id == currentIndex,
+					}"
+					v-for="mobiker in mobikers"
+					:key="mobiker.id"
+					@click="setActiveMobiker(mobiker, mobiker.id)"
+				>
+					<div class="col-span-2">
+						{{ mobiker.fullName }}
+					</div>
 
-			<div class="bg-white p-4 border-black border">
-				<h2 class="text-3xl text-primary font-bold mb-4">
-					Cliente
-				</h2>
-
-				<div class="flex flex-col max-h-96 text-sm" v-if="currentPedido">
-					<p class="mb-2">
-						<span class="resalta">Contacto: </span>
-						{{ currentPedido.contactoRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Empresa: </span
-						>{{ currentPedido.empresaRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Dirección: </span
-						>{{ currentPedido.direccionRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Distrito: </span
-						>{{ currentPedido.distritoRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Teléfono: </span
-						>{{ currentPedido.telefonoRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Otro dato: </span
-						>{{ currentPedido.otroDatoRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Forma de Pago: </span
-						>{{ currentPedido.formaPago }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Tarifa: </span>S/.
-						{{ currentPedido.tarifa }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Modalidad: </span
-						>{{ currentPedido.modalidad.tipo }}
-					</p>
-					<p class="mb-2"><span class="resalta">Rol: </span>Remitente</p>
-				</div>
-
-				<div class="flex flex-col max-h-96 text-sm" v-else>
-					<p class="mb-2">
-						<span class="resalta">Contacto: </span>
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Empresa: </span>
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Dirección: </span>
-					</p>
-					<p class="mb-2"><span class="resalta">Distrito: </span></p>
-					<p class="mb-2"><span class="resalta">Teléfono: </span></p>
-					<p class="mb-2">
-						<span class="resalta">Otro dato: </span>
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Forma de Pago: </span>
-					</p>
-					<p class="mb-2"><span class="resalta">Tarifa: </span>S/.</p>
-					<p class="mb-2"><span class="resalta">Modalidad: </span></p>
-					<p class="mb-2"><span class="resalta">Rol: </span></p>
+					<div>
+						{{ mobiker.biciEnvios }}
+					</div>
 				</div>
 			</div>
 
@@ -140,11 +95,9 @@
 				class="pedidos-scroll bg-white col-span-3 max-h-96 overflow-y-auto border-black border"
 			>
 				<div
-					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
-					:class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
-					v-for="pedido in pedidos"
+					class="grid grid-cols-5 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
+					v-for="pedido in pedidosMobiker"
 					:key="pedido.id"
-					@click="setActiveCliente(pedido, pedido.id)"
 				>
 					<div>
 						<p>{{ pedido.id }}</p>
@@ -154,9 +107,6 @@
 					</div>
 					<div>
 						<p>{{ pedido.distrito.distrito }}</p>
-					</div>
-					<div>
-						<p>{{ pedido.mobiker.fullName }}</p>
 					</div>
 					<div>
 						<p
@@ -218,11 +168,6 @@
 					<div>
 						<p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
 					</div>
-					<div class="flex justify-center">
-						<button class="focus:outline-none" @click="showDetalle = true">
-							<font-awesome-icon class="text-primary" icon="window-maximize" />
-						</button>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -231,44 +176,32 @@
 
 <script>
 import MobikerService from "@/services/mobiker.service";
-import PedidoService from "@/services/pedido.service";
-import DetallePedidoProgramado from "@/components/DetallePedidoProgramado";
+import ReporteComisiones from "@/components/ReporteComisiones";
 
 export default {
-	name: "HistorialPedidos",
-	components: { DetallePedidoProgramado },
+	name: "Comisiones",
+	components: { ReporteComisiones },
 	data() {
 		return {
 			mobikers: [],
-			pedidos: [],
+			pedidosMobiker: [],
 			showDetalle: false,
-			currentPedido: null,
+			currentMobiker: null,
 			currentIndex: -1,
 		};
 	},
 	mounted() {
-		this.retrievePedidos();
 		this.retrieveMobikers();
 	},
 	methods: {
-		retrievePedidos() {
-			PedidoService.getPedidos().then(
-				(response) => {
-					this.pedidos = response.data;
-				},
-				(error) => {
-					this.pedidos =
-						(error.response && error.response.data) ||
-						error.message ||
-						error.toString();
-				}
-			);
-		},
-
 		retrieveMobikers() {
 			MobikerService.getMobikers().then(
 				(response) => {
-					this.mobikers = response.data;
+					this.mobikers = response.data
+						.filter((mobiker) => mobiker.status === "Activo")
+						.sort((a, b) => {
+							return a.biciEnvios > b.biciEnvios ? 1 : -1;
+						});
 				},
 				(error) => {
 					this.mobikers =
@@ -279,15 +212,30 @@ export default {
 			);
 		},
 
-		setActiveCliente(pedido, index) {
-			this.currentPedido = pedido;
+		retrievePedidosMobikers(id) {
+			MobikerService.getPedidosDelMobiker(id).then(
+				(response) => {
+					this.pedidosMobiker = response.data;
+				},
+				(error) => {
+					this.pedidosMobiker =
+						(error.response && error.response.data) ||
+						error.message ||
+						error.toString();
+				}
+			);
+		},
+
+		setActiveMobiker(mobiker, index) {
+			this.currentMobiker = mobiker;
 			this.currentIndex = index;
+			this.retrievePedidosMobikers(index);
 		},
 
 		refreshList() {
 			this.retrievePedidos();
 
-			this.currentPedido = null;
+			this.currentMobiker = null;
 			this.currentIndex = -1;
 		},
 

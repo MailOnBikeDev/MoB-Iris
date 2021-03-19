@@ -85,6 +85,11 @@ const routes = [
 		name: "HistorialPedidos",
 		component: () => import("@/views/Finanzas/HistorialPedidos.vue"),
 	},
+	{
+		path: "/finanzas/comisiones",
+		name: "Comisiones",
+		component: () => import("@/views/Finanzas/Comisiones.vue"),
+	},
 ];
 
 const router = new VueRouter({

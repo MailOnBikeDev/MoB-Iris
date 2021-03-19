@@ -154,7 +154,7 @@
 
 <script>
 export default {
-	name: "ReporteDetalle",
+	name: "DetallePedidoProgramado",
 	props: {
 		showDetalle: {
 			type: Boolean,
