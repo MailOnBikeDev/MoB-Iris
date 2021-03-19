@@ -159,7 +159,11 @@
 			</div>
 
 			<div class="h-96 col-span-2 border border-black">
-				<Component :is="currentTab" :estadisticas="currentMobiker" />
+				<Component
+					:is="currentTab"
+					:estadisticas="currentMobiker"
+					:pedidos="pedidosMobiker"
+				/>
 			</div>
 		</div>
 	</div>
@@ -181,6 +185,7 @@ export default {
 	data() {
 		return {
 			mobikers: [],
+			pedidosMobiker: [],
 			currentMobiker: null,
 			currentIndex: -1,
 			editModal: false,
@@ -219,6 +224,20 @@ export default {
 			);
 		},
 
+		retrievePedidosMobikers(id) {
+			MobikerService.getPedidosDelMobiker(id).then(
+				(response) => {
+					this.pedidosMobiker = response.data;
+				},
+				(error) => {
+					this.pedidosMobiker =
+						(error.response && error.response.data) ||
+						error.message ||
+						error.toString();
+				}
+			);
+		},
+
 		handleTabClick(tabName) {
 			this.activeTabName = tabName;
 			this.currentTab = this.tabs[tabName];
@@ -235,6 +254,7 @@ export default {
 			this.currentMobiker = mobiker;
 			this.currentIndex = index;
 			this.handleTabClick(tabNames.detalles);
+			this.retrievePedidosMobikers(index);
 		},
 
 		async searchMobiker() {

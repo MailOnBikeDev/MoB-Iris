@@ -1,11 +1,14 @@
 <template>
 	<div class="w-full h-full p-4 flex flex-col text-sm" v-if="estadisticas">
-		<div class="bg-green-500 text-white text-center font-bold">
-			Un mensaje verde para cuidar el ambiente
+		<div class="mb-2 text-center">
+			<span class="resalta">CO2 Ahorrado: </span>
+			<span class="select-all">{{ estadisticas.CO2Ahorrado }}</span>
 		</div>
-		{{ estadisticas.kilometros }}
-		{{ estadisticas.CO2Ahorrado }}
-		{{ estadisticas.ruido }}
+
+		<div class="mb-2 text-center">
+			<span class="resalta">Ruido evitado: </span>
+			<span class="select-all">{{ estadisticas.ruido }}</span>
+		</div>
 	</div>
 </template>
 
@@ -14,6 +17,7 @@ export default {
 	name: "BaseEcoamigable",
 	props: {
 		estadisticas: Object,
+		pedidos: Array,
 	},
 };
 </script>

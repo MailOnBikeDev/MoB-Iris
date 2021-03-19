@@ -62,6 +62,7 @@ export default {
 	name: "MoBDetalles",
 	props: {
 		estadisticas: Object,
+		pedidos: Array,
 	},
 };
 </script>
