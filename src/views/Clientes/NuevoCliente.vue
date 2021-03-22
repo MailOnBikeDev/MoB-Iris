@@ -363,15 +363,16 @@ export default {
 				} else {
 					ClienteService.storageNuevoCliente(this.nuevoCliente).then(
 						(response) => {
-							this.$router.push("/clientes/tablero-clientes");
 							console.log(response.data.message);
 							this.message = response.data.message;
+							this.$router.push("/clientes/tablero-clientes");
 						},
 						(err) => console.log(err)
 					);
 				}
 			});
 		},
+
 		cancelar() {
 			this.$router.push("/clientes/tablero-clientes");
 		},

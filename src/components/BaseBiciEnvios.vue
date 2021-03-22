@@ -36,30 +36,30 @@ export default {
 	},
 	computed: {
 		contarEcommerce() {
-			let contador = 0;
+			let contadorEcommerce = 0;
 
 			this.pedidos.map((pedido) => {
 				if (pedido.tipoDeEnvioId === 1) {
-					contador++;
+					contadorEcommerce++;
 				}
 			});
 
-			return contador;
+			return contadorEcommerce;
 		},
 
 		contarExpress() {
-			let contador = 0;
+			let contadorExpress = 0;
 
 			this.pedidos.map((pedido) => {
 				if (
 					pedido.tipoDeEnvioId === 3 &&
 					this.indicesValidos.includes(pedido.statusId)
 				) {
-					contador++;
+					contadorExpress++;
 				}
 			});
 
-			return contador;
+			return contadorExpress;
 		},
 	},
 };

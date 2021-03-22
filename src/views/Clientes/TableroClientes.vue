@@ -177,7 +177,6 @@ export default {
 	},
 	mounted() {
 		this.retrieveClientes();
-		this.currentTab = this.tabs[tabNames.detalles];
 	},
 	methods: {
 		retrieveClientes() {
@@ -229,9 +228,11 @@ export default {
 
 		async searchCliente() {
 			try {
-				let clientes = await ClienteService.searchCliente(this.buscador);
+				let clientesFiltrados = await ClienteService.searchCliente(
+					this.buscador
+				);
 
-				this.clientes = clientes.data;
+				this.clientes = clientesFiltrados.data;
 				this.buscador = "";
 			} catch (error) {
 				console.error(error);
