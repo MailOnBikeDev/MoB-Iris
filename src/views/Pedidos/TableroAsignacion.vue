@@ -36,8 +36,9 @@
 
 		<div class="grid grid-cols-4 gap-2">
 			<div class="flex flex-row justify-center">
-				<p>
-					<span class="resalta">Número de Pedidos:</span> {{ pedidos.length }}
+				<p v-if="pedidos">
+					<span class="resalta">Pedidos por asignar:</span>
+					{{ pedidos.length }}
 				</p>
 			</div>
 
@@ -66,72 +67,21 @@
 					<p>Asignar</p>
 				</div>
 			</div>
-			<div class="bg-white p-4 border-black border">
-				<h2 class="text-3xl text-primary font-bold mb-4">
-					Cliente
-				</h2>
+			<div
+				class="bg-white max-h-96 overflow-y-auto h-96 border-black border pedidos-scroll"
+			>
+				<div
+					class="grid grid-cols-3 gap-x-1 text-center text-sm h-14 px-2 border-b-2 border-primary hover:bg-info items-center"
+					v-for="mobiker in mobikers"
+					:key="mobiker.id"
+				>
+					<div class="col-span-2">
+						{{ mobiker.fullName }}
+					</div>
 
-				<div class="flex flex-col text-sm max-h-96" v-if="currentPedido">
-					<p class="mb-2">
-						<span class="resalta">Contacto: </span>
-						{{ currentPedido.contactoRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Empresa: </span
-						>{{ currentPedido.empresaRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Dirección: </span
-						>{{ currentPedido.direccionRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Distrito: </span
-						>{{ currentPedido.distritoRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Teléfono: </span
-						>{{ currentPedido.telefonoRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Otro dato: </span
-						>{{ currentPedido.otroDatoRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Forma de Pago: </span
-						>{{ currentPedido.formaPago }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Tarifa: </span>S/.
-						{{ currentPedido.tarifa }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Modalidad: </span
-						>{{ currentPedido.modalidad.tipo }}
-					</p>
-					<p class="mb-2"><span class="resalta">Rol: </span>Remitente</p>
-				</div>
-
-				<div class="flex flex-col text-sm max-h-96" v-else>
-					<p class="mb-2">
-						<span class="resalta">Contacto: </span>
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Empresa: </span>
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Dirección: </span>
-					</p>
-					<p class="mb-2"><span class="resalta">Distrito: </span></p>
-					<p class="mb-2"><span class="resalta">Teléfono: </span></p>
-					<p class="mb-2">
-						<span class="resalta">Otro dato: </span>
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Forma de Pago: </span>
-					</p>
-					<p class="mb-2"><span class="resalta">Tarifa: </span>S/.</p>
-					<p class="mb-2"><span class="resalta">Modalidad: </span></p>
-					<p class="mb-2"><span class="resalta">Rol: </span></p>
+					<div>
+						{{ mobiker.biciEnvios }}
+					</div>
 				</div>
 			</div>
 
@@ -140,10 +90,12 @@
 			>
 				<div
 					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
-					:class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
+					:class="{
+						'bg-info text-white font-bold': pedido.id == currentIndex,
+					}"
 					v-for="pedido in pedidos"
 					:key="pedido.id"
-					@click="setActiveCliente(pedido, pedido.id)"
+					@click="setActivePedido(pedido, pedido.id)"
 				>
 					<div>
 						<p>{{ pedido.id }}</p>
@@ -182,38 +134,48 @@
 <script>
 import PedidoService from "@/services/pedido.service";
 import MobikerService from "@/services/mobiker.service";
-import DetallePedidoProgramado from "@/components/DetallePedidoProgramado";
+import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
 
 export default {
 	name: "Pedidos",
 	components: { DetallePedidoProgramado },
 	data() {
 		return {
-			pedidos: [],
 			mobikers: [],
+			pedidos: [],
 			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
 		};
 	},
-	async mounted() {
-		try {
-			this.retrievePedidos();
-			let mobiker = await MobikerService.getMobikers();
-
-			this.mobikers = mobiker.data.filter(
-				(mobiker) => mobiker.status === "Activo"
-			);
-		} catch (error) {
-			console.error("Mensaje de error: ", error);
-		}
+	mounted() {
+		this.retrieveMobikers();
+		this.retrievePedidos();
 	},
 	methods: {
+		retrieveMobikers() {
+			MobikerService.getMobikers().then(
+				(response) => {
+					this.mobikers = response.data
+						.filter((mobiker) => mobiker.status === "Activo")
+						.sort((a, b) => {
+							return a.biciEnvios > b.biciEnvios ? 1 : -1;
+						});
+				},
+				(error) => {
+					this.mobikers =
+						(error.response && error.response.data) ||
+						error.message ||
+						error.toString();
+				}
+			);
+		},
+
 		retrievePedidos() {
 			PedidoService.getPedidos().then(
 				(response) => {
 					this.pedidos = response.data.filter(
-						(pedido) => pedido.status.tag === "Programado"
+						(pedido) => pedido.statusId === 1
 					);
 				},
 				(error) => {
@@ -225,7 +187,7 @@ export default {
 			);
 		},
 
-		setActiveCliente(pedido, index) {
+		setActivePedido(pedido, index) {
 			this.currentPedido = pedido;
 			this.currentIndex = index;
 		},

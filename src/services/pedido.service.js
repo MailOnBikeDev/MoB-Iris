@@ -127,6 +127,19 @@ class PedidoService {
 			console.error("Mensaje de error: ", error.message);
 		}
 	}
+
+	async asignarPedido(id, pedidoAsignado) {
+		try {
+			let pedidoEditado = await http.put(`pedidos-programados/${id}`, {
+				status: pedidoAsignado.statusId,
+				mobiker: pedidoAsignado.mobiker,
+			});
+
+			return pedidoEditado;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
 }
 
 export default new PedidoService();

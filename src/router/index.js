@@ -45,11 +45,7 @@ const routes = [
 		name: "EditarPedido",
 		component: () => import("@/views/Pedidos/EditarPedido.vue"),
 	},
-	{
-		path: "/pedidos/pedidos-programados/:id",
-		name: "AsignarPedido",
-		component: () => import("@/views/Pedidos/AsignarPedido.vue"),
-	},
+
 	{
 		path: "/mobikers/equipo-mobiker",
 		name: "EquipoMobiker",
@@ -89,6 +85,11 @@ const routes = [
 		path: "/finanzas/comisiones",
 		name: "Comisiones",
 		component: () => import("@/views/Finanzas/Comisiones.vue"),
+	},
+	{
+		path: "/finanzas/historial-pedidos/:id",
+		name: "CorregirPedido",
+		component: () => import("@/views/Finanzas/CorregirPedido.vue"),
 	},
 ];
 

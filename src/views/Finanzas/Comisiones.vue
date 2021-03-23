@@ -45,7 +45,7 @@
 		<div class="grid grid-cols-4 gap-2">
 			<div class="flex flex-row justify-center">
 				<p>
-					<span class="resalta">Número de Pedidos:</span>
+					<span class="resalta">Total de Pedidos:</span>
 					{{ pedidosMobiker.length }}
 				</p>
 			</div>

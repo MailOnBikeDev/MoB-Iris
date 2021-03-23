@@ -55,7 +55,8 @@
 		<div class="grid grid-cols-4 gap-2">
 			<div class="flex flex-row justify-center">
 				<p>
-					<span class="resalta">Número de Pedidos:</span> {{ pedidos.length }}
+					<span class="resalta">N° de Pedidos del día:</span>
+					{{ pedidos.length }}
 				</p>
 			</div>
 			<div
