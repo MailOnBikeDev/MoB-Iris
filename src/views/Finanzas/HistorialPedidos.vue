@@ -8,7 +8,7 @@
 			</h1>
 		</div>
 
-		<DetallePedidoProgramado
+		<DetalleHistorialPedido
 			:showDetalle="showDetalle"
 			@cerrarDetalle="showDetalle = false"
 			:currentPedido="currentPedido"
@@ -232,11 +232,11 @@
 <script>
 import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
-import DetallePedidoProgramado from "@/components/DetallePedidoProgramado";
+import DetalleHistorialPedido from "@/components/DetalleHistorialPedido";
 
 export default {
 	name: "HistorialPedidos",
-	components: { DetallePedidoProgramado },
+	components: { DetalleHistorialPedido },
 	data() {
 		return {
 			mobikers: [],

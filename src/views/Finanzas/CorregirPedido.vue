@@ -575,7 +575,7 @@
 					@click.prevent="handleEditarPedido"
 					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 				>
-					Asignar Pedido
+					Editar Pedido
 				</button>
 			</div>
 		</form>
@@ -653,20 +653,6 @@ export default {
 			return tarifaSugerida.toFixed(2);
 		},
 	},
-	watch: {
-		"editarPedido.mobiker": function() {
-			if (this.editarPedido.mobiker.fullName === "Asignar MoBiker") {
-				this.editarPedido.statusId = 1;
-			} else {
-				this.editarPedido.statusId = 2;
-			}
-		},
-		"editarPedido.statusId": function() {
-			if (this.editarPedido.statusId === 1) {
-				this.editarPedido.mobiker.fullName = "Asignar MoBiker";
-			}
-		},
-	},
 	methods: {
 		async getPedido(id) {
 			try {
@@ -691,7 +677,7 @@ export default {
 						this.editarPedido
 					).then(
 						(response) => {
-							this.$router.push("/pedidos/pedidos-programados");
+							this.$router.push("/finanzas/historial-pedidos");
 							console.log(response.data.message);
 							this.message = response.data.message;
 						},
@@ -766,7 +752,7 @@ export default {
 		},
 
 		cancelar() {
-			this.$router.push("/pedidos/pedidos-programados");
+			this.$router.push("/finanzas/historial-pedidos");
 		},
 
 		activarCliente(cliente) {
@@ -797,7 +783,7 @@ export default {
 						this.editarPedido
 					).then(
 						(response) => {
-							this.$router.push("/pedidos/pedidos-programados");
+							this.$router.push("/finanzas/historial-pedidos");
 							console.log(response.data.message);
 							this.message = response.data.message;
 						},
