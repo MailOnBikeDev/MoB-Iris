@@ -32,29 +32,51 @@
 			</div>
 			<br />
 			<div>
-				<p>Envíos E-commerce =</p>
-				<p>Envíos Express =</p>
-				<p>Total de envíos =</p>
+				<p>Envíos E-commerce = {{ contarEcommerce }}</p>
+				<p>Envíos Express = {{ contarExpress }}</p>
+				<p>Total de envíos = {{ detalles.length }}</p>
 				<br />
 
-				<p>Tarifas E-commerce =</p>
-				<p>Tarifas Express =</p>
-				<p>Total de tarifas =</p>
+				<p>Tarifas E-commerce = {{ calcularTarifaEcommerce }}</p>
+				<p>Tarifas Express = {{ calcularTarifaExpress }}</p>
+				<p>
+					Total de tarifas =
+					{{
+						parseFloat(calcularTarifaEcommerce + calcularTarifaExpress).toFixed(
+							2
+						)
+					}}
+				</p>
 				<br />
 
-				<p>Comisiones E-commerce =</p>
-				<p>Comisiones Express =</p>
-				<p>Total de comisiones =</p>
+				<p>Comisiones E-commerce = {{ calcularComisionEcommerce }}</p>
+				<p>Comisiones Express = {{ calcularComisionExpress }}</p>
+				<p>
+					Total de comisiones =
+					{{
+						parseFloat(
+							calcularComisionEcommerce + calcularComisionExpress
+						).toFixed(2)
+					}}
+				</p>
 				<br />
-				<p>Pagos en Efectivo =</p>
-				<p>Total a pagar =</p>
+				<p>Pagos en Efectivo = {{ calcularPagosEfectivo }}</p>
+				<p>
+					Total a pagar =
+					{{
+						parseFloat(
+							calcularComisionEcommerce + calcularComisionExpress
+						).toFixed(2) - parseFloat(calcularPagosEfectivo).toFixed(2)
+					}}
+				</p>
 				<br />
 
-				<p>Mis Estadísticas:</p>
-				<p>Mis Envíos =</p>
-				<p>Mis Kilómetros =</p>
-				<p>CO2 Ahorrado en kg =</p>
-				<p>Mi nivel es:</p>
+				<p class="resalta">Mis Estadísticas:</p>
+				<p>Mis BiciEnvíos = {{ mobiker.biciEnvios }}</p>
+				<p>Mis Kilómetros = {{ mobiker.kilometros }}km</p>
+				<p>CO2 Ahorrado = {{ mobiker.CO2Ahorrado }}kg</p>
+				<p>Horas de Ruido Ahorrado = {{ mobiker.CO2Ahorrado }}h</p>
+				<p>Mi nivel es: {{ mobiker.rango.rangoMoBiker }}</p>
 			</div>
 		</div>
 
@@ -96,9 +118,99 @@ export default {
 	data() {
 		return { reporteCopiado: false };
 	},
+	computed: {
+		contarEcommerce() {
+			let contadorEcommerce = 0;
+
+			this.detalles.map((pedido) => {
+				if (pedido.tipoDeEnvioId === 1) {
+					contadorEcommerce++;
+				}
+			});
+
+			return contadorEcommerce;
+		},
+
+		calcularTarifaEcommerce() {
+			let tarifaEcommerce = 0;
+
+			this.detalles.map((pedido) => {
+				if (pedido.tipoDeEnvioId === 1) {
+					tarifaEcommerce += pedido.tarifa;
+				}
+			});
+
+			return tarifaEcommerce.toFixed(2);
+		},
+
+		calcularComisionEcommerce() {
+			let comisionEcommerce = 0;
+
+			this.detalles.map((pedido) => {
+				if (pedido.tipoDeEnvioId === 1) {
+					comisionEcommerce += pedido.comision;
+				}
+			});
+
+			return comisionEcommerce.toFixed(2);
+		},
+
+		contarExpress() {
+			let contadorExpress = 0;
+
+			this.detalles.map((pedido) => {
+				if (pedido.tipoDeEnvioId === 3) {
+					contadorExpress++;
+				}
+			});
+
+			return contadorExpress;
+		},
+
+		calcularTarifaExpress() {
+			let tarifaExpress = 0;
+
+			this.detalles.map((pedido) => {
+				if (pedido.tipoDeEnvioId === 3) {
+					tarifaExpress += pedido.tarifa;
+				}
+			});
+
+			return tarifaExpress.toFixed(2);
+		},
+
+		calcularComisionExpress() {
+			let comisionExpress = 0;
+
+			this.detalles.map((pedido) => {
+				if (pedido.tipoDeEnvioId === 3) {
+					comisionExpress += pedido.comision;
+				}
+			});
+
+			return comisionExpress.toFixed(2);
+		},
+
+		calcularPagosEfectivo() {
+			let pagoEfectivo = 0;
+
+			this.detalles.map((pedido) => {
+				if (
+					(pedido.tipoDeEnvioId === 1 || pedido.tipoDeEnvioId === 3) &&
+					(pedido.formaPago === "Efectivo en Origen" ||
+						pedido.formaPago === "Efectivo en Destino")
+				) {
+					pagoEfectivo += pedido.tarifa;
+				}
+			});
+
+			return pagoEfectivo.toFixed(2);
+		},
+	},
 	methods: {
 		cerrarDetalle() {
 			this.$emit("cerrarDetalle");
+			this.reporteCopiado = false;
 		},
 
 		copiarReporte() {
