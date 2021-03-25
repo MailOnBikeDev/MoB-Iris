@@ -172,11 +172,9 @@ export default {
 		},
 
 		retrievePedidos() {
-			PedidoService.getPedidos().then(
+			PedidoService.searchPedidoProgramado().then(
 				(response) => {
-					this.pedidos = response.data.filter(
-						(pedido) => pedido.statusId === 1
-					);
+					this.pedidos = response.data;
 				},
 				(error) => {
 					this.pedidos =

@@ -2,9 +2,9 @@ import http from "@/http-common";
 import authHeader from "./auth-header";
 
 class PedidoService {
-	async getPedidos() {
+	async getPedidosPorFecha(query) {
 		try {
-			let pedidos = await http.get("pedidos/tablero-pedidos", {
+			let pedidos = await http.get(`pedidos/tablero-pedidos?q=${query}`, {
 				headers: authHeader(),
 			});
 
@@ -116,9 +116,9 @@ class PedidoService {
 		}
 	}
 
-	async searchPedidoProgramado(status) {
+	async searchPedidoProgramado() {
 		try {
-			let pedido = await http.get(`pedidos-programados?q=${status}`, {
+			let pedido = await http.get("pedidos-programados", {
 				headers: authHeader(),
 			});
 
@@ -136,6 +136,21 @@ class PedidoService {
 			});
 
 			return pedidoEditado;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async historialPedidos(desde, hasta) {
+		try {
+			let pedido = await http.get(
+				`historial-pedidos?desde=${desde}&hasta=${hasta}`,
+				{
+					headers: authHeader(),
+				}
+			);
+
+			return pedido;
 		} catch (error) {
 			console.error("Mensaje de error: ", error.message);
 		}

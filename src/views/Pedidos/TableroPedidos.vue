@@ -22,6 +22,22 @@
 		/>
 
 		<div class="flex flex-row justify-evenly items-center -mt-10 mb-4">
+			<div class="flex flex-row">
+				<datepicker
+					v-model="buscadorFecha"
+					name="buscadorFecha"
+					input-class="rounded-l-xl w-28 focus:outline-none p-2 font-bold cursor-pointer"
+					:monday-first="true"
+				/>
+				<button
+					type="button"
+					class="bg-white py-1 px-2 rounded-r-xl font-bold hover:bg-info hover:text-white focus:outline-none"
+					@click="retrievePedidos"
+				>
+					Buscar
+				</button>
+			</div>
+
 			<router-link
 				to="/pedidos/pedidos-programados"
 				class="bg-indigo-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-indigo-500"
@@ -157,7 +173,7 @@
 				class="bg-white col-span-3 max-h-96 overflow-y-auto border-black border pedidos-scroll"
 			>
 				<div
-					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info hover:text-white items-center"
+					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info hover:text-white items-center cursor-pointer"
 					:class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
 					v-for="pedido in pedidos"
 					:key="pedido.id"
@@ -257,10 +273,11 @@
 import PedidoService from "@/services/pedido.service";
 import ReporteComanda from "@/components/ReporteComanda";
 import DetallePedido from "@/components/DetallePedido";
+import Datepicker from "vuejs-datepicker";
 
 export default {
 	name: "Pedidos",
-	components: { ReporteComanda, DetallePedido },
+	components: { ReporteComanda, DetallePedido, Datepicker },
 	data() {
 		return {
 			pedidos: [],
@@ -269,6 +286,7 @@ export default {
 			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
+			buscadorFecha: new Date(),
 		};
 	},
 	mounted() {
@@ -276,14 +294,11 @@ export default {
 	},
 	methods: {
 		retrievePedidos() {
-			PedidoService.getPedidos().then(
+			PedidoService.getPedidosPorFecha(
+				this.$date(this.buscadorFecha).format("YYYY-MM-DD")
+			).then(
 				(response) => {
-					let hoy = new Date();
-					this.pedidos = response.data.filter(
-						(pedido) =>
-							this.$date(pedido.fecha).format("DD MMM YYYY") ===
-							this.$date(hoy).format("DD MMM YYYY")
-					);
+					this.pedidos = response.data;
 				},
 				(error) => {
 					this.pedidos =

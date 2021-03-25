@@ -15,6 +15,35 @@
 		/>
 
 		<div class="flex flex-row justify-evenly -mt-10 mb-4">
+			<div class="flex flex-row">
+				<datepicker
+					v-model="fechaInicio"
+					name="fechaInicio"
+					input-class="rounded-l-xl w-32 focus:outline-none p-2 font-bold cursor-pointer"
+					:monday-first="true"
+				/>
+				<datepicker
+					v-model="fechaFin"
+					name="fechaFin"
+					input-class="w-32 focus:outline-none p-2 font-bold cursor-pointer"
+					:monday-first="true"
+				/>
+				<button
+					type="button"
+					class="bg-white py-1 px-2 rounded-r-xl font-bold hover:bg-info hover:text-white focus:outline-none"
+					@click="retrievePedidos"
+				>
+					Buscar
+				</button>
+			</div>
+
+			<button
+				class="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded-full focus:outline-none"
+				@click="refreshList"
+			>
+				<font-awesome-icon class="text-white" icon="sync-alt" />
+			</button>
+
 			<router-link
 				to="/finanzas/comisiones"
 				class="bg-indigo-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-indigo-500"
@@ -25,13 +54,6 @@
 					>Comisiones</span
 				>
 			</router-link>
-
-			<button
-				class="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded-full focus:outline-none"
-				@click="refreshList"
-			>
-				<font-awesome-icon class="text-white" icon="sync-alt" />
-			</button>
 		</div>
 
 		<div class="grid grid-cols-4 gap-2">
@@ -140,7 +162,7 @@
 				class="pedidos-scroll bg-white col-span-3 max-h-96 overflow-y-auto border-black border"
 			>
 				<div
-					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
+					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center cursor-pointer"
 					:class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
 					v-for="pedido in pedidos"
 					:key="pedido.id"
@@ -233,10 +255,11 @@
 import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import DetalleHistorialPedido from "@/components/DetalleHistorialPedido";
+import Datepicker from "vuejs-datepicker";
 
 export default {
 	name: "HistorialPedidos",
-	components: { DetalleHistorialPedido },
+	components: { DetalleHistorialPedido, Datepicker },
 	data() {
 		return {
 			mobikers: [],
@@ -244,6 +267,8 @@ export default {
 			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
+			fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
+			fechaFin: new Date(),
 		};
 	},
 	mounted() {
@@ -252,7 +277,10 @@ export default {
 	},
 	methods: {
 		retrievePedidos() {
-			PedidoService.getPedidos().then(
+			PedidoService.historialPedidos(
+				this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+				this.$date(this.fechaFin).format("YYYY-MM-DD")
+			).then(
 				(response) => {
 					this.pedidos = response.data;
 				},
@@ -285,6 +313,10 @@ export default {
 		},
 
 		refreshList() {
+			this.fechaInicio = new Date(
+				new Date().getTime() - 1000 * 60 * 60 * 24 * 7
+			);
+			this.fechaFin = new Date();
 			this.retrievePedidos();
 
 			this.currentPedido = null;
