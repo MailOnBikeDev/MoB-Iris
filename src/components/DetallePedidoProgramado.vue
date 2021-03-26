@@ -217,6 +217,7 @@ export default {
 							console.log(response.data.message);
 							this.message = response.data.message;
 							this.cerrarDetalle();
+							this.refresh();
 						},
 						(err) => console.error(`Mensaje de error: ${err.message}`)
 					);
@@ -226,6 +227,10 @@ export default {
 
 		cerrarDetalle() {
 			this.$emit("cerrarDetalle");
+		},
+
+		refresh() {
+			this.$emit("refresh");
 		},
 	},
 };

@@ -93,7 +93,7 @@
 				class="pedidos-scroll bg-white overscroll-auto col-span-3 border border-black"
 			>
 				<div
-					class="grid grid-cols-7 text-center text-sm py-2 hover:bg-info border-b-2 border-primary items-center cursor-default"
+					class="grid grid-cols-7 h-14 text-center text-sm py-2 hover:bg-info border-b-2 border-primary items-center cursor-default"
 					:class="{
 						'bg-info text-white font-bold': mobiker.id == currentIndex,
 					}"

@@ -72,7 +72,7 @@
 			<div class="flex flex-row justify-center">
 				<p>
 					<span class="resalta">N° de Pedidos del día:</span>
-					{{ pedidos.length }}
+					{{ cantidadPedidos }}
 				</p>
 			</div>
 			<div
@@ -277,7 +277,11 @@ import Datepicker from "vuejs-datepicker";
 
 export default {
 	name: "Pedidos",
-	components: { ReporteComanda, DetallePedido, Datepicker },
+	components: {
+		ReporteComanda,
+		DetallePedido,
+		Datepicker,
+	},
 	data() {
 		return {
 			pedidos: [],
@@ -287,24 +291,51 @@ export default {
 			currentPedido: null,
 			currentIndex: -1,
 			buscadorFecha: new Date(),
+
+			page: 1,
+			cantidadPedidos: 0,
+			pageSize: 3,
+
+			pageSizes: [3, 6, 9],
 		};
 	},
 	mounted() {
 		this.retrievePedidos();
 	},
 	methods: {
+		getRequestParams(fecha, page, pageSize) {
+			let params = {};
+
+			if (fecha) {
+				params["fecha"] = fecha;
+			}
+
+			if (page) {
+				params["page"] = page - 1;
+			}
+
+			if (pageSize) {
+				params["size"] = pageSize;
+			}
+
+			return params;
+		},
+
 		retrievePedidos() {
-			PedidoService.getPedidosPorFecha(
-				this.$date(this.buscadorFecha).format("YYYY-MM-DD")
-			).then(
+			const params = this.getRequestParams(
+				this.$date(this.buscadorFecha).format("YYYY-MM-DD"),
+				this.page,
+				this.pageSize
+			);
+
+			PedidoService.getPedidosPorFecha(params).then(
 				(response) => {
-					this.pedidos = response.data;
+					const { pedidos, totalPedidos } = response.data;
+					this.pedidos = pedidos;
+					this.cantidadPedidos = totalPedidos;
 				},
 				(error) => {
-					this.pedidos =
-						(error.response && error.response.data) ||
-						error.message ||
-						error.toString();
+					console.error(error);
 				}
 			);
 		},
@@ -315,6 +346,7 @@ export default {
 		},
 
 		refreshList() {
+			this.buscadorFecha = new Date();
 			this.retrievePedidos();
 
 			this.currentPedido = null;

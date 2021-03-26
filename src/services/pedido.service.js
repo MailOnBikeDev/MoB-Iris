@@ -2,11 +2,15 @@ import http from "@/http-common";
 import authHeader from "./auth-header";
 
 class PedidoService {
-	async getPedidosPorFecha(query) {
+	async getPedidosPorFecha(params) {
 		try {
-			let pedidos = await http.get(`pedidos/tablero-pedidos?q=${query}`, {
-				headers: authHeader(),
-			});
+			let pedidos = await http.get(
+				"pedidos/tablero-pedidos",
+				{ params },
+				{
+					headers: authHeader(),
+				}
+			);
 
 			return pedidos;
 		} catch (error) {

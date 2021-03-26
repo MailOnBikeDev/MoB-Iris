@@ -11,6 +11,7 @@
 		<DetallePedidoProgramado
 			:showDetalle="showDetalle"
 			@cerrarDetalle="showDetalle = false"
+			@refresh="refreshList"
 			:currentPedido="currentPedido"
 		/>
 
