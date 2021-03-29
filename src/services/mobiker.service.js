@@ -56,11 +56,15 @@ class MobikerService {
 		}
 	}
 
-	async getPedidosDelMobiker(id) {
+	async getPedidosDelMobiker(params) {
 		try {
-			let pedidos = await http.get(`mobikers/pedidos/${id}`, {
-				headers: authHeader(),
-			});
+			let pedidos = await http.get(
+				"mobikers/pedidos",
+				{ params },
+				{
+					headers: authHeader(),
+				}
+			);
 
 			return pedidos;
 		} catch (error) {
