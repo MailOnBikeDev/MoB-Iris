@@ -267,29 +267,20 @@
 			</div>
 		</div>
 
-		<div class="flex justify-center space-x-2 mt-4 text-xl">
-			<button
-				class="px-2 focus:outline-none rounded hover:bg-info"
-				@click="prevPageChange"
-			>
-				-
-			</button>
-			<div v-for="n in totalPages" :key="n">
-				<button
-					class="px-2 focus:outline-none rounded hover:bg-info"
-					:class="{ 'bg-info text-white font-bold': n === page }"
-					@click="handlePageChange(n)"
-				>
-					{{ n }}
-				</button>
-			</div>
-			<button
-				class="px-2 focus:outline-none rounded hover:bg-info"
-				@click="nextPageChange"
-			>
-				+
-			</button>
-		</div>
+		<Pagination
+			:page="page"
+			:cantidadItems="cantidadPedidos"
+			:pageSize="pageSize"
+			@prevPageChange="
+				page--;
+				retrievePedidos();
+			"
+			@nextPageChange="
+				page++;
+				retrievePedidos();
+			"
+			@handlePageChange="handlePageChange"
+		/>
 	</div>
 </template>
 
@@ -298,6 +289,7 @@ import PedidoService from "@/services/pedido.service";
 import ReporteComanda from "@/components/ReporteComanda";
 import DetallePedido from "@/components/DetallePedido";
 import Datepicker from "vuejs-datepicker";
+import Pagination from "../../components/Pagination.vue";
 
 export default {
 	name: "Pedidos",
@@ -305,6 +297,7 @@ export default {
 		ReporteComanda,
 		DetallePedido,
 		Datepicker,
+		Pagination,
 	},
 	data() {
 		return {
@@ -318,18 +311,11 @@ export default {
 
 			page: 1,
 			cantidadPedidos: 0,
-			pageSize: 50,
+			pageSize: 3,
 		};
 	},
 	mounted() {
 		this.retrievePedidos();
-	},
-	computed: {
-		totalPages() {
-			let total = Math.ceil(this.cantidadPedidos / this.pageSize);
-
-			return total;
-		},
 	},
 	methods: {
 		getRequestParams(fecha, page, pageSize) {
@@ -367,24 +353,6 @@ export default {
 					console.error("Mensaje de error: ", error);
 				}
 			);
-		},
-
-		prevPageChange() {
-			if (this.page === 1) {
-				console.log("No hagas nada");
-				return;
-			}
-			this.page--;
-			this.retrievePedidos();
-		},
-
-		nextPageChange() {
-			if (this.page === this.totalPages) {
-				console.log("No hagas nada");
-				return;
-			}
-			this.page++;
-			this.retrievePedidos();
 		},
 
 		handlePageChange(value) {
