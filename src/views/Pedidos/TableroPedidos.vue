@@ -266,6 +266,30 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="flex justify-center space-x-2 mt-4 text-xl">
+			<button
+				class="px-2 focus:outline-none rounded hover:bg-info"
+				@click="prevPageChange"
+			>
+				-
+			</button>
+			<div v-for="n in totalPages" :key="n">
+				<button
+					class="px-2 focus:outline-none rounded hover:bg-info"
+					:class="{ 'bg-info text-white font-bold': n === page }"
+					@click="handlePageChange(n)"
+				>
+					{{ n }}
+				</button>
+			</div>
+			<button
+				class="px-2 focus:outline-none rounded hover:bg-info"
+				@click="nextPageChange"
+			>
+				+
+			</button>
+		</div>
 	</div>
 </template>
 
@@ -294,13 +318,18 @@ export default {
 
 			page: 1,
 			cantidadPedidos: 0,
-			pageSize: 3,
-
-			pageSizes: [3, 6, 9],
+			pageSize: 50,
 		};
 	},
 	mounted() {
 		this.retrievePedidos();
+	},
+	computed: {
+		totalPages() {
+			let total = Math.ceil(this.cantidadPedidos / this.pageSize);
+
+			return total;
+		},
 	},
 	methods: {
 		getRequestParams(fecha, page, pageSize) {
@@ -331,13 +360,36 @@ export default {
 			PedidoService.getPedidosPorFecha(params).then(
 				(response) => {
 					const { pedidos, totalPedidos } = response.data;
-					this.pedidos = pedidos;
-					this.cantidadPedidos = totalPedidos;
+					this.pedidos = pedidos; // rows
+					this.cantidadPedidos = totalPedidos; // count
 				},
 				(error) => {
-					console.error(error);
+					console.error("Mensaje de error: ", error);
 				}
 			);
+		},
+
+		prevPageChange() {
+			if (this.page === 1) {
+				console.log("No hagas nada");
+				return;
+			}
+			this.page--;
+			this.retrievePedidos();
+		},
+
+		nextPageChange() {
+			if (this.page === this.totalPages) {
+				console.log("No hagas nada");
+				return;
+			}
+			this.page++;
+			this.retrievePedidos();
+		},
+
+		handlePageChange(value) {
+			this.page = value;
+			this.retrievePedidos();
 		},
 
 		setActivePedido(pedido, index) {
@@ -347,6 +399,7 @@ export default {
 
 		refreshList() {
 			this.buscadorFecha = new Date();
+			this.page = 1;
 			this.retrievePedidos();
 
 			this.currentPedido = null;
