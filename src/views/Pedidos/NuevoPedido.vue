@@ -28,11 +28,15 @@
 		<form class="mt-2 h-full p-2" autocomplete="off">
 			<div class="grid grid-cols-2 h-full">
 				<div class="text-3xl text-primary font-bold px-1 text-center">
-					<h2>Origen</h2>
+					<h2 v-if="nuevoPedido.rolCliente === 'Destinatario'">
+						Destino
+					</h2>
+					<h2 v-else>Origen</h2>
 				</div>
 
 				<div class="text-3xl text-primary font-bold px-1 text-center">
-					<h2>Destino</h2>
+					<h2 v-if="nuevoPedido.rolCliente === 'Destinatario'">Origen</h2>
+					<h2 v-else>Destino</h2>
 				</div>
 
 				<!-- FORMULARIO ORIGEN -->

@@ -131,7 +131,9 @@
 						<span class="resalta">Modalidad: </span
 						>{{ currentPedido.modalidad.tipo }}
 					</p>
-					<p class="mb-2"><span class="resalta">Rol: </span>Remitente</p>
+					<p class="mb-2">
+						<span class="resalta">Rol: </span>{{ currentPedido.rolCliente }}
+					</p>
 				</div>
 
 				<div class="flex flex-col max-h-96 text-sm" v-else>
@@ -172,10 +174,16 @@
 						<p>{{ pedido.id }}</p>
 					</div>
 					<div>
-						<p>{{ pedido.distritoRemitente }}</p>
+						<p v-if="pedido.rolCliente === 'Remitente'">
+							{{ pedido.distritoRemitente }}
+						</p>
+						<p v-else>{{ pedido.distrito.distrito }}</p>
 					</div>
 					<div>
-						<p>{{ pedido.distrito.distrito }}</p>
+						<p v-if="pedido.rolCliente === 'Remitente'">
+							{{ pedido.distrito.distrito }}
+						</p>
+						<p v-else>{{ pedido.distritoRemitente }}</p>
 					</div>
 					<div>
 						<p>{{ pedido.mobiker.fullName }}</p>
