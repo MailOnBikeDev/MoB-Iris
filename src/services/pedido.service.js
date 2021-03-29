@@ -145,10 +145,11 @@ class PedidoService {
 		}
 	}
 
-	async historialPedidos(desde, hasta) {
+	async historialPedidos(params) {
 		try {
 			let pedido = await http.get(
-				`historial-pedidos?desde=${desde}&hasta=${hasta}`,
+				"historial-pedidos",
+				{ params },
 				{
 					headers: authHeader(),
 				}

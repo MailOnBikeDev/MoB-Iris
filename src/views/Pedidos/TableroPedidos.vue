@@ -289,7 +289,7 @@ import PedidoService from "@/services/pedido.service";
 import ReporteComanda from "@/components/ReporteComanda";
 import DetallePedido from "@/components/DetallePedido";
 import Datepicker from "vuejs-datepicker";
-import Pagination from "../../components/Pagination.vue";
+import Pagination from "@/components/Pagination.vue";
 
 export default {
 	name: "Pedidos",
