@@ -142,7 +142,9 @@
 						<span class="resalta">Modalidad: </span
 						>{{ currentPedido.modalidad.tipo }}
 					</p>
-					<p class="mb-2"><span class="resalta">Rol: </span>Remitente</p>
+					<p class="mb-2">
+						<span class="resalta">Rol: </span>{{ currentPedido.rolCliente }}
+					</p>
 				</div>
 
 				<div class="flex flex-col max-h-96 text-sm" v-else>
@@ -183,10 +185,16 @@
 						<p>{{ pedido.id }}</p>
 					</div>
 					<div>
-						<p>{{ pedido.distritoRemitente }}</p>
+						<p v-if="pedido.rolCliente === 'Remitente'">
+							{{ pedido.distritoRemitente }}
+						</p>
+						<p v-else>{{ pedido.distrito.distrito }}</p>
 					</div>
 					<div>
-						<p>{{ pedido.distrito.distrito }}</p>
+						<p v-if="pedido.rolCliente === 'Remitente'">
+							{{ pedido.distrito.distrito }}
+						</p>
+						<p v-else>{{ pedido.distritoRemitente }}</p>
 					</div>
 					<div>
 						<p>{{ pedido.mobiker.fullName }}</p>
@@ -266,6 +274,21 @@
 				</div>
 			</div>
 		</div>
+
+		<Pagination
+			:page="page"
+			:cantidadItems="cantidadPedidos"
+			:pageSize="pageSize"
+			@prevPageChange="
+				page--;
+				retrievePedidos();
+			"
+			@nextPageChange="
+				page++;
+				retrievePedidos();
+			"
+			@handlePageChange="handlePageChange"
+		/>
 	</div>
 </template>
 
@@ -274,6 +297,7 @@ import PedidoService from "@/services/pedido.service";
 import ReporteComanda from "@/components/ReporteComanda";
 import DetallePedido from "@/components/DetallePedido";
 import Datepicker from "vuejs-datepicker";
+import Pagination from "@/components/Pagination.vue";
 
 export default {
 	name: "Pedidos",
@@ -281,6 +305,7 @@ export default {
 		ReporteComanda,
 		DetallePedido,
 		Datepicker,
+		Pagination,
 	},
 	data() {
 		return {
@@ -295,8 +320,6 @@ export default {
 			page: 1,
 			cantidadPedidos: 0,
 			pageSize: 3,
-
-			pageSizes: [3, 6, 9],
 		};
 	},
 	mounted() {
@@ -331,13 +354,18 @@ export default {
 			PedidoService.getPedidosPorFecha(params).then(
 				(response) => {
 					const { pedidos, totalPedidos } = response.data;
-					this.pedidos = pedidos;
-					this.cantidadPedidos = totalPedidos;
+					this.pedidos = pedidos; // rows
+					this.cantidadPedidos = totalPedidos; // count
 				},
 				(error) => {
-					console.error(error);
+					console.error("Mensaje de error: ", error);
 				}
 			);
+		},
+
+		handlePageChange(value) {
+			this.page = value;
+			this.retrievePedidos();
 		},
 
 		setActivePedido(pedido, index) {
@@ -347,6 +375,7 @@ export default {
 
 		refreshList() {
 			this.buscadorFecha = new Date();
+			this.page = 1;
 			this.retrievePedidos();
 
 			this.currentPedido = null;

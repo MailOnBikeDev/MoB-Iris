@@ -1,71 +1,48 @@
 import http from "@/http-common";
-import authHeader from "./auth-header";
 
 class AuxiliarService {
 	getRolesUsers() {
-		return http.get("auxiliares/roles-usuarios", {
-			headers: authHeader(),
-		});
+		return http.get("auxiliares/roles-usuarios");
 	}
 
 	getDistritos() {
-		return http.get("auxiliares/distritos", {
-			headers: authHeader(),
-		});
+		return http.get("auxiliares/distritos");
 	}
 
 	getTipoCarga() {
-		return http.get("auxiliares/tipos-de-carga", {
-			headers: authHeader(),
-		});
+		return http.get("auxiliares/tipos-de-carga");
 	}
 
 	getTipoComprobante() {
-		return http.get("auxiliares/tipos-de-comprobantes", {
-			headers: authHeader(),
-		});
+		return http.get("auxiliares/tipos-de-comprobantes");
 	}
 
 	getTipoEnvio() {
-		return http.get("auxiliares/tipos-de-envios", {
-			headers: authHeader(),
-		});
+		return http.get("auxiliares/tipos-de-envios");
 	}
 
 	getFormasPago() {
-		return http.get("auxiliares/formas-de-pago", {
-			headers: authHeader(),
-		});
+		return http.get("auxiliares/formas-de-pago");
 	}
 
 	getModalidad() {
-		return http.get("auxiliares/modalidad", {
-			headers: authHeader(),
-		});
+		return http.get("auxiliares/modalidad");
 	}
 
 	getRangosMoB() {
-		return http.get("auxiliares/rangos-MoBiker", {
-			headers: authHeader(),
-		});
+		return http.get("auxiliares/rangos-MoBiker");
 	}
 
 	getRolCliente() {
-		return http.get("auxiliares/roles-clientes", {
-			headers: authHeader(),
-		});
+		return http.get("auxiliares/roles-clientes");
 	}
 
 	getEntidadesBancarias() {
-		return http.get("auxiliares/entidades-financieras", {
-			headers: authHeader(),
-		});
+		return http.get("auxiliares/entidades-financieras");
 	}
 
 	getStatusPedidos() {
-		return http.get("auxiliares/status", {
-			headers: authHeader(),
-		});
+		return http.get("auxiliares/status");
 	}
 }
 

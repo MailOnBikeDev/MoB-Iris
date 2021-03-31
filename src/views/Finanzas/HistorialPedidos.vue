@@ -59,7 +59,7 @@
 		<div class="grid grid-cols-4 gap-2">
 			<div class="flex flex-row justify-center">
 				<p>
-					<span class="resalta">Número de Pedidos:</span> {{ pedidos.length }}
+					<span class="resalta">Número de Pedidos:</span> {{ cantidadPedidos }}
 				</p>
 			</div>
 
@@ -131,7 +131,9 @@
 						<span class="resalta">Modalidad: </span
 						>{{ currentPedido.modalidad.tipo }}
 					</p>
-					<p class="mb-2"><span class="resalta">Rol: </span>Remitente</p>
+					<p class="mb-2">
+						<span class="resalta">Rol: </span>{{ currentPedido.rolCliente }}
+					</p>
 				</div>
 
 				<div class="flex flex-col max-h-96 text-sm" v-else>
@@ -172,10 +174,16 @@
 						<p>{{ pedido.id }}</p>
 					</div>
 					<div>
-						<p>{{ pedido.distritoRemitente }}</p>
+						<p v-if="pedido.rolCliente === 'Remitente'">
+							{{ pedido.distritoRemitente }}
+						</p>
+						<p v-else>{{ pedido.distrito.distrito }}</p>
 					</div>
 					<div>
-						<p>{{ pedido.distrito.distrito }}</p>
+						<p v-if="pedido.rolCliente === 'Remitente'">
+							{{ pedido.distrito.distrito }}
+						</p>
+						<p v-else>{{ pedido.distritoRemitente }}</p>
 					</div>
 					<div>
 						<p>{{ pedido.mobiker.fullName }}</p>
@@ -248,6 +256,21 @@
 				</div>
 			</div>
 		</div>
+
+		<Pagination
+			:page="page"
+			:cantidadItems="cantidadPedidos"
+			:pageSize="pageSize"
+			@prevPageChange="
+				page--;
+				retrievePedidos();
+			"
+			@nextPageChange="
+				page++;
+				retrievePedidos();
+			"
+			@handlePageChange="handlePageChange"
+		/>
 	</div>
 </template>
 
@@ -256,10 +279,11 @@ import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import DetalleHistorialPedido from "@/components/DetalleHistorialPedido";
 import Datepicker from "vuejs-datepicker";
+import Pagination from "@/components/Pagination.vue";
 
 export default {
 	name: "HistorialPedidos",
-	components: { DetalleHistorialPedido, Datepicker },
+	components: { DetalleHistorialPedido, Datepicker, Pagination },
 	data() {
 		return {
 			mobikers: [],
@@ -269,6 +293,10 @@ export default {
 			currentIndex: -1,
 			fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
 			fechaFin: new Date(),
+
+			page: 1,
+			cantidadPedidos: 0,
+			pageSize: 10,
 		};
 	},
 	mounted() {
@@ -276,13 +304,41 @@ export default {
 		this.retrieveMobikers();
 	},
 	methods: {
+		getRequestParams(desde, hasta, page, pageSize) {
+			let params = {};
+
+			if (desde) {
+				params["desde"] = desde;
+			}
+
+			if (hasta) {
+				params["hasta"] = hasta;
+			}
+
+			if (page) {
+				params["page"] = page - 1;
+			}
+
+			if (pageSize) {
+				params["size"] = pageSize;
+			}
+
+			return params;
+		},
+
 		retrievePedidos() {
-			PedidoService.historialPedidos(
+			const params = this.getRequestParams(
 				this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-				this.$date(this.fechaFin).format("YYYY-MM-DD")
-			).then(
+				this.$date(this.fechaFin).format("YYYY-MM-DD"),
+				this.page,
+				this.pageSize
+			);
+
+			PedidoService.historialPedidos(params).then(
 				(response) => {
-					this.pedidos = response.data;
+					const { pedidos, totalPedidos } = response.data;
+					this.pedidos = pedidos; // rows
+					this.cantidadPedidos = totalPedidos; // count
 				},
 				(error) => {
 					this.pedidos =
@@ -305,6 +361,11 @@ export default {
 						error.toString();
 				}
 			);
+		},
+
+		handlePageChange(value) {
+			this.page = value;
+			this.retrievePedidos();
 		},
 
 		setActiveCliente(pedido, index) {

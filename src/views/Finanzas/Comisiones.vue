@@ -16,6 +16,28 @@
 		/>
 
 		<div class="flex flex-row justify-evenly -mt-10 mb-4">
+			<div class="flex flex-row">
+				<datepicker
+					v-model="fechaInicio"
+					name="fechaInicio"
+					input-class="rounded-l-xl w-32 focus:outline-none p-2 font-bold cursor-pointer"
+					:monday-first="true"
+				/>
+				<datepicker
+					v-model="fechaFin"
+					name="fechaFin"
+					input-class="w-32 focus:outline-none p-2 font-bold cursor-pointer"
+					:monday-first="true"
+				/>
+				<button
+					type="button"
+					class="bg-white py-1 px-2 rounded-r-xl font-bold hover:bg-info hover:text-white focus:outline-none"
+					@click="retrievePedidosMobikers"
+				>
+					Buscar
+				</button>
+			</div>
+
 			<router-link
 				to="/finanzas/historial-pedidos"
 				class="bg-indigo-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-indigo-500"
@@ -46,7 +68,7 @@
 			<div class="flex flex-row justify-center">
 				<p>
 					<span class="resalta">Total de Pedidos:</span>
-					{{ pedidosMobiker.length }}
+					{{ cantidadPedidos }}
 				</p>
 			</div>
 
@@ -86,7 +108,7 @@
 					</div>
 
 					<div>
-						{{ mobiker.biciEnvios }}
+						=>
 					</div>
 				</div>
 			</div>
@@ -103,10 +125,16 @@
 						<p>{{ pedido.id }}</p>
 					</div>
 					<div>
-						<p>{{ pedido.distritoRemitente }}</p>
+						<p v-if="pedido.rolCliente === 'Remitente'">
+							{{ pedido.distritoRemitente }}
+						</p>
+						<p v-else>{{ pedido.distrito.distrito }}</p>
 					</div>
 					<div>
-						<p>{{ pedido.distrito.distrito }}</p>
+						<p v-if="pedido.rolCliente === 'Remitente'">
+							{{ pedido.distrito.distrito }}
+						</p>
+						<p v-else>{{ pedido.distritoRemitente }}</p>
 					</div>
 					<div>
 						<p
@@ -171,16 +199,33 @@
 				</div>
 			</div>
 		</div>
+
+		<Pagination
+			:page="page"
+			:cantidadItems="cantidadPedidos"
+			:pageSize="pageSize"
+			@prevPageChange="
+				page--;
+				retrievePedidos();
+			"
+			@nextPageChange="
+				page++;
+				retrievePedidos();
+			"
+			@handlePageChange="handlePageChange"
+		/>
 	</div>
 </template>
 
 <script>
 import MobikerService from "@/services/mobiker.service";
 import ReporteComisiones from "@/components/ReporteComisiones";
+import Datepicker from "vuejs-datepicker";
+import Pagination from "@/components/Pagination.vue";
 
 export default {
 	name: "Comisiones",
-	components: { ReporteComisiones },
+	components: { ReporteComisiones, Datepicker, Pagination },
 	data() {
 		return {
 			mobikers: [],
@@ -188,6 +233,12 @@ export default {
 			showDetalle: false,
 			currentMobiker: null,
 			currentIndex: -1,
+			fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
+			fechaFin: new Date(),
+
+			page: 1,
+			cantidadPedidos: 0,
+			pageSize: 10,
 		};
 	},
 	mounted() {
@@ -198,7 +249,11 @@ export default {
 			MobikerService.getMobikers().then(
 				(response) => {
 					this.mobikers = response.data
-						.filter((mobiker) => mobiker.status === "Activo")
+						.filter(
+							(mobiker) =>
+								mobiker.status === "Activo" &&
+								mobiker.fullName !== "Asignar MoBiker"
+						)
 						.sort((a, b) => {
 							return a.biciEnvios > b.biciEnvios ? 1 : -1;
 						});
@@ -212,10 +267,46 @@ export default {
 			);
 		},
 
-		retrievePedidosMobikers(id) {
-			MobikerService.getPedidosDelMobiker(id).then(
+		getRequestParams(desde, hasta, id, page, pageSize) {
+			let params = {};
+
+			if (desde) {
+				params["desde"] = desde;
+			}
+
+			if (hasta) {
+				params["hasta"] = hasta;
+			}
+
+			if (id) {
+				params["id"] = id;
+			}
+
+			if (page) {
+				params["page"] = page - 1;
+			}
+
+			if (pageSize) {
+				params["size"] = pageSize;
+			}
+
+			return params;
+		},
+
+		retrievePedidosMobikers() {
+			const params = this.getRequestParams(
+				this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+				this.$date(this.fechaFin).format("YYYY-MM-DD"),
+				this.currentIndex,
+				this.page,
+				this.pageSize
+			);
+
+			MobikerService.getPedidosDelMobiker(params).then(
 				(response) => {
-					this.pedidosMobiker = response.data;
+					const { pedidos, totalPedidos } = response.data;
+					this.pedidosMobiker = pedidos; // rows
+					this.cantidadPedidos = totalPedidos; // count
 				},
 				(error) => {
 					this.pedidosMobiker =
@@ -226,10 +317,15 @@ export default {
 			);
 		},
 
+		handlePageChange(value) {
+			this.page = value;
+			this.retrievePedidos();
+		},
+
 		setActiveMobiker(mobiker, index) {
 			this.currentMobiker = mobiker;
 			this.currentIndex = index;
-			this.retrievePedidosMobikers(index);
+			this.retrievePedidosMobikers();
 		},
 
 		refreshList() {

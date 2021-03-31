@@ -20,7 +20,11 @@
 			</h1>
 		</div>
 
-		<div class="bg-white rounded-xl grid grid-cols-2 gap-x-8 p-4">
+		<!-- Caso Cliente es Origen -->
+		<div
+			v-if="currentPedido.rolCliente === 'Remitente'"
+			class="bg-white rounded-xl grid grid-cols-2 gap-x-8 p-4"
+		>
 			<div class="grid grid-flow-row text-sm py-2 px-4">
 				<h2 class="text-3xl text-primary font-bold mb-4 text-center">
 					Origen
@@ -73,9 +77,6 @@
 					<span class="resalta">Trámite: </span>S/.
 					{{ currentPedido.tramite }}
 				</p>
-				<p class="mb-2">
-					<span class="resalta">Rol: </span> {{ currentPedido.rolCliente }}
-				</p>
 			</div>
 
 			<div class="grid grid-flow-row text-sm py-2 px-4">
@@ -113,6 +114,121 @@
 				<p class="mb-2" v-if="currentPedido.otroDatoConsignado">
 					<span class="resalta">Otro dato: </span
 					>{{ currentPedido.otroDatoConsignado }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">MoBiker: </span
+					>{{ currentPedido.mobiker.fullName }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Comisión: </span>S/.
+					{{ currentPedido.comision }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Distancia: </span
+					>{{ currentPedido.distancia }}Km
+				</p>
+				<p class="mb-2">
+					<span class="resalta">CO2 Ahorrado: </span
+					>{{ currentPedido.CO2Ahorrado }}Kg
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Horas de Ruido: </span
+					>{{ currentPedido.ruido }}h
+				</p>
+			</div>
+		</div>
+
+		<!-- Caso Cliente es Destino -->
+		<div v-else class="bg-white rounded-xl grid grid-cols-2 gap-x-8 p-4">
+			<div class="grid grid-flow-row text-sm py-2 px-4">
+				<h2 class="text-3xl text-primary font-bold mb-4 text-center">
+					Origen
+				</h2>
+				<p class="mb-2">
+					<span class="resalta">Fecha: </span>
+					{{ $date(currentPedido.fecha).format("DD MMM YYYY") }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Carga: </span>
+					{{ currentPedido.tipoCarga }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Contacto: </span>
+					{{ currentPedido.contactoConsignado }}
+				</p>
+				<p class="mb-2" v-if="currentPedido.empresaConsignado">
+					<span class="resalta">Empresa: </span
+					>{{ currentPedido.empresaConsignado }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Dirección: </span
+					>{{ currentPedido.direccionConsignado }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Distrito: </span
+					>{{ currentPedido.distrito.distrito }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Teléfono: </span
+					>{{ currentPedido.telefonoConsignado }}
+				</p>
+				<p class="mb-2" v-if="currentPedido.otroDatoConsignado">
+					<span class="resalta">Otro dato: </span
+					>{{ currentPedido.otroDatoConsignado }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Forma de Pago: </span
+					>{{ currentPedido.formaPago }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Tarifa: </span>S/.
+					{{ currentPedido.tarifa }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Recaudo: </span>S/.
+					{{ currentPedido.recaudo }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Trámite: </span>S/.
+					{{ currentPedido.tramite }}
+				</p>
+			</div>
+
+			<div class="grid grid-flow-row text-sm py-2 px-4">
+				<h2 class="text-3xl text-primary font-bold mb-4 text-center">
+					Destino
+				</h2>
+				<p class="mb-2">
+					<span class="resalta">Estado: </span
+					>{{ currentPedido.status.codigo }} - {{ currentPedido.status.tag }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Modalidad: </span
+					>{{ currentPedido.modalidad.tipo }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Contacto: </span>
+					{{ currentPedido.contactoRemitente }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Empresa: </span
+					>{{ currentPedido.empresaRemitente }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Dirección: </span
+					>{{ currentPedido.direccionRemitente }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Distrito: </span
+					>{{ currentPedido.distritoRemitente }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Teléfono: </span
+					>{{ currentPedido.telefonoRemitente }}
+				</p>
+				<p class="mb-2">
+					<span class="resalta">Otro dato: </span
+					>{{ currentPedido.otroDatoRemitente }}
 				</p>
 				<p class="mb-2">
 					<span class="resalta">MoBiker: </span

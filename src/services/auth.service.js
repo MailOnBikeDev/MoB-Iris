@@ -14,9 +14,11 @@ class AuthService {
 				return response.data;
 			});
 	}
+
 	logout() {
 		localStorage.removeItem("user");
 	}
+
 	register(user) {
 		return http.post("registro", {
 			fullName: user.fullName,

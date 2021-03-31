@@ -1,12 +1,9 @@
 import http from "@/http-common";
-import authHeader from "./auth-header";
 
 class ClienteService {
 	async getClientes() {
 		try {
-			let clientes = await http.get("clientes/tablero-clientes", {
-				headers: authHeader(),
-			});
+			let clientes = await http.get("clientes/tablero-clientes");
 
 			return clientes;
 		} catch (error) {
@@ -40,9 +37,7 @@ class ClienteService {
 
 	async getClienteById(id) {
 		try {
-			let cliente = await http.get(`clientes/tablero-clientes/${id}`, {
-				headers: authHeader(),
-			});
+			let cliente = await http.get(`clientes/tablero-clientes/${id}`);
 
 			return cliente;
 		} catch (error) {
@@ -52,9 +47,7 @@ class ClienteService {
 
 	async getPedidosDelCliente(id) {
 		try {
-			let pedidos = await http.get(`clientes/pedidos/${id}`, {
-				headers: authHeader(),
-			});
+			let pedidos = await http.get(`clientes/pedidos/${id}`);
 
 			return pedidos;
 		} catch (error) {
@@ -88,9 +81,7 @@ class ClienteService {
 
 	async searchCliente(findCliente) {
 		try {
-			let cliente = await http.get(`clientes?q=${findCliente}`, {
-				headers: authHeader(),
-			});
+			let cliente = await http.get(`clientes?q=${findCliente}`);
 
 			return cliente;
 		} catch (error) {

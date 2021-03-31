@@ -38,7 +38,7 @@
 
 				<div
 					v-if="dropMenu"
-					class="sub-menu flex flex-col bg-white text-black shadow-xl rounded mt-1 text-sm absolute -translate-x-1/2 z-40"
+					class="sub-menu flex flex-col bg-white text-black shadow-xl rounded mt-1 text-sm absolute right-4 z-40"
 					v-click-outside="clickExterno"
 				>
 					<div
