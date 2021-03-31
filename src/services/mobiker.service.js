@@ -1,12 +1,9 @@
 import http from "@/http-common";
-import authHeader from "./auth-header";
 
 class MobikerService {
 	async getMobikers() {
 		try {
-			let mobikers = await http.get("mobikers/equipo-mobiker", {
-				headers: authHeader(),
-			});
+			let mobikers = await http.get("mobikers/equipo-mobiker");
 
 			return mobikers;
 		} catch (error) {
@@ -46,9 +43,7 @@ class MobikerService {
 
 	async getMobikerById(id) {
 		try {
-			let mobiker = await http.get(`mobikers/equipo-mobiker/${id}`, {
-				headers: authHeader(),
-			});
+			let mobiker = await http.get(`mobikers/equipo-mobiker/${id}`);
 
 			return mobiker;
 		} catch (error) {
@@ -58,13 +53,7 @@ class MobikerService {
 
 	async getPedidosDelMobiker(params) {
 		try {
-			let pedidos = await http.get(
-				"mobikers/pedidos",
-				{ params },
-				{
-					headers: authHeader(),
-				}
-			);
+			let pedidos = await http.get("mobikers/pedidos", { params });
 
 			return pedidos;
 		} catch (error) {
@@ -104,9 +93,7 @@ class MobikerService {
 
 	async searchMobiker(findMobiker) {
 		try {
-			let mobiker = await http.get(`mobikers?q=${findMobiker}`, {
-				headers: authHeader(),
-			});
+			let mobiker = await http.get(`mobikers?q=${findMobiker}`);
 
 			return mobiker;
 		} catch (error) {

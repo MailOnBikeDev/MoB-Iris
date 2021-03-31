@@ -1,16 +1,9 @@
 import http from "@/http-common";
-import authHeader from "./auth-header";
 
 class PedidoService {
 	async getPedidosPorFecha(params) {
 		try {
-			let pedidos = await http.get(
-				"pedidos/tablero-pedidos",
-				{ params },
-				{
-					headers: authHeader(),
-				}
-			);
+			let pedidos = await http.get("pedidos/tablero-pedidos", { params });
 
 			return pedidos;
 		} catch (error) {
@@ -59,9 +52,7 @@ class PedidoService {
 
 	async getPedidoById(id) {
 		try {
-			let pedido = await http.get(`pedidos/tablero-pedidos/${id}`, {
-				headers: authHeader(),
-			});
+			let pedido = await http.get(`pedidos/tablero-pedidos/${id}`);
 
 			return pedido;
 		} catch (error) {
@@ -110,9 +101,7 @@ class PedidoService {
 
 	async searchPedido(findPedido) {
 		try {
-			let pedido = await http.get(`pedidos?q=${findPedido}`, {
-				headers: authHeader(),
-			});
+			let pedido = await http.get(`pedidos?q=${findPedido}`);
 
 			return pedido;
 		} catch (error) {
@@ -122,9 +111,7 @@ class PedidoService {
 
 	async searchPedidoProgramado() {
 		try {
-			let pedido = await http.get("pedidos-programados", {
-				headers: authHeader(),
-			});
+			let pedido = await http.get("pedidos-programados");
 
 			return pedido;
 		} catch (error) {
@@ -147,13 +134,7 @@ class PedidoService {
 
 	async historialPedidos(params) {
 		try {
-			let pedido = await http.get(
-				"historial-pedidos",
-				{ params },
-				{
-					headers: authHeader(),
-				}
-			);
+			let pedido = await http.get("historial-pedidos", { params });
 
 			return pedido;
 		} catch (error) {
