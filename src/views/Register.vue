@@ -154,7 +154,7 @@
 				class="text-white text-center text-sm rounded p-2"
 				:class="successful ? 'bg-green-500' : 'bg-red-500'"
 			>
-				{{ message }}
+				{{ message.message }}
 			</div>
 		</div>
 	</div>
@@ -210,6 +210,7 @@ export default {
 								error.message ||
 								error.toString();
 							this.successful = false;
+							console.log(this.message);
 						}
 					);
 				}
