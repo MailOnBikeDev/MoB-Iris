@@ -236,7 +236,7 @@
 						>
 						<model-list-select
 							v-validate="'required'"
-							name="pago"
+							name="comprobante"
 							v-model="nuevoCliente.comprobante"
 							:list="comprobantes"
 							option-text="tipo"
@@ -351,6 +351,8 @@ export default {
 			this.comprobantes = comp.data;
 			this.rolesCliente = roles.data;
 			this.tiposDeEnvio = envios.data;
+
+			this.nuevoCliente.rol = "Remitente";
 		} catch (error) {
 			console.error(error);
 		}

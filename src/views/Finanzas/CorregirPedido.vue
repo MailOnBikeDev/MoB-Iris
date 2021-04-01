@@ -728,9 +728,9 @@ export default {
 
 				// console.log(`distancia calculada: ${distanciaCalculada}`);
 
-				let distanciaCalculada = 3.765;
+				let distanciaCalculada = 6.8;
 
-				this.nuevoPedido.distancia = distanciaCalculada.toFixed(3);
+				this.nuevoPedido.distancia = distanciaCalculada.toFixed(1);
 				this.nuevoPedido.tarifa = 7.0;
 				this.nuevoPedido.CO2Ahorrado = (
 					this.nuevoPedido.distancia / 12

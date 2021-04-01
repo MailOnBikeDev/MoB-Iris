@@ -781,9 +781,9 @@ export default {
 
 				// console.log(`distancia calculada: ${distanciaCalculada}`);
 
-				let distanciaCalculada = 6.754; // Mientras no funciona la API
+				let distanciaCalculada = 6.8; // Mientras no funciona la API
 
-				this.nuevoPedido.distancia = distanciaCalculada.toFixed(3);
+				this.nuevoPedido.distancia = distanciaCalculada.toFixed(1);
 				this.nuevoPedido.tarifa = 7.0;
 				this.nuevoPedido.CO2Ahorrado = (
 					this.nuevoPedido.distancia / 12

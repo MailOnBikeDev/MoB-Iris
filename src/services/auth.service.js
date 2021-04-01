@@ -1,5 +1,4 @@
 import http from "@/http-common";
-
 class AuthService {
 	login(user) {
 		return http
