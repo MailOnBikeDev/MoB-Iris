@@ -44,7 +44,7 @@
 			</div>
 
 			<div
-				class="col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center text-primary"
+				class="col-span-3 inline-grid grid-cols-8 text-sm text-center font-bold items-center text-primary"
 			>
 				<button @click="sortPorId" class="focus:outline-none">
 					<p class="font-bold"># Pedido</p>
@@ -61,6 +61,9 @@
 				<button @click="sortPorEstado" class="focus:outline-none">
 					<p class="font-bold">Estado</p>
 				</button>
+				<div>
+					<p>Observaciones</p>
+				</div>
 				<button @click="sortPorFecha" class="focus:outline-none">
 					<p class="font-bold">Fecha</p>
 				</button>
@@ -90,7 +93,7 @@
 				class="pedidos-scroll bg-white col-span-3 max-h-96 overflow-y-auto border-black border"
 			>
 				<div
-					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
+					class="grid grid-cols-8 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
 					:class="{
 						'bg-info text-white font-bold': pedido.id == currentIndex,
 					}"
@@ -123,6 +126,15 @@
 						>
 							{{ pedido.status.tag }}
 						</p>
+					</div>
+					<div>
+						<p
+							v-if="pedido.otroDatoConsignado"
+							class="text-red-500 font-bold text-2xl"
+						>
+							!
+						</p>
+						<p v-else></p>
 					</div>
 					<div>
 						<p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>

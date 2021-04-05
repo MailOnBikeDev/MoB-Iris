@@ -756,7 +756,7 @@ export default {
 		},
 
 		cancelar() {
-			this.$router.push("/finanzas/historial-pedidos");
+			history.go(-1);
 		},
 
 		activarCliente(cliente) {
