@@ -291,7 +291,7 @@ export default {
 			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
-			fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
+			fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
 			fechaFin: new Date(),
 
 			page: 1,

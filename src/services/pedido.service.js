@@ -109,9 +109,9 @@ class PedidoService {
 		}
 	}
 
-	async searchPedidoProgramado() {
+	async searchPedidoProgramado(params) {
 		try {
-			let pedido = await http.get("pedidos-programados");
+			let pedido = await http.get("pedidos-programados", { params });
 
 			return pedido;
 		} catch (error) {

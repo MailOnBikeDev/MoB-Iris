@@ -16,6 +16,28 @@
 		/>
 
 		<div class="flex flex-row justify-evenly -mt-10 mb-4">
+			<div class="flex flex-row">
+				<datepicker
+					v-model="fechaInicio"
+					name="fechaInicio"
+					input-class="rounded-l-xl w-32 focus:outline-none p-2 font-bold cursor-pointer"
+					:monday-first="true"
+				/>
+				<datepicker
+					v-model="fechaFin"
+					name="fechaFin"
+					input-class="w-32 focus:outline-none p-2 font-bold cursor-pointer"
+					:monday-first="true"
+				/>
+				<button
+					type="button"
+					class="bg-white py-1 px-2 rounded-r-xl font-bold hover:bg-info hover:text-white focus:outline-none"
+					@click="retrievePedidos"
+				>
+					Buscar
+				</button>
+			</div>
+
 			<button
 				class="bg-yellow-600 hover:bg-yellow-500 px-4 rounded-full focus:outline-none"
 				@click="refreshList"
@@ -84,7 +106,9 @@
 					</div>
 
 					<div>
-						{{ mobiker.biciEnvios }}
+						{{
+							pedidos.filter((pedido) => pedido.mobikerId === mobiker.id).length
+						}}
 					</div>
 				</div>
 			</div>
@@ -97,7 +121,7 @@
 					:class="{
 						'bg-info text-white font-bold': pedido.id == currentIndex,
 					}"
-					v-for="pedido in pedidos"
+					v-for="pedido in pedidosProgramados"
 					:key="pedido.id"
 					@click="setActivePedido(pedido, pedido.id)"
 				>
@@ -154,17 +178,21 @@
 import PedidoService from "@/services/pedido.service";
 import MobikerService from "@/services/mobiker.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
+import Datepicker from "vuejs-datepicker";
 
 export default {
 	name: "Pedidos",
-	components: { DetallePedidoProgramado },
+	components: { DetallePedidoProgramado, Datepicker },
 	data() {
 		return {
 			mobikers: [],
 			pedidos: [],
+			pedidosProgramados: [],
 			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
+			fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
+			fechaFin: new Date(new Date().getTime() + 1000 * 60 * 60 * 24),
 		};
 	},
 	mounted() {
@@ -191,9 +219,18 @@ export default {
 		},
 
 		retrievePedidos() {
-			PedidoService.searchPedidoProgramado().then(
+			const params = {
+				desde: this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+				hasta: this.$date(this.fechaFin).format("YYYY-MM-DD"),
+			};
+
+			PedidoService.searchPedidoProgramado(params).then(
 				(response) => {
 					this.pedidos = response.data;
+
+					this.pedidosProgramados = response.data.filter(
+						(pedido) => pedido.statusId === 1
+					);
 				},
 				(error) => {
 					this.pedidos =
