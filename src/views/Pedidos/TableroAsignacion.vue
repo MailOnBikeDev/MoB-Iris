@@ -61,7 +61,7 @@
 			<div class="flex flex-row justify-center">
 				<p v-if="pedidos">
 					<span class="resalta">Pedidos por asignar:</span>
-					{{ pedidos.length }}
+					{{ pedidosPorAsignar }}
 				</p>
 			</div>
 
@@ -121,7 +121,7 @@
 					:class="{
 						'bg-info text-white font-bold': pedido.id == currentIndex,
 					}"
-					v-for="pedido in pedidosProgramados"
+					v-for="pedido in pedidos"
 					:key="pedido.id"
 					@click="setActivePedido(pedido, pedido.id)"
 				>
@@ -150,6 +150,55 @@
 						>
 							{{ pedido.status.tag }}
 						</p>
+						<p
+							v-if="pedido.status.id === 2"
+							class="bg-yellow-400 rounded-full inline px-2 py-1 font-bold text-white"
+						>
+							{{ pedido.status.tag }}
+						</p>
+						<p
+							v-if="pedido.status.id === 3"
+							class="bg-indigo-400 rounded-full inline px-2 py-1 font-bold text-white"
+						>
+							{{ pedido.status.tag }}
+						</p>
+						<p
+							v-if="
+								pedido.status.id === 4 ||
+									pedido.status.id === 5 ||
+									pedido.status.id === 6
+							"
+							class="bg-green-700 rounded-full inline px-2 py-1 font-bold text-white"
+						>
+							{{ pedido.status.tag }}
+						</p>
+						<p
+							v-if="
+								pedido.status.id === 7 ||
+									pedido.status.id === 8 ||
+									pedido.status.id === 9 ||
+									pedido.status.id === 10 ||
+									pedido.status.id === 11 ||
+									pedido.status.id === 12 ||
+									pedido.status.id === 13 ||
+									pedido.status.id === 14 ||
+									pedido.status.id === 15 ||
+									pedido.status.id === 16
+							"
+							class="bg-red-600 rounded-full inline px-2 py-1 font-bold text-white"
+						>
+							{{ pedido.status.tag }}
+						</p>
+						<p
+							v-if="
+								pedido.status.id === 17 ||
+									pedido.status.id === 18 ||
+									pedido.status.id === 19
+							"
+							class="bg-yellow-700 rounded-full inline px-2 py-1 font-bold text-white"
+						>
+							{{ pedido.status.tag }}
+						</p>
 					</div>
 					<div>
 						<p
@@ -171,6 +220,21 @@
 				</div>
 			</div>
 		</div>
+
+		<Pagination
+			:page="page"
+			:cantidadItems="cantidadPedidos"
+			:pageSize="pageSize"
+			@prevPageChange="
+				page--;
+				retrievePedidos();
+			"
+			@nextPageChange="
+				page++;
+				retrievePedidos();
+			"
+			@handlePageChange="handlePageChange"
+		/>
 	</div>
 </template>
 
@@ -179,20 +243,25 @@ import PedidoService from "@/services/pedido.service";
 import MobikerService from "@/services/mobiker.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
 import Datepicker from "vuejs-datepicker";
+import Pagination from "@/components/Pagination.vue";
 
 export default {
 	name: "Pedidos",
-	components: { DetallePedidoProgramado, Datepicker },
+	components: { DetallePedidoProgramado, Datepicker, Pagination },
 	data() {
 		return {
 			mobikers: [],
 			pedidos: [],
-			pedidosProgramados: [],
 			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
 			fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
 			fechaFin: new Date(new Date().getTime() + 1000 * 60 * 60 * 24),
+			pedidosPorAsignar: 0,
+
+			page: 1,
+			cantidadPedidos: 0,
+			pageSize: 50,
 		};
 	},
 	mounted() {
@@ -200,6 +269,28 @@ export default {
 		this.retrievePedidos();
 	},
 	methods: {
+		getRequestParams(desde, hasta, page, pageSize) {
+			let params = {};
+
+			if (desde) {
+				params["desde"] = desde;
+			}
+
+			if (hasta) {
+				params["hasta"] = hasta;
+			}
+
+			if (page) {
+				params["page"] = page - 1;
+			}
+
+			if (pageSize) {
+				params["size"] = pageSize;
+			}
+
+			return params;
+		},
+
 		retrieveMobikers() {
 			MobikerService.getMobikers().then(
 				(response) => {
@@ -219,18 +310,23 @@ export default {
 		},
 
 		retrievePedidos() {
-			const params = {
-				desde: this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-				hasta: this.$date(this.fechaFin).format("YYYY-MM-DD"),
-			};
+			const params = this.getRequestParams(
+				this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+				this.$date(this.fechaFin).format("YYYY-MM-DD"),
+				this.page,
+				this.pageSize
+			);
 
-			PedidoService.searchPedidoProgramado(params).then(
+			PedidoService.historialPedidos(params).then(
 				(response) => {
-					this.pedidos = response.data;
-
-					this.pedidosProgramados = response.data.filter(
+					const { pedidos, totalPedidos } = response.data;
+					this.pedidos = pedidos.sort((a, b) => {
+						return a.statusId > b.statusId ? 1 : -1;
+					}); // rows
+					this.cantidadPedidos = totalPedidos; // count
+					this.pedidosPorAsignar = pedidos.filter(
 						(pedido) => pedido.statusId === 1
-					);
+					).length;
 				},
 				(error) => {
 					this.pedidos =
@@ -241,12 +337,21 @@ export default {
 			);
 		},
 
+		handlePageChange(value) {
+			this.page = value;
+			this.retrievePedidos();
+		},
+
 		setActivePedido(pedido, index) {
 			this.currentPedido = pedido;
 			this.currentIndex = index;
 		},
 
 		refreshList() {
+			this.fechaInicio = new Date(
+				new Date().getTime() - 1000 * 60 * 60 * 24 * 7
+			);
+			this.fechaFin = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
 			this.retrievePedidos();
 
 			this.currentPedido = null;

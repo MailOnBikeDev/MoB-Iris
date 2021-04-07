@@ -22,119 +22,121 @@
 
 		<div class="bg-white rounded-xl justify-center">
 			<!-- Texto formateado como mensaje de Telegram a copiar -->
-			<div class="flex-col p-4 flex">
-				<span>Tipo Envío: **{{ currentPedido.tipoDeEnvio.tipo }}**</span>
-				<span>
-					__Origen:__
-					{{ currentPedido.direccionRemitente }} -
-					{{ currentPedido.distritoRemitente }}
-				</span>
-				<span>__Empresa:__ {{ currentPedido.empresaRemitente }}</span>
-				<span>
-					__Contacto:__
-					{{ currentPedido.contactoRemitente }} -
-					{{ currentPedido.telefonoRemitente }}
-				</span>
-				<span v-if="currentPedido.otroDatoRemitente !== null">
-					**IMPORTANTE: {{ currentPedido.otroDatoRemitente }}**
-				</span>
-				<br />
-				<span>
-					__Destino:__ {{ currentPedido.direccionConsignado }} -
-					{{ currentPedido.distrito.distrito }}
-				</span>
-				<span>__Contacto:__ {{ currentPedido.contactoConsignado }}</span>
-				<span v-if="currentPedido.empresaConsignado !== null">
-					__Empresa:__ {{ currentPedido.empresaConsignado }}
-				</span>
-				<span v-if="currentPedido.otroDatoConsignado !== null">
-					**IMPORTANTE: {{ currentPedido.otroDatoConsignado }}**
-				</span>
-				<span>__Teléfono:__ {{ currentPedido.telefonoConsignado }}</span>
-				<span>__Llevar:__ {{ currentPedido.tipoCarga }}</span>
-				<span>__Modalidad:__ {{ currentPedido.modalidad.tipo }}</span>
-				<br />
-				<span>__Tarifa:__ S/. {{ currentPedido.tarifa }}</span>
-				<span>__Mi comisión:__ S/. {{ currentPedido.comision }}</span>
-				<span>__Pedido:__ #{{ currentPedido.id }}</span>
-				<span>__CO2:__ {{ currentPedido.CO2Ahorrado }} Kg</span>
-				<span>__Horas de Ruido:__ {{ currentPedido.ruido }} h</span>
+			<div class="hidden">
+				<pre>
+Tipo Envío: **{{ currentPedido.tipoDeEnvio.tipo }}**
+__Origen:__ {{ currentPedido.direccionRemitente }} - {{
+						currentPedido.distritoRemitente
+					}}
+__Empresa:__ {{ currentPedido.empresaRemitente }}
+__Contacto:__ {{ currentPedido.contactoRemitente }} - {{
+						currentPedido.telefonoRemitente
+					}}
+{{
+						currentPedido.otroDatoRemitente
+							? "**IMPORTANTE:" + currentPedido.otroDatoRemitente
+							: null
+					}}
+
+__Destino:__ {{ currentPedido.direccionConsignado }} - {{
+						currentPedido.distrito.distrito
+					}}
+__Contacto:__ {{ currentPedido.contactoConsignado }} - {{
+						currentPedido.empresaConsignado
+							? "- __Empresa:__" + currentPedido.empresaConsignado
+							: null
+					}}
+__Teléfono:__ {{ currentPedido.telefonoConsignado }}
+__Llevar:__ {{ currentPedido.tipoCarga }}
+__Modalidad:__ {{ currentPedido.modalidad.tipo }}
+{{
+						currentPedido.otroDatoConsignado
+							? "**IMPORTANTE:" + currentPedido.otroDatoConsignado
+							: null
+					}}
+
+__Tarifa:__ S/. {{ currentPedido.tarifa }}
+__Mi comisión:__ S/. {{ currentPedido.comision }}
+__Pedido:__ #{{ currentPedido.id }}
+__CO2:__ {{ currentPedido.CO2Ahorrado }} Kg
+__Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
+				>
 			</div>
 
 			<!-- Texto de ejemplo para que el operador confirme la comanda -->
-			<div class="hidden flex-col p-4">
-				<p>
+			<div class="p-4">
+				<div>
 					<span class="resalta">Tipo Envío: </span
 					>{{ currentPedido.tipoDeEnvio.tipo }}
-				</p>
-				<p>
+				</div>
+				<div>
 					<span class="resalta">
 						Origen:
 					</span>
 					{{ currentPedido.direccionRemitente }} -
 					{{ currentPedido.distritoRemitente }}
-				</p>
-				<p>
+				</div>
+				<div>
 					<span class="resalta">Empresa: </span
 					>{{ currentPedido.empresaRemitente }}
-				</p>
-				<p>
+				</div>
+				<div>
 					<span class="resalta">
 						Contacto:
 					</span>
 					{{ currentPedido.contactoRemitente }} -
 					{{ currentPedido.telefonoRemitente }}
-				</p>
-				<p v-if="currentPedido.otroDatoRemitente !== null">
+				</div>
+				<div v-if="currentPedido.otroDatoRemitente !== null">
 					<span class="resalta">IMPORTANTE: </span
 					>{{ currentPedido.otroDatoRemitente }}
-				</p>
+				</div>
 				<br />
-				<p>
+				<div>
 					<span class="resalta"> Destino: </span
 					>{{ currentPedido.direccionConsignado }} -
 
 					{{ currentPedido.distrito.distrito }}
-				</p>
-				<p>
+				</div>
+				<div>
 					<span class="resalta">Contacto: </span>
 					{{ currentPedido.contactoConsignado }}
-				</p>
-				<p v-if="currentPedido.empresaConsignado !== null">
+				</div>
+				<div v-if="currentPedido.empresaConsignado !== null">
 					<span class="resalta">Empresa: </span>
 					{{ currentPedido.empresaConsignado }}
-				</p>
-				<p v-if="currentPedido.otroDatoConsignado !== null">
+				</div>
+				<div v-if="currentPedido.otroDatoConsignado !== null">
 					<span class="resalta">IMPORTANTE: </span
 					>{{ currentPedido.otroDatoConsignado }}
-				</p>
-				<p>
+				</div>
+				<div>
 					<span class="resalta">Teléfono: </span>
 					{{ currentPedido.telefonoConsignado }}
-				</p>
-				<p>
+				</div>
+				<div>
 					<span class="resalta">Llevar: </span> {{ currentPedido.tipoCarga }}
-				</p>
-				<p>
+				</div>
+				<div>
 					<span class="resalta">Modalidad: </span>
 					{{ currentPedido.modalidad.tipo }}
-				</p>
+				</div>
 				<br />
-				<p>
+				<div>
 					<span class="resalta">Tarifa: </span> S/. {{ currentPedido.tarifa }}
-				</p>
-				<p>
+				</div>
+				<div>
 					<span class="resalta">Mi comisión: </span> S/.
 					{{ currentPedido.comision }}
-				</p>
-				<p><span class="resalta">Pedido: </span> #{{ currentPedido.id }}</p>
-				<p>
+				</div>
+				<div><span class="resalta">Pedido: </span> #{{ currentPedido.id }}</div>
+				<div>
 					<span class="resalta">CO2: </span> {{ currentPedido.CO2Ahorrado }} Kg
-				</p>
-				<p>
+				</div>
+				<div>
 					<span class="resalta">Horas de Ruido: </span>
 					{{ currentPedido.ruido }} h
-				</p>
+				</div>
 			</div>
 		</div>
 

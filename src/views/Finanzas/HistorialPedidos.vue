@@ -296,7 +296,7 @@ export default {
 
 			page: 1,
 			cantidadPedidos: 0,
-			pageSize: 10,
+			pageSize: 50,
 		};
 	},
 	mounted() {

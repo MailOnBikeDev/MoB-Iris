@@ -20,6 +20,47 @@
 			</h1>
 		</div>
 
+		<div class="hidden">
+			<pre>
+Tipo Envío: **{{ currentPedido.tipoDeEnvio.tipo }}**
+__Origen:__ {{ currentPedido.direccionRemitente }} - {{
+					currentPedido.distritoRemitente
+				}}
+__Empresa:__ {{ currentPedido.empresaRemitente }}
+__Contacto:__ {{ currentPedido.contactoRemitente }} - {{
+					currentPedido.telefonoRemitente
+				}}
+{{
+					currentPedido.otroDatoRemitente
+						? "**IMPORTANTE:" + currentPedido.otroDatoRemitente
+						: null
+				}}
+
+__Destino:__ {{ currentPedido.direccionConsignado }} - {{
+					currentPedido.distrito.distrito
+				}}
+__Contacto:__ {{ currentPedido.contactoConsignado }} - {{
+					currentPedido.empresaConsignado
+						? "- __Empresa:__" + currentPedido.empresaConsignado
+						: null
+				}}
+__Teléfono:__ {{ currentPedido.telefonoConsignado }}
+__Llevar:__ {{ currentPedido.tipoCarga }}
+__Modalidad:__ {{ currentPedido.modalidad.tipo }}
+{{
+					currentPedido.otroDatoConsignado
+						? "**IMPORTANTE:" + currentPedido.otroDatoConsignado
+						: null
+				}}
+
+__Tarifa:__ S/. {{ currentPedido.tarifa }}
+__Mi comisión:__ S/. {{ currentPedido.comision }}
+__Pedido:__ #{{ currentPedido.id }}
+__CO2:__ {{ currentPedido.CO2Ahorrado }} Kg
+__Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
+			>
+		</div>
+
 		<form class="grid grid-cols-2 gap-x-4 bg-white p-4 rounded-t-xl">
 			<div>
 				<label
@@ -158,6 +199,22 @@
 			>
 				Asignar MoBiker
 			</button>
+
+			<button
+				v-if="comandaCopiada === false"
+				class="bg-secondary text-white font-bold px-4 py-2 rounded-xl focus:outline-none hover:bg-info"
+				@click="copiarComanda"
+			>
+				Copiar
+			</button>
+
+			<button
+				v-else
+				class="bg-green-600 text-white font-bold px-4 py-2 rounded-xl focus:outline-none hover:bg-green-500"
+				@click="copiarComanda"
+			>
+				Copiado
+			</button>
 		</div>
 	</div>
 </template>
@@ -190,6 +247,7 @@ export default {
 			},
 			mobikers: [],
 			estadosPedido: [],
+			comandaCopiada: false,
 		};
 	},
 	async mounted() {
@@ -216,8 +274,8 @@ export default {
 						(response) => {
 							console.log(response.data.message);
 							this.message = response.data.message;
-							this.cerrarDetalle();
-							this.refresh();
+							// this.cerrarDetalle();
+							// this.refresh();
 						},
 						(err) => console.error(`Mensaje de error: ${err.message}`)
 					);
@@ -225,13 +283,22 @@ export default {
 			});
 		},
 
-		cerrarDetalle() {
-			this.$emit("cerrarDetalle");
+		copiarComanda() {
+			// console.log(this.$el.children[2].children[0].innerText);
+			this.$copyText(this.$el.children[2].children[0].innerText).then(() => {
+				this.comandaCopiada = true;
+				console.log("Texto copiado");
+			});
 		},
 
-		refresh() {
-			this.$emit("refresh");
+		cerrarDetalle() {
+			this.$emit("cerrarDetalle");
+			this.comandaCopiada = true;
 		},
+
+		// refresh() {
+		// 	this.$emit("refresh");
+		// },
 	},
 };
 </script>
