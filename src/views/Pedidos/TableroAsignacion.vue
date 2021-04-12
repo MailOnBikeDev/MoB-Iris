@@ -107,8 +107,11 @@
 
 					<div>
 						{{
-							pedidosMobiker.filter((pedido) => pedido.mobikerId === mobiker.id)
-								.length
+							pedidosMobiker.filter(
+								(pedido) =>
+									pedido.mobikerId === mobiker.id &&
+									pedido.statusId !== (17 || 18 || 19)
+							).length
 						}}
 					</div>
 				</div>
@@ -287,7 +290,9 @@ export default {
 					this.pedidosMobiker = pedidos;
 					this.cantidadPedidos = totalPedidos; // count
 					this.pedidosPorAsignar = pedidos.filter(
-						(pedido) => pedido.statusId === 1
+						(pedido) =>
+							pedido.statusId === 1 &&
+							pedido.mobiker.fullName === "Asignar MoBiker"
 					).length;
 				},
 				(error) => {

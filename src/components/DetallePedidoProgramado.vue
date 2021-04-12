@@ -70,7 +70,7 @@ __Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
 				>
 				<model-list-select
 					name="status"
-					v-model="currentPedido.statusId"
+					v-model="pedidoAsignado.statusId"
 					:list="estadosPedido"
 					v-validate="'required'"
 					option-text="tag"
@@ -92,7 +92,7 @@ __Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
 				>
 				<model-list-select
 					name="mobiker"
-					v-model="currentPedido.mobiker"
+					v-model="pedidoAsignado.mobiker"
 					placeholder="Buscar MoBiker..."
 					:list="mobikers"
 					v-validate="'required'"
@@ -242,8 +242,10 @@ export default {
 	data() {
 		return {
 			pedidoAsignado: {
-				statusId: 1,
-				mobiker: "Asignar MoBiker",
+				statusId: this.currentPedido ? this.currentPedido.statusId : 1,
+				mobiker: this.currentPedido
+					? this.currentPedido.mobiker
+					: "Asignar MoBiker",
 			},
 			mobikers: [],
 			estadosPedido: [],
@@ -294,6 +296,7 @@ export default {
 		cerrarDetalle() {
 			this.$emit("cerrarDetalle");
 			this.comandaCopiada = false;
+			this.pedidoAsignado = {};
 			this.refresh();
 		},
 
