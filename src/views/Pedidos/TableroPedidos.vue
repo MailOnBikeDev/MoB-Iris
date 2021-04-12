@@ -72,7 +72,14 @@
 			<div class="flex flex-row justify-center">
 				<p>
 					<span class="resalta">N° de Pedidos del día:</span>
-					{{ cantidadPedidos }}
+					{{
+						pedidos.filter(
+							(pedido) =>
+								pedido.statusId !== 17 &&
+								pedido.statusId !== 18 &&
+								pedido.statusId !== 19
+						).length
+					}}
 				</p>
 			</div>
 			<div
@@ -319,7 +326,7 @@ export default {
 
 			page: 1,
 			cantidadPedidos: 0,
-			pageSize: 3,
+			pageSize: 50,
 		};
 	},
 	mounted() {

@@ -107,7 +107,8 @@
 
 					<div>
 						{{
-							pedidos.filter((pedido) => pedido.mobikerId === mobiker.id).length
+							pedidosMobiker.filter((pedido) => pedido.mobikerId === mobiker.id)
+								.length
 						}}
 					</div>
 				</div>
@@ -153,49 +154,6 @@
 						<p
 							v-if="pedido.status.id === 2"
 							class="bg-yellow-400 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="pedido.status.id === 3"
-							class="bg-indigo-400 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="
-								pedido.status.id === 4 ||
-									pedido.status.id === 5 ||
-									pedido.status.id === 6
-							"
-							class="bg-green-700 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="
-								pedido.status.id === 7 ||
-									pedido.status.id === 8 ||
-									pedido.status.id === 9 ||
-									pedido.status.id === 10 ||
-									pedido.status.id === 11 ||
-									pedido.status.id === 12 ||
-									pedido.status.id === 13 ||
-									pedido.status.id === 14 ||
-									pedido.status.id === 15 ||
-									pedido.status.id === 16
-							"
-							class="bg-red-600 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="
-								pedido.status.id === 17 ||
-									pedido.status.id === 18 ||
-									pedido.status.id === 19
-							"
-							class="bg-yellow-700 rounded-full inline px-2 py-1 font-bold text-white"
 						>
 							{{ pedido.status.tag }}
 						</p>
@@ -252,6 +210,7 @@ export default {
 		return {
 			mobikers: [],
 			pedidos: [],
+			pedidosMobiker: [],
 			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
@@ -320,9 +279,12 @@ export default {
 			PedidoService.historialPedidos(params).then(
 				(response) => {
 					const { pedidos, totalPedidos } = response.data;
-					this.pedidos = pedidos.sort((a, b) => {
-						return a.statusId > b.statusId ? 1 : -1;
-					}); // rows
+					this.pedidos = pedidos
+						.filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
+						.sort((a, b) => {
+							return a.statusId > b.statusId ? 1 : -1;
+						}); // rows
+					this.pedidosMobiker = pedidos;
 					this.cantidadPedidos = totalPedidos; // count
 					this.pedidosPorAsignar = pedidos.filter(
 						(pedido) => pedido.statusId === 1
@@ -349,7 +311,7 @@ export default {
 
 		refreshList() {
 			this.fechaInicio = new Date(
-				new Date().getTime() - 1000 * 60 * 60 * 24 * 7
+				new Date().getTime() - 1000 * 60 * 60 * 24 * 6
 			);
 			this.fechaFin = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
 			this.retrievePedidos();
