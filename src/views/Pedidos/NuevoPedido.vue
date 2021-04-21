@@ -693,7 +693,6 @@ export default {
 						(response) => {
 							// this.$router.push("/pedidos/tablero-pedidos");
 							console.log(response.data.message);
-							prompt(response.data.message);
 							this.message = response.data.message;
 
 							this.$refs.pedido.reset();
