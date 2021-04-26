@@ -123,14 +123,16 @@
 								class="block text-primary text-sm font-bold mb-2 ml-1"
 								>Seleccione un Rol</label
 							>
-							<div v-for="(rol, index) in roles" :key="index">
+							<div v-for="(rol, index) in rolesUsuarios" :key="index">
 								<input
 									type="checkbox"
 									name="roles"
 									v-model="user.roles"
 									:value="rol.name"
 								/>
-								<label class="ml-2" :for="rol">{{ roles[index].name }}</label>
+								<label class="ml-2" :for="rol">{{
+									rolesUsuarios[index].name
+								}}</label>
 							</div>
 							<div
 								v-if="submitted && errors.has('roles')"
@@ -162,7 +164,7 @@
 
 <script>
 import User from "../models/user";
-import AuxiliarService from "@/services/auxiliares.service";
+import { mapState } from "vuex";
 
 export default {
 	name: "Register",
@@ -172,23 +174,10 @@ export default {
 			submitted: false,
 			successful: false,
 			message: "",
-			roles: [],
 		};
 	},
-	mounted() {
-		AuxiliarService.getRolesUsers().then(
-			(response) => {
-				this.roles = response.data;
-			},
-			(error) => {
-				this.roles =
-					(error.response && error.response.data) ||
-					error.message ||
-					error.toString();
-			}
-		);
-	},
 	computed: {
+		...mapState("auxiliares", ["rolesUsuarios"]),
 		loggedIn() {
 			return this.$store.state.status.loggedIn;
 		},

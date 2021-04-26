@@ -128,6 +128,9 @@
 					v-for="pedido in pedidos"
 					:key="pedido.id"
 					@click="setActivePedido(pedido, pedido.id)"
+					:title="
+						`Cliente: ${pedido.contactoRemitente}. Observaciones: ${pedido.otroDatoRemitente} / ${pedido.otroDatoConsignado}`
+					"
 				>
 					<div>
 						<p>{{ pedido.id }}</p>
