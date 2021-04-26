@@ -12,7 +12,7 @@ export const auxiliares = {
 		distritos: [],
 		tiposDeCarga: [],
 		tiposDeComprobante: [],
-		tiposDeEnvios: [],
+		tiposDeEnvio: [],
 		formasDePago: [],
 		modalidades: [],
 		rangosMoBiker: [],
@@ -34,7 +34,7 @@ export const auxiliares = {
 			state.tiposDeComprobante = payload;
 		},
 		setTiposEnvios(state, payload) {
-			state.tiposDeEnvios = payload;
+			state.tiposDeEnvio = payload;
 		},
 		setFormasPago(state, payload) {
 			state.formasDePago = payload;
@@ -60,52 +60,42 @@ export const auxiliares = {
 			const response = await AuxiliarService.getRolesUsers();
 			commit("setRolesUsuarios", response.data);
 		},
-
 		async getDistritosLima({ commit }) {
 			const response = await AuxiliarService.getDistritos();
 			commit("setDistritos", response.data);
 		},
-
 		async getTiposCarga({ commit }) {
 			const response = await AuxiliarService.getTipoCarga();
 			commit("setTiposCarga", response.data);
 		},
-
 		async getComprobantes({ commit }) {
 			const response = await AuxiliarService.getTipoComprobante();
 			commit("setTiposComprobante", response.data);
 		},
-
 		async getTiposEnvios({ commit }) {
 			const response = await AuxiliarService.getTipoEnvio();
 			commit("setTiposEnvios", response.data);
 		},
-
 		async getFormasPago({ commit }) {
 			const response = await AuxiliarService.getFormasPago();
 			commit("setFormasPago", response.data);
 		},
-
 		async getModalidades({ commit }) {
 			const response = await AuxiliarService.getModalidad();
 			commit("setModalidades", response.data);
 		},
-
 		async getRangosMoB({ commit }) {
 			const response = await AuxiliarService.getRangosMoB();
 			commit("setRangosMoBiker", response.data);
 		},
-
 		async getRolCliente({ commit }) {
 			const response = await AuxiliarService.getRolCliente();
 			commit("setRolCliente", response.data);
 		},
-
 		async getEntidadesBancarias({ commit }) {
 			const response = await AuxiliarService.getEntidadesBancarias();
 			commit("setEntidadesBancarias", response.data);
 		},
-
 		async getStatusPedido({ commit }) {
 			const response = await AuxiliarService.getStatusPedidos();
 			commit("setStatusPedido", response.data);

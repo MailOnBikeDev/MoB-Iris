@@ -237,7 +237,7 @@
 						v-validate="'required'"
 						name="pago"
 						v-model="editarCliente.comprobante"
-						:list="comprobantes"
+						:list="tiposDeComprobante"
 						option-text="tipo"
 						option-value="tipo"
 					/>
@@ -281,7 +281,7 @@
 						v-validate="'required'"
 						name="rol"
 						v-model="editarCliente.rol"
-						:list="rolesCliente"
+						:list="rolCliente"
 						option-text="rol"
 						option-value="rol"
 					/>
@@ -321,7 +321,7 @@
 <script>
 import Cliente from "@/models/cliente";
 import { ModelListSelect } from "vue-search-select";
-import AuxiliarService from "@/services/auxiliares.service";
+import { mapState } from "vuex";
 import ClienteService from "@/services/cliente.service";
 
 export default {
@@ -330,31 +330,21 @@ export default {
 		return {
 			editarCliente: new Cliente(),
 			message: "",
-			distritos: [],
-			tiposDeCarga: [],
-			formasDePago: [],
-			comprobantes: [],
-			rolesCliente: [],
-			tiposDeEnvio: [],
 		};
+	},
+	computed: {
+		...mapState("auxiliares", [
+			"distritos",
+			"tiposDeCarga",
+			"tiposDeComprobante",
+			"formasDePago",
+			"rolCliente",
+			"tiposDeEnvio",
+		]),
 	},
 	async mounted() {
 		try {
 			this.getCliente(this.$route.params.id);
-
-			let resDistritos = await AuxiliarService.getDistritos();
-			let resCarga = await AuxiliarService.getTipoCarga();
-			let pagos = await AuxiliarService.getFormasPago();
-			let comp = await AuxiliarService.getTipoComprobante();
-			let roles = await AuxiliarService.getRolCliente();
-			let envios = await AuxiliarService.getTipoEnvio();
-
-			this.distritos = resDistritos.data;
-			this.tiposDeCarga = resCarga.data;
-			this.formasDePago = pagos.data;
-			this.comprobantes = comp.data;
-			this.rolesCliente = roles.data;
-			this.tiposDeEnvio = envios.data;
 		} catch (error) {
 			console.error(error);
 		}
