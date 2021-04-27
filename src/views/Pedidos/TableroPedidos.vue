@@ -42,7 +42,7 @@
 				<input
 					type="text"
 					placeholder="Buscar Pedido..."
-					class="rounded w-full text-gray-700 focus:outline-none p-2"
+					class="rounded w-48 text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 py-1 px-2"
 					v-model="buscador"
 					@keyup="buscarPedido"
 				/>
@@ -386,13 +386,22 @@ export default {
 		},
 
 		buscarPedido() {
+			console.log(typeof this.buscador);
 			const textoCliente = this.buscador.toLowerCase();
 			this.pedidos = this.pedidos.filter((pedido) => {
 				const compararTexto = pedido.contactoRemitente.toLowerCase();
-				if (compararTexto.includes(textoCliente)) {
+				const compararId = pedido.id.toString();
+				if (
+					compararTexto.includes(textoCliente) ||
+					compararId.includes(textoCliente)
+				) {
 					return pedido;
 				}
 			});
+
+			if (textoCliente.trim() === "") {
+				this.refreshList();
+			}
 		},
 
 		handlePageChange(value) {

@@ -129,7 +129,7 @@
 							>Teléfono</label
 						>
 						<input
-							v-model="nuevoPedido.telefonoRemitente"
+							v-model.number="nuevoPedido.telefonoRemitente"
 							type="number"
 							v-validate="'required|length:9'"
 							name="telefonoRemitente"
@@ -405,7 +405,7 @@
 							>Teléfono</label
 						>
 						<input
-							v-model="nuevoPedido.telefonoConsignado"
+							v-model.number="nuevoPedido.telefonoConsignado"
 							type="number"
 							v-validate="'required|length:9'"
 							name="telefonoConsignado"

@@ -1,9 +1,4 @@
-import Vue from "vue";
-import Vuex from "vuex";
-
-import AuxiliarService from "../services/auxiliares.service";
-
-Vue.use(Vuex);
+import AuxiliarService from "@/services/auxiliares.service";
 
 export const auxiliares = {
 	namespaced: true,
@@ -57,48 +52,92 @@ export const auxiliares = {
 	},
 	actions: {
 		async getRolesUsuarios({ commit }) {
-			const response = await AuxiliarService.getRolesUsers();
-			commit("setRolesUsuarios", response.data);
+			try {
+				const response = await AuxiliarService.getRolesUsers();
+				commit("setRolesUsuarios", response.data);
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		async getDistritosLima({ commit }) {
-			const response = await AuxiliarService.getDistritos();
-			commit("setDistritos", response.data);
+			try {
+				const response = await AuxiliarService.getDistritos();
+				commit("setDistritos", response.data);
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		async getTiposCarga({ commit }) {
-			const response = await AuxiliarService.getTipoCarga();
-			commit("setTiposCarga", response.data);
+			try {
+				const response = await AuxiliarService.getTipoCarga();
+				commit("setTiposCarga", response.data);
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		async getComprobantes({ commit }) {
-			const response = await AuxiliarService.getTipoComprobante();
-			commit("setTiposComprobante", response.data);
+			try {
+				const response = await AuxiliarService.getTipoComprobante();
+				commit("setTiposComprobante", response.data);
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		async getTiposEnvios({ commit }) {
-			const response = await AuxiliarService.getTipoEnvio();
-			commit("setTiposEnvios", response.data);
+			try {
+				const response = await AuxiliarService.getTipoEnvio();
+				commit("setTiposEnvios", response.data);
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		async getFormasPago({ commit }) {
-			const response = await AuxiliarService.getFormasPago();
-			commit("setFormasPago", response.data);
+			try {
+				const response = await AuxiliarService.getFormasPago();
+				commit("setFormasPago", response.data);
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		async getModalidades({ commit }) {
-			const response = await AuxiliarService.getModalidad();
-			commit("setModalidades", response.data);
+			try {
+				const response = await AuxiliarService.getModalidad();
+				commit("setModalidades", response.data);
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		async getRangosMoB({ commit }) {
-			const response = await AuxiliarService.getRangosMoB();
-			commit("setRangosMoBiker", response.data);
+			try {
+				const response = await AuxiliarService.getRangosMoB();
+				commit("setRangosMoBiker", response.data);
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		async getRolCliente({ commit }) {
-			const response = await AuxiliarService.getRolCliente();
-			commit("setRolCliente", response.data);
+			try {
+				const response = await AuxiliarService.getRolCliente();
+				commit("setRolCliente", response.data);
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		async getEntidadesBancarias({ commit }) {
-			const response = await AuxiliarService.getEntidadesBancarias();
-			commit("setEntidadesBancarias", response.data);
+			try {
+				const response = await AuxiliarService.getEntidadesBancarias();
+				commit("setEntidadesBancarias", response.data);
+			} catch (error) {
+				console.error(error);
+			}
 		},
 		async getStatusPedido({ commit }) {
-			const response = await AuxiliarService.getStatusPedidos();
-			commit("setStatusPedido", response.data);
+			try {
+				const response = await AuxiliarService.getStatusPedidos();
+				commit("setStatusPedido", response.data);
+			} catch (error) {
+				console.error(error);
+			}
 		},
 	},
 	getters: {},

@@ -37,6 +37,16 @@
 				</button>
 			</div>
 
+			<div>
+				<input
+					type="text"
+					placeholder="Buscar Pedido..."
+					class="rounded w-48 text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 py-1 px-2"
+					v-model="buscador"
+					@keyup="buscarPedido"
+				/>
+			</div>
+
 			<button
 				class="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded-full focus:outline-none"
 				@click="refreshList"
@@ -293,6 +303,7 @@ export default {
 			currentIndex: -1,
 			fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
 			fechaFin: new Date(),
+			buscador: "",
 
 			page: 1,
 			cantidadPedidos: 0,
@@ -324,6 +335,25 @@ export default {
 			}
 
 			return params;
+		},
+
+		buscarPedido() {
+			console.log(typeof this.buscador);
+			const textoCliente = this.buscador.toLowerCase();
+			this.pedidos = this.pedidos.filter((pedido) => {
+				const compararTexto = pedido.contactoRemitente.toLowerCase();
+				const compararId = pedido.id.toString();
+				if (
+					compararTexto.includes(textoCliente) ||
+					compararId.includes(textoCliente)
+				) {
+					return pedido;
+				}
+			});
+
+			if (textoCliente.trim() === "") {
+				this.refreshList();
+			}
 		},
 
 		retrievePedidos() {
