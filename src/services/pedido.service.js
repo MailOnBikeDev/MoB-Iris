@@ -1,0 +1,146 @@
+import http from "@/http-common";
+
+class PedidoService {
+	async getPedidosPorFecha(params) {
+		try {
+			let pedidos = await http.get("pedidos/tablero-pedidos", { params });
+
+			return pedidos;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async storageNuevoPedido(nuevoPedido) {
+		try {
+			let pedido = await http.post("pedidos/crear-nuevo-pedido", {
+				fecha: nuevoPedido.fecha,
+				contactoRemitente: nuevoPedido.contactoRemitente,
+				empresaRemitente: nuevoPedido.empresaRemitente,
+				direccionRemitente: nuevoPedido.direccionRemitente,
+				distritoRemitente: nuevoPedido.distritoRemitente,
+				telefonoRemitente: nuevoPedido.telefonoRemitente,
+				otroDatoRemitente: nuevoPedido.otroDatoRemitente,
+				contactoConsignado: nuevoPedido.contactoConsignado,
+				empresaConsignado: nuevoPedido.empresaConsignado,
+				direccionConsignado: nuevoPedido.direccionConsignado,
+				telefonoConsignado: nuevoPedido.telefonoConsignado,
+				otroDatoConsignado: nuevoPedido.otroDatoConsignado,
+				tipoCarga: nuevoPedido.tipoCarga,
+				formaPago: nuevoPedido.formaPago,
+				tarifa: nuevoPedido.tarifa,
+				recaudo: nuevoPedido.recaudo,
+				tramite: nuevoPedido.tramite,
+				comision: nuevoPedido.comision,
+				distancia: nuevoPedido.distancia,
+				CO2Ahorrado: nuevoPedido.CO2Ahorrado,
+				ruido: nuevoPedido.ruido,
+				status: nuevoPedido.status,
+				statusFinanciero: nuevoPedido.statusFinanciero,
+				distritoConsignado: nuevoPedido.distritoConsignado,
+				mobiker: nuevoPedido.mobiker,
+				tipoEnvio: nuevoPedido.tipoEnvio,
+				modalidad: nuevoPedido.modalidad,
+				rolCliente: nuevoPedido.rolCliente,
+			});
+
+			return pedido;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async getPedidoById(id) {
+		try {
+			let pedido = await http.get(`pedidos/tablero-pedidos/${id}`);
+
+			return pedido;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async editPedido(id, editarPedido) {
+		try {
+			let pedidoEditado = await http.put(`pedidos/tablero-pedidos/${id}`, {
+				fecha: editarPedido.fecha,
+				contactoRemitente: editarPedido.contactoRemitente,
+				empresaRemitente: editarPedido.empresaRemitente,
+				direccionRemitente: editarPedido.direccionRemitente,
+				distritoRemitente: editarPedido.distritoRemitente,
+				telefonoRemitente: editarPedido.telefonoRemitente,
+				otroDatoRemitente: editarPedido.otroDatoRemitente,
+				contactoConsignado: editarPedido.contactoConsignado,
+				empresaConsignado: editarPedido.empresaConsignado,
+				direccionConsignado: editarPedido.direccionConsignado,
+				telefonoConsignado: editarPedido.telefonoConsignado,
+				otroDatoConsignado: editarPedido.otroDatoConsignado,
+				tipoCarga: editarPedido.tipoCarga,
+				formaPago: editarPedido.formaPago,
+				tarifa: editarPedido.tarifa,
+				recaudo: editarPedido.recaudo,
+				tramite: editarPedido.tramite,
+				comision: editarPedido.comision,
+				distancia: editarPedido.distancia,
+				CO2Ahorrado: editarPedido.CO2Ahorrado,
+				ruido: editarPedido.ruido,
+				status: editarPedido.statusId,
+				// statusFinanciero: editarPedido.statusFinanciero,
+				distritoConsignado: editarPedido.distrito.distrito,
+				mobiker: editarPedido.mobiker.fullName,
+				tipoEnvio: editarPedido.tipoDeEnvio.tipo,
+				modalidad: editarPedido.modalidad.tipo,
+				rolCliente: editarPedido.rolCliente,
+			});
+
+			return pedidoEditado;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async searchPedido(findPedido) {
+		try {
+			let pedido = await http.get(`pedidos?q=${findPedido}`);
+
+			return pedido;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async searchPedidoProgramado(params) {
+		try {
+			let pedido = await http.get("pedidos-programados", { params });
+
+			return pedido;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async asignarPedido(id, pedidoAsignado) {
+		try {
+			let pedidoEditado = await http.put(`pedidos-programados/${id}`, {
+				status: pedidoAsignado.statusId,
+				mobiker: pedidoAsignado.mobiker,
+			});
+
+			return pedidoEditado;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async historialPedidos(params) {
+		try {
+			let pedido = await http.get("historial-pedidos", { params });
+
+			return pedido;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+}
+
+export default new PedidoService();

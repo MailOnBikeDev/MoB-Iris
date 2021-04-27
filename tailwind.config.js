@@ -14,7 +14,10 @@ module.exports = {
 		},
 	},
 	variants: {
-		extend: {},
+		extend: {
+			maxHeight: ["focus"],
+			backgroundColor: ["active"],
+		},
 	},
 	plugins: [],
 };

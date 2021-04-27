@@ -1,160 +1,138 @@
 <template>
-	<div class="w-full flex flex-col justify-center items-center mt-10 mb-40">
+	<div class="w-full flex flex-col justify-center items-center mt-6">
 		<div
-			class="max-w-lg bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 mt-10"
+			class="max-w-lg bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8"
 		>
 			<form
-				name="flex flex-col"
+				class="flex flex-col mt-4"
 				@submit.prevent="handleRegister"
 				autocomplete="off"
 			>
 				<div v-if="!successful">
 					<div class="flex flex-row">
-						<div class="my-6 pt-3 rounded  mr-10">
-							<label
-								for="nombre"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>Nombre</label
-							>
+						<div class="mb-4 rounded mr-4">
+							<label for="fullName" class="label-input">Nombre completo</label>
 							<input
-								v-model="user.nombre"
-								v-validate="'required|min:3|max:20'"
+								v-model="user.fullName"
+								v-validate="'required|min:3|max:30'"
 								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
-								name="nombre"
+								class="input"
+								name="fullName"
 							/>
 							<div
-								v-if="submitted && errors.has('nombre')"
-								class="alert-danger"
+								v-if="submitted && errors.has('fullName')"
+								class="bg-red-500 text-white text-sm rounded p-2"
 							>
-								{{ errors.first("nombre") }}
+								<p>El nombre es requerido</p>
 							</div>
 						</div>
-						<div class="my-6 pt-3 rounded">
-							<label
-								for="username"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>Username</label
-							>
+						<div class="mb-4 rounded">
+							<label for="username" class="label-input">Usuario</label>
 							<input
 								v-model="user.username"
-								v-validate="'required|min:3|max:20'"
+								v-validate="'required|min:3|max:25'"
 								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+								class="input"
 								name="username"
 							/>
 							<div
 								v-if="submitted && errors.has('username')"
-								class="alert-danger"
+								class="bg-red-500 text-white text-sm rounded p-2"
 							>
-								{{ errors.first("username") }}
+								<p>El usuario es requerido</p>
 							</div>
 						</div>
 					</div>
 
 					<div class="flex flex-row">
-						<div class="my-6 pt-3 rounded mr-10">
-							<label
-								for="empresa"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>Empresa</label
-							>
+						<div class="mb-4 rounded mr-4">
+							<label for="empresa" class="label-input">Empresa</label>
 							<input
 								v-model="user.empresa"
-								v-validate="'required|min:3|max:20'"
+								v-validate="'required|min:3|max:30'"
 								type="text"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+								class="input"
 								name="empresa"
 							/>
 							<div
 								v-if="submitted && errors.has('empresa')"
-								class="alert-danger"
+								class="bg-red-500 text-white text-sm rounded p-2"
 							>
-								{{ errors.first("empresa") }}
+								<p>La empresa es requerida</p>
 							</div>
 						</div>
-						<div class="my-6 pt-3 rounded">
-							<label
-								for="email"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>Email</label
-							>
+						<div class="mb-4 rounded">
+							<label for="email" class="label-input">Email</label>
 							<input
 								v-model="user.email"
 								v-validate="'required|email|max:50'"
 								type="email"
-								class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+								class="input"
 								name="email"
 							/>
-							<div v-if="submitted && errors.has('email')" class="alert-danger">
-								{{ errors.first("email") }}
+							<div
+								v-if="submitted && errors.has('email')"
+								class="bg-red-500 text-white text-sm rounded p-2"
+							>
+								<p>El email es requerido</p>
 							</div>
 						</div>
 					</div>
 
-					<div class="my-6 pt-3 rounded">
-						<label
-							for="password"
-							class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-							>Password</label
-						>
+					<div class="mb-4 rounded">
+						<label for="password" class="label-input">Password</label>
 						<input
 							v-model="user.password"
 							v-validate="'required|min:6|max:40'"
 							type="password"
-							class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 px-3 py-3"
+							class="input"
 							name="password"
 						/>
 						<div
 							v-if="submitted && errors.has('password')"
-							class="alert-danger"
+							class="bg-red-500 text-white text-sm rounded p-2"
 						>
-							{{ errors.first("password") }}
+							<p>La contraseña es requerida</p>
 						</div>
 					</div>
 
 					<div class="flex flex-row">
-						<div class="my-6 pt-3 rounded">
-							<label
-								for="roles"
-								class="block text-gray-700 text-sm font-bold mb-2 ml-3"
-								>Seleccione un Rol</label
+						<div class="mx-auto">
+							<label for="roles" class="label-input">Seleccione un Rol</label>
+							<div v-for="(rol, index) in rolesUsuarios" :key="index">
+								<input
+									type="checkbox"
+									name="roles"
+									v-model="user.roles"
+									:value="rol.name"
+								/>
+								<label class="ml-2" :for="rol">{{
+									rolesUsuarios[index].name
+								}}</label>
+							</div>
+							<div
+								v-if="submitted && errors.has('roles')"
+								class="bg-red-500 text-white text-sm rounded p-2"
 							>
-							<select
-								name="roles"
-								v-model="user.roles"
-								multiple
-								class="bg-white rounded w-full text-gray-700 border-b-4 border-gray-300 px-3 py-3"
-							>
-								<option
-									class="w-full mx-auto
-									"
-									v-for="(rol, index) in roles"
-									:key="index"
-									:value="rol"
-									>{{ roles[index] }}</option
-								>
-							</select>
-							<div v-if="submitted && errors.has('roles')" class="alert-danger">
 								{{ errors.first("roles") }}
 							</div>
 						</div>
 					</div>
 
 					<button
-						class="block w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 mb-6"
+						class="block mx-auto my-4 bg-info hover:bg-secondary text-white font-bold px-8 py-2 rounded shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
 					>
-						Registrarse
+						Crear Nuevo Usuario
 					</button>
 				</div>
 			</form>
 
 			<div
 				v-if="message"
-				class="alert"
-				:class="successful ? 'alert-success' : 'alert-danger'"
+				class="text-white text-center text-sm rounded p-2"
+				:class="successful ? 'bg-green-500' : 'bg-red-500'"
 			>
-				{{ message }}
+				{{ message.message }}
 			</div>
 		</div>
 	</div>
@@ -162,6 +140,7 @@
 
 <script>
 import User from "../models/user";
+import { mapState } from "vuex";
 
 export default {
 	name: "Register",
@@ -171,18 +150,13 @@ export default {
 			submitted: false,
 			successful: false,
 			message: "",
-			roles: ["administrador", "operador", "auditor", "cliente", "mobiker"],
 		};
 	},
 	computed: {
+		...mapState("auxiliares", ["rolesUsuarios"]),
 		loggedIn() {
-			return this.$store.state.auth.status.loggedIn;
+			return this.$store.state.status.loggedIn;
 		},
-	},
-	mounted() {
-		if (this.loggedIn) {
-			this.$router.push("/profile");
-		}
 	},
 	methods: {
 		handleRegister() {
@@ -190,7 +164,7 @@ export default {
 			this.submitted = true;
 			this.$validator.validate().then((isValid) => {
 				if (isValid) {
-					this.$store.dispatch("auth/register", this.user).then(
+					this.$store.dispatch("register", this.user).then(
 						(data) => {
 							this.message = data.message;
 							this.successful = true;
@@ -201,6 +175,7 @@ export default {
 								error.message ||
 								error.toString();
 							this.successful = false;
+							console.log(this.message);
 						}
 					);
 				}
@@ -209,3 +184,39 @@ export default {
 	},
 };
 </script>
+
+<style lang="scss">
+input[type="checkbox"] {
+	position: relative;
+	width: 2rem;
+	height: 1rem;
+	appearance: none;
+	background: #c6c6c6;
+	outline: none;
+	border-radius: 1rem;
+	box-shadow: inset 0 0 0.5rem rgba(0, 0, 0, 0.2);
+	transition: 0.3s;
+
+	&:checked {
+		background: #6f8fc8;
+	}
+
+	&::before {
+		content: "";
+		position: absolute;
+		width: 1rem;
+		height: 1rem;
+		border-radius: 1rem;
+		top: 0;
+		left: 0;
+		background: #fff;
+		transform: scale(1.1);
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+		transition: 0.3s;
+	}
+
+	&:checked::before {
+		left: 1rem;
+	}
+}
+</style>

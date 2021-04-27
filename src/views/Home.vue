@@ -1,37 +1,41 @@
 <template>
-	<div
-		class="h-screen w-full flex flex-col justify-center items-center mt-10 mb-40"
-	>
+	<div class="w-full flex flex-col justify-center items-center mt-28">
 		<div
-			class="max-w-lg bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8 mt-10"
+			class="max-w-lg bg-gray-100 shadow-lg rounded-xl mx-auto py-4 px-8 flex flex-col justify-center"
 		>
-			<h2>Bienvenidos a Iris</h2>
+			<img
+				id="profile-img"
+				src="@/assets/MoB-logo.png"
+				alt="Mail On Bike Logo"
+				class="w-40 mx-auto relative -top-24"
+			/>
+
+			<h2 class="text-center -mt-16 mb-10 text-2xl text-primary font-bold">
+				Bienvenidos a Mail On Bike
+			</h2>
+
+			<router-link
+				to="/login"
+				class="bg-secondary px-4 py-2 text-white my-4 link rounded-lg text-center font-bold"
+				custom
+				v-slot="{ navigate }"
+			>
+				<span @click="navigate" role="link">
+					Empezar
+				</span>
+			</router-link>
 		</div>
 	</div>
 </template>
 
 <script>
-import UserService from "../services/user.service";
-
 export default {
 	name: "Home",
-	data() {
-		return {
-			content: "",
-		};
-	},
-	mounted() {
-		UserService.getPublicContent().then(
-			(response) => {
-				this.content = response.data;
-			},
-			(error) => {
-				this.content =
-					(error.response && error.response.data) ||
-					error.message ||
-					error.toString();
-			}
-		);
-	},
 };
 </script>
+
+<style lang="scss" scoped>
+.link {
+	cursor: pointer;
+}
+</style>

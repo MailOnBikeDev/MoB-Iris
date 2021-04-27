@@ -1,38 +1,42 @@
 <template>
-	<div class="container">
-		<header class="jumbotron">
-			<h3>
-				<strong>{{ currentUser.username }}</strong> Profile
-			</h3>
-		</header>
-		<p>
-			<strong>Token:</strong>
-			{{ currentUser.accessToken.substring(0, 20) }} ...
-			{{ currentUser.accessToken.substr(currentUser.accessToken.length - 20) }}
-		</p>
-		<p>
-			<strong>Id:</strong>
-			{{ currentUser.id }}
-		</p>
-		<p>
-			<strong>Email:</strong>
-			{{ currentUser.email }}
-		</p>
-		<strong>Authorities:</strong>
-		<ul>
-			<li v-for="(role, index) in currentUser.roles" :key="index">
-				{{ role }}
-			</li>
-		</ul>
+	<div class="bg-gray-100 shadow-lg rounded-xl w-1/2 mx-auto p-4 my-12">
+		<div class="flex justify-end">
+			<h1
+				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded-xl relative -top-12 py-2 bg-gray-100 px-6"
+			>
+				Perfil
+			</h1>
+		</div>
+
+		<div class="-mt-12">
+			<div class="p-4">
+				<h2 class="mb-2">
+					<strong class="resalta">Perfil:</strong>
+					{{ currentUser.username }}
+				</h2>
+				<p class="mb-2">
+					<strong class="resalta">Nombre:</strong>
+					{{ currentUser.fullName }}
+				</p>
+				<p class="mb-2">
+					<strong class="resalta">Email:</strong>
+					{{ currentUser.email }}
+				</p>
+				<p class="mb-2">
+					<strong class="resalta">Empresa:</strong>
+					{{ currentUser.empresa }}
+				</p>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script>
 export default {
-	name: "Profile",
+	name: "Perfil",
 	computed: {
 		currentUser() {
-			return this.$store.state.auth.user;
+			return this.$store.state.user;
 		},
 	},
 	mounted() {
