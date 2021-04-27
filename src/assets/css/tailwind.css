@@ -1,21 +1,36 @@
 /* Font Montserrat */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 * {
-    font-family: 'Montserrat';
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: "Montserrat";
 }
 
 body {
-    background: linear-gradient(116.82deg, #052B8D 0%, rgba(39, 117, 169, 0.869792) 50%, rgba(70, 185, 195, 0.75) 100%);
-    background-repeat: no-repeat;
-    min-height: 100vh;
+	background: linear-gradient(
+		116.82deg,
+		#052b8d 0%,
+		rgba(39, 117, 169, 0.869792) 50%,
+		rgba(70, 185, 195, 0.75) 100%
+	);
+	background-repeat: no-repeat;
+	min-height: 100vh;
 }
 
 .resalta {
-    color: #303868;
-    font-weight: bold;
+	@apply text-primary font-bold;
+}
+
+.input {
+	@apply rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2;
+}
+
+.label-input {
+	@apply block text-primary text-sm font-bold mb-1 ml-1;
 }

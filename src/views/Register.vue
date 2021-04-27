@@ -11,16 +11,12 @@
 				<div v-if="!successful">
 					<div class="flex flex-row">
 						<div class="mb-4 rounded mr-4">
-							<label
-								for="fullName"
-								class="block text-primary text-sm font-bold mb-1 ml-1"
-								>Nombre completo</label
-							>
+							<label for="fullName" class="label-input">Nombre completo</label>
 							<input
 								v-model="user.fullName"
 								v-validate="'required|min:3|max:30'"
 								type="text"
-								class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+								class="input"
 								name="fullName"
 							/>
 							<div
@@ -31,16 +27,12 @@
 							</div>
 						</div>
 						<div class="mb-4 rounded">
-							<label
-								for="username"
-								class="block text-primary text-sm font-bold mb-1 ml-1"
-								>Usuario</label
-							>
+							<label for="username" class="label-input">Usuario</label>
 							<input
 								v-model="user.username"
 								v-validate="'required|min:3|max:25'"
 								type="text"
-								class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+								class="input"
 								name="username"
 							/>
 							<div
@@ -54,16 +46,12 @@
 
 					<div class="flex flex-row">
 						<div class="mb-4 rounded mr-4">
-							<label
-								for="empresa"
-								class="block text-primary text-sm font-bold mb-1 ml-1"
-								>Empresa</label
-							>
+							<label for="empresa" class="label-input">Empresa</label>
 							<input
 								v-model="user.empresa"
 								v-validate="'required|min:3|max:30'"
 								type="text"
-								class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+								class="input"
 								name="empresa"
 							/>
 							<div
@@ -74,16 +62,12 @@
 							</div>
 						</div>
 						<div class="mb-4 rounded">
-							<label
-								for="email"
-								class="block text-primary text-sm font-bold mb-1 ml-1"
-								>Email</label
-							>
+							<label for="email" class="label-input">Email</label>
 							<input
 								v-model="user.email"
 								v-validate="'required|email|max:50'"
 								type="email"
-								class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+								class="input"
 								name="email"
 							/>
 							<div
@@ -96,16 +80,12 @@
 					</div>
 
 					<div class="mb-4 rounded">
-						<label
-							for="password"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
-							>Password</label
-						>
+						<label for="password" class="label-input">Password</label>
 						<input
 							v-model="user.password"
 							v-validate="'required|min:6|max:40'"
 							type="password"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+							class="input"
 							name="password"
 						/>
 						<div
@@ -118,11 +98,7 @@
 
 					<div class="flex flex-row">
 						<div class="mx-auto">
-							<label
-								for="roles"
-								class="block text-primary text-sm font-bold mb-2 ml-1"
-								>Seleccione un Rol</label
-							>
+							<label for="roles" class="label-input">Seleccione un Rol</label>
 							<div v-for="(rol, index) in rolesUsuarios" :key="index">
 								<input
 									type="checkbox"

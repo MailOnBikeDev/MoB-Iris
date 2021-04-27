@@ -11,17 +11,13 @@
 			/>
 			<form class="-mt-16" @submit.prevent="handleLogin" autocomplete="off">
 				<div class="rounded">
-					<label
-						for="username"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Usuario</label
-					>
+					<label for="username" class="label-input">Usuario</label>
 					<input
 						v-model="user.username"
 						v-validate="'required'"
 						type="text"
 						name="username"
-						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+						class="input"
 					/>
 					<div
 						v-if="errors.has('username')"
@@ -32,17 +28,13 @@
 				</div>
 
 				<div class="my-6 rounded">
-					<label
-						for="password"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Contraseña</label
-					>
+					<label for="password" class="label-input">Contraseña</label>
 					<input
 						v-model="user.password"
 						v-validate="'required'"
 						type="password"
 						name="password"
-						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+						class="input"
 					/>
 					<div
 						v-if="errors.has('password')"
