@@ -51,7 +51,7 @@
 			</form>
 		</div>
 
-		<BaseAlerta :message="message" :success="success" />
+		<BaseAlerta :alert="alert" />
 	</div>
 </template>
 
@@ -65,8 +65,11 @@ export default {
 	data() {
 		return {
 			user: new User("", ""),
-			message: "",
-			success: false,
+			alert: {
+				message: "",
+				success: false,
+				show: false,
+			},
 		};
 	},
 	computed: {
@@ -83,19 +86,26 @@ export default {
 		handleLogin() {
 			this.$validator.validateAll().then((isValid) => {
 				if (!isValid) {
-					this.success = false;
+					this.alert.show = true;
+					this.alert.success = false;
 					return;
 				}
 				if (this.user.username && this.user.password) {
 					this.$store.dispatch("login", this.user).then(
-						() => {
-							this.$router.push("/perfil");
+						(response) => {
+							console.log(response.message);
+							this.alert.message = response.message;
+							this.alert.show = true;
+							this.alert.success = true;
+							setTimeout(() => {
+								this.$router.push("/perfil");
+							}, 1500);
 						},
 						(error) => {
-							this.message =
-								(error.response && error.response.data) ||
-								error.messsage ||
-								error.toString();
+							console.log(error.response.data.message);
+							this.alert.message = error.response.data.message;
+							this.alert.show = true;
+							this.alert.success = false;
 						}
 					);
 				}

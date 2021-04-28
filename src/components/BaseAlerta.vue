@@ -1,18 +1,17 @@
 <template>
 	<div
-		v-if="message !== ''"
+		v-if="alert.show"
 		class="absolute top-1/4 right-0 p-10 rounded-l-lg text-white font-bold"
-		:class="{ 'bg-red-500': success === false }"
+		:class="[alert.success ? 'bg-green-500' : 'bg-red-500']"
 	>
-		{{ message.message }}
+		{{ alert.message }}
 	</div>
 </template>
 
 <script>
 export default {
 	props: {
-		message: String,
-		success: Boolean,
+		alert: Object,
 	},
 };
 </script>

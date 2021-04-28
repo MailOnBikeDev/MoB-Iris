@@ -252,6 +252,13 @@ export default {
 			comandaCopiada: false,
 		};
 	},
+	watch: {
+		currentPedido: function() {
+			console.log(
+				`Pedido actual desde el componente ${this.currentPedido.statusId}`
+			);
+		},
+	},
 	async mounted() {
 		let estados = await AuxiliarService.getStatusPedidos();
 		let mobiker = await MobikerService.getMobikers();
@@ -296,7 +303,7 @@ export default {
 		cerrarDetalle() {
 			this.$emit("cerrarDetalle");
 			this.comandaCopiada = false;
-			this.pedidoAsignado = {};
+			// this.pedidoAsignado = {};
 			this.refresh();
 		},
 

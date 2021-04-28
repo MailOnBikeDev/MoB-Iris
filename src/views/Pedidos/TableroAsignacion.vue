@@ -314,6 +314,7 @@ export default {
 
 		setActivePedido(pedido, index) {
 			this.currentPedido = pedido;
+			console.log(this.currentPedido);
 			this.currentIndex = index;
 		},
 
