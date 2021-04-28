@@ -17,18 +17,18 @@ export default {
 	name: "App",
 	components: { Navigation },
 	created() {
-			// Llamando a todas las tablas auxiliares
-			this.$store.dispatch("auxiliares/getRolesUsuarios");
-			this.$store.dispatch("auxiliares/getDistritosLima");
-			this.$store.dispatch("auxiliares/getTiposCarga");
-			this.$store.dispatch("auxiliares/getComprobantes");
-			this.$store.dispatch("auxiliares/getTiposEnvios");
-			this.$store.dispatch("auxiliares/getFormasPago");
-			this.$store.dispatch("auxiliares/getModalidades");
-			this.$store.dispatch("auxiliares/getRangosMoB");
-			this.$store.dispatch("auxiliares/getRolCliente");
-			this.$store.dispatch("auxiliares/getEntidadesBancarias");
-			this.$store.dispatch("auxiliares/getStatusPedido");
-		},
+		// Llamando a todas las tablas auxiliares
+		this.$store.dispatch("auxiliares/getRolesUsuarios");
+		this.$store.dispatch("auxiliares/getDistritosLima");
+		this.$store.dispatch("auxiliares/getTiposCarga");
+		this.$store.dispatch("auxiliares/getComprobantes");
+		this.$store.dispatch("auxiliares/getTiposEnvios");
+		this.$store.dispatch("auxiliares/getFormasPago");
+		this.$store.dispatch("auxiliares/getModalidades");
+		this.$store.dispatch("auxiliares/getRangosMoB");
+		this.$store.dispatch("auxiliares/getRolCliente");
+		this.$store.dispatch("auxiliares/getEntidadesBancarias");
+		this.$store.dispatch("auxiliares/getStatusPedido");
+	},
 };
 </script>
