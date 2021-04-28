@@ -16,7 +16,7 @@ import Navigation from "./components/Navigation.vue";
 export default {
 	name: "App",
 	components: { Navigation },
-	created() {
+	mounted() {
 		// Llamando a todas las tablas auxiliares
 		this.$store.dispatch("auxiliares/getRolesUsuarios");
 		this.$store.dispatch("auxiliares/getDistritosLima");

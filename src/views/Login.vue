@@ -47,24 +47,26 @@
 					>
 						<span>Iniciar Sesión</span>
 					</button>
-					<div v-if="message">
-						{{ message }}
-					</div>
 				</div>
 			</form>
 		</div>
+
+		<BaseAlerta :message="message" :success="success" />
 	</div>
 </template>
 
 <script>
+import BaseAlerta from "@/components/BaseAlerta.vue";
 import User from "../models/user";
 
 export default {
 	name: "Login",
+	components: { BaseAlerta },
 	data() {
 		return {
 			user: new User("", ""),
 			message: "",
+			success: false,
 		};
 	},
 	computed: {
@@ -81,6 +83,7 @@ export default {
 		handleLogin() {
 			this.$validator.validateAll().then((isValid) => {
 				if (!isValid) {
+					this.success = false;
 					return;
 				}
 				if (this.user.username && this.user.password) {
@@ -89,7 +92,6 @@ export default {
 							this.$router.push("/perfil");
 						},
 						(error) => {
-							this.loading = false;
 							this.message =
 								(error.response && error.response.data) ||
 								error.messsage ||
