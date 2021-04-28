@@ -25,7 +25,7 @@
 			/>
 		</div>
 
-		<form class="mt-2 h-full p-2" autocomplete="off">
+		<form class="mt-2 h-full p-2" autocomplete="off" ref="pedido">
 			<div class="grid grid-cols-2 h-full">
 				<div class="text-3xl text-primary font-bold px-1 text-center">
 					<h2 v-if="nuevoPedido.rolCliente === 'Destinatario'">
@@ -129,7 +129,7 @@
 							>Teléfono</label
 						>
 						<input
-							v-model="nuevoPedido.telefonoRemitente"
+							v-model.number="nuevoPedido.telefonoRemitente"
 							type="number"
 							v-validate="'required|length:9'"
 							name="telefonoRemitente"
@@ -405,7 +405,7 @@
 							>Teléfono</label
 						>
 						<input
-							v-model="nuevoPedido.telefonoConsignado"
+							v-model.number="nuevoPedido.telefonoConsignado"
 							type="number"
 							v-validate="'required|length:9'"
 							name="telefonoConsignado"
@@ -691,9 +691,11 @@ export default {
 				} else {
 					PedidoService.storageNuevoPedido(this.nuevoPedido).then(
 						(response) => {
-							this.$router.push("/pedidos/tablero-pedidos");
+							// this.$router.push("/pedidos/tablero-pedidos");
 							console.log(response.data.message);
 							this.message = response.data.message;
+
+							this.$refs.pedido.reset();
 						},
 						(err) => console.error(`Mensaje de error: ${err.message}`)
 					);
@@ -725,15 +727,15 @@ export default {
 							this.nuevoPedido.rolCliente = this.memoriaCliente.rolCliente.rol;
 							this.nuevoPedido.tipoEnvio = this.memoriaCliente.tipoDeEnvio.tipo;
 							this.nuevoPedido.modalidad = "Una vía";
-							this.nuevoPedido.status = null;
+							this.nuevoPedido.status = 1;
 							this.nuevoPedido.contactoConsignado = null;
 							this.nuevoPedido.empresaConsignado = null;
 							this.nuevoPedido.telefonoConsignado = null;
 							this.nuevoPedido.direccionConsignado = null;
-							this.nuevoPedido.distritoConsignado = null;
+							this.nuevoPedido.distritoConsignado = "";
 							this.nuevoPedido.otroDatoConsignado = null;
 							this.nuevoPedido.comision = 0;
-							this.nuevoPedido.mobiker = null;
+							this.nuevoPedido.mobiker = "";
 							this.nuevoPedido.distancia = 0;
 							this.nuevoPedido.recaudo = null;
 							this.nuevoPedido.tramite = null;
@@ -781,9 +783,9 @@ export default {
 
 				// console.log(`distancia calculada: ${distanciaCalculada}`);
 
-				let distanciaCalculada = 6.754; // Mientras no funciona la API
+				let distanciaCalculada = 6.8; // Mientras no funciona la API
 
-				this.nuevoPedido.distancia = distanciaCalculada.toFixed(3);
+				this.nuevoPedido.distancia = distanciaCalculada.toFixed(1);
 				this.nuevoPedido.tarifa = 7.0;
 				this.nuevoPedido.CO2Ahorrado = (
 					this.nuevoPedido.distancia / 12
@@ -827,6 +829,7 @@ export default {
 				this.nuevoPedido.rolCliente = cliente.rolCliente.rol;
 				this.nuevoPedido.tipoEnvio = cliente.tipoDeEnvio.tipo;
 				this.nuevoPedido.modalidad = "Una vía";
+				this.nuevoPedido.status = 1;
 
 				this.memoriaCliente = cliente;
 			}

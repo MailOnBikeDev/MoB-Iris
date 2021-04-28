@@ -38,6 +38,16 @@
 				</button>
 			</div>
 
+			<div>
+				<input
+					type="text"
+					placeholder="Buscar Pedido..."
+					class="rounded w-48 text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 py-1 px-2"
+					v-model="buscador"
+					@keyup="buscarPedido"
+				/>
+			</div>
+
 			<router-link
 				to="/pedidos/pedidos-programados"
 				class="bg-indigo-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-indigo-500"
@@ -52,6 +62,7 @@
 			<button
 				class="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded-full focus:outline-none"
 				@click="refreshList"
+				title="Actualizar listado"
 			>
 				<font-awesome-icon class="text-white" icon="sync-alt" />
 			</button>
@@ -72,7 +83,10 @@
 			<div class="flex flex-row justify-center">
 				<p>
 					<span class="resalta">N° de Pedidos del día:</span>
-					{{ cantidadPedidos }}
+					{{
+						pedidos.filter((pedido) => pedido.statusId !== (17 && 18 && 19))
+							.length
+					}}
 				</p>
 			</div>
 			<div
@@ -260,11 +274,19 @@
 						<p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
 					</div>
 					<div class="flex justify-center items-center">
-						<button class="focus:outline-none" @click="showComanda = true">
+						<button
+							class="focus:outline-none"
+							@click="showComanda = true"
+							title="Emitir Comanda"
+						>
 							<font-awesome-icon class="text-primary" icon="receipt" />
 						</button>
 
-						<button class="focus:outline-none" @click="showDetalle = true">
+						<button
+							class="focus:outline-none"
+							@click="showDetalle = true"
+							title="Detalles del Pedido"
+						>
 							<font-awesome-icon
 								class="text-primary ml-6"
 								icon="window-maximize"
@@ -319,7 +341,7 @@ export default {
 
 			page: 1,
 			cantidadPedidos: 0,
-			pageSize: 3,
+			pageSize: 50,
 		};
 	},
 	mounted() {
@@ -361,6 +383,25 @@ export default {
 					console.error("Mensaje de error: ", error);
 				}
 			);
+		},
+
+		buscarPedido() {
+			console.log(typeof this.buscador);
+			const textoCliente = this.buscador.toLowerCase();
+			this.pedidos = this.pedidos.filter((pedido) => {
+				const compararTexto = pedido.contactoRemitente.toLowerCase();
+				const compararId = pedido.id.toString();
+				if (
+					compararTexto.includes(textoCliente) ||
+					compararId.includes(textoCliente)
+				) {
+					return pedido;
+				}
+			});
+
+			if (textoCliente.trim() === "") {
+				this.refreshList();
+			}
 		},
 
 		handlePageChange(value) {

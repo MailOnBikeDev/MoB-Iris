@@ -3,6 +3,8 @@ import Vuex from "vuex";
 
 import AuthService from "../services/auth.service";
 
+import { auxiliares } from "./auxiliares.module";
+
 const user = JSON.parse(localStorage.getItem("user"));
 const initialState = user
 	? { status: { loggedIn: true }, user }
@@ -62,5 +64,8 @@ export default new Vuex.Store({
 		registerFailure(state) {
 			state.status.loggedIn = false;
 		},
+	},
+	modules: {
+		auxiliares,
 	},
 });

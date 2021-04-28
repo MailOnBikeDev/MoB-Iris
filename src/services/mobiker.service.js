@@ -61,6 +61,18 @@ class MobikerService {
 		}
 	}
 
+	async getCantidadPedidos(params) {
+		try {
+			let cantidadPedidos = await http.get("mobikers/cantidad-pedidos", {
+				params,
+			});
+
+			return cantidadPedidos;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
 	async editMobiker(id, editarMobiker) {
 		try {
 			let mobikerEditado = await http.put(`mobikers/equipo-mobiker/${id}`, {

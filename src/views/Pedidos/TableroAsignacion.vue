@@ -16,6 +16,28 @@
 		/>
 
 		<div class="flex flex-row justify-evenly -mt-10 mb-4">
+			<div class="flex flex-row">
+				<datepicker
+					v-model="fechaInicio"
+					name="fechaInicio"
+					input-class="rounded-l-xl w-32 focus:outline-none p-2 font-bold cursor-pointer"
+					:monday-first="true"
+				/>
+				<datepicker
+					v-model="fechaFin"
+					name="fechaFin"
+					input-class="w-32 focus:outline-none p-2 font-bold cursor-pointer"
+					:monday-first="true"
+				/>
+				<button
+					type="button"
+					class="bg-white py-1 px-2 rounded-r-xl font-bold hover:bg-info hover:text-white focus:outline-none"
+					@click="retrievePedidos"
+				>
+					Buscar
+				</button>
+			</div>
+
 			<button
 				class="bg-yellow-600 hover:bg-yellow-500 px-4 rounded-full focus:outline-none"
 				@click="refreshList"
@@ -39,12 +61,12 @@
 			<div class="flex flex-row justify-center">
 				<p v-if="pedidos">
 					<span class="resalta">Pedidos por asignar:</span>
-					{{ pedidos.length }}
+					{{ pedidosPorAsignar }}
 				</p>
 			</div>
 
 			<div
-				class="col-span-3 inline-grid grid-cols-7 text-sm text-center font-bold items-center text-primary"
+				class="col-span-3 inline-grid grid-cols-8 text-sm text-center font-bold items-center text-primary"
 			>
 				<button @click="sortPorId" class="focus:outline-none">
 					<p class="font-bold"># Pedido</p>
@@ -61,6 +83,9 @@
 				<button @click="sortPorEstado" class="focus:outline-none">
 					<p class="font-bold">Estado</p>
 				</button>
+				<div>
+					<p>Observaciones</p>
+				</div>
 				<button @click="sortPorFecha" class="focus:outline-none">
 					<p class="font-bold">Fecha</p>
 				</button>
@@ -81,7 +106,13 @@
 					</div>
 
 					<div>
-						{{ mobiker.biciEnvios }}
+						{{
+							pedidosMobiker.filter(
+								(pedido) =>
+									pedido.mobikerId === mobiker.id &&
+									pedido.statusId !== (17 || 18 || 19)
+							).length
+						}}
 					</div>
 				</div>
 			</div>
@@ -90,13 +121,16 @@
 				class="pedidos-scroll bg-white col-span-3 max-h-96 overflow-y-auto border-black border"
 			>
 				<div
-					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
+					class="grid grid-cols-8 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
 					:class="{
 						'bg-info text-white font-bold': pedido.id == currentIndex,
 					}"
 					v-for="pedido in pedidos"
 					:key="pedido.id"
 					@click="setActivePedido(pedido, pedido.id)"
+					:title="
+						`Cliente: ${pedido.contactoRemitente}. Observaciones: ${pedido.otroDatoRemitente} / ${pedido.otroDatoConsignado}`
+					"
 				>
 					<div>
 						<p>{{ pedido.id }}</p>
@@ -123,6 +157,21 @@
 						>
 							{{ pedido.status.tag }}
 						</p>
+						<p
+							v-if="pedido.status.id === 2"
+							class="bg-yellow-400 rounded-full inline px-2 py-1 font-bold text-white"
+						>
+							{{ pedido.status.tag }}
+						</p>
+					</div>
+					<div>
+						<p
+							v-if="pedido.otroDatoConsignado"
+							class="text-red-500 font-bold text-2xl"
+						>
+							!
+						</p>
+						<p v-else></p>
 					</div>
 					<div>
 						<p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
@@ -135,6 +184,21 @@
 				</div>
 			</div>
 		</div>
+
+		<Pagination
+			:page="page"
+			:cantidadItems="cantidadPedidos"
+			:pageSize="pageSize"
+			@prevPageChange="
+				page--;
+				retrievePedidos();
+			"
+			@nextPageChange="
+				page++;
+				retrievePedidos();
+			"
+			@handlePageChange="handlePageChange"
+		/>
 	</div>
 </template>
 
@@ -142,17 +206,27 @@
 import PedidoService from "@/services/pedido.service";
 import MobikerService from "@/services/mobiker.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
+import Datepicker from "vuejs-datepicker";
+import Pagination from "@/components/Pagination.vue";
 
 export default {
 	name: "Pedidos",
-	components: { DetallePedidoProgramado },
+	components: { DetallePedidoProgramado, Datepicker, Pagination },
 	data() {
 		return {
 			mobikers: [],
 			pedidos: [],
+			pedidosMobiker: [],
 			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
+			fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
+			fechaFin: new Date(new Date().getTime() + 1000 * 60 * 60 * 24),
+			pedidosPorAsignar: 0,
+
+			page: 1,
+			cantidadPedidos: 0,
+			pageSize: 50,
 		};
 	},
 	mounted() {
@@ -160,6 +234,28 @@ export default {
 		this.retrievePedidos();
 	},
 	methods: {
+		getRequestParams(desde, hasta, page, pageSize) {
+			let params = {};
+
+			if (desde) {
+				params["desde"] = desde;
+			}
+
+			if (hasta) {
+				params["hasta"] = hasta;
+			}
+
+			if (page) {
+				params["page"] = page - 1;
+			}
+
+			if (pageSize) {
+				params["size"] = pageSize;
+			}
+
+			return params;
+		},
+
 		retrieveMobikers() {
 			MobikerService.getMobikers().then(
 				(response) => {
@@ -179,9 +275,28 @@ export default {
 		},
 
 		retrievePedidos() {
-			PedidoService.searchPedidoProgramado().then(
+			const params = this.getRequestParams(
+				this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+				this.$date(this.fechaFin).format("YYYY-MM-DD"),
+				this.page,
+				this.pageSize
+			);
+
+			PedidoService.historialPedidos(params).then(
 				(response) => {
-					this.pedidos = response.data;
+					const { pedidos, totalPedidos } = response.data;
+					this.pedidos = pedidos
+						.filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
+						.sort((a, b) => {
+							return a.statusId > b.statusId ? 1 : -1;
+						}); // rows
+					this.pedidosMobiker = pedidos;
+					this.cantidadPedidos = totalPedidos; // count
+					this.pedidosPorAsignar = pedidos.filter(
+						(pedido) =>
+							pedido.statusId === 1 &&
+							pedido.mobiker.fullName === "Asignar MoBiker"
+					).length;
 				},
 				(error) => {
 					this.pedidos =
@@ -192,12 +307,21 @@ export default {
 			);
 		},
 
+		handlePageChange(value) {
+			this.page = value;
+			this.retrievePedidos();
+		},
+
 		setActivePedido(pedido, index) {
 			this.currentPedido = pedido;
 			this.currentIndex = index;
 		},
 
 		refreshList() {
+			this.fechaInicio = new Date(
+				new Date().getTime() - 1000 * 60 * 60 * 24 * 6
+			);
+			this.fechaFin = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
 			this.retrievePedidos();
 
 			this.currentPedido = null;

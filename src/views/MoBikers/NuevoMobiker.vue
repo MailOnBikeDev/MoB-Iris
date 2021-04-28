@@ -449,10 +449,10 @@
 <script>
 import Mobiker from "@/models/mobiker";
 import { ModelListSelect } from "vue-search-select";
-import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
+import { mapState } from "vuex";
 
 export default {
 	name: "NuevoMobiker",
@@ -460,7 +460,6 @@ export default {
 		return {
 			nuevoMobiker: new Mobiker(),
 			message: "",
-			distritos: [],
 			tiposDocumentos: [
 				{ doc: "DNI" },
 				{ doc: "Pasaporte" },
@@ -487,8 +486,6 @@ export default {
 				{ cuenta: "Cuenta de Ahorros" },
 				{ cuenta: "Cuenta Corriente" },
 			],
-			entidadesBancarias: [],
-			rangosMoBiker: [],
 			estadosMoBiker: [
 				{
 					id: 1,
@@ -506,18 +503,12 @@ export default {
 			es: es,
 		};
 	},
-	async mounted() {
-		try {
-			let resDistritos = await AuxiliarService.getDistritos();
-			let resBancos = await AuxiliarService.getEntidadesBancarias();
-			let resRangos = await AuxiliarService.getRangosMoB();
-
-			this.distritos = resDistritos.data;
-			this.entidadesBancarias = resBancos.data;
-			this.rangosMoBiker = resRangos.data;
-		} catch (error) {
-			console.error(error);
-		}
+	computed: {
+		...mapState("auxiliares", [
+			"distritos",
+			"entidadesBancarias",
+			"rangosMoBiker",
+		]),
 	},
 	methods: {
 		handleNuevoMobiker() {

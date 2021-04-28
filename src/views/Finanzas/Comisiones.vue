@@ -73,7 +73,7 @@
 			</div>
 
 			<div
-				class="col-span-3 inline-grid grid-cols-5 text-sm text-center font-bold items-center text-primary"
+				class="col-span-3 inline-grid grid-cols-6 text-sm text-center font-bold items-center text-primary"
 			>
 				<button @click="sortPorId" class="focus:outline-none">
 					<p class="font-bold"># Pedido</p>
@@ -90,12 +90,15 @@
 				<button @click="sortPorFecha" class="focus:outline-none">
 					<p class="font-bold">Fecha</p>
 				</button>
+				<div>
+					<p>Corregir</p>
+				</div>
 			</div>
 			<div
 				class="bg-white max-h-96 overflow-y-auto h-96 border-black border pedidos-scroll"
 			>
 				<div
-					class="grid grid-cols-3 gap-x-1 text-center text-sm h-14 px-2 border-b-2 border-primary hover:bg-info items-center"
+					class="grid text-center text-sm h-14 px-2 border-b-2 border-primary hover:bg-info items-center"
 					:class="{
 						'bg-info text-white font-bold': mobiker.id == currentIndex,
 					}"
@@ -106,10 +109,6 @@
 					<div class="col-span-2">
 						{{ mobiker.fullName }}
 					</div>
-
-					<div>
-						=>
-					</div>
 				</div>
 			</div>
 
@@ -117,44 +116,29 @@
 				class="pedidos-scroll bg-white col-span-3 max-h-96 overflow-y-auto border-black border"
 			>
 				<div
-					class="grid grid-cols-5 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
+					class="grid grid-cols-6 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
 					v-for="pedido in pedidosMobiker"
 					:key="pedido.id"
 				>
 					<div>
 						<p>{{ pedido.id }}</p>
 					</div>
+
 					<div>
 						<p v-if="pedido.rolCliente === 'Remitente'">
 							{{ pedido.distritoRemitente }}
 						</p>
 						<p v-else>{{ pedido.distrito.distrito }}</p>
 					</div>
+
 					<div>
 						<p v-if="pedido.rolCliente === 'Remitente'">
 							{{ pedido.distrito.distrito }}
 						</p>
 						<p v-else>{{ pedido.distritoRemitente }}</p>
 					</div>
+
 					<div>
-						<p
-							v-if="pedido.status.id === 1"
-							class="bg-purple-400 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="pedido.status.id === 2"
-							class="bg-yellow-400 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="pedido.status.id === 3"
-							class="bg-indigo-400 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
 						<p
 							v-if="
 								pedido.status.id === 4 ||
@@ -183,18 +167,31 @@
 							{{ pedido.status.tag }}
 						</p>
 						<p
-							v-if="
-								pedido.status.id === 17 ||
-									pedido.status.id === 18 ||
-									pedido.status.id === 19
-							"
+							v-if="pedido.status.id === 19"
 							class="bg-yellow-700 rounded-full inline px-2 py-1 font-bold text-white"
 						>
 							{{ pedido.status.tag }}
 						</p>
 					</div>
+
 					<div>
 						<p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
+					</div>
+
+					<div class="flex justify-center">
+						<router-link
+							:to="`/finanzas/historial-pedidos/${pedido.id}`"
+							custom
+							v-slot="{ navigate }"
+							class="cursor-pointer"
+						>
+							<font-awesome-icon
+								class="text-primary"
+								icon="pencil-alt"
+								@click="navigate"
+								role="link"
+							/>
+						</router-link>
 					</div>
 				</div>
 			</div>
@@ -233,7 +230,7 @@ export default {
 			showDetalle: false,
 			currentMobiker: null,
 			currentIndex: -1,
-			fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 7),
+			fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
 			fechaFin: new Date(),
 
 			page: 1,
