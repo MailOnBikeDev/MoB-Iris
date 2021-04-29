@@ -12,15 +12,15 @@
 			</button>
 		</div>
 
-		<div class="flex justify-center">
+		<!-- <div class="flex justify-center">
 			<h1
 				class="bg-white inline-block text-2xl text-primary font-bold px-6 pt-1 rounded-t-xl"
 			>
 				Pedido #<span class="text-red-500">{{ currentPedido.id }}</span>
 			</h1>
-		</div>
+		</div> -->
 
-		<div class="hidden">
+		<!-- <div class="hidden">
 			<pre>
 Tipo Envío: **{{ currentPedido.tipoDeEnvio.tipo }}**
 __Origen:__ {{ currentPedido.direccionRemitente }} - {{
@@ -59,7 +59,7 @@ __Pedido:__ #{{ currentPedido.id }}
 __CO2:__ {{ currentPedido.CO2Ahorrado }} Kg
 __Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
 			>
-		</div>
+		</div> -->
 
 		<form class="grid grid-cols-2 gap-x-4 bg-white p-4 rounded-t-xl">
 			<div>
@@ -108,85 +108,33 @@ __Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
 			</div>
 		</form>
 
-		<div class="bg-white rounded-b-xl grid grid-cols-2 gap-x-8 p-4">
-			<div class="grid grid-flow-row text-sm py-2 px-4">
-				<h2 class="text-3xl text-primary font-bold mb-4 text-center">
-					Origen
-				</h2>
+		<div class="grid grid-cols-4 text-center font-bold text-white my-2">
+			<h4>#</h4>
+			<h4>Cliente</h4>
+			<h4>Origen</h4>
+			<h4>Destino</h4>
+		</div>
 
-				<p class="mb-2">
-					<span class="resalta">Contacto: </span>
-					{{ currentPedido.contactoRemitente }}
+		<div class="h-72 bg-white p-2 overflow-y-auto">
+			<div
+				class="grid grid-cols-4 text-center mb-2"
+				v-for="pedido in pedidosArray"
+				:key="pedido.id"
+			>
+				<p>
+					{{ pedido.id }}
 				</p>
-				<p class="mb-2">
-					<span class="resalta">Empresa: </span
-					>{{ currentPedido.empresaRemitente }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Dirección: </span
-					>{{ currentPedido.direccionRemitente }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Distrito: </span
-					>{{ currentPedido.distritoRemitente }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Otro dato: </span
-					>{{ currentPedido.otroDatoRemitente }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Tarifa: </span>S/.
-					{{ currentPedido.tarifa }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Recaudo: </span>S/.
-					{{ currentPedido.recaudo }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Trámite: </span>S/.
-					{{ currentPedido.tramite }}
-				</p>
-			</div>
 
-			<div class="grid grid-flow-row text-sm py-2 px-4">
-				<h2 class="text-3xl text-primary font-bold mb-4 text-center">
-					Destino
-				</h2>
-				<p class="mb-2">
-					<span class="resalta">Carga: </span>
-					{{ currentPedido.tipoCarga }}
+				<p>
+					{{ pedido.contactoRemitente }}
 				</p>
-				<p class="mb-2">
-					<span class="resalta">Modalidad: </span
-					>{{ currentPedido.modalidad.tipo }}
+
+				<p>
+					{{ pedido.distritoRemitente }}
 				</p>
-				<p class="mb-2">
-					<span class="resalta">Contacto: </span>
-					{{ currentPedido.contactoConsignado }}
-				</p>
-				<p class="mb-2" v-if="currentPedido.empresaConsignado">
-					<span class="resalta">Empresa: </span
-					>{{ currentPedido.empresaConsignado }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Dirección: </span
-					>{{ currentPedido.direccionConsignado }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Distrito: </span
-					>{{ currentPedido.distrito.distrito }}
-				</p>
-				<p class="mb-2" v-if="currentPedido.otroDatoConsignado">
-					<span class="resalta">Otro dato: </span
-					>{{ currentPedido.otroDatoConsignado }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Comisión: </span>S/.
-					{{ currentPedido.comision }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Distancia: </span
-					>{{ currentPedido.distancia }}Km
+
+				<p>
+					{{ pedido.distrito.distrito }}
 				</p>
 			</div>
 		</div>
@@ -232,8 +180,8 @@ export default {
 			type: Boolean,
 			required: true,
 		},
-		currentPedido: {
-			type: Object,
+		pedidosArray: {
+			type: Array,
 		},
 	},
 	components: {
@@ -242,22 +190,13 @@ export default {
 	data() {
 		return {
 			pedidoAsignado: {
-				statusId: this.currentPedido ? this.currentPedido.statusId : 1,
-				mobiker: this.currentPedido
-					? this.currentPedido.mobiker
-					: "Asignar MoBiker",
+				statusId: 1,
+				mobiker: "Asignar MoBiker",
 			},
 			mobikers: [],
 			estadosPedido: [],
 			comandaCopiada: false,
 		};
-	},
-	watch: {
-		currentPedido: function() {
-			console.log(
-				`Pedido actual desde el componente ${this.currentPedido.statusId}`
-			);
-		},
 	},
 	async mounted() {
 		let estados = await AuxiliarService.getStatusPedidos();
@@ -271,24 +210,21 @@ export default {
 	},
 	methods: {
 		handleAsignarPedido() {
-			this.$validator.validateAll().then((isValid) => {
-				if (!isValid) {
-					console.error("Mensaje de error: No se pudo asignar el Pedido");
-					return;
-				} else {
-					PedidoService.asignarPedido(
-						this.currentPedido.id,
-						this.pedidoAsignado
-					).then(
-						(response) => {
-							console.log(response.data.message);
-							this.message = response.data.message;
-							// this.cerrarDetalle();
-							// this.refresh();
-						},
-						(err) => console.error(`Mensaje de error: ${err.message}`)
+			const isValid = this.$validator.validateAll();
+			if (!isValid) {
+				console.error("Mensaje de error: No se pudo asignar el Pedido");
+				return;
+			}
+
+			this.pedidosArray.forEach((pedido) => {
+				PedidoService.asignarPedido(pedido.id, this.pedidoAsignado)
+					.then((response) => {
+						console.log(response.data.message);
+						this.cerrarDetalle();
+					})
+					.catch((error) =>
+						console.error(`Mensaje de error: ${error.message}`)
 					);
-				}
 			});
 		},
 
@@ -303,7 +239,8 @@ export default {
 		cerrarDetalle() {
 			this.$emit("cerrarDetalle");
 			this.comandaCopiada = false;
-			// this.pedidoAsignado = {};
+			this.pedidoAsignado.statusId = 1;
+			this.pedidoAsignado.mobiker = "Asignar MoBiker";
 			this.refresh();
 		},
 

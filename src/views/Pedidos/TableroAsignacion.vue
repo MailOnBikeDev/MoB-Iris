@@ -10,9 +10,9 @@
 
 		<DetallePedidoProgramado
 			:showDetalle="showDetalle"
-			@cerrarDetalle="showDetalle = false"
+			@cerrarDetalle="closeModal"
 			@refresh="refreshList"
-			:currentPedido="currentPedido"
+			:pedidosArray="pedidosArray"
 		/>
 
 		<div class="flex flex-row justify-evenly -mt-10 mb-4">
@@ -38,12 +38,15 @@
 				</button>
 			</div>
 
-			<button
-				class="bg-yellow-600 hover:bg-yellow-500 px-4 rounded-full focus:outline-none"
-				@click="refreshList"
-			>
-				<font-awesome-icon class="text-white" icon="sync-alt" />
-			</button>
+			<div>
+				<input
+					type="text"
+					placeholder="Buscar Pedido..."
+					class="rounded w-48 text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 py-1 px-2"
+					v-model="buscador"
+					@keyup="buscarPedido"
+				/>
+			</div>
 
 			<router-link
 				to="/pedidos/tablero-pedidos"
@@ -55,6 +58,21 @@
 					>Regresar al Tablero</span
 				>
 			</router-link>
+
+			<button
+				class="bg-yellow-600 hover:bg-yellow-500 px-4 rounded-full focus:outline-none"
+				@click="refreshList"
+			>
+				<font-awesome-icon class="text-white" icon="sync-alt" />
+			</button>
+
+			<button
+				class="bg-green-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-green-500"
+				@click="createArrayPedidos"
+				:disabled="emptyArray"
+			>
+				Asignar
+			</button>
 		</div>
 
 		<div class="grid grid-cols-4 gap-2">
@@ -122,9 +140,6 @@
 			>
 				<div
 					class="grid grid-cols-8 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
-					:class="{
-						'bg-info text-white font-bold': pedido.id == currentIndex,
-					}"
 					v-for="pedido in pedidos"
 					:key="pedido.id"
 					@click="setActivePedido(pedido, pedido.id)"
@@ -135,21 +150,25 @@
 					<div>
 						<p>{{ pedido.id }}</p>
 					</div>
+
 					<div>
 						<p v-if="pedido.rolCliente === 'Remitente'">
 							{{ pedido.distritoRemitente }}
 						</p>
 						<p v-else>{{ pedido.distrito.distrito }}</p>
 					</div>
+
 					<div>
 						<p v-if="pedido.rolCliente === 'Remitente'">
 							{{ pedido.distrito.distrito }}
 						</p>
 						<p v-else>{{ pedido.distritoRemitente }}</p>
 					</div>
+
 					<div>
 						<p>{{ pedido.mobiker.fullName }}</p>
 					</div>
+
 					<div>
 						<p
 							v-if="pedido.status.id === 1"
@@ -164,6 +183,7 @@
 							{{ pedido.status.tag }}
 						</p>
 					</div>
+
 					<div>
 						<p
 							v-if="pedido.otroDatoConsignado"
@@ -173,13 +193,13 @@
 						</p>
 						<p v-else></p>
 					</div>
+
 					<div>
 						<p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
 					</div>
+
 					<div class="flex justify-center">
-						<button class="focus:outline-none" @click="showDetalle = true">
-							<font-awesome-icon class="text-primary" icon="window-maximize" />
-						</button>
+						<input type="checkbox" v-model="pedidosArray" :value="pedido" />
 					</div>
 				</div>
 			</div>
@@ -223,6 +243,9 @@ export default {
 			fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
 			fechaFin: new Date(new Date().getTime() + 1000 * 60 * 60 * 24),
 			pedidosPorAsignar: 0,
+			pedidosArray: [],
+
+			buscador: "",
 
 			page: 1,
 			cantidadPedidos: 0,
@@ -232,6 +255,15 @@ export default {
 	mounted() {
 		this.retrieveMobikers();
 		this.retrievePedidos();
+	},
+	computed: {
+		emptyArray() {
+			if (this.pedidosArray.length === 0) {
+				return true;
+			} else {
+				return false;
+			}
+		},
 	},
 	methods: {
 		getRequestParams(desde, hasta, page, pageSize) {
@@ -307,6 +339,25 @@ export default {
 			);
 		},
 
+		buscarPedido() {
+			console.log(typeof this.buscador);
+			const textoCliente = this.buscador.toLowerCase();
+			this.pedidos = this.pedidos.filter((pedido) => {
+				const compararTexto = pedido.contactoRemitente.toLowerCase();
+				const compararId = pedido.id.toString();
+				if (
+					compararTexto.includes(textoCliente) ||
+					compararId.includes(textoCliente)
+				) {
+					return pedido;
+				}
+			});
+
+			if (textoCliente.trim() === "") {
+				this.refreshList();
+			}
+		},
+
 		handlePageChange(value) {
 			this.page = value;
 			this.retrievePedidos();
@@ -314,15 +365,25 @@ export default {
 
 		setActivePedido(pedido, index) {
 			this.currentPedido = pedido;
-			console.log(this.currentPedido);
+			// console.log(this.currentPedido);
 			this.currentIndex = index;
+		},
+
+		createArrayPedidos() {
+			this.showDetalle = true;
+			console.log(this.pedidosArray);
+		},
+
+		closeModal() {
+			this.showDetalle = false;
+			this.pedidosArray = [];
 		},
 
 		refreshList() {
 			this.fechaInicio = new Date(
-				new Date().getTime() - 1000 * 60 * 60 * 24 * 6
+				new Date().getTime() - 1000 * 60 * 60 * 24 * 6 // 6 días
 			);
-			this.fechaFin = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
+			this.fechaFin = new Date(new Date().getTime() + 1000 * 60 * 60 * 24); // Mañana
 			this.retrievePedidos();
 
 			this.currentPedido = null;
