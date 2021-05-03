@@ -1,71 +1,63 @@
 <template>
 	<div
 		v-if="showDetalle"
-		class="bg-primary w-1/2 h-auto absolute top-14 left-1/4 z-40 py-4 px-10 rounded-xl shadow-xl"
+		class="absolute z-40 w-1/2 h-auto px-10 py-4 shadow-xl bg-primary top-14 left-1/4 rounded-xl"
 	>
 		<div class="absolute -top-4 -right-2">
 			<button
-				class="rounded-full bg-info hover:bg-secondary px-2 text-2xl focus:outline-none text-white"
+				class="px-2 text-2xl text-white rounded-full bg-info hover:bg-secondary focus:outline-none"
 				@click.prevent="cerrarDetalle"
 			>
 				<font-awesome-icon icon="times" />
 			</button>
 		</div>
 
-		<!-- <div class="flex justify-center">
-			<h1
-				class="bg-white inline-block text-2xl text-primary font-bold px-6 pt-1 rounded-t-xl"
-			>
-				Pedido #<span class="text-red-500">{{ currentPedido.id }}</span>
-			</h1>
-		</div> -->
-
-		<!-- <div class="hidden">
-			<pre>
-Tipo Envío: **{{ currentPedido.tipoDeEnvio.tipo }}**
-__Origen:__ {{ currentPedido.direccionRemitente }} - {{
-					currentPedido.distritoRemitente
+		<div class="hidden">
+			<pre v-if="currentComanda !== null">
+Tipo Envío: **{{ currentComanda.tipoDeEnvio.tipo }}**
+__Origen:__ {{ currentComanda.direccionRemitente }} - {{
+					currentComanda.distritoRemitente
 				}}
-__Empresa:__ {{ currentPedido.empresaRemitente }}
-__Contacto:__ {{ currentPedido.contactoRemitente }} - {{
-					currentPedido.telefonoRemitente
+__Empresa:__ {{ currentComanda.empresaRemitente }}
+__Contacto:__ {{ currentComanda.contactoRemitente }} - {{
+					currentComanda.telefonoRemitente
 				}}
 {{
-					currentPedido.otroDatoRemitente
-						? "**IMPORTANTE:" + currentPedido.otroDatoRemitente
+					currentComanda.otroDatoRemitente
+						? `**IMPORTANTE:  ${currentComanda.otroDatoRemitente}**`
 						: null
 				}}
-
-__Destino:__ {{ currentPedido.direccionConsignado }} - {{
-					currentPedido.distrito.distrito
+			
+__Destino:__ {{ currentComanda.direccionConsignado }} - {{
+					currentComanda.distrito.distrito
 				}}
-__Contacto:__ {{ currentPedido.contactoConsignado }} - {{
-					currentPedido.empresaConsignado
-						? "- __Empresa:__" + currentPedido.empresaConsignado
+__Contacto:__ {{ currentComanda.contactoConsignado }} {{
+					currentComanda.empresaConsignado
+						? `- __Empresa:__ ${currentComanda.empresaConsignado}`
 						: null
 				}}
-__Teléfono:__ {{ currentPedido.telefonoConsignado }}
-__Llevar:__ {{ currentPedido.tipoCarga }}
-__Modalidad:__ {{ currentPedido.modalidad.tipo }}
+__Teléfono:__ {{ currentComanda.telefonoConsignado }}
+__Llevar:__ {{ currentComanda.tipoCarga }}
+__Modalidad:__ {{ currentComanda.modalidad.tipo }}
 {{
-					currentPedido.otroDatoConsignado
-						? "**IMPORTANTE:" + currentPedido.otroDatoConsignado
+					currentComanda.otroDatoConsignado
+						? `**IMPORTANTE:  ${currentComanda.otroDatoConsignado}**`
 						: null
 				}}
 
-__Tarifa:__ S/. {{ currentPedido.tarifa }}
-__Mi comisión:__ S/. {{ currentPedido.comision }}
-__Pedido:__ #{{ currentPedido.id }}
-__CO2:__ {{ currentPedido.CO2Ahorrado }} Kg
-__Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
+__Tarifa:__ S/. {{ currentComanda.tarifa }}
+__Mi comisión:__ S/. {{ currentComanda.comision }}
+__Pedido:__ #{{ currentComanda.id }}
+__CO2:__ {{ currentComanda.CO2Ahorrado }} Kg
+__Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
 			>
-		</div> -->
+		</div>
 
-		<form class="grid grid-cols-2 gap-x-4 bg-white p-4 rounded-t-xl">
+		<form class="grid grid-cols-2 p-4 bg-white gap-x-4 rounded-t-xl">
 			<div>
 				<label
 					for="status"
-					class="block text-primary text-sm font-bold mb-1 ml-1"
+					class="block mb-1 ml-1 text-sm font-bold text-primary"
 					>Estado del Pedido</label
 				>
 				<model-list-select
@@ -78,7 +70,7 @@ __Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
 				/>
 				<div
 					v-if="errors.has('status')"
-					class="bg-red-500 text-white text-sm rounded p-2"
+					class="p-2 text-sm text-white bg-red-500 rounded"
 				>
 					<p>El estado es requerido</p>
 				</div>
@@ -87,7 +79,7 @@ __Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
 			<div>
 				<label
 					for="mobiker"
-					class="block text-primary text-sm font-bold mb-1 ml-1"
+					class="block mb-1 ml-1 text-sm font-bold text-primary"
 					>MoBiker</label
 				>
 				<model-list-select
@@ -101,25 +93,29 @@ __Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
 				/>
 				<div
 					v-if="errors.has('mobiker')"
-					class="bg-red-500 text-white text-sm rounded p-2"
+					class="p-2 text-sm text-white bg-red-500 rounded"
 				>
 					<p>El MoBiker es requerido</p>
 				</div>
 			</div>
 		</form>
 
-		<div class="grid grid-cols-4 text-center font-bold text-white my-2">
+		<div class="grid grid-cols-4 my-2 font-bold text-center text-white">
 			<h4>#</h4>
 			<h4>Cliente</h4>
 			<h4>Origen</h4>
 			<h4>Destino</h4>
 		</div>
 
-		<div class="h-72 bg-white p-2 overflow-y-auto">
+		<div class="p-2 overflow-y-auto bg-white h-72">
 			<div
-				class="grid grid-cols-4 text-center mb-2"
+				class="grid grid-cols-4 py-2 mb-2 text-center cursor-pointer"
+				:class="{
+					'bg-info text-white font-bold': pedido.id == currentComandaIdx,
+				}"
 				v-for="pedido in pedidosArray"
 				:key="pedido.id"
+				@click="seleccionComanda(pedido, pedido.id)"
 			>
 				<p>
 					{{ pedido.id }}
@@ -139,18 +135,18 @@ __Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
 			</div>
 		</div>
 
-		<div class="mt-6 flex flex-row justify-around">
+		<div class="flex flex-row justify-around mt-6">
 			<button
 				type="button"
 				@click="handleAsignarPedido"
-				class="bg-green-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-green-500"
+				class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
 			>
 				Asignar MoBiker
 			</button>
 
 			<button
 				v-if="comandaCopiada === false"
-				class="bg-secondary text-white font-bold px-4 py-2 rounded-xl focus:outline-none hover:bg-info"
+				class="px-4 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
 				@click="copiarComanda"
 			>
 				Copiar
@@ -158,7 +154,7 @@ __Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
 
 			<button
 				v-else
-				class="bg-green-600 text-white font-bold px-4 py-2 rounded-xl focus:outline-none hover:bg-green-500"
+				class="px-4 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
 				@click="copiarComanda"
 			>
 				Copiado
@@ -196,6 +192,8 @@ export default {
 			mobikers: [],
 			estadosPedido: [],
 			comandaCopiada: false,
+			currentComanda: null,
+			currentComandaIdx: -1,
 		};
 	},
 	async mounted() {
@@ -228,9 +226,15 @@ export default {
 			});
 		},
 
+		seleccionComanda(comanda, index) {
+			this.currentComanda = comanda;
+			this.currentComandaIdx = index;
+			// console.log(this.currentComanda);
+		},
+
 		copiarComanda() {
 			// console.log(this.$el.children[2].children[0].innerText);
-			this.$copyText(this.$el.children[2].children[0].innerText).then(() => {
+			this.$copyText(this.$el.children[1].textContent).then(() => {
 				this.comandaCopiada = true;
 				console.log("Texto copiado");
 			});
