@@ -61,6 +61,16 @@ class MobikerService {
 		}
 	}
 
+	async getPedidosDelMobikerById(id) {
+		try {
+			let pedidos = await http.get(`mobikers/pedidos-del-mobiker/${id}`);
+
+			return pedidos;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
 	async getCantidadPedidos(params) {
 		try {
 			let cantidadPedidos = await http.get("mobikers/cantidad-pedidos", {

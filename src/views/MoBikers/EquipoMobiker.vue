@@ -1,18 +1,18 @@
 <template>
-	<div class="w-full max-h-screen p-4 bg-gray-100 rounded-xl mt-10">
+	<div class="w-full max-h-screen p-4 mt-10 bg-gray-100 rounded-xl">
 		<div class="flex justify-end">
 			<h1
-				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded-xl relative -top-12 py-2 bg-gray-100 px-6"
+				class="relative inline-block px-6 py-2 mb-4 text-2xl font-bold text-center bg-gray-100 text-primary rounded-xl -top-12"
 			>
 				Equipo MoBiker
 			</h1>
 		</div>
 
-		<div class="flex flex-row justify-evenly -mt-10 mb-4">
+		<div class="flex flex-row mb-4 -mt-10 justify-evenly">
 			<div>
 				<input
 					type="text"
-					class="rounded text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-1"
+					class="p-1 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 					v-model="buscador"
 					v-on:keyup.enter="searchMobiker"
 					placeholder="Buscar mobiker..."
@@ -20,7 +20,7 @@
 
 				<button
 					type="button"
-					class="bg-white ml-2 py-1 px-2 rounded font-bold hover:bg-info hover:text-white focus:outline-none"
+					class="px-2 py-1 ml-2 font-bold bg-white rounded hover:bg-info hover:text-white focus:outline-none"
 					@click="searchMobiker"
 				>
 					Buscar
@@ -28,7 +28,7 @@
 			</div>
 
 			<button
-				class="bg-yellow-600 hover:bg-yellow-500 px-4 rounded-full focus:outline-none"
+				class="px-4 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none"
 				@click="refreshList"
 			>
 				<font-awesome-icon class="text-white" icon="sync-alt" />
@@ -36,7 +36,7 @@
 
 			<router-link
 				to="/mobikers/nuevo-mobiker"
-				class="bg-green-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-green-500"
+				class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
 				custom
 				v-slot="{ navigate }"
 			>
@@ -48,7 +48,7 @@
 
 		<div class="grid grid-cols-5 gap-x-2">
 			<div
-				class="inline-grid col-span-3 grid-cols-7 text-sm text-center font-bold items-center"
+				class="inline-grid items-center grid-cols-7 col-span-3 text-sm font-bold text-center"
 			>
 				<p>Nombres</p>
 				<p>Distrito</p>
@@ -60,17 +60,17 @@
 			</div>
 
 			<div
-				class="inline-grid col-span-2 grid-cols-3 text-sm text-center font-bold items-center cursor-pointer"
+				class="inline-grid items-center grid-cols-3 col-span-2 text-sm font-bold text-center cursor-pointer"
 			>
 				<div
-					class="hover:bg-info py-2 hover:text-white rounded-t-xl"
+					class="py-2 hover:bg-info hover:text-white rounded-t-xl"
 					:class="{ 'bg-info text-white': activeTabName === tabNames.detalles }"
 					@click="handleTabClick(tabNames.detalles)"
 				>
 					Detalles
 				</div>
 				<div
-					class="hover:bg-info py-2 hover:text-white rounded-t-xl"
+					class="py-2 hover:bg-info hover:text-white rounded-t-xl"
 					:class="{
 						'bg-info text-white': activeTabName === tabNames.biciEnvios,
 					}"
@@ -79,7 +79,7 @@
 					Bicienvios
 				</div>
 				<div
-					class="hover:bg-info py-2 hover:text-white rounded-t-xl"
+					class="py-2 hover:bg-info hover:text-white rounded-t-xl"
 					:class="{
 						'bg-info text-white': activeTabName === tabNames.ecoamigable,
 					}"
@@ -90,10 +90,10 @@
 			</div>
 
 			<div
-				class="pedidos-scroll bg-white overscroll-auto col-span-3 border border-black"
+				class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
 			>
 				<div
-					class="grid grid-cols-7 h-14 text-center text-sm py-2 hover:bg-info border-b-2 border-primary items-center cursor-default"
+					class="grid items-center grid-cols-7 py-2 text-sm text-center border-b-2 cursor-default h-14 hover:bg-info border-primary"
 					:class="{
 						'bg-info text-white font-bold': mobiker.id == currentIndex,
 					}"
@@ -101,7 +101,7 @@
 					:key="mobiker.id"
 					@click="setActiveMobiker(mobiker, mobiker.id)"
 				>
-					<div>
+					<div class="px-2">
 						<p>
 							{{ mobiker.fullName }}
 						</p>
@@ -129,13 +129,13 @@
 					<div>
 						<p
 							v-if="mobiker.status === 'Activo'"
-							class="bg-green-500 inline-block rounded-full px-2 text-white font-bold"
+							class="inline-block px-2 font-bold text-white bg-green-500 rounded-full"
 						>
 							{{ mobiker.status }}
 						</p>
 						<p
 							v-else
-							class="bg-gray-500 inline-block rounded-full px-2 text-white font-bold"
+							class="inline-block px-2 font-bold text-white bg-gray-500 rounded-full"
 						>
 							{{ mobiker.status }}
 						</p>
@@ -158,7 +158,7 @@
 				</div>
 			</div>
 
-			<div class="h-96 col-span-2 border border-black">
+			<div class="col-span-2 border border-black h-96">
 				<Component
 					:is="currentTab"
 					:estadisticas="currentMobiker"
@@ -225,8 +225,9 @@ export default {
 		},
 
 		retrievePedidosMobikers(id) {
-			MobikerService.getPedidosDelMobiker(id).then(
+			MobikerService.getPedidosDelMobikerById(id).then(
 				(response) => {
+					console.log(response.data);
 					this.pedidosMobiker = response.data;
 				},
 				(error) => {
