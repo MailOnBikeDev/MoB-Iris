@@ -1,7 +1,6 @@
 <template>
 	<div
-		v-if="alert.show"
-		class="absolute top-1/4 right-0 p-10 rounded-l-lg text-white font-bold"
+		class="fixed right-0 p-6 font-bold text-white rounded-l-lg top-1/4"
 		:class="[alert.success ? 'bg-green-500' : 'bg-red-500']"
 	>
 		{{ alert.message }}
@@ -15,5 +14,3 @@ export default {
 	},
 };
 </script>
-
-<style></style>

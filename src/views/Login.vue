@@ -1,13 +1,13 @@
 <template>
-	<div class="w-full flex flex-col justify-center items-center mt-28">
+	<div class="flex flex-col items-center justify-center w-full mt-28">
 		<div
-			class="max-w-lg bg-gray-100 shadow-lg rounded-xl mx-auto py-4 px-8 flex flex-col justify-center"
+			class="flex flex-col justify-center max-w-lg px-8 py-4 mx-auto bg-gray-100 shadow-lg rounded-xl"
 		>
 			<img
 				id="profile-img"
 				src="@/assets/MoB-logo.png"
 				alt="Mail On Bike Logo"
-				class="w-40 mx-auto relative -top-24"
+				class="relative w-40 mx-auto -top-24"
 			/>
 			<form class="-mt-16" @submit.prevent="handleLogin" autocomplete="off">
 				<div class="rounded">
@@ -21,7 +21,7 @@
 					/>
 					<div
 						v-if="errors.has('username')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>El usuario es requerido</p>
 					</div>
@@ -38,12 +38,12 @@
 					/>
 					<div
 						v-if="errors.has('password')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>La contraseña es requerida</p>
 					</div>
 					<button
-						class="block w-full my-6 bg-info hover:bg-secondary text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
+						class="block w-full py-2 my-6 font-bold text-white transition duration-200 rounded shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
 					>
 						<span>Iniciar Sesión</span>
 					</button>
@@ -51,7 +51,11 @@
 			</form>
 		</div>
 
-		<BaseAlerta :alert="alert" />
+		<transition name="alerta">
+			<BaseAlerta v-if="alert.show" :alert="alert" />
+		</transition>
+
+		<button @click="alert.show = !alert.show">Show alert</button>
 	</div>
 </template>
 
@@ -90,6 +94,7 @@ export default {
 					this.alert.success = false;
 					return;
 				}
+
 				if (this.user.username && this.user.password) {
 					this.$store.dispatch("login", this.user).then(
 						(response) => {
@@ -106,6 +111,7 @@ export default {
 							this.alert.message = error.response.data.message;
 							this.alert.show = true;
 							this.alert.success = false;
+							setTimeout(() => (this.alert.show = false), 2500);
 						}
 					);
 				}
@@ -114,3 +120,22 @@ export default {
 	},
 };
 </script>
+
+<style lang="scss">
+.alerta-enter-from,
+.alerta-leave-to {
+	opacity: 0;
+	transform: translateX(200px);
+}
+
+// .alerta-enter-to,
+// .alerta-leave-from {
+// 	opacity: 1;
+// 	transform: translateX(0);
+// }
+
+.alerta-enter-active,
+.alerta-leave-active {
+	transition: all 0.5s ease;
+}
+</style>
