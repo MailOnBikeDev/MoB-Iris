@@ -1,68 +1,59 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
+// Auth Controllers
 import AuthService from "../services/auth.service";
 
+// Modules
 import { auxiliares } from "./auxiliares.module";
 
-const user = JSON.parse(localStorage.getItem("user"));
-const initialState = user
-	? { status: { loggedIn: true }, user }
-	: { status: { loggedIn: false }, user: null };
+const initialState = JSON.parse(localStorage.getItem("user"));
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
 	namespaced: true,
-	state: initialState,
-	actions: {
-		login({ commit }, user) {
-			return AuthService.login(user).then(
-				(user) => {
-					commit("loginSuccess", user);
-					return Promise.resolve(user);
-				},
-				(error) => {
-					commit("loginFailure");
-					return Promise.reject(error);
-				}
-			);
+	state: {
+		loggedIn: initialState ? true : false,
+		user: initialState ? initialState : null,
+	},
+	mutations: {
+		loginSuccess(state, payload) {
+			state.user = payload;
+			state.loggedIn = true;
+			localStorage.setItem("user", JSON.stringify(payload));
 		},
+
+		logout(state) {
+			state.loggedIn = false;
+			state.user = null;
+		},
+	},
+	actions: {
+		async login({ commit }, user) {
+			try {
+				const usuarioLogin = await AuthService.login(user);
+				commit("loginSuccess", usuarioLogin);
+				return Promise.resolve(usuarioLogin);
+			} catch (error) {
+				console.error(`Error en el login: ${error}`);
+				return Promise.reject(error);
+			}
+		},
+
 		logout({ commit }) {
 			AuthService.logout();
 			commit("logout");
 		},
-		register({ commit }, user) {
-			return AuthService.register(user).then(
-				(response) => {
-					commit("registerSuccess");
-					return Promise.resolve(response.data);
-				},
-				(error) => {
-					commit("registerFailure");
-					return Promise.reject(error);
-				}
-			);
-		},
-	},
-	mutations: {
-		loginSuccess(state, user) {
-			state.status.loggedIn = true;
-			state.user = user;
-		},
-		loginFailure(state) {
-			state.status.loggedIn = false;
-			state.user = null;
-		},
-		logout(state) {
-			state.status.loggedIn = false;
-			state.user = null;
-		},
-		registerSuccess(state) {
-			state.status.loggedIn = false;
-		},
-		registerFailure(state) {
-			state.status.loggedIn = false;
+
+		async register(user) {
+			try {
+				const usuarioRegistrado = await AuthService.register(user);
+				return Promise.resolve(usuarioRegistrado.data);
+			} catch (error) {
+				console.error(`Error en el register: ${error}`);
+				return Promise.reject(error);
+			}
 		},
 	},
 	modules: {
