@@ -18,7 +18,6 @@ export default {
 	components: { Navigation },
 	mounted() {
 		// Llamando a todas las tablas auxiliares
-		console.log("Esta llamando a las tablas");
 		this.$store.dispatch("auxiliares/getRolesUsuarios");
 		this.$store.dispatch("auxiliares/getDistritosLima");
 		this.$store.dispatch("auxiliares/getTiposCarga");
@@ -30,7 +29,7 @@ export default {
 		this.$store.dispatch("auxiliares/getRolCliente");
 		this.$store.dispatch("auxiliares/getEntidadesBancarias");
 		this.$store.dispatch("auxiliares/getStatusPedido");
-		console.log("Ya hizo todas las llamadas");
+		console.log("Tablas auxiliares cargadas, todo ok");
 	},
 };
 </script>

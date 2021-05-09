@@ -6,6 +6,7 @@ import AuthService from "../services/auth.service";
 
 // Modules
 import { auxiliares } from "./auxiliares.module";
+import { mobikers } from "./mobikers.module";
 
 const initialState = JSON.parse(localStorage.getItem("user"));
 
@@ -58,5 +59,6 @@ export default new Vuex.Store({
 	},
 	modules: {
 		auxiliares,
+		mobikers,
 	},
 });

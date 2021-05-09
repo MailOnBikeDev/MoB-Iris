@@ -97,7 +97,7 @@
 					:class="{
 						'bg-info text-white font-bold': mobiker.id == currentIndex,
 					}"
-					v-for="mobiker in mobikers"
+					v-for="mobiker in mobikersFiltrados"
 					:key="mobiker.id"
 					@click="setActiveMobiker(mobiker, mobiker.id)"
 				>
@@ -174,6 +174,7 @@ import MobikerService from "@/services/mobiker.service";
 import MoBDetalles from "@/components/MoBDetalles.vue";
 import BaseBiciEnvios from "@/components/BaseBiciEnvios.vue";
 import BaseEcoamigable from "@/components/BaseEcoamigable.vue";
+import { mapState, mapActions } from "vuex";
 
 const tabNames = {
 	detalles: "detalles",
@@ -184,7 +185,7 @@ const tabNames = {
 export default {
 	data() {
 		return {
-			mobikers: [],
+			mobikersFiltrados: [],
 			pedidosMobiker: [],
 			currentMobiker: null,
 			currentIndex: -1,
@@ -200,29 +201,20 @@ export default {
 			activeTabName: null,
 		};
 	},
+	computed: {
+		...mapState("mobikers", ["mobikers"]),
+	},
 	components: {
 		MoBDetalles,
 		BaseBiciEnvios,
 		BaseEcoamigable,
 	},
 	mounted() {
-		this.retrieveMobikers();
+		this.mobikersFiltrados = this.mobikers;
 		this.currentTab = this.tabs[tabNames.detalles];
 	},
 	methods: {
-		retrieveMobikers() {
-			MobikerService.getMobikers().then(
-				(response) => {
-					this.mobikers = response.data;
-				},
-				(error) => {
-					this.mobikers =
-						(error.response && error.response.data) ||
-						error.message ||
-						error.toString();
-				}
-			);
-		},
+		...mapActions("mobikers", ["getMobikers"]),
 
 		retrievePedidosMobikers(id) {
 			MobikerService.getPedidosDelMobikerById(id).then(
@@ -245,7 +237,8 @@ export default {
 		},
 
 		refreshList() {
-			this.retrieveMobikers();
+			this.getMobikers();
+			this.mobikersFiltrados = this.mobikers;
 
 			this.currentMobiker = null;
 			this.currentIndex = -1;
