@@ -9,28 +9,15 @@
 		</div>
 
 		<div class="flex flex-row mb-4 -mt-10 justify-evenly">
-			<div>
-				<input
-					type="text"
-					class="p-1 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
-					v-model="buscador"
-					v-on:keyup.enter="searchMobiker"
-					placeholder="Buscar mobiker..."
-				/>
+			<input
+				type="search"
+				class="p-1 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+				v-model="buscador"
+				@keyup="searchMobiker"
+				placeholder="Buscar mobiker..."
+			/>
 
-				<button
-					type="button"
-					class="px-2 py-1 ml-2 font-bold bg-white rounded hover:bg-info hover:text-white focus:outline-none"
-					@click="searchMobiker"
-				>
-					Buscar
-				</button>
-			</div>
-
-			<button
-				class="px-4 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none"
-				@click="refreshList"
-			>
+			<button class="refresh-btn" @click="refreshList">
 				<font-awesome-icon class="text-white" icon="sync-alt" />
 			</button>
 
@@ -48,7 +35,7 @@
 
 		<div class="grid grid-cols-5 gap-x-2">
 			<div
-				class="inline-grid items-center grid-cols-7 col-span-3 text-sm font-bold text-center"
+				class="inline-grid items-center grid-cols-7 col-span-3 mr-2 text-sm font-bold text-center text-primary"
 			>
 				<p>Nombres</p>
 				<p>Distrito</p>
@@ -214,21 +201,17 @@ export default {
 		this.currentTab = this.tabs[tabNames.detalles];
 	},
 	methods: {
-		...mapActions("mobikers", ["getMobikers"]),
+		...mapActions("mobikers", ["getMobikers", "buscarMobikers"]),
 
-		retrievePedidosMobikers(id) {
-			MobikerService.getPedidosDelMobikerById(id).then(
-				(response) => {
-					console.log(response.data);
-					this.pedidosMobiker = response.data;
-				},
-				(error) => {
-					this.pedidosMobiker =
-						(error.response && error.response.data) ||
-						error.message ||
-						error.toString();
-				}
-			);
+		async retrievePedidosMobikers(id) {
+			try {
+				const response = await MobikerService.getPedidosDelMobikerById(id);
+				this.pedidosMobiker = response.data;
+			} catch (error) {
+				console.error(
+					`Mensaje de error desde Equipo MoBiker: ${error.message}`
+				);
+			}
 		},
 
 		handleTabClick(tabName) {
@@ -236,8 +219,8 @@ export default {
 			this.currentTab = this.tabs[tabName];
 		},
 
-		refreshList() {
-			this.getMobikers();
+		async refreshList() {
+			await this.getMobikers();
 			this.mobikersFiltrados = this.mobikers;
 
 			this.currentMobiker = null;
@@ -252,13 +235,10 @@ export default {
 		},
 
 		async searchMobiker() {
-			try {
-				let mobikers = await MobikerService.searchMobiker(this.buscador);
+			this.mobikersFiltrados = await this.buscarMobikers(this.buscador);
 
-				this.mobikers = mobikers.data;
-				this.buscador = "";
-			} catch (error) {
-				console.error(error);
+			if (this.buscador.trim() === "") {
+				this.mobikersFiltrados = this.mobikers;
 			}
 		},
 	},

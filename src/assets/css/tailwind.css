@@ -24,13 +24,17 @@ body {
 }
 
 .resalta {
-	@apply text-primary font-bold;
+	@apply font-bold text-primary;
 }
 
 .input {
-	@apply rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2;
+	@apply w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info;
 }
 
 .label-input {
-	@apply block text-primary text-sm font-bold mb-1 ml-1;
+	@apply block mb-1 ml-1 text-sm font-bold text-primary;
+}
+
+.refresh-btn {
+	@apply px-4 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none;
 }
