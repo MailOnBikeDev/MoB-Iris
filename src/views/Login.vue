@@ -122,12 +122,6 @@ export default {
 	transform: translateX(200px);
 }
 
-// .alerta-enter-to,
-// .alerta-leave-from {
-// 	opacity: 1;
-// 	transform: translateX(0);
-// }
-
 .alerta-enter-active,
 .alerta-leave-active {
 	transition: all 0.5s ease;

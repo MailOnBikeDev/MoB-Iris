@@ -47,7 +47,7 @@
 			</div>
 
 			<div
-				class="inline-grid items-center grid-cols-3 col-span-2 text-sm font-bold text-center cursor-pointer"
+				class="inline-grid items-center grid-cols-3 col-span-2 text-sm font-bold text-center cursor-pointer text-primary"
 			>
 				<div
 					class="py-2 hover:bg-info hover:text-white rounded-t-xl"
