@@ -1,8 +1,8 @@
 <template>
-	<div class="bg-gray-100 shadow-lg rounded-xl mx-auto py-4 px-8 mt-10">
+	<div class="px-8 py-4 mx-auto mt-10 bg-gray-100 shadow-lg rounded-xl">
 		<div class="flex justify-end">
 			<h1
-				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded-xl relative -top-12 py-2 bg-gray-100 px-6"
+				class="relative inline-block px-6 py-2 mb-4 text-2xl font-bold text-center bg-gray-100 text-primary rounded-xl -top-12"
 			>
 				Editar Cliente
 			</h1>
@@ -15,63 +15,51 @@
 		>
 			<div class="grid grid-cols-3 gap-4 mb-4">
 				<div class="flex flex-col">
-					<label
-						for="contacto"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Contacto</label
-					>
+					<label for="contacto" class="label-input">Contacto</label>
 					<input
 						v-model="editarCliente.contacto"
 						v-validate="'required'"
 						type="text"
 						name="contacto"
-						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+						class="input"
 					/>
 					<div
 						v-if="errors.has('contacto')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>El contacto es requerido</p>
 					</div>
 				</div>
 
 				<div class="flex flex-col">
-					<label
-						for="empresa"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Razón Social</label
-					>
+					<label for="empresa" class="label-input">Razón Social</label>
 					<input
 						v-model="editarCliente.empresa"
 						v-validate="'required'"
 						type="text"
 						name="empresa"
-						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+						class="input"
 					/>
 					<div
 						v-if="errors.has('empresa')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>La empresa es requerida</p>
 					</div>
 				</div>
 
 				<div class="flex flex-col">
-					<label
-						for="telefono"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Teléfono</label
-					>
+					<label for="telefono" class="label-input">Teléfono</label>
 					<input
 						v-model="editarCliente.telefono"
 						v-validate="'required|length:9'"
 						type="number"
 						name="telefono"
-						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+						class="input"
 					/>
 					<div
 						v-if="errors.has('telefono')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>El telefono es requerido y debe tener 9 caracteres</p>
 					</div>
@@ -80,53 +68,41 @@
 
 			<div class="grid grid-cols-3 gap-4 mb-4">
 				<div class="flex flex-col">
-					<label
-						for="email"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Email</label
-					>
+					<label for="email" class="label-input">Email</label>
 					<input
 						v-model="editarCliente.email"
 						v-validate="'required'"
 						type="email"
 						name="email"
-						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+						class="input"
 					/>
 					<div
 						v-if="errors.has('email')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>El email es requerido</p>
 					</div>
 				</div>
 
 				<div class="flex flex-col">
-					<label
-						for="ruc"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>RUC</label
-					>
+					<label for="ruc" class="label-input">RUC</label>
 					<input
 						v-model="editarCliente.ruc"
 						v-validate="'length:11'"
 						name="ruc"
 						type="number"
-						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+						class="input"
 					/>
 					<div
 						v-if="errors.has('ruc')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>El RUC debe tener 11 números</p>
 					</div>
 				</div>
 
 				<div class="flex flex-col">
-					<label
-						for="distrito"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Distrito</label
-					>
+					<label for="distrito" class="label-input">Distrito</label>
 					<model-list-select
 						v-validate="'required'"
 						name="distrito"
@@ -138,7 +114,7 @@
 					/>
 					<div
 						v-if="errors.has('distrito')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>El distrito es requerido</p>
 					</div>
@@ -147,48 +123,36 @@
 
 			<div class="grid grid-cols-2 gap-4 mb-4">
 				<div class="flex flex-col">
-					<label
-						for="direccion"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Dirección</label
-					>
+					<label for="direccion" class="label-input">Dirección</label>
 					<input
 						v-model="editarCliente.direccion"
 						v-validate="'required'"
 						name="direccion"
 						type="text"
-						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+						class="input"
 					/>
 					<div
 						v-if="errors.has('direccion')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>La direccion es requerida</p>
 					</div>
 				</div>
 
 				<div class="flex flex-col">
-					<label
-						for="otroDato"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Otro Dato</label
-					>
+					<label for="otroDato" class="label-input">Otro Dato</label>
 					<input
 						v-model="editarCliente.otroDato"
 						name="otroDato"
 						type="text"
-						class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 px-2 py-2"
+						class="input"
 					/>
 				</div>
 			</div>
 
 			<div class="grid grid-cols-5 gap-4 mb-10">
 				<div class="flex flex-col">
-					<label
-						for="carga"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Tipo de Carga</label
-					>
+					<label for="carga" class="label-input">Tipo de Carga</label>
 					<model-list-select
 						v-validate="'required'"
 						name="carga"
@@ -199,18 +163,14 @@
 					/>
 					<div
 						v-if="errors.has('carga')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>El tipo de carga es requerido</p>
 					</div>
 				</div>
 
 				<div class="flex flex-col">
-					<label
-						for="pago"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Forma de Pago</label
-					>
+					<label for="pago" class="label-input">Forma de Pago</label>
 					<model-list-select
 						v-validate="'required'"
 						name="pago"
@@ -221,18 +181,14 @@
 					/>
 					<div
 						v-if="errors.has('pago')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>La forma de pago es requerida</p>
 					</div>
 				</div>
 
 				<div class="flex flex-col">
-					<label
-						for="comprobante"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Comprobante</label
-					>
+					<label for="comprobante" class="label-input">Comprobante</label>
 					<model-list-select
 						v-validate="'required'"
 						name="pago"
@@ -243,18 +199,14 @@
 					/>
 					<div
 						v-if="errors.has('comprobante')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>El comprobante es requerido</p>
 					</div>
 				</div>
 
 				<div>
-					<label
-						for="tipoEnvio"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Tipo de Envío</label
-					>
+					<label for="tipoEnvio" class="label-input">Tipo de Envío</label>
 					<model-list-select
 						name="tipoEnvio"
 						v-model="editarCliente.tipoEnvio"
@@ -265,18 +217,14 @@
 					/>
 					<div
 						v-if="errors.has('tipoEnvio')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>El tipo de Envío es requerido</p>
 					</div>
 				</div>
 
 				<div class="flex flex-col">
-					<label
-						for="rol"
-						class="block text-primary text-sm font-bold mb-1 ml-1"
-						>Rol</label
-					>
+					<label for="rol" class="label-input">Rol</label>
 					<model-list-select
 						v-validate="'required'"
 						name="rol"
@@ -287,7 +235,7 @@
 					/>
 					<div
 						v-if="errors.has('rol')"
-						class="bg-red-500 text-white text-sm rounded p-2"
+						class="p-2 text-sm text-white bg-red-500 rounded"
 					>
 						<p>El rol es requerido</p>
 					</div>
@@ -298,30 +246,31 @@
 				<button
 					type="button"
 					@click="cancelar"
-					class="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
+					class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 bg-red-500 rounded-lg shadow-lg hover:bg-red-700 hover:shadow-xl focus:outline-none"
 				>
 					Cancelar
 				</button>
 
 				<button
 					type="submit"
-					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
+					class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 rounded-lg shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
 				>
 					Editar Cliente
 				</button>
 			</div>
 		</form>
 
-		<div v-if="message" class="bg-green-500 p-4 text-white text-center">
-			{{ message }}
-		</div>
+		<transition name="alerta">
+			<BaseAlerta v-if="alert.show" :alert="alert" />
+		</transition>
 	</div>
 </template>
 
 <script>
+import BaseAlerta from "@/components/BaseAlerta.vue";
 import Cliente from "@/models/cliente";
 import { ModelListSelect } from "vue-search-select";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import ClienteService from "@/services/cliente.service";
 
 export default {
@@ -329,7 +278,11 @@ export default {
 	data() {
 		return {
 			editarCliente: new Cliente(),
-			message: "",
+			alert: {
+				message: "",
+				success: false,
+				show: false,
+			},
 		};
 	},
 	computed: {
@@ -350,6 +303,7 @@ export default {
 		}
 	},
 	methods: {
+		...mapActions("clientes", ["getClientes"]),
 		async getCliente(id) {
 			try {
 				let response = await ClienteService.getClienteById(id);
@@ -362,25 +316,36 @@ export default {
 				this.editarCliente.rol = response.data.rolCliente["rol"];
 				this.editarCliente.tipoEnvio = response.data.tipoDeEnvio["tipo"];
 			} catch (error) {
-				console.error("Mensaje de error:", error);
+				console.error(`Error al obtener el cliente por id: ${error.message}`);
 			}
 		},
-		handleEditarCliente() {
-			this.$validator.validateAll().then((isValid) => {
+		async handleEditarCliente() {
+			try {
+				const isValid = await this.$validator.validateAll();
 				if (!isValid) {
 					return;
-				} else {
-					ClienteService.editCliente(this.$route.params.id, this.editarCliente)
-						.then((response) => {
-							this.$router.push("/clientes/tablero-clientes");
-							console.log(response.data.message);
-							this.message = response.data.message;
-						})
-						.catch((err) => {
-							console.log(err);
-						});
 				}
-			});
+
+				const response = await ClienteService.editCliente(
+					this.$route.params.id,
+					this.editarCliente
+				);
+
+				this.alert.message = response.data.message;
+				this.alert.show = true;
+				this.alert.success = true;
+				await this.getClientes();
+
+				setTimeout(() => {
+					this.$router.push("/clientes/tablero-clientes");
+				}, 1500);
+			} catch (error) {
+				console.error(`Error al editar el cliente: ${error.message}`);
+				this.alert.message = error.response.data.message;
+				this.alert.show = true;
+				this.alert.success = false;
+				setTimeout(() => (this.alert.show = false), 2500);
+			}
 		},
 		cancelar() {
 			this.$router.push("/clientes/tablero-clientes");
@@ -388,6 +353,7 @@ export default {
 	},
 	components: {
 		ModelListSelect,
+		BaseAlerta,
 	},
 };
 </script>

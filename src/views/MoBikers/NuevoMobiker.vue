@@ -496,9 +496,3 @@ export default {
 	},
 };
 </script>
-
-<style lang="scss" scoped>
-wrapper-class {
-	padding: 1rem 0rem 1rem 0rem !important;
-}
-</style>

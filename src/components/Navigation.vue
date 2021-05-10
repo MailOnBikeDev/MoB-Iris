@@ -135,6 +135,7 @@ export default {
 			console.log("Actualizando datos");
 			// MoBikers
 			this.$store.dispatch("mobikers/getMobikers");
+			this.$store.dispatch("clientes/getClientes");
 			this.dropMenu = false;
 		},
 	},

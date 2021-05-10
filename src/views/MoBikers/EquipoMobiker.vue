@@ -9,13 +9,15 @@
 		</div>
 
 		<div class="flex flex-row mb-4 -mt-10 justify-evenly">
-			<input
-				type="search"
-				class="p-1 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
-				v-model="buscador"
-				@keyup="searchMobiker"
-				placeholder="Buscar mobiker..."
-			/>
+			<div>
+				<input
+					type="search"
+					class="input"
+					v-model="buscador"
+					@keyup="searchMobiker"
+					placeholder="Buscar mobiker..."
+				/>
+			</div>
 
 			<button class="refresh-btn" @click="refreshList">
 				<font-awesome-icon class="text-white" icon="sync-alt" />
@@ -209,7 +211,7 @@ export default {
 				this.pedidosMobiker = response.data;
 			} catch (error) {
 				console.error(
-					`Mensaje de error desde Equipo MoBiker: ${error.message}`
+					`No se pudieron obtener los pedidos del MoBiker: ${error.message}`
 				);
 			}
 		},
@@ -235,10 +237,14 @@ export default {
 		},
 
 		async searchMobiker() {
-			this.mobikersFiltrados = await this.buscarMobikers(this.buscador);
+			try {
+				this.mobikersFiltrados = await this.buscarMobikers(this.buscador);
 
-			if (this.buscador.trim() === "") {
-				this.mobikersFiltrados = this.mobikers;
+				if (this.buscador.trim() === "") {
+					this.mobikersFiltrados = this.mobikers;
+				}
+			} catch (error) {
+				console.error(`Error en el buscador de MoBikers: ${error.message}`);
 			}
 		},
 	},
