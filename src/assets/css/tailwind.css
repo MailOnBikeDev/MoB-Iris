@@ -38,3 +38,28 @@ body {
 .refresh-btn {
 	@apply px-4 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none;
 }
+
+/* Tags de Pedidos */
+.tag-programado {
+	@apply inline px-2 py-1 font-bold text-white bg-purple-400 rounded-full;
+}
+
+.tag-recoger {
+	@apply inline px-2 py-1 font-bold text-white bg-yellow-400 rounded-full;
+}
+
+.tag-transito {
+	@apply inline px-2 py-1 font-bold text-white bg-indigo-400 rounded-full;
+}
+
+.tag-entregado {
+	@apply inline px-2 py-1 font-bold text-white bg-green-400 rounded-full;
+}
+
+.tag-falso-flete {
+	@apply inline px-2 py-1 font-bold text-white bg-red-600 rounded-full;
+}
+
+.tag-anulado {
+	@apply inline px-2 py-1 font-bold text-white bg-yellow-700 rounded-full;
+}
