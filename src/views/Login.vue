@@ -54,8 +54,6 @@
 		<transition name="alerta">
 			<BaseAlerta v-if="alert.show" :alert="alert" />
 		</transition>
-
-		<button @click="alert.show = !alert.show">Show alert</button>
 	</div>
 </template>
 
@@ -78,7 +76,7 @@ export default {
 	},
 	computed: {
 		loggedIn() {
-			return this.$store.state.status.loggedIn;
+			return this.$store.state.loggedIn;
 		},
 	},
 	created() {
@@ -87,35 +85,31 @@ export default {
 		}
 	},
 	methods: {
-		handleLogin() {
-			this.$validator.validateAll().then((isValid) => {
+		async handleLogin() {
+			try {
+				const isValid = await this.$validator.validateAll();
+
 				if (!isValid) {
-					this.alert.show = true;
-					this.alert.success = false;
 					return;
 				}
 
 				if (this.user.username && this.user.password) {
-					this.$store.dispatch("login", this.user).then(
-						(response) => {
-							console.log(response.message);
-							this.alert.message = response.message;
-							this.alert.show = true;
-							this.alert.success = true;
-							setTimeout(() => {
-								this.$router.push("/perfil");
-							}, 1500);
-						},
-						(error) => {
-							console.log(error.response.data.message);
-							this.alert.message = error.response.data.message;
-							this.alert.show = true;
-							this.alert.success = false;
-							setTimeout(() => (this.alert.show = false), 2500);
-						}
-					);
+					const response = await this.$store.dispatch("login", this.user);
+					console.log(response.message);
+					this.alert.message = response.message;
+					this.alert.show = true;
+					this.alert.success = true;
+					setTimeout(() => {
+						this.$router.push("/perfil");
+					}, 1500);
 				}
-			});
+			} catch (error) {
+				console.log(`Error al iniciar sesión: ${error.response.data.message}`);
+				this.alert.message = error.response.data.message;
+				this.alert.show = true;
+				this.alert.success = false;
+				setTimeout(() => (this.alert.show = false), 2500);
+			}
 		},
 	},
 };
@@ -127,12 +121,6 @@ export default {
 	opacity: 0;
 	transform: translateX(200px);
 }
-
-// .alerta-enter-to,
-// .alerta-leave-from {
-// 	opacity: 1;
-// 	transform: translateX(0);
-// }
 
 .alerta-enter-active,
 .alerta-leave-active {

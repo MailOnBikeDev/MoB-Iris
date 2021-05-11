@@ -7,7 +7,7 @@ class MobikerService {
 
 			return mobikers;
 		} catch (error) {
-			console.error("Mensaje de error: ", error.message);
+			console.error(`Mensaje de error desde MobikerService: ${error.message}`);
 		}
 	}
 

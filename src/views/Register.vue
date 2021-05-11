@@ -1,7 +1,7 @@
 <template>
-	<div class="w-full flex flex-col justify-center items-center mt-6">
+	<div class="flex flex-col items-center justify-center w-full mt-6">
 		<div
-			class="max-w-lg bg-gray-100 shadow-lg rounded-xl overflow-hidden mx-auto py-4 px-8"
+			class="max-w-lg px-8 py-4 mx-auto overflow-hidden bg-gray-100 shadow-lg rounded-xl"
 		>
 			<form
 				class="flex flex-col mt-4"
@@ -10,7 +10,7 @@
 			>
 				<div v-if="!successful">
 					<div class="flex flex-row">
-						<div class="mb-4 rounded mr-4">
+						<div class="mb-4 mr-4 rounded">
 							<label for="fullName" class="label-input">Nombre completo</label>
 							<input
 								v-model="user.fullName"
@@ -21,7 +21,7 @@
 							/>
 							<div
 								v-if="submitted && errors.has('fullName')"
-								class="bg-red-500 text-white text-sm rounded p-2"
+								class="p-2 text-sm text-white bg-red-500 rounded"
 							>
 								<p>El nombre es requerido</p>
 							</div>
@@ -37,7 +37,7 @@
 							/>
 							<div
 								v-if="submitted && errors.has('username')"
-								class="bg-red-500 text-white text-sm rounded p-2"
+								class="p-2 text-sm text-white bg-red-500 rounded"
 							>
 								<p>El usuario es requerido</p>
 							</div>
@@ -45,7 +45,7 @@
 					</div>
 
 					<div class="flex flex-row">
-						<div class="mb-4 rounded mr-4">
+						<div class="mb-4 mr-4 rounded">
 							<label for="empresa" class="label-input">Empresa</label>
 							<input
 								v-model="user.empresa"
@@ -56,7 +56,7 @@
 							/>
 							<div
 								v-if="submitted && errors.has('empresa')"
-								class="bg-red-500 text-white text-sm rounded p-2"
+								class="p-2 text-sm text-white bg-red-500 rounded"
 							>
 								<p>La empresa es requerida</p>
 							</div>
@@ -72,7 +72,7 @@
 							/>
 							<div
 								v-if="submitted && errors.has('email')"
-								class="bg-red-500 text-white text-sm rounded p-2"
+								class="p-2 text-sm text-white bg-red-500 rounded"
 							>
 								<p>El email es requerido</p>
 							</div>
@@ -90,7 +90,7 @@
 						/>
 						<div
 							v-if="submitted && errors.has('password')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>La contraseña es requerida</p>
 						</div>
@@ -112,7 +112,7 @@
 							</div>
 							<div
 								v-if="submitted && errors.has('roles')"
-								class="bg-red-500 text-white text-sm rounded p-2"
+								class="p-2 text-sm text-white bg-red-500 rounded"
 							>
 								{{ errors.first("roles") }}
 							</div>
@@ -120,7 +120,7 @@
 					</div>
 
 					<button
-						class="block mx-auto my-4 bg-info hover:bg-secondary text-white font-bold px-8 py-2 rounded shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
+						class="block px-8 py-2 mx-auto my-4 font-bold text-white transition duration-200 rounded shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
 					>
 						Crear Nuevo Usuario
 					</button>
@@ -129,7 +129,7 @@
 
 			<div
 				v-if="message"
-				class="text-white text-center text-sm rounded p-2"
+				class="p-2 text-sm text-center text-white rounded"
 				:class="successful ? 'bg-green-500' : 'bg-red-500'"
 			>
 				{{ message.message }}
@@ -166,6 +166,7 @@ export default {
 				if (isValid) {
 					this.$store.dispatch("register", this.user).then(
 						(data) => {
+							console.log(data);
 							this.message = data.message;
 							this.successful = true;
 						},

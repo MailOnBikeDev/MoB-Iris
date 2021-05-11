@@ -1,8 +1,8 @@
 <template>
-	<div class="w-full max-h-screen p-4 bg-gray-100 rounded-xl mt-10">
+	<div class="w-full max-h-screen p-4 mt-10 bg-gray-100 rounded-xl">
 		<div class="flex justify-end">
 			<h1
-				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded-xl relative -top-12 py-2 bg-gray-100 px-6"
+				class="relative inline-block px-6 py-2 mb-4 text-2xl font-bold text-center bg-gray-100 text-primary rounded-xl -top-12"
 			>
 				Asignación de Pedidos
 			</h1>
@@ -15,23 +15,23 @@
 			:pedidosArray="pedidosArray"
 		/>
 
-		<div class="flex flex-row justify-evenly -mt-10 mb-4">
+		<div class="flex flex-row justify-between mb-4 -mt-10">
 			<div class="flex flex-row">
 				<datepicker
 					v-model="fechaInicio"
 					name="fechaInicio"
-					input-class="rounded-l-xl w-32 focus:outline-none p-2 font-bold cursor-pointer"
+					input-class="w-32 p-2 mb-1 font-bold cursor-pointer rounded-l-xl focus:outline-none text-primary"
 					:monday-first="true"
 				/>
 				<datepicker
 					v-model="fechaFin"
 					name="fechaFin"
-					input-class="w-32 focus:outline-none p-2 font-bold cursor-pointer"
+					input-class="w-32 p-2 mb-1 font-bold cursor-pointer focus:outline-none text-primary"
 					:monday-first="true"
 				/>
 				<button
 					type="button"
-					class="bg-white py-1 px-2 rounded-r-xl font-bold hover:bg-info hover:text-white focus:outline-none"
+					class="px-2 py-1 mb-1 font-bold bg-white rounded-r-xl hover:bg-info hover:text-white focus:outline-none text-secondary"
 					@click="retrievePedidos"
 				>
 					Buscar
@@ -42,7 +42,7 @@
 				<input
 					type="text"
 					placeholder="Buscar Pedido..."
-					class="rounded w-48 text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 py-1 px-2"
+					class="input"
 					v-model="buscador"
 					@keyup="buscarPedido"
 				/>
@@ -50,7 +50,7 @@
 
 			<router-link
 				to="/pedidos/tablero-pedidos"
-				class="bg-indigo-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-indigo-500"
+				class="px-6 py-2 font-bold text-white bg-indigo-600 rounded-xl focus:outline-none hover:bg-indigo-500"
 				custom
 				v-slot="{ navigate }"
 			>
@@ -60,14 +60,14 @@
 			</router-link>
 
 			<button
-				class="bg-yellow-600 hover:bg-yellow-500 px-4 rounded-full focus:outline-none"
+				class="px-4 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none"
 				@click="refreshList"
 			>
 				<font-awesome-icon class="text-white" icon="sync-alt" />
 			</button>
 
 			<button
-				class="bg-green-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-green-500"
+				class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
 				@click="createArrayPedidos"
 				:disabled="emptyArray"
 			>
@@ -84,7 +84,7 @@
 			</div>
 
 			<div
-				class="col-span-3 inline-grid grid-cols-8 text-sm text-center font-bold items-center text-primary"
+				class="inline-grid items-center grid-cols-8 col-span-3 text-sm font-bold text-center text-primary"
 			>
 				<button @click="sortPorId" class="focus:outline-none">
 					<p class="font-bold"># Pedido</p>
@@ -112,11 +112,11 @@
 				</div>
 			</div>
 			<div
-				class="bg-white max-h-96 overflow-y-auto h-96 border-black border pedidos-scroll"
+				class="overflow-y-auto bg-white border border-black max-h-96 h-96 pedidos-scroll"
 			>
 				<div
-					class="grid grid-cols-3 gap-x-1 text-center text-sm h-14 px-2 border-b-2 border-primary hover:bg-info items-center"
-					v-for="mobiker in mobikers"
+					class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 gap-x-1 h-14 border-primary hover:bg-info"
+					v-for="mobiker in mobikersFiltrados"
 					:key="mobiker.id"
 				>
 					<div class="col-span-2">
@@ -136,11 +136,11 @@
 			</div>
 
 			<div
-				class="pedidos-scroll bg-white col-span-3 max-h-96 overflow-y-auto border-black border"
+				class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
 			>
 				<div
-					class="grid grid-cols-8 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info items-center"
-					v-for="pedido in pedidos"
+					class="grid items-center grid-cols-8 py-2 text-sm text-center border-b-2 gap-x-1 h-14 border-primary hover:bg-info"
+					v-for="pedido in pedidosFiltrados"
 					:key="pedido.id"
 					@click="setActivePedido(pedido, pedido.id)"
 					:title="
@@ -170,16 +170,10 @@
 					</div>
 
 					<div>
-						<p
-							v-if="pedido.status.id === 1"
-							class="bg-purple-400 rounded-full inline px-2 py-1 font-bold text-white"
-						>
+						<p v-if="pedido.status.id === 1" class="tag-programado">
 							{{ pedido.status.tag }}
 						</p>
-						<p
-							v-if="pedido.status.id === 2"
-							class="bg-yellow-400 rounded-full inline px-2 py-1 font-bold text-white"
-						>
+						<p v-if="pedido.status.id === 2" class="tag-recoger">
 							{{ pedido.status.tag }}
 						</p>
 					</div>
@@ -187,7 +181,7 @@
 					<div>
 						<p
 							v-if="pedido.otroDatoConsignado"
-							class="text-red-500 font-bold text-2xl"
+							class="text-2xl font-bold text-red-500"
 						>
 							!
 						</p>
@@ -224,19 +218,19 @@
 
 <script>
 import PedidoService from "@/services/pedido.service";
-import MobikerService from "@/services/mobiker.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
+import { mapState, mapActions } from "vuex";
 
 export default {
 	name: "Pedidos",
 	components: { DetallePedidoProgramado, Datepicker, Pagination },
 	data() {
 		return {
-			mobikers: [],
 			pedidos: [],
 			pedidosMobiker: [],
+			mobikersFiltrados: [],
 			showDetalle: false,
 			currentPedido: null,
 			currentIndex: -1,
@@ -257,6 +251,7 @@ export default {
 		this.retrievePedidos();
 	},
 	computed: {
+		...mapState("mobikers", ["mobikers"]),
 		emptyArray() {
 			if (this.pedidosArray.length === 0) {
 				return true;
@@ -266,6 +261,8 @@ export default {
 		},
 	},
 	methods: {
+		...mapActions("mobikers", ["getMobikers", "buscarMobikers"]),
+
 		getRequestParams(desde, hasta, page, pageSize) {
 			let params = {};
 
@@ -289,72 +286,56 @@ export default {
 		},
 
 		retrieveMobikers() {
-			MobikerService.getMobikers().then(
-				(response) => {
-					this.mobikers = response.data
-						.filter((mobiker) => mobiker.status === "Activo")
-						.sort((a, b) => {
-							return a.biciEnvios > b.biciEnvios ? 1 : -1;
-						});
-				},
-				(error) => {
-					this.mobikers =
-						(error.response && error.response.data) ||
-						error.message ||
-						error.toString();
-				}
-			);
+			this.mobikersFiltrados = this.mobikers
+				.filter((mobiker) => mobiker.status === "Activo")
+				.sort((a, b) => {
+					return a.biciEnvios > b.biciEnvios ? 1 : -1;
+				});
 		},
 
-		retrievePedidos() {
-			const params = this.getRequestParams(
-				this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-				this.$date(this.fechaFin).format("YYYY-MM-DD"),
-				this.page,
-				this.pageSize
-			);
+		async retrievePedidos() {
+			try {
+				const params = this.getRequestParams(
+					this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+					this.$date(this.fechaFin).format("YYYY-MM-DD"),
+					this.page,
+					this.pageSize
+				);
 
-			PedidoService.historialPedidos(params).then(
-				(response) => {
-					const { pedidos, totalPedidos } = response.data;
-					this.pedidos = pedidos
-						.filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
-						.sort((a, b) => {
-							return a.statusId > b.statusId ? 1 : -1;
-						}); // rows
-					this.pedidosMobiker = pedidos;
-					this.cantidadPedidos = totalPedidos; // count
-					this.pedidosPorAsignar = pedidos.filter(
-						(pedido) =>
-							pedido.statusId === 1 &&
-							pedido.mobiker.fullName === "Asignar MoBiker"
-					).length;
-				},
-				(error) => {
-					this.pedidos =
-						(error.response && error.response.data) ||
-						error.message ||
-						error.toString();
-				}
-			);
+				const response = await PedidoService.historialPedidos(params);
+				const { pedidos, totalPedidos } = response.data;
+				this.pedidos = pedidos; // rows
+				this.pedidosFiltrados = pedidos
+					.filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
+					.sort((a, b) => {
+						return a.statusId > b.statusId ? 1 : -1;
+					}); // rows
+				this.pedidosMobiker = pedidos;
+				this.cantidadPedidos = totalPedidos; // count
+				this.pedidosPorAsignar = pedidos.filter(
+					(pedido) =>
+						pedido.statusId === 1 &&
+						pedido.mobiker.fullName === "Asignar MoBiker"
+				).length;
+			} catch (error) {
+				console.error(`Error al obtener los Pedidos:`);
+			}
 		},
 
 		buscarPedido() {
-			console.log(typeof this.buscador);
-			const textoCliente = this.buscador.toLowerCase();
-			this.pedidos = this.pedidos.filter((pedido) => {
-				const compararTexto = pedido.contactoRemitente.toLowerCase();
-				const compararId = pedido.id.toString();
+			this.pedidosFiltrados = this.pedidos.filter((pedido) => {
 				if (
-					compararTexto.includes(textoCliente) ||
-					compararId.includes(textoCliente)
+					pedido.contactoRemitente
+						.toLowerCase()
+						.includes(this.buscador.toLowerCase()) ||
+					pedido.id.toString().includes(this.buscador.toLowerCase())
 				) {
 					return pedido;
 				}
 			});
 
-			if (textoCliente.trim() === "") {
-				this.refreshList();
+			if (this.buscador.trim() === "") {
+				this.pedidosFiltrados = this.pedidos;
 			}
 		},
 
@@ -385,19 +366,20 @@ export default {
 			);
 			this.fechaFin = new Date(new Date().getTime() + 1000 * 60 * 60 * 24); // Mañana
 			this.retrievePedidos();
+			this.getMobikers();
 
 			this.currentPedido = null;
 			this.currentIndex = -1;
 		},
 
 		sortPorId() {
-			this.pedidos.sort((a, b) => {
+			this.pedidosFiltrados.sort((a, b) => {
 				return a.id > b.id ? 1 : -1;
 			});
 		},
 
 		sortPorOrigen() {
-			this.pedidos.sort((a, b) => {
+			this.pedidosFiltrados.sort((a, b) => {
 				return a.distritoRemitente.toLowerCase() >
 					b.distritoRemitente.toLowerCase()
 					? 1
@@ -406,7 +388,7 @@ export default {
 		},
 
 		sortPorDestino() {
-			this.pedidos.sort((a, b) => {
+			this.pedidosFiltrados.sort((a, b) => {
 				return a.distrito.distrito.toLowerCase() >
 					b.distrito.distrito.toLowerCase()
 					? 1
@@ -415,7 +397,7 @@ export default {
 		},
 
 		sortPorMobiker() {
-			this.pedidos.sort((a, b) => {
+			this.pedidosFiltrados.sort((a, b) => {
 				return a.mobiker.fullName.toLowerCase() >
 					b.mobiker.fullName.toLowerCase()
 					? 1
@@ -424,13 +406,13 @@ export default {
 		},
 
 		sortPorEstado() {
-			this.pedidos.sort((a, b) => {
+			this.pedidosFiltrados.sort((a, b) => {
 				return a.status.tag.toLowerCase() > b.status.tag.toLowerCase() ? 1 : -1;
 			});
 		},
 
 		sortPorFecha() {
-			this.pedidos.sort((a, b) => {
+			this.pedidosFiltrados.sort((a, b) => {
 				return a.fecha > b.fecha ? -1 : 1;
 			});
 		},

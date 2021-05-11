@@ -11,26 +11,15 @@
 		<div class="flex flex-row mb-4 -mt-10 justify-evenly">
 			<div>
 				<input
-					type="text"
-					class="p-1 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+					type="search"
+					class="input"
 					v-model="buscador"
-					v-on:keyup.enter="searchMobiker"
+					@keyup="searchMobiker"
 					placeholder="Buscar mobiker..."
 				/>
-
-				<button
-					type="button"
-					class="px-2 py-1 ml-2 font-bold bg-white rounded hover:bg-info hover:text-white focus:outline-none"
-					@click="searchMobiker"
-				>
-					Buscar
-				</button>
 			</div>
 
-			<button
-				class="px-4 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none"
-				@click="refreshList"
-			>
+			<button class="refresh-btn" @click="refreshList">
 				<font-awesome-icon class="text-white" icon="sync-alt" />
 			</button>
 
@@ -48,7 +37,7 @@
 
 		<div class="grid grid-cols-5 gap-x-2">
 			<div
-				class="inline-grid items-center grid-cols-7 col-span-3 text-sm font-bold text-center"
+				class="inline-grid items-center grid-cols-7 col-span-3 mr-2 text-sm font-bold text-center text-primary"
 			>
 				<p>Nombres</p>
 				<p>Distrito</p>
@@ -60,7 +49,7 @@
 			</div>
 
 			<div
-				class="inline-grid items-center grid-cols-3 col-span-2 text-sm font-bold text-center cursor-pointer"
+				class="inline-grid items-center grid-cols-3 col-span-2 text-sm font-bold text-center cursor-pointer text-primary"
 			>
 				<div
 					class="py-2 hover:bg-info hover:text-white rounded-t-xl"
@@ -97,7 +86,7 @@
 					:class="{
 						'bg-info text-white font-bold': mobiker.id == currentIndex,
 					}"
-					v-for="mobiker in mobikers"
+					v-for="mobiker in mobikersFiltrados"
 					:key="mobiker.id"
 					@click="setActiveMobiker(mobiker, mobiker.id)"
 				>
@@ -174,6 +163,7 @@ import MobikerService from "@/services/mobiker.service";
 import MoBDetalles from "@/components/MoBDetalles.vue";
 import BaseBiciEnvios from "@/components/BaseBiciEnvios.vue";
 import BaseEcoamigable from "@/components/BaseEcoamigable.vue";
+import { mapState, mapActions } from "vuex";
 
 const tabNames = {
 	detalles: "detalles",
@@ -184,7 +174,7 @@ const tabNames = {
 export default {
 	data() {
 		return {
-			mobikers: [],
+			mobikersFiltrados: [],
 			pedidosMobiker: [],
 			currentMobiker: null,
 			currentIndex: -1,
@@ -200,43 +190,30 @@ export default {
 			activeTabName: null,
 		};
 	},
+	computed: {
+		...mapState("mobikers", ["mobikers"]),
+	},
 	components: {
 		MoBDetalles,
 		BaseBiciEnvios,
 		BaseEcoamigable,
 	},
 	mounted() {
-		this.retrieveMobikers();
+		this.mobikersFiltrados = this.mobikers;
 		this.currentTab = this.tabs[tabNames.detalles];
 	},
 	methods: {
-		retrieveMobikers() {
-			MobikerService.getMobikers().then(
-				(response) => {
-					this.mobikers = response.data;
-				},
-				(error) => {
-					this.mobikers =
-						(error.response && error.response.data) ||
-						error.message ||
-						error.toString();
-				}
-			);
-		},
+		...mapActions("mobikers", ["getMobikers", "buscarMobikers"]),
 
-		retrievePedidosMobikers(id) {
-			MobikerService.getPedidosDelMobikerById(id).then(
-				(response) => {
-					console.log(response.data);
-					this.pedidosMobiker = response.data;
-				},
-				(error) => {
-					this.pedidosMobiker =
-						(error.response && error.response.data) ||
-						error.message ||
-						error.toString();
-				}
-			);
+		async retrievePedidosMobikers(id) {
+			try {
+				const response = await MobikerService.getPedidosDelMobikerById(id);
+				this.pedidosMobiker = response.data;
+			} catch (error) {
+				console.error(
+					`No se pudieron obtener los pedidos del MoBiker: ${error.message}`
+				);
+			}
 		},
 
 		handleTabClick(tabName) {
@@ -244,8 +221,9 @@ export default {
 			this.currentTab = this.tabs[tabName];
 		},
 
-		refreshList() {
-			this.retrieveMobikers();
+		async refreshList() {
+			await this.getMobikers();
+			this.mobikersFiltrados = this.mobikers;
 
 			this.currentMobiker = null;
 			this.currentIndex = -1;
@@ -260,12 +238,13 @@ export default {
 
 		async searchMobiker() {
 			try {
-				let mobikers = await MobikerService.searchMobiker(this.buscador);
+				this.mobikersFiltrados = await this.buscarMobikers(this.buscador);
 
-				this.mobikers = mobikers.data;
-				this.buscador = "";
+				if (this.buscador.trim() === "") {
+					this.mobikersFiltrados = this.mobikers;
+				}
 			} catch (error) {
-				console.error(error);
+				console.error(`Error en el buscador de MoBikers: ${error.message}`);
 			}
 		},
 	},

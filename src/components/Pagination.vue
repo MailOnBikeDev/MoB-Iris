@@ -1,14 +1,14 @@
 <template>
-	<div class="flex justify-center space-x-2 mt-4 text-xl">
+	<div class="flex justify-center mt-4 space-x-2 text-xl">
 		<button
-			class="px-2 focus:outline-none rounded text-primary hover:bg-info hover:text-white"
+			class="px-2 rounded focus:outline-none text-primary hover:bg-info hover:text-white"
 			@click="prevPageChange"
 		>
 			&#60;&#60;
 		</button>
 		<div v-for="n in totalPages" :key="n">
 			<button
-				class="px-2 focus:outline-none rounded hover:bg-info"
+				class="px-2 rounded focus:outline-none hover:bg-info"
 				:class="{ 'bg-info text-white font-bold': n === page }"
 				@click="handlePageChange(n)"
 			>
@@ -16,7 +16,7 @@
 			</button>
 		</div>
 		<button
-			class="px-2 focus:outline-none rounded text-primary hover:bg-info hover:text-white"
+			class="px-2 rounded focus:outline-none text-primary hover:bg-info hover:text-white"
 			@click="nextPageChange"
 		>
 			&#62;&#62;
