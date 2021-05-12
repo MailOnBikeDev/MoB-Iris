@@ -229,6 +229,7 @@ export default {
 	data() {
 		return {
 			pedidos: [],
+			pedidosFiltrados: [],
 			pedidosMobiker: [],
 			mobikersFiltrados: [],
 			showDetalle: false,
