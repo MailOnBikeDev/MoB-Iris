@@ -202,7 +202,7 @@
 							type="number"
 							v-validate="'required'"
 							name="tarifa"
-							class="w-full p-2 text-gray-700 transition duration-500 bg-white border-b-4 border-gray-300 rounded focus:outline-none focus:border-blue-600"
+							class="input"
 						/>
 						<div
 							v-if="errors.has('tarifa')"
@@ -243,7 +243,7 @@
 						<label for="rol" class="label-input">Rol</label>
 						<model-list-select
 							name="rolCliente"
-							:list="rolesCliente"
+							:list="rolCliente"
 							v-model="editarPedido.rolCliente"
 							v-validate="'required'"
 							option-text="rol"
@@ -301,7 +301,7 @@
 						<model-list-select
 							name="status"
 							v-model="editarPedido.statusId"
-							:list="estadosPedido"
+							:list="statusDelPedido"
 							v-validate="'required'"
 							option-text="tag"
 							option-value="id"
@@ -495,17 +495,22 @@
 				</button>
 			</div>
 		</form>
+
+		<transition name="alerta">
+			<BaseAlerta v-if="alert.show" :alert="alert" />
+		</transition>
 	</div>
 </template>
 
 <script>
+import BaseAlerta from "@/components/BaseAlerta.vue";
 import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
-import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
 import Datepicker from "vuejs-datepicker";
+import { mapState } from "vuex";
 // import axios from "axios";
 // import googleMaps_API from "@/googleMaps-API";
 
@@ -514,17 +519,13 @@ export default {
 		return {
 			editarPedido: new Pedido(),
 			showBuscador: false,
-			message: "",
+			alert: {
+				message: "",
+				success: false,
+				show: false,
+			},
 			errorCalcularDistancia: false,
-			distritos: [],
-			tiposDeCarga: [],
-			formasDePago: [],
-			rolesCliente: [],
-			modalidades: [],
 			mobikers: [],
-			tiposDeEnvio: [],
-			estadosPedido: [],
-			rolDelCliente: "",
 			tarifaSugerida: null,
 		};
 	},
@@ -532,23 +533,7 @@ export default {
 		try {
 			this.getPedido(this.$route.params.id);
 
-			let resDistritos = await AuxiliarService.getDistritos();
-			let resCarga = await AuxiliarService.getTipoCarga();
-			let pagos = await AuxiliarService.getFormasPago();
-			let roles = await AuxiliarService.getRolCliente();
-			let modalidad = await AuxiliarService.getModalidad();
-			let envios = await AuxiliarService.getTipoEnvio();
-			let estados = await AuxiliarService.getStatusPedidos();
-
 			let mobiker = await MobikerService.getMobikers();
-
-			this.distritos = resDistritos.data;
-			this.tiposDeCarga = resCarga.data;
-			this.formasDePago = pagos.data;
-			this.rolesCliente = roles.data;
-			this.modalidades = modalidad.data;
-			this.tiposDeEnvio = envios.data;
-			this.estadosPedido = estados.data;
 
 			this.mobikers = mobiker.data.filter(
 				(mobiker) => mobiker.status === "Activo"
@@ -558,6 +543,15 @@ export default {
 		}
 	},
 	computed: {
+		...mapState("auxiliares", [
+			"distritos",
+			"formasDePago",
+			"tiposDeCarga",
+			"rolCliente",
+			"modalidades",
+			"tiposDeEnvio",
+			"statusDelPedido",
+		]),
 		calcularComision() {
 			let comision = this.editarPedido.tarifa * 0.6;
 			return comision.toFixed(2);
@@ -596,25 +590,31 @@ export default {
 			}
 		},
 
-		handleEditarPedido() {
-			this.$validator.validateAll().then((isValid) => {
+		async handleEditarPedido() {
+			try {
+				const isValid = await this.$validator.validateAll();
 				if (!isValid) {
-					console.error("Mensaje de error: No se pudo editar el Pedido");
 					return;
-				} else {
-					PedidoService.editPedido(
-						this.$route.params.id,
-						this.editarPedido
-					).then(
-						(response) => {
-							this.$router.push("/pedidos/tablero-pedidos");
-							console.log(response.data.message);
-							this.message = response.data.message;
-						},
-						(err) => console.error(`Mensaje de error: ${err.message}`)
-					);
 				}
-			});
+
+				const response = await PedidoService.editPedido(
+					this.$route.params.id,
+					this.editarPedido
+				);
+				this.alert.message = response.data.message;
+				this.alert.show = true;
+				this.alert.success = true;
+
+				setTimeout(() => {
+					this.$router.push("/pedidos/tablero-pedidos");
+				}, 1500);
+			} catch (error) {
+				console.log(`Error al Editar Pedido: ${error.response.data.message}`);
+				this.alert.message = error.response.data.message;
+				this.alert.show = true;
+				this.alert.success = false;
+				setTimeout(() => (this.alert.show = false), 2500);
+			}
 		},
 
 		async calcularDistancia() {
@@ -739,6 +739,7 @@ export default {
 		ModelListSelect,
 		BuscadorCliente,
 		Datepicker,
+		BaseAlerta,
 	},
 };
 </script>

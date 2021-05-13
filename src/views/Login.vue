@@ -44,6 +44,7 @@
 					</div>
 					<button
 						class="block w-full py-2 my-6 font-bold text-white transition duration-200 rounded shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
+						type="submit"
 					>
 						<span>Iniciar Sesión</span>
 					</button>

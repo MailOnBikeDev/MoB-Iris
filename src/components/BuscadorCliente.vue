@@ -1,11 +1,11 @@
 vue.<template>
 	<div
 		v-if="showBuscador == true"
-		class="bg-primary w-1/2 h-96 absolute top-1/3 left-1/4 z-40 p-8 rounded-xl shadow-xl"
+		class="absolute z-40 w-1/2 p-8 shadow-xl bg-primary h-96 top-1/3 left-1/4 rounded-xl"
 	>
 		<div class="absolute -top-4 -right-2">
 			<button
-				class="rounded-full bg-info hover:bg-secondary px-2 text-2xl focus:outline-none text-white"
+				class="px-2 text-2xl text-white rounded-full bg-info hover:bg-secondary focus:outline-none"
 				@click.prevent="cerrarBuscador"
 			>
 				<font-awesome-icon icon="times" />
@@ -15,7 +15,7 @@ vue.<template>
 		<div class="flex flex-row justify-center">
 			<input
 				type="text"
-				class="rounded text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-1"
+				class="p-1 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 				placeholder="Buscar cliente..."
 				v-model="buscador"
 				v-on:keyup.enter="searchCliente"
@@ -23,16 +23,16 @@ vue.<template>
 
 			<button
 				type="button"
-				class="bg-white ml-2 py-1 px-2 rounded font-bold hover:bg-info hover:text-white focus:outline-none"
+				class="px-2 py-1 ml-2 font-bold bg-white rounded hover:bg-info hover:text-white focus:outline-none"
 				@click="searchCliente"
 			>
 				Buscar
 			</button>
 		</div>
 
-		<div class="overscroll-auto h-56 mt-6">
+		<div class="h-56 mt-6 overflow-y-auto">
 			<div
-				class="grid grid-cols-3 bg-white text-center text-sm py-2 hover:bg-info border-b-2 border-primary items-center cursor-default"
+				class="grid items-center grid-cols-3 py-2 text-sm text-center bg-white border-b-2 cursor-default hover:bg-info border-primary"
 				:class="{ 'bg-info': cliente.id == currentIndex }"
 				v-for="cliente in listadoClientes"
 				:key="cliente.id"
@@ -58,7 +58,7 @@ vue.<template>
 
 		<div class="flex justify-center mt-4">
 			<button
-				class="bg-secondary text-white font-bold px-4 py-2 rounded-xl focus:outline-none hover:bg-info"
+				class="px-4 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
 				@click.prevent="enviarCliente"
 			>
 				Capturar cliente

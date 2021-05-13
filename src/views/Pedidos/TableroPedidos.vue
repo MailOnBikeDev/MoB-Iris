@@ -196,6 +196,9 @@
 					v-for="pedido in pedidosFiltrados"
 					:key="pedido.id"
 					@click="setActivePedido(pedido, pedido.id)"
+					:title="
+						`Cliente: ${pedido.contactoRemitente}. Observaciones: Del origen: ${pedido.otroDatoRemitente} / Del destino: ${pedido.otroDatoConsignado}`
+					"
 				>
 					<div>
 						<p>{{ pedido.id }}</p>
@@ -349,6 +352,7 @@ export default {
 				const response = await PedidoService.getPedidosPorFecha(params);
 				const { pedidos, totalPedidos } = response.data;
 				this.pedidos = pedidos; // rows
+				this.pedidosFiltrados = pedidos;
 				this.cantidadPedidos = totalPedidos; // count
 			} catch (error) {
 				console.error(`Error al obtener los Pedidos:`);

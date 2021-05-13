@@ -250,7 +250,7 @@
 						<label for="rol" class="label-input">Rol</label>
 						<model-list-select
 							name="rolCliente"
-							:list="rolesCliente"
+							:list="rolCliente"
 							v-model="nuevoPedido.rolCliente"
 							v-validate="'required'"
 							option-text="rol"
@@ -308,7 +308,7 @@
 						<model-list-select
 							name="status"
 							v-model="nuevoPedido.status"
-							:list="estadosPedido"
+							:list="statusDelPedido"
 							v-validate="'required'"
 							option-text="tag"
 							option-value="id"
@@ -506,17 +506,22 @@
 				</button>
 			</div>
 		</form>
+
+		<transition name="alerta">
+			<BaseAlerta v-if="alert.show" :alert="alert" />
+		</transition>
 	</div>
 </template>
 
 <script>
+import BaseAlerta from "@/components/BaseAlerta.vue";
 import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
-import AuxiliarService from "@/services/auxiliares.service";
 import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
 import Datepicker from "vuejs-datepicker";
+import { mapState } from "vuex";
 // import axios from "axios";
 // import googleMaps_API from "@/googleMaps-API";
 
@@ -525,40 +530,20 @@ export default {
 		return {
 			nuevoPedido: new Pedido(),
 			showBuscador: false,
-			message: "",
+			alert: {
+				message: "",
+				success: false,
+				show: false,
+			},
 			errorCalcularDistancia: false,
-			distritos: [],
-			tiposDeCarga: [],
-			formasDePago: [],
-			rolesCliente: [],
-			modalidades: [],
 			mobikers: [],
-			tiposDeEnvio: [],
-			estadosPedido: [],
-			rolDelCliente: "",
 			tarifaSugerida: null,
 			memoriaCliente: null,
 		};
 	},
 	async mounted() {
 		try {
-			let resDistritos = await AuxiliarService.getDistritos();
-			let resCarga = await AuxiliarService.getTipoCarga();
-			let pagos = await AuxiliarService.getFormasPago();
-			let roles = await AuxiliarService.getRolCliente();
-			let modalidad = await AuxiliarService.getModalidad();
-			let envios = await AuxiliarService.getTipoEnvio();
-			let estados = await AuxiliarService.getStatusPedidos();
-
 			let mobiker = await MobikerService.getMobikers();
-
-			this.distritos = resDistritos.data;
-			this.tiposDeCarga = resCarga.data;
-			this.formasDePago = pagos.data;
-			this.rolesCliente = roles.data;
-			this.modalidades = modalidad.data;
-			this.tiposDeEnvio = envios.data;
-			this.estadosPedido = estados.data;
 
 			this.mobikers = mobiker.data.filter(
 				(mobiker) => mobiker.status === "Activo"
@@ -568,6 +553,15 @@ export default {
 		}
 	},
 	computed: {
+		...mapState("auxiliares", [
+			"distritos",
+			"formasDePago",
+			"tiposDeCarga",
+			"rolCliente",
+			"modalidades",
+			"tiposDeEnvio",
+			"statusDelPedido",
+		]),
 		calcularComision() {
 			let comisionMoBiker = 0.6;
 			let comision = this.nuevoPedido.tarifa * comisionMoBiker;
@@ -595,67 +589,91 @@ export default {
 		},
 	},
 	methods: {
-		handleNuevoPedido() {
-			this.$validator.validateAll().then((isValid) => {
+		async handleNuevoPedido() {
+			try {
+				const isValid = await this.$validator.validateAll();
 				if (!isValid) {
-					console.error("Mensaje de error: No se pudo crear el Pedido");
 					return;
-				} else {
-					PedidoService.storageNuevoPedido(this.nuevoPedido).then(
-						(response) => {
-							// this.$router.push("/pedidos/tablero-pedidos");
-							console.log(response.data.message);
-							this.message = response.data.message;
-
-							this.$refs.pedido.reset();
-						},
-						(err) => console.error(`Mensaje de error: ${err.message}`)
-					);
 				}
-			});
+
+				const response = await PedidoService.storageNuevoPedido(
+					this.nuevoPedido
+				);
+				this.alert.message = response.data.message;
+				this.alert.show = true;
+				this.alert.success = true;
+
+				setTimeout(() => {
+					this.$router.push("/pedidos/tablero-pedidos");
+				}, 1500);
+			} catch (error) {
+				console.log(
+					`Error al crear Nuevo Pedido: ${error.response.data.message}`
+				);
+				this.alert.message = error.response.data.message;
+				this.alert.show = true;
+				this.alert.success = false;
+				setTimeout(() => (this.alert.show = false), 2500);
+			}
 		},
 
-		handleAnadirPedido() {
-			this.$validator.validateAll().then((isValid) => {
+		async handleAnadirPedido() {
+			try {
+				const isValid = await this.$validator.validateAll();
 				if (!isValid) {
-					console.error("Mensaje de error: No se pudo crear el Pedido");
 					return;
-				} else {
-					PedidoService.storageNuevoPedido(this.nuevoPedido).then(
-						() => {
-							console.log("El pedido fue añadido correctamente");
-
-							this.nuevoPedido.fecha = new Date();
-							this.nuevoPedido.contactoRemitente = this.memoriaCliente.contacto;
-							this.nuevoPedido.empresaRemitente = this.memoriaCliente.empresa;
-							this.nuevoPedido.telefonoRemitente = this.memoriaCliente.telefono;
-							this.nuevoPedido.direccionRemitente = this.memoriaCliente.direccion;
-							this.nuevoPedido.distritoRemitente = this.memoriaCliente.distrito.distrito;
-							this.nuevoPedido.otroDatoRemitente = this.memoriaCliente.otroDato;
-							this.nuevoPedido.formaPago = this.memoriaCliente.formaDePago.pago;
-							this.nuevoPedido.tarifa = null;
-							this.nuevoPedido.tarifaSugerida = 0;
-							this.nuevoPedido.tipoCarga = this.memoriaCliente.tipoDeCarga.tipo;
-							this.nuevoPedido.rolCliente = this.memoriaCliente.rolCliente.rol;
-							this.nuevoPedido.tipoEnvio = this.memoriaCliente.tipoDeEnvio.tipo;
-							this.nuevoPedido.modalidad = "Una vía";
-							this.nuevoPedido.status = 1;
-							this.nuevoPedido.contactoConsignado = null;
-							this.nuevoPedido.empresaConsignado = null;
-							this.nuevoPedido.telefonoConsignado = null;
-							this.nuevoPedido.direccionConsignado = null;
-							this.nuevoPedido.distritoConsignado = "";
-							this.nuevoPedido.otroDatoConsignado = null;
-							this.nuevoPedido.comision = 0;
-							this.nuevoPedido.mobiker = "";
-							this.nuevoPedido.distancia = 0;
-							this.nuevoPedido.recaudo = null;
-							this.nuevoPedido.tramite = null;
-						},
-						(err) => console.error(`Mensaje de error: ${err.message}`)
-					);
 				}
-			});
+
+				const response = await PedidoService.storageNuevoPedido(
+					this.nuevoPedido
+				);
+				this.alert.message = response.data.message;
+				this.alert.show = true;
+				this.alert.success = true;
+
+				setTimeout(() => {
+					this.alert.show = false;
+				}, 1500);
+
+				await this.resetForm();
+			} catch (error) {
+				console.log(
+					`Error al añadir Nuevo Pedido: ${error.response.data.message}`
+				);
+				this.alert.message = error.response.data.message;
+				this.alert.show = true;
+				this.alert.success = false;
+				setTimeout(() => (this.alert.show = false), 2500);
+			}
+		},
+
+		resetForm() {
+			this.nuevoPedido.fecha = new Date();
+			this.nuevoPedido.contactoRemitente = this.memoriaCliente.contacto;
+			this.nuevoPedido.empresaRemitente = this.memoriaCliente.empresa;
+			this.nuevoPedido.telefonoRemitente = this.memoriaCliente.telefono;
+			this.nuevoPedido.direccionRemitente = this.memoriaCliente.direccion;
+			this.nuevoPedido.distritoRemitente = this.memoriaCliente.distrito.distrito;
+			this.nuevoPedido.otroDatoRemitente = this.memoriaCliente.otroDato;
+			this.nuevoPedido.formaPago = this.memoriaCliente.formaDePago.pago;
+			this.nuevoPedido.tarifa = 0;
+			this.nuevoPedido.tarifaSugerida = 0;
+			this.nuevoPedido.tipoCarga = this.memoriaCliente.tipoDeCarga.tipo;
+			this.nuevoPedido.rolCliente = this.memoriaCliente.rolCliente.rol;
+			this.nuevoPedido.tipoEnvio = this.memoriaCliente.tipoDeEnvio.tipo;
+			this.nuevoPedido.modalidad = "Una vía";
+			this.nuevoPedido.status = 1;
+			this.nuevoPedido.contactoConsignado = null;
+			this.nuevoPedido.empresaConsignado = null;
+			this.nuevoPedido.telefonoConsignado = null;
+			this.nuevoPedido.direccionConsignado = null;
+			this.nuevoPedido.distritoConsignado = "";
+			this.nuevoPedido.otroDatoConsignado = null;
+			this.nuevoPedido.comision = 0;
+			this.nuevoPedido.mobiker = "Asignar MoBiker";
+			this.nuevoPedido.distancia = 0;
+			this.nuevoPedido.recaudo = null;
+			this.nuevoPedido.tramite = null;
 		},
 
 		async calcularDistancia() {
@@ -763,6 +781,7 @@ export default {
 		ModelListSelect,
 		BuscadorCliente,
 		Datepicker,
+		BaseAlerta,
 	},
 };
 </script>

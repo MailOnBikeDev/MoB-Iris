@@ -144,7 +144,7 @@
 					:key="pedido.id"
 					@click="setActivePedido(pedido, pedido.id)"
 					:title="
-						`Cliente: ${pedido.contactoRemitente}. Observaciones: ${pedido.otroDatoRemitente} / ${pedido.otroDatoConsignado}`
+						`Cliente: ${pedido.contactoRemitente}. Observaciones: Del origen: ${pedido.otroDatoRemitente} / Del destino: ${pedido.otroDatoConsignado}`
 					"
 				>
 					<div>
