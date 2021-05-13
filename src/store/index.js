@@ -58,6 +58,11 @@ export default new Vuex.Store({
 			}
 		},
 	},
+	getters: {
+		currentUser: (state) => {
+			return state.user;
+		},
+	},
 	modules: {
 		auxiliares,
 		mobikers,

@@ -53,7 +53,7 @@ body {
 }
 
 .tag-entregado {
-	@apply inline px-2 py-1 font-bold text-white bg-green-400 rounded-full;
+	@apply inline px-2 py-1 font-bold text-white bg-green-600 rounded-full;
 }
 
 .tag-falso-flete {

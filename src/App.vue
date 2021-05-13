@@ -16,20 +16,32 @@ import Navigation from "./components/Navigation.vue";
 export default {
 	name: "App",
 	components: { Navigation },
-	mounted() {
-		// Llamando a todas las tablas auxiliares
-		this.$store.dispatch("auxiliares/getRolesUsuarios");
-		this.$store.dispatch("auxiliares/getDistritosLima");
-		this.$store.dispatch("auxiliares/getTiposCarga");
-		this.$store.dispatch("auxiliares/getComprobantes");
-		this.$store.dispatch("auxiliares/getTiposEnvios");
-		this.$store.dispatch("auxiliares/getFormasPago");
-		this.$store.dispatch("auxiliares/getModalidades");
-		this.$store.dispatch("auxiliares/getRangosMoB");
-		this.$store.dispatch("auxiliares/getRolCliente");
-		this.$store.dispatch("auxiliares/getEntidadesBancarias");
-		this.$store.dispatch("auxiliares/getStatusPedido");
-		console.log("Tablas auxiliares cargadas, todo ok");
+	async mounted() {
+		try {
+			// Llamando a todas las tablas auxiliares
+			await this.$store.dispatch("auxiliares/getRolesUsuarios");
+			await this.$store.dispatch("auxiliares/getDistritosLima");
+			await this.$store.dispatch("auxiliares/getTiposCarga");
+			await this.$store.dispatch("auxiliares/getComprobantes");
+			await this.$store.dispatch("auxiliares/getTiposEnvios");
+			await this.$store.dispatch("auxiliares/getFormasPago");
+			await this.$store.dispatch("auxiliares/getModalidades");
+			await this.$store.dispatch("auxiliares/getRangosMoB");
+			await this.$store.dispatch("auxiliares/getRolCliente");
+			await this.$store.dispatch("auxiliares/getEntidadesBancarias");
+			await this.$store.dispatch("auxiliares/getStatusPedido");
+			console.log("Tablas auxiliares cargadas, todo ok");
+
+			if (localStorage.getItem("user")) {
+				await this.$store.dispatch("mobikers/getMobikers");
+				await this.$store.dispatch("clientes/getClientes");
+				console.log("Se cargaron los MoBikers y los Clientes");
+			}
+		} catch (error) {
+			console.error(
+				`No se pudieron cargar las tablas Auxiliares. ${error.message}`
+			);
+		}
 	},
 };
 </script>

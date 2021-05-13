@@ -1,6 +1,6 @@
 import axios from "axios";
 
-let user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user"));
 
 export default axios.create({
 	baseURL: process.env.VUE_APP_HERMES,

@@ -52,12 +52,12 @@
 							</span>
 						</router-link>
 					</div>
-					<div
+					<!-- <div
 						class="px-2 py-2 rounded link hover:bg-info hover:text-white"
 						@click="actualizarDatos"
 					>
 						Actualizar datos
-					</div>
+					</div> -->
 					<div class="divider"></div>
 					<a
 						class="px-2 py-2 rounded link hover:bg-blue-500 hover:text-white"
@@ -131,13 +131,18 @@ export default {
 		clickExterno() {
 			this.dropMenu = false;
 		},
-		actualizarDatos() {
-			console.log("Actualizando datos");
-			// MoBikers
-			this.$store.dispatch("mobikers/getMobikers");
-			this.$store.dispatch("clientes/getClientes");
-			this.dropMenu = false;
-		},
+		// async actualizarDatos() {
+		// 	try {
+		// 		console.log("Actualizando datos");
+		// 		// MoBikers
+		// 		await this.$store.dispatch("mobikers/getMobikers");
+		// 		await this.$store.dispatch("clientes/getClientes");
+		// 		this.dropMenu = false;
+		// 		console.log("Datos perfectamente cargados");
+		// 	} catch (error) {
+		// 		console.error(`Error al cargar los datos. ${error.message}`);
+		// 	}
+		// },
 	},
 };
 </script>
