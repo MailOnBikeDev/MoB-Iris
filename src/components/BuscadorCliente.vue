@@ -1,7 +1,7 @@
 vue.<template>
 	<div
 		v-if="showBuscador == true"
-		class="absolute z-40 w-1/2 p-8 shadow-xl bg-primary h-96 top-1/3 left-1/4 rounded-xl"
+		class="absolute z-40 w-1/2 p-8 py-10 shadow-xl bg-primary top-1/4 left-1/4 rounded-xl"
 	>
 		<div class="absolute -top-4 -right-2">
 			<button
@@ -14,27 +14,19 @@ vue.<template>
 
 		<div class="flex flex-row justify-center">
 			<input
-				type="text"
-				class="p-1 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
-				placeholder="Buscar cliente..."
+				type="search"
+				class="input"
 				v-model="buscador"
-				v-on:keyup.enter="searchCliente"
+				@keyup="searchCliente"
+				placeholder="Buscar contacto o empresa..."
 			/>
-
-			<button
-				type="button"
-				class="px-2 py-1 ml-2 font-bold bg-white rounded hover:bg-info hover:text-white focus:outline-none"
-				@click="searchCliente"
-			>
-				Buscar
-			</button>
 		</div>
 
 		<div class="h-56 mt-6 overflow-y-auto">
 			<div
 				class="grid items-center grid-cols-3 py-2 text-sm text-center bg-white border-b-2 cursor-default hover:bg-info border-primary"
 				:class="{ 'bg-info': cliente.id == currentIndex }"
-				v-for="cliente in listadoClientes"
+				v-for="cliente in clientesFiltrados"
 				:key="cliente.id"
 				@click="setActiveCliente(cliente, cliente.id)"
 			>
@@ -68,7 +60,7 @@ vue.<template>
 </template>
 
 <script>
-import ClienteService from "@/services/cliente.service";
+import { mapState, mapActions } from "vuex";
 
 export default {
 	name: "BuscadorCliente",
@@ -81,20 +73,28 @@ export default {
 	data() {
 		return {
 			buscador: "",
-			listadoClientes: [],
 			currentCliente: null,
 			currentIndex: -1,
 		};
 	},
+	mounted() {
+		this.clientesFiltrados = this.clientes;
+	},
+	computed: {
+		...mapState("clientes", ["clientes"]),
+	},
 	methods: {
+		...mapActions("clientes", ["buscarCliente"]),
+
 		async searchCliente() {
 			try {
-				let findCliente = await ClienteService.searchCliente(this.buscador);
+				this.clientesFiltrados = await this.buscarCliente(this.buscador);
 
-				this.listadoClientes = findCliente.data;
-				this.buscador = "";
+				if (this.buscador.trim() === "") {
+					this.clientesFiltrados = this.clientes;
+				}
 			} catch (error) {
-				console.error(error);
+				console.error(`Error en el buscador de Clientes: ${error.message}`);
 			}
 		},
 
@@ -111,9 +111,6 @@ export default {
 			this.$emit("activarCliente", this.currentCliente);
 			this.$emit("cerrarBuscador");
 		},
-	},
-	mounted() {
-		this.enviarCliente();
 	},
 };
 </script>
