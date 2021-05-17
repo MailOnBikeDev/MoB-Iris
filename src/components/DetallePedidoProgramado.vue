@@ -63,7 +63,7 @@ __Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
 				<model-list-select
 					name="status"
 					v-model="pedidoAsignado.statusId"
-					:list="estadosPedido"
+					:list="statusDelPedido"
 					v-validate="'required'"
 					option-text="tag"
 					option-value="id"
@@ -86,7 +86,7 @@ __Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
 					name="mobiker"
 					v-model="pedidoAsignado.mobiker"
 					placeholder="Buscar MoBiker..."
-					:list="mobikers"
+					:list="mobikersFiltrados"
 					v-validate="'required'"
 					option-text="fullName"
 					option-value="fullName"
@@ -141,7 +141,11 @@ __Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
 				@click="handleAsignarPedido"
 				class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
 			>
-				Asignar MoBiker
+				<span v-if="!statusAsignado">
+					Asignar MoBiker
+				</span>
+
+				<span v-else>Asignado</span>
 			</button>
 
 			<button
@@ -164,10 +168,9 @@ __Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
 </template>
 
 <script>
-import AuxiliarService from "@/services/auxiliares.service";
-import MobikerService from "@/services/mobiker.service";
 import { ModelListSelect } from "vue-search-select";
 import PedidoService from "@/services/pedido.service";
+import { mapState } from "vuex";
 
 export default {
 	name: "DetallePedidoProgramado",
@@ -189,41 +192,51 @@ export default {
 				statusId: 1,
 				mobiker: "Asignar MoBiker",
 			},
-			mobikers: [],
-			estadosPedido: [],
+			statusAsignado: false,
 			comandaCopiada: false,
 			currentComanda: null,
 			currentComandaIdx: -1,
 		};
 	},
+	computed: {
+		...mapState("mobikers", ["mobikers"]),
+		...mapState("auxiliares", ["statusDelPedido"]),
+	},
 	async mounted() {
-		let estados = await AuxiliarService.getStatusPedidos();
-		let mobiker = await MobikerService.getMobikers();
-
-		this.estadosPedido = estados.data;
-
-		this.mobikers = mobiker.data.filter(
-			(mobiker) => mobiker.status === "Activo"
-		);
+		this.mobikersFiltrados = this.mobikers
+			.filter((mobiker) => mobiker.status === "Activo")
+			.sort((a, b) => {
+				return a.fullName.localeCompare(b.fullName);
+			});
 	},
 	methods: {
 		handleAsignarPedido() {
-			const isValid = this.$validator.validateAll();
-			if (!isValid) {
-				console.error("Mensaje de error: No se pudo asignar el Pedido");
-				return;
-			}
+			try {
+				const isValid = this.$validator.validateAll();
+				if (!isValid) {
+					console.error("Mensaje de error: No se pudo asignar el Pedido");
+					return;
+				}
 
-			this.pedidosArray.forEach((pedido) => {
-				PedidoService.asignarPedido(pedido.id, this.pedidoAsignado)
-					.then((response) => {
-						console.log(response.data.message);
-						this.cerrarDetalle();
-					})
-					.catch((error) =>
-						console.error(`Mensaje de error: ${error.message}`)
+				this.pedidosArray.forEach(async (pedido) => {
+					const response = await PedidoService.asignarPedido(
+						pedido.id,
+						this.pedidoAsignado
 					);
-			});
+					console.log(response.message);
+
+					if (
+						this.pedidoAsignado.statusId !== 1 &&
+						this.pedidoAsignado.mobiker !== "Asignar MoBiker"
+					) {
+						this.statusAsignado = true;
+					} else {
+						this.statusAsignado = false;
+					}
+				});
+			} catch (error) {
+				console.error(`Error al asignar Pedidos: ${error.message}`);
+			}
 		},
 
 		seleccionComanda(comanda, index) {
@@ -243,6 +256,7 @@ export default {
 		cerrarDetalle() {
 			this.$emit("cerrarDetalle");
 			this.comandaCopiada = false;
+			this.statusAsignado = false;
 			this.pedidoAsignado.statusId = 1;
 			this.pedidoAsignado.mobiker = "Asignar MoBiker";
 			this.refresh();
