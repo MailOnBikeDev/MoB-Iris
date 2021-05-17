@@ -199,7 +199,9 @@ export default {
 		BaseEcoamigable,
 	},
 	mounted() {
-		this.mobikersFiltrados = this.mobikers;
+		this.mobikersFiltrados = this.mobikers.sort((a, b) => {
+			return a.fullName.localeCompare(b.fullName);
+		});
 		this.currentTab = this.tabs[tabNames.detalles];
 	},
 	methods: {
@@ -223,7 +225,9 @@ export default {
 
 		async refreshList() {
 			await this.getMobikers();
-			this.mobikersFiltrados = this.mobikers;
+			this.mobikersFiltrados = this.mobikers.sort((a, b) => {
+				return a.fullName.localeCompare(b.fullName);
+			});
 
 			this.currentMobiker = null;
 			this.currentIndex = -1;

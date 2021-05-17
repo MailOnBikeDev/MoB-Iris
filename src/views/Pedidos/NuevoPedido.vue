@@ -522,8 +522,7 @@ import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
 import Datepicker from "vuejs-datepicker";
 import { mapState } from "vuex";
-// import axios from "axios";
-// import googleMaps_API from "@/googleMaps-API";
+import consultarApi from "@/services/maps.service";
 
 export default {
 	data() {
@@ -691,29 +690,16 @@ export default {
 					return;
 				}
 				this.errorCalcularDistancia = false;
-				// let origen = `${this.nuevoPedido.direccionRemitente.replace(
-				// 	/ /g,
-				// 	"+"
-				// )}+${this.nuevoPedido.distritoRemitente.replace(/ /g, "+")}`;
-				// let destino = `${this.nuevoPedido.direccionConsignado.replace(
-				// 	/ /g,
-				// 	"+"
-				// )}+${this.nuevoPedido.distritoConsignado.replace(/ /g, "+")}`;
 
-				// console.log("Origen:", origen);
-				// console.log("Destino:", destino);
+				// let distanciaCalculada = 6.8; // Mientras no funciona la API
 
-				// const API_URL = `https://cors-anywhere.herokuapp.com/${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
-
-				// let distancia = await axios.get(API_URL);
-				// console.log(`Distancia: ${distancia}`);
-
-				// let distanciaCalculada =
-				// 	distancia.data.rows[0].elements[0].distance.value / 1000;
-
-				// console.log(`distancia calculada: ${distanciaCalculada}`);
-
-				let distanciaCalculada = 6.8; // Mientras no funciona la API
+				let distanciaCalculada = await consultarApi(
+					this.nuevoPedido.direccionRemitente,
+					this.nuevoPedido.distritoRemitente,
+					this.nuevoPedido.direccionConsignado,
+					this.nuevoPedido.distritoConsignado
+				);
+				console.log(distanciaCalculada);
 
 				this.nuevoPedido.distancia = distanciaCalculada.toFixed(1);
 				this.nuevoPedido.tarifa = 7.0;
@@ -767,6 +753,7 @@ export default {
 
 		asignarHoy() {
 			let hoy = new Date();
+			console.log(hoy);
 			return (this.nuevoPedido.fecha = hoy);
 		},
 
@@ -774,6 +761,7 @@ export default {
 			let hoy = new Date();
 			let DIA_EN_MS = 24 * 60 * 60 * 1000;
 			let manana = new Date(hoy.getTime() + DIA_EN_MS);
+			console.log(manana);
 			return (this.nuevoPedido.fecha = manana);
 		},
 	},
