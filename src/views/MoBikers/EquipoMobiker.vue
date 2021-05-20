@@ -116,16 +116,13 @@
             </p>
           </div>
           <div>
-            <p
-              v-if="mobiker.status === 'Activo'"
-              class="inline-block px-2 font-bold text-white bg-green-500 rounded-full"
-            >
+            <p v-if="mobiker.status === 'Activo'" class="mob-activo">
               {{ mobiker.status }}
             </p>
-            <p
-              v-else
-              class="inline-block px-2 font-bold text-white bg-gray-500 rounded-full"
-            >
+            <p v-if="mobiker.status === 'Inactivo'" class="mob-inactivo">
+              {{ mobiker.status }}
+            </p>
+            <p v-if="mobiker.status === 'Retirado'" class="mob-retirado">
               {{ mobiker.status }}
             </p>
           </div>
