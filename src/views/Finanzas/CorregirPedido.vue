@@ -1,17 +1,17 @@
 <template>
-	<div class="bg-gray-100 shadow-lg rounded-xl mx-auto p-4 my-12">
+	<div class="p-4 mx-auto my-12 bg-gray-100 shadow-lg rounded-xl">
 		<div class="flex justify-end">
 			<h1
-				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded-xl relative -top-12 py-2 bg-gray-100 px-6"
+				class="relative inline-block px-6 py-2 mb-4 text-2xl font-bold text-center bg-gray-100 text-primary rounded-xl -top-12"
 			>
 				Corregir Pedido
 			</h1>
 		</div>
 
-		<div class="px-4 flex flex-row -mt-12">
+		<div class="flex flex-row px-4 -mt-12">
 			<div>
 				<button
-					class="bg-primary relative left-56 text-white px-4 py-1 rounded-xl focus:outline-none font-bold"
+					class="relative px-4 py-1 font-bold text-white bg-primary left-56 rounded-xl focus:outline-none"
 					@click="showBuscador = true"
 				>
 					Buscar cliente
@@ -25,25 +25,25 @@
 			/>
 		</div>
 
-		<form class="mt-2 h-full p-2" autocomplete="off">
-			<div class="grid grid-cols-2 h-full">
-				<div class="text-3xl text-primary font-bold px-1 text-center">
+		<form class="h-full p-2 mt-2" autocomplete="off">
+			<div class="grid h-full grid-cols-2">
+				<div class="px-1 text-3xl font-bold text-center text-primary">
 					<h2 v-if="editarPedido.rolCliente === 'Destinatario'">
 						Destino
 					</h2>
 					<h2 v-else>Origen</h2>
 				</div>
 
-				<div class="text-3xl text-primary font-bold px-1 text-center">
+				<div class="px-1 text-3xl font-bold text-center text-primary">
 					<h2 v-if="editarPedido.rolCliente === 'Destinatario'">Origen</h2>
 					<h2 v-else>Destino</h2>
 				</div>
 
 				<!-- FORMULARIO ORIGEN -->
-				<div class="grid grid-cols-3 gap-2 p-2">
+				<div class="grid grid-cols-3 gap-2 p-2 border-r-2 border-secondary">
 					<div>
 						<button
-							class="mt-5 bg-secondary py-2 w-full rounded text-white font-bold focus:outline-none"
+							class="w-full py-2 mt-5 font-bold text-white rounded bg-secondary focus:outline-none"
 							@click="asignarHoy()"
 							type="button"
 						>
@@ -53,7 +53,7 @@
 
 					<div>
 						<button
-							class="mt-5 bg-secondary py-2 w-full rounded text-white font-bold focus:outline-none"
+							class="w-full py-2 mt-5 font-bold text-white rounded bg-secondary focus:outline-none"
 							@click="asignarMañana()"
 							type="button"
 						>
@@ -61,14 +61,14 @@
 						</button>
 					</div>
 					<div>
-						<label for="fecha" class="block text-primary text-sm font-bold ml-1"
+						<label for="fecha" class="block ml-1 text-sm font-bold text-primary"
 							>Fecha</label
 						>
 						<datepicker
 							v-model="editarPedido.fecha"
 							v-validate="'required'"
 							name="fechaNacimiento"
-							input-class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							input-class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 							:monday-first="true"
 						/>
 					</div>
@@ -76,7 +76,7 @@
 					<div>
 						<label
 							for="contactoRemitente"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Contacto</label
 						>
 						<input
@@ -84,11 +84,11 @@
 							type="text"
 							v-validate="'required'"
 							name="contactoRemitente"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 						/>
 						<div
 							v-if="errors.has('contactoRemitente')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>El contacto del cliente es requerido</p>
 						</div>
@@ -97,7 +97,7 @@
 					<div>
 						<label
 							for="empresaRemitente"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Empresa</label
 						>
 						<input
@@ -105,11 +105,11 @@
 							type="text"
 							v-validate="'required'"
 							name="empresaRemitente"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 						/>
 						<div
 							v-if="errors.has('empresaRemitente')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>La empresa del cliente es requerida</p>
 						</div>
@@ -118,7 +118,7 @@
 					<div>
 						<label
 							for="telefonoRemitente"
-							class=" text-primary text-sm font-bold mb-1 ml-1"
+							class="mb-1 ml-1 text-sm font-bold  text-primary"
 							>Teléfono</label
 						>
 						<input
@@ -126,20 +126,20 @@
 							type="number"
 							v-validate="'required|length:9'"
 							name="telefonoRemitente"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 						/>
 						<div
 							v-if="errors.has('telefonoRemitente')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>El teléfono es requerido</p>
 						</div>
 					</div>
 
-					<div class=" col-span-2">
+					<div class="col-span-2 ">
 						<label
 							for="direccionRemitente"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Direccion</label
 						>
 						<input
@@ -147,11 +147,11 @@
 							type="text"
 							v-validate="'required'"
 							name="direccionRemitente"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 						/>
 						<div
 							v-if="errors.has('direccionRemitente') || errorCalcularDistancia"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>La dirección es requerida</p>
 						</div>
@@ -160,7 +160,7 @@
 					<div>
 						<label
 							for="distritoRemitente"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Distrito</label
 						>
 						<model-list-select
@@ -175,7 +175,7 @@
 						/>
 						<div
 							v-if="errors.has('distritoRemitente') || errorCalcularDistancia"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>El distrito es requerido</p>
 						</div>
@@ -184,20 +184,20 @@
 					<div class="col-span-3">
 						<label
 							for="otroDatoRemitente"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Otro Dato</label
 						>
 						<input
 							v-model="editarPedido.otroDatoRemitente"
 							type="text"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 						/>
 					</div>
 
 					<div>
 						<label
 							for="formaPago"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Forma de pago</label
 						>
 						<model-list-select
@@ -211,7 +211,7 @@
 						/>
 						<div
 							v-if="errors.has('formaPago')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>La forma de pago es requerida</p>
 						</div>
@@ -220,7 +220,7 @@
 					<div>
 						<label
 							for="tarifa"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Tarifa</label
 						>
 						<input
@@ -228,11 +228,11 @@
 							type="number"
 							v-validate="'required'"
 							name="tarifa"
-							class="bg-white rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-blue-600 transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 bg-white border-b-4 border-gray-300 rounded focus:outline-none focus:border-blue-600"
 						/>
 						<div
 							v-if="errors.has('tarifa')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>La tarifa es requerida</p>
 						</div>
@@ -241,10 +241,10 @@
 					<div>
 						<label
 							for="tarifaSugerida"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Tarifa Sugerida</label
 						>
-						<p class="bg-white rounded w-full h-10 tex-gray-700 p-2">
+						<p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
 							{{ (tarifaSugerida = sugerirTarifa) }}
 						</p>
 					</div>
@@ -252,7 +252,7 @@
 					<div class="col-span-2">
 						<label
 							for="tipoCarga"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Tipo de Carga</label
 						>
 						<model-list-select
@@ -265,7 +265,7 @@
 						/>
 						<div
 							v-if="errors.has('tipoCarga')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>El tipo de carga es requerido</p>
 						</div>
@@ -274,7 +274,7 @@
 					<div>
 						<label
 							for="rol"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Rol</label
 						>
 						<model-list-select
@@ -287,7 +287,7 @@
 						/>
 						<div
 							v-if="errors.has('rolCliente')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>El rol del cliente es requerido</p>
 						</div>
@@ -299,7 +299,7 @@
 					<div>
 						<label
 							for="tipoEnvio"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Tipo de Envío</label
 						>
 						<model-list-select
@@ -312,7 +312,7 @@
 						/>
 						<div
 							v-if="errors.has('tipoEnvio')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>El tipo de Envío es requerido</p>
 						</div>
@@ -321,7 +321,7 @@
 					<div>
 						<label
 							for="modalidad"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Modalidad</label
 						>
 						<model-list-select
@@ -334,7 +334,7 @@
 						/>
 						<div
 							v-if="errors.has('modalidad')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>La modalidad es requerida</p>
 						</div>
@@ -343,7 +343,7 @@
 					<div>
 						<label
 							for="status"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Estado del Pedido</label
 						>
 						<model-list-select
@@ -356,7 +356,7 @@
 						/>
 						<div
 							v-if="errors.has('status')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>El estado es requerido</p>
 						</div>
@@ -365,7 +365,7 @@
 					<div>
 						<label
 							for="contactoConsignado"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Contacto</label
 						>
 						<input
@@ -373,11 +373,11 @@
 							type="text"
 							v-validate="'required'"
 							name="contactoConsignado"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 						/>
 						<div
 							v-if="errors.has('contactoConsignado')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>El contacto es requerido</p>
 						</div>
@@ -386,21 +386,21 @@
 					<div>
 						<label
 							for="empresaConsignado"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Empresa</label
 						>
 						<input
 							v-model="editarPedido.empresaConsignado"
 							type="text"
 							name="empresaConsignado"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 						/>
 					</div>
 
 					<div>
 						<label
 							for="telefonoConsignado"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Teléfono</label
 						>
 						<input
@@ -408,11 +408,11 @@
 							type="number"
 							v-validate="'required|length:9'"
 							name="telefonoConsignado"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 						/>
 						<div
 							v-if="errors.has('telefonoConsignado')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>El telefono es requerido y debe tener 9 caracteres</p>
 						</div>
@@ -421,7 +421,7 @@
 					<div class="col-span-2">
 						<label
 							for="direccionConsignado"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Dirección</label
 						>
 						<input
@@ -429,11 +429,11 @@
 							type="text"
 							v-validate="'required'"
 							name="direccionConsignado"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 						/>
 						<div
 							v-if="errors.has('direccionConsignado') || errorCalcularDistancia"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>La dirección es requerida</p>
 						</div>
@@ -442,7 +442,7 @@
 					<div>
 						<label
 							for="distritoConsignado"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Distrito</label
 						>
 						<model-list-select
@@ -456,7 +456,7 @@
 						/>
 						<div
 							v-if="errors.has('distritoConsignado') || errorCalcularDistancia"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>El distrito es requerido</p>
 						</div>
@@ -465,23 +465,23 @@
 					<div class="col-span-3">
 						<label
 							for="otroDatoConsignado"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Otro Dato</label
 						>
 						<input
 							v-model="editarPedido.otroDatoConsignado"
 							type="text"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 						/>
 					</div>
 
 					<div>
 						<label
 							for="comision"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Comisión</label
 						>
-						<p class="bg-white rounded w-full h-10 tex-gray-700 p-2">
+						<p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
 							{{ (editarPedido.comision = calcularComision) }}
 						</p>
 					</div>
@@ -489,7 +489,7 @@
 					<div>
 						<label
 							for="mobiker"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Mobiker</label
 						>
 						<model-list-select
@@ -503,7 +503,7 @@
 						/>
 						<div
 							v-if="errors.has('mobiker')"
-							class="bg-red-500 text-white text-sm rounded p-2"
+							class="p-2 text-sm text-white bg-red-500 rounded"
 						>
 							<p>El MoBiker es requerido</p>
 						</div>
@@ -511,7 +511,7 @@
 
 					<div class="text-center">
 						<button
-							class="bg-primary text-white mt-6 p-2 rounded-xl focus:outline-none font-bold"
+							class="p-2 mt-6 font-bold text-white bg-primary rounded-xl focus:outline-none"
 							@click.prevent="calcularDistancia"
 						>
 							Calcular distancia
@@ -521,10 +521,10 @@
 					<div>
 						<label
 							for="distancia"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Distancia</label
 						>
-						<p class="bg-white rounded w-full h-10 tex-gray-700 p-2">
+						<p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
 							{{ editarPedido.distancia }}
 						</p>
 					</div>
@@ -532,26 +532,26 @@
 					<div>
 						<label
 							for="recaudo"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Recaudo</label
 						>
 						<input
 							v-model.number="editarPedido.recaudo"
 							type="number"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 						/>
 					</div>
 
 					<div>
 						<label
 							for="tramite"
-							class="block text-primary text-sm font-bold mb-1 ml-1"
+							class="block mb-1 ml-1 text-sm font-bold text-primary"
 							>Trámite</label
 						>
 						<input
 							v-model.number="editarPedido.tramite"
 							type="number"
-							class="rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2"
+							class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
 						/>
 					</div>
 				</div>
@@ -561,7 +561,7 @@
 				<button
 					@click="cancelar"
 					type="button"
-					class="block mx-auto bg-red-500 hover:bg-red-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
+					class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 bg-red-500 rounded-lg shadow-lg hover:bg-red-700 hover:shadow-xl focus:outline-none"
 				>
 					Cancelar
 				</button>
@@ -569,7 +569,7 @@
 				<button
 					type="button"
 					@click.prevent="anularPedido"
-					class="block mx-auto bg-yellow-500 hover:bg-yellow-700 text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
+					class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 bg-yellow-500 rounded-lg shadow-lg hover:bg-yellow-700 hover:shadow-xl focus:outline-none"
 				>
 					Anular
 				</button>
@@ -577,7 +577,7 @@
 				<button
 					type="submit"
 					@click.prevent="handleEditarPedido"
-					class="block mx-auto bg-info hover:bg-secondary text-white font-bold px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition duration-200 focus:outline-none"
+					class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 rounded-lg shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
 				>
 					Editar Pedido
 				</button>
