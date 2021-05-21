@@ -71,17 +71,10 @@
           <label for="email" class="label-input">Email</label>
           <input
             v-model="editarCliente.email"
-            v-validate="'required'"
             type="email"
             name="email"
             class="input"
           />
-          <div
-            v-if="errors.has('email')"
-            class="p-2 text-sm text-white bg-red-500 rounded"
-          >
-            <p>El email es requerido</p>
-          </div>
         </div>
 
         <div class="flex flex-col">
