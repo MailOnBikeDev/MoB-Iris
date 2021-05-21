@@ -15,6 +15,13 @@
       :pedidosArray="pedidosArray"
     />
 
+    <ResumenPedido
+      :showResumen="showResumen"
+      @cerrarResumen="closeResumen"
+      @marcarAsignar="marcarAsignar"
+      :currentPedido="currentPedido"
+    />
+
     <div class="flex flex-row justify-between mb-4 -mt-10">
       <div class="flex flex-row">
         <datepicker
@@ -144,7 +151,10 @@
         class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
         <div
-          class="grid items-center grid-cols-8 py-2 text-sm text-center border-b-2 gap-x-1 h-14 border-primary hover:bg-info"
+          class="grid items-center grid-cols-8 py-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
+          :class="{
+            'bg-info text-white font-bold': pedido.id == currentIndex,
+          }"
           v-for="pedido in pedidosFiltrados"
           :key="pedido.id"
           @click="setActivePedido(pedido, pedido.id)"
@@ -225,13 +235,19 @@
 import vClickOutside from "v-click-outside";
 import PedidoService from "@/services/pedido.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
+import ResumenPedido from "@/components/ResumenPedido.vue";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { mapState, mapActions } from "vuex";
 
 export default {
   name: "Pedidos",
-  components: { DetallePedidoProgramado, Datepicker, Pagination },
+  components: {
+    DetallePedidoProgramado,
+    Datepicker,
+    Pagination,
+    ResumenPedido,
+  },
   data() {
     return {
       pedidos: [],
@@ -239,6 +255,7 @@ export default {
       pedidosMobiker: [],
       mobikersFiltrados: [],
       showDetalle: false,
+      showResumen: false,
       currentIndexMobiker: -1,
       currentPedido: null,
       currentIndex: -1,
@@ -364,18 +381,36 @@ export default {
 
     setActivePedido(pedido, index) {
       this.currentPedido = pedido;
-      // console.log(this.currentPedido);
       this.currentIndex = index;
+
+      this.showResumen = true;
     },
 
     createArrayPedidos() {
       this.showDetalle = true;
-      console.log(this.pedidosArray);
+      // console.log(this.pedidosArray);
     },
 
     closeModal() {
       this.showDetalle = false;
+      this.showResumen = false;
       this.pedidosArray = [];
+
+      this.currentPedido = null;
+      this.currentIndex = -1;
+    },
+
+    closeResumen() {
+      this.showDetalle = false;
+      this.showResumen = false;
+
+      this.currentPedido = null;
+      this.currentIndex = -1;
+    },
+
+    marcarAsignar() {
+      this.showResumen = false;
+      this.pedidosArray.push(this.currentPedido);
     },
 
     refreshList() {
@@ -388,6 +423,7 @@ export default {
 
       this.currentPedido = null;
       this.currentIndex = -1;
+      this.pedidosArray = [];
     },
 
     sortPorId() {
