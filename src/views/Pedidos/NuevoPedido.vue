@@ -653,7 +653,7 @@ export default {
       this.nuevoPedido.telefonoRemitente = this.memoriaCliente.telefono;
       this.nuevoPedido.direccionRemitente = this.memoriaCliente.direccion;
       this.nuevoPedido.distritoRemitente = this.memoriaCliente.distrito.distrito;
-      this.nuevoPedido.otroDatoRemitente = this.memoriaCliente.otroDatoRemitente;
+      // this.nuevoPedido.otroDatoRemitente = this.memoriaCliente.otroDato;
       this.nuevoPedido.formaPago = this.memoriaCliente.formaDePago.pago;
       this.nuevoPedido.tarifa = 0;
       this.nuevoPedido.tarifaSugerida = 0;
@@ -673,6 +673,10 @@ export default {
       this.nuevoPedido.distancia = 0;
       this.nuevoPedido.recaudo = null;
       this.nuevoPedido.tramite = null;
+
+      console.log(
+        `Original: ${this.nuevoPedido.otroDatoRemitente} y respaldo: ${this.memoriaCliente.otroDato}`
+      );
     },
 
     async calcularDistancia() {
