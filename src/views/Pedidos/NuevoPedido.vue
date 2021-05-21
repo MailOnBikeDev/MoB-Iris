@@ -522,7 +522,7 @@ import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
 import Datepicker from "vuejs-datepicker";
 import { mapState } from "vuex";
-import consultarApi from "@/services/maps.service";
+// import consultarApi from "@/services/maps.service";
 
 export default {
   data() {
@@ -691,15 +691,15 @@ export default {
         }
         this.errorCalcularDistancia = false;
 
-        // let distanciaCalculada = 6.8; // Mientras no funciona la API
+        let distanciaCalculada = 6.8; // Mientras no funciona la API
 
-        let distanciaCalculada = await consultarApi(
-          this.nuevoPedido.direccionRemitente,
-          this.nuevoPedido.distritoRemitente,
-          this.nuevoPedido.direccionConsignado,
-          this.nuevoPedido.distritoConsignado
-        );
-        console.log(distanciaCalculada);
+        // let distanciaCalculada = await consultarApi(
+        //   this.nuevoPedido.direccionRemitente,
+        //   this.nuevoPedido.distritoRemitente,
+        //   this.nuevoPedido.direccionConsignado,
+        //   this.nuevoPedido.distritoConsignado
+        // );
+        // console.log(distanciaCalculada);
 
         this.nuevoPedido.distancia = distanciaCalculada.toFixed(1);
         this.nuevoPedido.tarifa = 7.0;

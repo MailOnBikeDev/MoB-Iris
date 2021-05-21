@@ -9,11 +9,11 @@ import "vue-search-select/dist/VueSearchSelect.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
-	faPencilAlt,
-	faSyncAlt,
-	faTimes,
-	faReceipt,
-	faWindowMaximize,
+  faPencilAlt,
+  faSyncAlt,
+  faTimes,
+  faReceipt,
+  faWindowMaximize,
 } from "@fortawesome/free-solid-svg-icons";
 import VueDayjs from "vue-dayjs-plugin";
 import VueClipboard from "vue-clipboard2";
@@ -30,7 +30,7 @@ Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.use(VueDayjs);
 
 new Vue({
-	router,
-	store,
-	render: (h) => h(App),
+  router,
+  store,
+  render: (h) => h(App),
 }).$mount("#app");
