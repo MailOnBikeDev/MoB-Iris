@@ -333,7 +333,6 @@ export default {
     checkPedidosMobikers(mobiker, index) {
       this.buscador = mobiker.fullName;
       this.currentIndexMobiker = index;
-      console.log(this.buscador);
 
       this.buscarPedido();
     },

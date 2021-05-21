@@ -112,6 +112,9 @@ __Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
         class="grid grid-cols-4 py-2 mb-2 text-center cursor-pointer"
         :class="{
           'bg-info text-white font-bold': pedido.id == currentComandaIdx,
+          'bg-green-600 text-white font-bold': comandasEnviadas.includes(
+            pedido.id
+          ),
         }"
         v-for="pedido in pedidosArray"
         :key="pedido.id"
@@ -196,6 +199,7 @@ export default {
       comandaCopiada: false,
       currentComanda: null,
       currentComandaIdx: -1,
+      comandasEnviadas: [],
     };
   },
   computed: {
@@ -256,7 +260,7 @@ export default {
     seleccionComanda(comanda, index) {
       this.currentComanda = comanda;
       this.currentComandaIdx = index;
-      // console.log(this.currentComanda);
+      this.comandaCopiada = false;
     },
 
     copiarComanda() {
@@ -264,6 +268,8 @@ export default {
       this.$copyText(this.$el.children[1].textContent).then(() => {
         this.comandaCopiada = true;
         console.log("Texto copiado");
+        this.comandasEnviadas.push(this.currentComandaIdx);
+        console.log(this.comandasEnviadas);
       });
     },
 
@@ -272,7 +278,9 @@ export default {
       this.comandaCopiada = false;
       this.statusAsignado = false;
       this.pedidoAsignado.statusId = 1;
+      this.comandasEnviadas.length = 0;
       this.pedidoAsignado.mobiker = "Asignar MoBiker";
+
       this.refresh();
     },
 
