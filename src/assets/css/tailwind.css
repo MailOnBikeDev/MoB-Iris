@@ -6,31 +6,72 @@
 @tailwind utilities;
 
 * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: "Montserrat";
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat";
 }
 
 body {
-	background: linear-gradient(
-		116.82deg,
-		#052b8d 0%,
-		rgba(39, 117, 169, 0.869792) 50%,
-		rgba(70, 185, 195, 0.75) 100%
-	);
-	background-repeat: no-repeat;
-	min-height: 100vh;
+  background: linear-gradient(
+    116.82deg,
+    #052b8d 0%,
+    rgba(39, 117, 169, 0.869792) 50%,
+    rgba(70, 185, 195, 0.75) 100%
+  );
+  background-repeat: no-repeat;
+  min-height: 100vh;
 }
 
 .resalta {
-	@apply text-primary font-bold;
+  @apply font-bold text-primary;
+}
+
+.mob-activo {
+  @apply inline-block px-2 font-bold text-white bg-green-500 rounded-full;
+}
+
+.mob-inactivo {
+  @apply inline-block px-2 font-bold text-white bg-red-800 rounded-full;
+}
+
+.mob-retirado {
+  @apply inline-block px-2 font-bold text-white bg-yellow-600 rounded-full;
 }
 
 .input {
-	@apply rounded w-full text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 p-2;
+  @apply w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info;
 }
 
 .label-input {
-	@apply block text-primary text-sm font-bold mb-1 ml-1;
+  @apply block mb-1 ml-1 text-sm font-bold text-primary;
+}
+
+.refresh-btn {
+  @apply px-4 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none;
+}
+
+/* Tags de Pedidos */
+.tag-programado {
+  @apply inline px-2 py-1 font-bold text-white bg-purple-400 rounded-full;
+}
+
+.tag-recoger {
+  @apply inline px-2 py-1 font-bold text-white bg-yellow-400 rounded-full;
+}
+
+.tag-transito {
+  @apply inline px-2 py-1 font-bold text-white bg-indigo-400 rounded-full;
+}
+
+.tag-entregado {
+  @apply inline px-2 py-1 font-bold text-white bg-green-600 rounded-full;
+}
+
+.tag-falso-flete {
+  @apply inline px-2 py-1 font-bold text-white bg-red-600 rounded-full;
+}
+
+.tag-anulado {
+  @apply inline px-2 py-1 font-bold text-white bg-yellow-700 rounded-full;
 }

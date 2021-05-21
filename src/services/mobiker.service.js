@@ -7,7 +7,7 @@ class MobikerService {
 
 			return mobikers;
 		} catch (error) {
-			console.error("Mensaje de error: ", error.message);
+			console.error(`Mensaje de error desde MobikerService: ${error.message}`);
 		}
 	}
 
@@ -54,6 +54,16 @@ class MobikerService {
 	async getPedidosDelMobiker(params) {
 		try {
 			let pedidos = await http.get("mobikers/pedidos", { params });
+
+			return pedidos;
+		} catch (error) {
+			console.error("Mensaje de error: ", error.message);
+		}
+	}
+
+	async getPedidosDelMobikerById(id) {
+		try {
+			let pedidos = await http.get(`mobikers/pedidos-del-mobiker/${id}`);
 
 			return pedidos;
 		} catch (error) {
