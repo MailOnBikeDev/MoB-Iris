@@ -653,7 +653,7 @@ export default {
       this.nuevoPedido.telefonoRemitente = this.memoriaCliente.telefono;
       this.nuevoPedido.direccionRemitente = this.memoriaCliente.direccion;
       this.nuevoPedido.distritoRemitente = this.memoriaCliente.distrito.distrito;
-      this.nuevoPedido.otroDatoRemitente = this.memoriaCliente.otroDato;
+      this.nuevoPedido.otroDatoRemitente = this.memoriaCliente.otroDatoRemitente;
       this.nuevoPedido.formaPago = this.memoriaCliente.formaDePago.pago;
       this.nuevoPedido.tarifa = 0;
       this.nuevoPedido.tarifaSugerida = 0;
@@ -711,9 +711,9 @@ export default {
         this.nuevoPedido.tramite = 0;
 
         console.log(`
-					\n distancia: ${this.nuevoPedido.distancia} Km,
-					\n CO2: ${this.nuevoPedido.CO2Ahorrado} Kg,
-					\n ruido: ${this.nuevoPedido.ruido} h`);
+					distancia: ${this.nuevoPedido.distancia} Km,
+					CO2: ${this.nuevoPedido.CO2Ahorrado} Kg,
+					ruido: ${this.nuevoPedido.ruido} h`);
 
         return (
           this.nuevoPedido.distancia,
