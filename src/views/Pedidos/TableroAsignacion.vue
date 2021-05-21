@@ -113,11 +113,16 @@
       </div>
       <div
         class="overflow-y-auto bg-white border border-black max-h-96 h-96 pedidos-scroll"
+        v-click-outside="clickExterno"
       >
         <div
           class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 gap-x-1 h-14 border-primary hover:bg-info"
+          :class="{
+            'bg-info text-white font-bold': mobiker.id == currentIndexMobiker,
+          }"
           v-for="mobiker in mobikersFiltrados"
           :key="mobiker.id"
+          @click="checkPedidosMobikers(mobiker, mobiker.id)"
         >
           <div class="col-span-2">
             {{ mobiker.fullName }}
@@ -217,6 +222,7 @@
 </template>
 
 <script>
+import vClickOutside from "v-click-outside";
 import PedidoService from "@/services/pedido.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
 import Datepicker from "vuejs-datepicker";
@@ -233,6 +239,7 @@ export default {
       pedidosMobiker: [],
       mobikersFiltrados: [],
       showDetalle: false,
+      currentIndexMobiker: -1,
       currentPedido: null,
       currentIndex: -1,
       fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
@@ -290,7 +297,7 @@ export default {
       this.mobikersFiltrados = this.mobikers
         .filter((mobiker) => mobiker.status === "Activo")
         .sort((a, b) => {
-          return a.biciEnvios > b.biciEnvios ? 1 : -1;
+          return a.fullName > b.fullName ? 1 : -1;
         });
     },
 
@@ -323,13 +330,24 @@ export default {
       }
     },
 
+    checkPedidosMobikers(mobiker, index) {
+      this.buscador = mobiker.fullName;
+      this.currentIndexMobiker = index;
+      console.log(this.buscador);
+
+      this.buscarPedido();
+    },
+
     buscarPedido() {
       this.pedidosFiltrados = this.pedidos.filter((pedido) => {
         if (
           pedido.contactoRemitente
             .toLowerCase()
             .includes(this.buscador.toLowerCase()) ||
-          pedido.id.toString().includes(this.buscador.toLowerCase())
+          pedido.id.toString().includes(this.buscador.toLowerCase()) ||
+          pedido.mobiker.fullName
+            .toLowerCase()
+            .includes(this.buscador.toLowerCase())
         ) {
           return pedido;
         }
@@ -417,6 +435,20 @@ export default {
         return a.fecha > b.fecha ? -1 : 1;
       });
     },
+
+    clickExterno() {
+      this.buscador = "";
+      this.currentIndexMobiker = -1;
+
+      this.pedidosFiltrados = this.pedidos
+        .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
+        .sort((a, b) => {
+          return a.statusId > b.statusId ? 1 : -1;
+        });
+    },
+  },
+  directives: {
+    vClickOutside: vClickOutside.directive,
   },
 };
 </script>
