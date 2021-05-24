@@ -13,7 +13,7 @@
       @submit.prevent="handleNuevoCliente"
       autocomplete="off"
     >
-      <div class="grid grid-cols-3 gap-4 mb-4">
+      <div class="grid grid-cols-4 gap-4 mb-4">
         <div>
           <label for="contacto" class="label-input">Contacto</label>
           <input
@@ -32,20 +32,27 @@
         </div>
 
         <div>
-          <label for="empresa" class="label-input">Razón Social</label>
+          <label for="razonSocial" class="label-input">Razón Social</label>
           <input
-            v-model="nuevoCliente.empresa"
+            v-model="nuevoCliente.razonSocial"
             v-validate="'required'"
             type="text"
-            name="empresa"
+            name="razonSocial"
             class="input"
           />
-          <div
-            v-if="errors.has('empresa')"
-            class="p-2 text-sm text-white bg-red-500 rounded"
+        </div>
+
+        <div>
+          <label for="razonComercial" class="label-input"
+            >Razón Comercial</label
           >
-            <p>La empresa es requerida</p>
-          </div>
+          <input
+            v-model="nuevoCliente.razonComercial"
+            v-validate="'required'"
+            type="text"
+            name="razonComercial"
+            class="input"
+          />
         </div>
 
         <div>

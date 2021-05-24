@@ -87,7 +87,7 @@
         >
           <div class="col-span-1">
             <p>
-              {{ cliente.empresa }}
+              {{ cliente.razonComercial }}
             </p>
           </div>
           <div class="col-span-1">
