@@ -14,7 +14,7 @@
           type="search"
           class="input"
           v-model="buscador"
-          @keyup="searchCliente"
+          @keyup.enter="searchCliente"
           placeholder="Buscar contacto o empresa..."
         />
       </div>
@@ -77,7 +77,7 @@
 
       <div class="overflow-y-auto bg-white border border-black max-h-96">
         <div
-          class="grid items-center grid-cols-4 py-2 text-sm text-center border-b-2 cursor-default h-14 hover:bg-info border-primary"
+          class="grid items-center h-24 grid-cols-4 py-2 overflow-hidden text-sm text-center border-b-2 cursor-default hover:bg-info border-primary"
           :class="{
             'bg-info text-white font-bold': cliente.id == currentIndex,
           }"
@@ -177,7 +177,10 @@ export default {
     ...mapState("clientes", ["clientes"]),
   },
   mounted() {
-    this.clientesFiltrados = this.clientes;
+    this.clientesFiltrados = this.clientes.sort((a, b) => {
+      return a.razonComercial > b.razonComercial ? 1 : -1;
+    });
+    this.clientesFiltrados.length = 100;
   },
   methods: {
     ...mapActions("clientes", ["getClientes", "buscarCliente"]),
@@ -203,7 +206,10 @@ export default {
 
     refreshList() {
       this.getClientes();
-      this.clientesFiltrados = this.clientes;
+      this.clientesFiltrados = this.clientes.sort((a, b) => {
+        return a.razonComercial > b.razonComercial ? 1 : -1;
+      });
+      this.clientesFiltrados.length = 100;
 
       this.currentCliente = null;
       this.currentIndex = -1;
@@ -221,7 +227,7 @@ export default {
         this.clientesFiltrados = await this.buscarCliente(this.buscador);
 
         if (this.buscador.trim() === "") {
-          this.clientesFiltrados = this.clientes;
+          this.refreshList();
         }
       } catch (error) {
         console.error(`Error en el buscador de Clientes: ${error.message}`);
