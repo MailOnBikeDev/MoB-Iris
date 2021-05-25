@@ -688,7 +688,7 @@ export default {
     activarCliente(cliente) {
       if (cliente) {
         this.editarPedido.contactoRemitente = cliente.contacto;
-        this.editarPedido.empresaRemitente = cliente.empresa;
+        this.editarPedido.empresaRemitente = cliente.razonComercial;
         this.editarPedido.telefonoRemitente = cliente.telefono;
         this.editarPedido.direccionRemitente = cliente.direccion;
         this.editarPedido.distritoRemitente = cliente.distrito.distrito;

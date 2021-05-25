@@ -649,7 +649,7 @@ export default {
     resetForm() {
       this.nuevoPedido.fecha = new Date();
       this.nuevoPedido.contactoRemitente = this.memoriaCliente.contacto;
-      this.nuevoPedido.empresaRemitente = this.memoriaCliente.empresa;
+      this.nuevoPedido.empresaRemitente = this.memoriaCliente.razonComercial;
       this.nuevoPedido.telefonoRemitente = this.memoriaCliente.telefono;
       this.nuevoPedido.direccionRemitente = this.memoriaCliente.direccion;
       this.nuevoPedido.distritoRemitente = this.memoriaCliente.distrito.distrito;
@@ -738,7 +738,7 @@ export default {
     activarCliente(cliente) {
       if (cliente) {
         this.nuevoPedido.contactoRemitente = cliente.contacto;
-        this.nuevoPedido.empresaRemitente = cliente.empresa;
+        this.nuevoPedido.empresaRemitente = cliente.razonComercial;
         this.nuevoPedido.telefonoRemitente = cliente.telefono;
         this.nuevoPedido.direccionRemitente = cliente.direccion;
         this.nuevoPedido.distritoRemitente = cliente.distrito.distrito;
