@@ -629,6 +629,7 @@ export default {
         this.alert.message = response.data.message;
         this.alert.show = true;
         this.alert.success = true;
+        this.memoriaCliente.fecha = this.nuevoPedido.fecha;
 
         setTimeout(() => {
           this.alert.show = false;
@@ -647,7 +648,7 @@ export default {
     },
 
     resetForm() {
-      this.nuevoPedido.fecha = new Date();
+      this.nuevoPedido.fecha = this.memoriaCliente.fecha;
       this.nuevoPedido.contactoRemitente = this.memoriaCliente.contacto;
       this.nuevoPedido.empresaRemitente = this.memoriaCliente.razonComercial;
       this.nuevoPedido.telefonoRemitente = this.memoriaCliente.telefono;
@@ -669,10 +670,13 @@ export default {
       this.nuevoPedido.distritoConsignado = "";
       this.nuevoPedido.otroDatoConsignado = null;
       this.nuevoPedido.comision = 0;
-      this.nuevoPedido.mobiker = "Asignar MoBiker";
       this.nuevoPedido.distancia = 0;
       this.nuevoPedido.recaudo = null;
       this.nuevoPedido.tramite = null;
+
+      if (this.nuevoPedido.mobiker === "Asignar MoBiker") {
+        this.nuevoPedido.mobiker = "Asignar MoBiker";
+      }
 
       console.log(
         `Original: ${this.nuevoPedido.otroDatoRemitente} y respaldo: ${this.memoriaCliente.otroDato}`
@@ -752,6 +756,7 @@ export default {
         this.nuevoPedido.status = 1;
 
         this.memoriaCliente = cliente;
+        this.memoriaCliente.fecha = new Date();
       }
     },
 
