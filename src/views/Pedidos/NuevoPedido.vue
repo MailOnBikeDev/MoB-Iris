@@ -662,7 +662,6 @@ export default {
       this.nuevoPedido.rolCliente = this.memoriaCliente.rolCliente.rol;
       this.nuevoPedido.tipoEnvio = this.memoriaCliente.tipoDeEnvio.tipo;
       this.nuevoPedido.modalidad = "Una vía";
-      this.nuevoPedido.status = 1;
       this.nuevoPedido.contactoConsignado = null;
       this.nuevoPedido.empresaConsignado = null;
       this.nuevoPedido.telefonoConsignado = null;
@@ -671,10 +670,11 @@ export default {
       this.nuevoPedido.otroDatoConsignado = null;
       this.nuevoPedido.comision = 0;
       this.nuevoPedido.distancia = 0;
-      this.nuevoPedido.recaudo = null;
-      this.nuevoPedido.tramite = null;
+      this.nuevoPedido.recaudo = 0;
+      this.nuevoPedido.tramite = 0;
 
       if (this.nuevoPedido.mobiker === "Asignar MoBiker") {
+        this.nuevoPedido.status = 1;
         this.nuevoPedido.mobiker = "Asignar MoBiker";
       }
 
