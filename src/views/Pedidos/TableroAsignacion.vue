@@ -157,34 +157,33 @@
           }"
           v-for="pedido in pedidosFiltrados"
           :key="pedido.id"
-          @click="setActivePedido(pedido, pedido.id)"
           :title="
             `Cliente: ${pedido.contactoRemitente}. Observaciones: Del origen: ${pedido.otroDatoRemitente} / Del destino: ${pedido.otroDatoConsignado}`
           "
         >
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p>{{ pedido.id }}</p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p v-if="pedido.rolCliente === 'Remitente'">
               {{ pedido.distritoRemitente }}
             </p>
             <p v-else>{{ pedido.distrito.distrito }}</p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p v-if="pedido.rolCliente === 'Remitente'">
               {{ pedido.distrito.distrito }}
             </p>
             <p v-else>{{ pedido.distritoRemitente }}</p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p>{{ pedido.mobiker.fullName }}</p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p v-if="pedido.status.id === 1" class="tag-programado">
               {{ pedido.status.tag }}
             </p>
@@ -193,7 +192,7 @@
             </p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p
               v-if="pedido.otroDatoRemitente || pedido.otroDatoConsignado"
               class="text-2xl font-bold text-red-500"
@@ -203,7 +202,7 @@
             <p v-else></p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
           </div>
 
