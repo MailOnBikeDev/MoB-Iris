@@ -333,6 +333,7 @@ export default {
         (response) => {
           const { pedidos, totalPedidos } = response.data;
           this.pedidos = pedidos; // rows
+          this.pedidosFiltrados = pedidos; // rows
           this.cantidadPedidos = totalPedidos; // count
         },
         (error) => {
