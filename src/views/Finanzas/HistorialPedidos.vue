@@ -126,7 +126,7 @@
             >{{ currentPedido.telefonoRemitente }}
           </p>
           <p class="mb-2">
-            <span class="resalta">Otro dato: </span
+            <span class="resalta">Observaciones: </span
             >{{ currentPedido.otroDatoRemitente }}
           </p>
           <p class="mb-2">
@@ -159,7 +159,7 @@
           <p class="mb-2"><span class="resalta">Distrito: </span></p>
           <p class="mb-2"><span class="resalta">Teléfono: </span></p>
           <p class="mb-2">
-            <span class="resalta">Otro dato: </span>
+            <span class="resalta">Observaciones: </span>
           </p>
           <p class="mb-2">
             <span class="resalta">Forma de Pago: </span>
