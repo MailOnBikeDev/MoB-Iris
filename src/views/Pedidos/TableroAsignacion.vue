@@ -123,7 +123,7 @@
       >
         <!-- v-click-outside="clickExterno" -->
         <div
-          class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 gap-x-1 h-14 border-primary hover:bg-info"
+          class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': mobiker.id == currentIndexMobiker,
           }"
@@ -357,19 +357,21 @@ export default {
     },
 
     buscarPedido() {
-      this.pedidosFiltrados = this.pedidos.filter((pedido) => {
-        if (
-          pedido.contactoRemitente
-            .toLowerCase()
-            .includes(this.buscador.toLowerCase()) ||
-          pedido.id.toString().includes(this.buscador.toLowerCase()) ||
-          pedido.mobiker.fullName
-            .toLowerCase()
-            .includes(this.buscador.toLowerCase())
-        ) {
-          return pedido;
-        }
-      });
+      this.pedidosFiltrados = this.pedidos
+        .filter((pedido) => {
+          if (
+            pedido.contactoRemitente
+              .toLowerCase()
+              .includes(this.buscador.toLowerCase()) ||
+            pedido.id.toString().includes(this.buscador.toLowerCase()) ||
+            pedido.mobiker.fullName
+              .toLowerCase()
+              .includes(this.buscador.toLowerCase())
+          ) {
+            return pedido;
+          }
+        })
+        .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2);
 
       if (this.buscador.trim() === "") {
         this.pedidosFiltrados = this.pedidos;
