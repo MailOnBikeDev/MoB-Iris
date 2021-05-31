@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="showResumen"
-    class="absolute z-40 w-1/2 h-auto px-10 py-4 shadow-xl bg-primary top-14 left-1/4 rounded-xl"
+    class="absolute z-40 w-1/2 h-auto px-10 py-4 shadow-xl bg-primary top-10 left-1/4 rounded-xl"
   >
     <div class="absolute -top-4 -right-2">
       <button
@@ -25,18 +25,40 @@
       v-if="currentPedido.rolCliente === 'Remitente'"
       class="grid grid-cols-2 p-4 bg-white rounded-xl gap-x-8"
     >
-      <div class="grid grid-flow-row px-4 py-2 text-sm">
-        <h2 class="mb-4 text-3xl font-bold text-center text-primary">
-          Origen
-        </h2>
+      <div
+        class="grid w-full grid-cols-2 col-span-2 mx-auto border-b-2 gap-x-8 border-secondary place-items-center"
+      >
         <p class="mb-2">
           <span class="resalta">Fecha: </span>
           {{ $date(currentPedido.fecha).format("DD MMM YYYY") }}
         </p>
-        <p class="mb-2">
-          <span class="resalta">Carga: </span>
-          {{ currentPedido.tipoCarga }}
-        </p>
+
+        <div class="mb-2">
+          <p v-if="currentPedido.status.id === 1" class="tag-programado">
+            {{ currentPedido.status.tag }}
+          </p>
+          <p v-if="currentPedido.status.id === 2" class="tag-recoger">
+            {{ currentPedido.status.tag }}
+          </p>
+          <p v-if="currentPedido.status.id === 3" class="tag-transito">
+            {{ currentPedido.status.tag }}
+          </p>
+          <p v-if="currentPedido.status.id === 4" class="tag-entregado">
+            {{ currentPedido.status.tag }}
+          </p>
+          <p v-if="currentPedido.status.id === 5" class="tag-falso-flete">
+            {{ currentPedido.status.tag }}
+          </p>
+          <p v-if="currentPedido.status.id === 6" class="tag-anulado">
+            {{ currentPedido.status.tag }}
+          </p>
+        </div>
+      </div>
+
+      <div class="grid w-full grid-flow-row px-4 py-2 text-sm">
+        <h2 class="mb-4 text-3xl font-bold text-center text-primary">
+          Origen
+        </h2>
         <p class="mb-2">
           <span class="resalta">Contacto: </span>
           {{ currentPedido.contactoRemitente }}
@@ -58,44 +80,20 @@
           >{{ currentPedido.telefonoRemitente }}
         </p>
         <p class="mb-2">
-          <span class="resalta">Otro dato: </span
+          <span class="font-bold text-red-600">Observaciones del Cliente: </span
           >{{ currentPedido.otroDatoRemitente }}
-        </p>
-        <p class="mb-2">
-          <span class="resalta">Forma de Pago: </span
-          >{{ currentPedido.formaPago }}
-        </p>
-        <p class="mb-2">
-          <span class="resalta">Tarifa: </span>S/.
-          {{ currentPedido.tarifa }}
-        </p>
-        <p class="mb-2">
-          <span class="resalta">Recaudo: </span>S/.
-          {{ currentPedido.recaudo }}
-        </p>
-        <p class="mb-2">
-          <span class="resalta">Trámite: </span>S/.
-          {{ currentPedido.tramite }}
         </p>
       </div>
 
-      <div class="grid grid-flow-row px-4 py-2 text-sm">
+      <div class="grid w-full grid-flow-row px-4 py-2 text-sm">
         <h2 class="mb-4 text-3xl font-bold text-center text-primary">
           Destino
         </h2>
         <p class="mb-2">
-          <span class="resalta">Estado: </span
-          >{{ currentPedido.status.codigo }} - {{ currentPedido.status.tag }}
-        </p>
-        <p class="mb-2">
-          <span class="resalta">Modalidad: </span
-          >{{ currentPedido.modalidad.tipo }}
-        </p>
-        <p class="mb-2">
           <span class="resalta">Contacto: </span>
           {{ currentPedido.contactoConsignado }}
         </p>
-        <p class="mb-2" v-if="currentPedido.empresaConsignado">
+        <p class="mb-2">
           <span class="resalta">Empresa: </span
           >{{ currentPedido.empresaConsignado }}
         </p>
@@ -111,13 +109,27 @@
           <span class="resalta">Teléfono: </span
           >{{ currentPedido.telefonoConsignado }}
         </p>
-        <p class="mb-2" v-if="currentPedido.otroDatoConsignado">
-          <span class="resalta">Otro dato: </span
+        <p class="mb-2">
+          <span class="font-bold text-red-600">Observaciones del Destino: </span
           >{{ currentPedido.otroDatoConsignado }}
         </p>
-        <p class="mb-2">
+      </div>
+
+      <div
+        class="grid w-full col-span-2 py-2 mb-2 text-sm border-t-2 place-items-center border-secondary"
+      >
+        <p>
           <span class="resalta">MoBiker: </span
           >{{ currentPedido.mobiker.fullName }}
+        </p>
+      </div>
+
+      <div
+        class="grid w-full grid-cols-2 col-span-2 gap-2 mx-auto text-sm place-items-center"
+      >
+        <p class="mb-2">
+          <span class="resalta">Tarifa: </span>S/.
+          {{ currentPedido.tarifa }}
         </p>
         <p class="mb-2">
           <span class="resalta">Comisión: </span>S/.
@@ -128,35 +140,66 @@
           >{{ currentPedido.distancia }}Km
         </p>
         <p class="mb-2">
-          <span class="resalta">CO2 Ahorrado: </span
-          >{{ currentPedido.CO2Ahorrado }}Kg
+          <span class="resalta">Pago: </span>{{ currentPedido.formaPago }}
         </p>
         <p class="mb-2">
-          <span class="resalta">Horas de Ruido: </span
-          >{{ currentPedido.ruido }}h
+          <span class="resalta">Carga: </span>
+          {{ currentPedido.tipoCarga }}
+        </p>
+        <p class="mb-2">
+          <span class="resalta">Modalidad: </span
+          >{{ currentPedido.modalidad.tipo }}
+        </p>
+        <p class="mb-2">
+          <span class="resalta">Recaudo: </span>S/.
+          {{ currentPedido.recaudo }}
+        </p>
+        <p class="mb-2">
+          <span class="resalta">Trámite: </span>S/.
+          {{ currentPedido.tramite }}
         </p>
       </div>
     </div>
 
     <!-- Caso Cliente es Destino -->
     <div v-else class="grid grid-cols-2 p-4 bg-white rounded-xl gap-x-8">
-      <div class="grid grid-flow-row px-4 py-2 text-sm">
-        <h2 class="mb-4 text-3xl font-bold text-center text-primary">
-          Origen
-        </h2>
+      <div class="grid grid-cols-2 col-span-2 mx-auto text-sm gap-x-8">
         <p class="mb-2">
           <span class="resalta">Fecha: </span>
           {{ $date(currentPedido.fecha).format("DD MMM YYYY") }}
         </p>
-        <p class="mb-2">
-          <span class="resalta">Carga: </span>
-          {{ currentPedido.tipoCarga }}
-        </p>
+
+        <div>
+          <p v-if="currentPedido.status.id === 1" class="tag-programado">
+            {{ currentPedido.status.tag }}
+          </p>
+          <p v-if="currentPedido.status.id === 2" class="tag-recoger">
+            {{ currentPedido.status.tag }}
+          </p>
+          <p v-if="currentPedido.status.id === 3" class="tag-transito">
+            {{ currentPedido.status.tag }}
+          </p>
+          <p v-if="currentPedido.status.id === 4" class="tag-entregado">
+            {{ currentPedido.status.tag }}
+          </p>
+          <p v-if="currentPedido.status.id === 5" class="tag-falso-flete">
+            {{ currentPedido.status.tag }}
+          </p>
+          <p v-if="currentPedido.status.id === 6" class="tag-anulado">
+            {{ currentPedido.status.tag }}
+          </p>
+        </div>
+      </div>
+
+      <div class="grid w-full grid-flow-row px-4 py-2 text-sm">
+        <h2 class="mb-4 text-3xl font-bold text-center text-primary">
+          Origen
+        </h2>
         <p class="mb-2">
           <span class="resalta">Contacto: </span>
           {{ currentPedido.contactoConsignado }}
         </p>
-        <p class="mb-2" v-if="currentPedido.empresaConsignado">
+        <p class="mb-2">
           <span class="resalta">Empresa: </span
           >{{ currentPedido.empresaConsignado }}
         </p>
@@ -172,25 +215,9 @@
           <span class="resalta">Teléfono: </span
           >{{ currentPedido.telefonoConsignado }}
         </p>
-        <p class="mb-2" v-if="currentPedido.otroDatoConsignado">
-          <span class="resalta">Otro dato: </span
+        <p class="mb-2">
+          <span class="font-bold text-red-600">Observaciones del Origen: </span
           >{{ currentPedido.otroDatoConsignado }}
-        </p>
-        <p class="mb-2">
-          <span class="resalta">Forma de Pago: </span
-          >{{ currentPedido.formaPago }}
-        </p>
-        <p class="mb-2">
-          <span class="resalta">Tarifa: </span>S/.
-          {{ currentPedido.tarifa }}
-        </p>
-        <p class="mb-2">
-          <span class="resalta">Recaudo: </span>S/.
-          {{ currentPedido.recaudo }}
-        </p>
-        <p class="mb-2">
-          <span class="resalta">Trámite: </span>S/.
-          {{ currentPedido.tramite }}
         </p>
       </div>
 
@@ -198,14 +225,6 @@
         <h2 class="mb-4 text-3xl font-bold text-center text-primary">
           Destino
         </h2>
-        <p class="mb-2">
-          <span class="resalta">Estado: </span
-          >{{ currentPedido.status.codigo }} - {{ currentPedido.status.tag }}
-        </p>
-        <p class="mb-2">
-          <span class="resalta">Modalidad: </span
-          >{{ currentPedido.modalidad.tipo }}
-        </p>
         <p class="mb-2">
           <span class="resalta">Contacto: </span>
           {{ currentPedido.contactoRemitente }}
@@ -227,12 +246,26 @@
           >{{ currentPedido.telefonoRemitente }}
         </p>
         <p class="mb-2">
-          <span class="resalta">Otro dato: </span
+          <span class="font-bold text-red-600">Observaciones del Cliente: </span
           >{{ currentPedido.otroDatoRemitente }}
         </p>
-        <p class="mb-2">
+      </div>
+
+      <div
+        class="grid w-full col-span-2 py-2 mb-2 text-sm border-t-2 place-items-center border-secondary"
+      >
+        <p>
           <span class="resalta">MoBiker: </span
           >{{ currentPedido.mobiker.fullName }}
+        </p>
+      </div>
+
+      <div
+        class="grid w-full grid-cols-2 col-span-2 gap-2 mx-auto text-sm place-items-center"
+      >
+        <p class="mb-2">
+          <span class="resalta">Tarifa: </span>S/.
+          {{ currentPedido.tarifa }}
         </p>
         <p class="mb-2">
           <span class="resalta">Comisión: </span>S/.
@@ -243,12 +276,23 @@
           >{{ currentPedido.distancia }}Km
         </p>
         <p class="mb-2">
-          <span class="resalta">CO2 Ahorrado: </span
-          >{{ currentPedido.CO2Ahorrado }}Kg
+          <span class="resalta">Pago: </span>{{ currentPedido.formaPago }}
         </p>
         <p class="mb-2">
-          <span class="resalta">Horas de Ruido: </span
-          >{{ currentPedido.ruido }}h
+          <span class="resalta">Carga: </span>
+          {{ currentPedido.tipoCarga }}
+        </p>
+        <p class="mb-2">
+          <span class="resalta">Modalidad: </span
+          >{{ currentPedido.modalidad.tipo }}
+        </p>
+        <p class="mb-2">
+          <span class="resalta">Recaudo: </span>S/.
+          {{ currentPedido.recaudo }}
+        </p>
+        <p class="mb-2">
+          <span class="resalta">Trámite: </span>S/.
+          {{ currentPedido.tramite }}
         </p>
       </div>
     </div>

@@ -333,7 +333,11 @@ export default {
           .sort((a, b) => {
             return a.statusId > b.statusId ? 1 : -1;
           }); // rows
-        this.pedidosMobiker = pedidos;
+        this.pedidosMobiker = pedidos
+          .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
+          .sort((a, b) => {
+            return a.statusId > b.statusId ? 1 : -1;
+          });
         this.cantidadPedidos = totalPedidos; // count
         this.pedidosPorAsignar = pedidos.filter(
           (pedido) =>

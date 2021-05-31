@@ -94,8 +94,8 @@
         <button @click="sortPorFecha" class="focus:outline-none">
           <p class="font-bold">Fecha</p>
         </button>
-        <div>
-          <p>Reporte</p>
+        <div class="cursor-default">
+          <p>Detalles</p>
         </div>
       </div>
 
