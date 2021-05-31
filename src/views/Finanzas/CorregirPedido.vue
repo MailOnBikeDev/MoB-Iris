@@ -681,7 +681,7 @@ export default {
             this.editarPedido
           ).then(
             (response) => {
-              this.$router.push("/finanzas/historial-pedidos");
+              history.go(-1);
               console.log(response.data.message);
               this.message = response.data.message;
             },

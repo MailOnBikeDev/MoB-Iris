@@ -15,6 +15,12 @@
       :mobiker="currentMobiker"
     />
 
+    <DetallePedidoComisiones
+      :showResumen="showResumen"
+      @cerrarResumen="closeResumen"
+      :currentPedido="currentPedido"
+    />
+
     <div class="flex flex-row mb-4 -mt-10 justify-evenly">
       <div class="flex flex-row">
         <datepicker
@@ -78,6 +84,9 @@
         <button @click="sortPorId" class="focus:outline-none">
           <p class="font-bold"># Pedido</p>
         </button>
+        <button @click="sortPorId" class="focus:outline-none">
+          <p class="font-bold">Empresa</p>
+        </button>
         <button @click="sortPorOrigen" class="focus:outline-none">
           <p class="font-bold">Origen</p>
         </button>
@@ -90,15 +99,12 @@
         <button @click="sortPorFecha" class="focus:outline-none">
           <p class="font-bold">Fecha</p>
         </button>
-        <div>
-          <p>Corregir</p>
-        </div>
       </div>
       <div
         class="overflow-y-auto bg-white border border-black max-h-96 h-96 pedidos-scroll"
       >
         <div
-          class="grid items-center px-2 text-sm text-center border-b-2 h-14 border-primary hover:bg-info"
+          class="grid items-center px-2 text-sm text-center border-b-2 cursor-pointer h-14 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': mobiker.id == currentIndex,
           }"
@@ -116,29 +122,39 @@
         class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
         <div
-          class="grid items-center grid-cols-6 py-2 text-sm text-center border-b-2 gap-x-1 h-14 border-primary hover:bg-info"
+          class="grid items-center grid-cols-6 py-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
+          :class="{
+            'bg-info text-white font-bold': pedido.id == currentPedidoIndex,
+          }"
           v-for="pedido in pedidosMobiker"
           :key="pedido.id"
         >
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p>{{ pedido.id }}</p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
+            <p v-if="pedido.rolCliente === 'Remitente'">
+              {{ pedido.empresaRemitente }}
+            </p>
+            <p v-else>{{ pedido.empresaConsignado }}</p>
+          </div>
+
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p v-if="pedido.rolCliente === 'Remitente'">
               {{ pedido.distritoRemitente }}
             </p>
             <p v-else>{{ pedido.distrito.distrito }}</p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p v-if="pedido.rolCliente === 'Remitente'">
               {{ pedido.distrito.distrito }}
             </p>
             <p v-else>{{ pedido.distritoRemitente }}</p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p v-if="pedido.status.id === 4" class="tag-entregado">
               {{ pedido.status.tag }}
             </p>
@@ -150,24 +166,8 @@
             </p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
-          </div>
-
-          <div class="flex justify-center">
-            <router-link
-              :to="`/finanzas/historial-pedidos/${pedido.id}`"
-              custom
-              v-slot="{ navigate }"
-              class="cursor-pointer"
-            >
-              <font-awesome-icon
-                class="text-2xl text-primary"
-                icon="pencil-alt"
-                @click="navigate"
-                role="link"
-              />
-            </router-link>
           </div>
         </div>
       </div>
@@ -191,6 +191,7 @@
 </template>
 
 <script>
+import DetallePedidoComisiones from "@/components/DetallePedidoComisiones";
 import MobikerService from "@/services/mobiker.service";
 import ReporteComisiones from "@/components/ReporteComisiones";
 import Datepicker from "vuejs-datepicker";
@@ -199,14 +200,22 @@ import { mapState, mapActions } from "vuex";
 
 export default {
   name: "Comisiones",
-  components: { ReporteComisiones, Datepicker, Pagination },
+  components: {
+    ReporteComisiones,
+    Datepicker,
+    Pagination,
+    DetallePedidoComisiones,
+  },
   data() {
     return {
       mobikersFiltrados: [],
       pedidosMobiker: [],
       showDetalle: false,
+      showResumen: false,
       currentMobiker: null,
       currentIndex: -1,
+      currentPedido: null,
+      currentPedidoIndex: -1,
       fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
       fechaFin: new Date(),
 
@@ -227,28 +236,6 @@ export default {
   },
   methods: {
     ...mapActions("mobikers", ["getMobikers", "buscarMobikers"]),
-
-    // retrieveMobikers() {
-    //   MobikerService.getMobikers().then(
-    //     (response) => {
-    //       this.mobikers = response.data
-    //         .filter(
-    //           (mobiker) =>
-    //             mobiker.status === "Activo" &&
-    //             mobiker.fullName !== "Asignar MoBiker"
-    //         )
-    //         .sort((a, b) => {
-    //           return a.biciEnvios > b.biciEnvios ? 1 : -1;
-    //         });
-    //     },
-    //     (error) => {
-    //       this.mobikers =
-    //         (error.response && error.response.data) ||
-    //         error.message ||
-    //         error.toString();
-    //     }
-    //   );
-    // },
 
     getRequestParams(desde, hasta, id, page, pageSize) {
       let params = {};
@@ -327,6 +314,20 @@ export default {
       } catch (error) {
         console.error(`Error al refrescar la lista: ${error.message}`);
       }
+    },
+
+    setActivePedido(pedido, index) {
+      this.currentPedido = pedido;
+      this.currentPedidoIndex = index;
+
+      this.showResumen = true;
+    },
+
+    closeResumen() {
+      this.showResumen = false;
+
+      this.currentPedido = null;
+      this.currentPedidoIndex = -1;
     },
 
     sortPorId() {

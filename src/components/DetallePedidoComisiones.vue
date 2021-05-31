@@ -298,12 +298,16 @@
     </div>
 
     <div class="flex flex-row justify-around mt-6">
-      <button
-        class="px-6 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
-        @click="marcarAsignar"
+      <router-link
+        :to="`/finanzas/historial-pedidos/${currentPedido.id}`"
+        custom
+        v-slot="{ navigate }"
+        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
       >
-        Marcar para Asignar
-      </button>
+        <span @click="navigate" role="link" class="text-center cursor-pointer"
+          >Corregir Pedido</span
+        >
+      </router-link>
     </div>
   </div>
 </template>
