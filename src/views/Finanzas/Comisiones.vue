@@ -22,6 +22,16 @@
     />
 
     <div class="flex flex-row mb-4 -mt-10 justify-evenly">
+      <div>
+        <input
+          type="search"
+          class="input"
+          v-model="buscador"
+          @keyup="searchMobiker"
+          placeholder="Buscar mobiker..."
+        />
+      </div>
+
       <div class="flex flex-row">
         <datepicker
           v-model="fechaInicio"
@@ -37,7 +47,7 @@
         />
         <button
           type="button"
-          class="px-2 py-1 font-bold bg-white rounded-r-xl hover:bg-info hover:text-white focus:outline-none text-secondary"
+          class="px-2 py-1 mb-1 font-bold bg-white rounded-r-xl hover:bg-info hover:text-white focus:outline-none text-secondary"
           @click="retrievePedidosMobikers"
         >
           Buscar
@@ -218,6 +228,7 @@ export default {
       currentPedidoIndex: -1,
       fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
       fechaFin: new Date(),
+      buscador: "",
 
       page: 1,
       cantidadPedidos: 0,
@@ -328,6 +339,27 @@ export default {
 
       this.currentPedido = null;
       this.currentPedidoIndex = -1;
+    },
+
+    async searchMobiker() {
+      try {
+        const response = await this.buscarMobikers(this.buscador);
+        this.mobikersFiltrados = response
+          .filter((mobiker) => mobiker.status === "Activo")
+          .sort((a, b) => {
+            return a.fullName.localeCompare(b.fullName);
+          });
+
+        if (this.buscador.trim() === "") {
+          this.mobikersFiltrados = this.mobikers
+            .filter((mobiker) => mobiker.status === "Activo")
+            .sort((a, b) => {
+              return a.fullName.localeCompare(b.fullName);
+            });
+        }
+      } catch (error) {
+        console.error(`Error en el buscador de MoBikers: ${error.message}`);
+      }
     },
 
     sortPorId() {
