@@ -59,7 +59,7 @@
           <label for="telefono" class="label-input">Teléfono</label>
           <input
             v-model="nuevoCliente.telefono"
-            v-validate="'required|length:9'"
+            v-validate="'required|min:6|max:9'"
             type="number"
             name="telefono"
             class="input"

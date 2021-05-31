@@ -116,7 +116,7 @@
             <input
               v-model="editarPedido.telefonoRemitente"
               type="number"
-              v-validate="'required|length:9'"
+              v-validate="'required|min:6|max:9'"
               name="telefonoRemitente"
               class="input"
             />
@@ -346,7 +346,7 @@
             <input
               v-model="editarPedido.telefonoConsignado"
               type="number"
-              v-validate="'required|length:9'"
+              v-validate="'required|min:6|max:9'"
               name="telefonoConsignado"
               class="input"
             />
