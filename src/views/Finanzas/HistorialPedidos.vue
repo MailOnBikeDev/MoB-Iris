@@ -208,19 +208,13 @@
             <p v-if="pedido.status.id === 3" class="tag-transito">
               {{ pedido.status.tag }}
             </p>
-            <p v-if="pedido.status.id === (4 || 5 || 6)" class="tag-entregado">
+            <p v-if="pedido.status.id === 4" class="tag-entregado">
               {{ pedido.status.tag }}
             </p>
-            <p
-              v-if="
-                pedido.status.id ===
-                  (7 || 8 || 9 || 10 || 11 || 12 || 13 || 14 || 16)
-              "
-              class="tag-falso-flete"
-            >
+            <p v-if="pedido.status.id === 5" class="tag-falso-flete">
               {{ pedido.status.tag }}
             </p>
-            <p v-if="pedido.status.id === (17 || 18 || 19)" class="tag-anulado">
+            <p v-if="pedido.status.id === 6" class="tag-anulado">
               {{ pedido.status.tag }}
             </p>
           </div>
@@ -229,7 +223,10 @@
           </div>
           <div class="flex justify-center">
             <button class="focus:outline-none" @click="showDetalle = true">
-              <font-awesome-icon class="text-primary" icon="window-maximize" />
+              <font-awesome-icon
+                class="text-2xl text-primary"
+                icon="window-maximize"
+              />
             </button>
           </div>
         </div>

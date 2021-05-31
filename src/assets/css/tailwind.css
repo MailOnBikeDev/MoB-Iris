@@ -61,7 +61,7 @@ body {
 }
 
 .tag-transito {
-  @apply inline px-2 py-1 font-bold text-white bg-indigo-400 rounded-full;
+  @apply inline px-2 py-1 font-bold text-white rounded-full bg-primary;
 }
 
 .tag-entregado {

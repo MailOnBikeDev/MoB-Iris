@@ -102,7 +102,7 @@
           :class="{
             'bg-info text-white font-bold': mobiker.id == currentIndex,
           }"
-          v-for="mobiker in mobikers"
+          v-for="mobiker in mobikersFiltrados"
           :key="mobiker.id"
           @click="setActiveMobiker(mobiker, mobiker.id)"
         >
@@ -139,19 +139,13 @@
           </div>
 
           <div>
-            <p v-if="pedido.status.id === (4 || 5 || 6)" class="tag-entregado">
+            <p v-if="pedido.status.id === 4" class="tag-entregado">
               {{ pedido.status.tag }}
             </p>
-            <p
-              v-if="
-                pedido.status.id ===
-                  (7 || 8 || 9 || 10 || 11 || 12 || 13 || 14 || 16)
-              "
-              class="tag-falso-flete"
-            >
+            <p v-if="pedido.status.id === 5" class="tag-falso-flete">
               {{ pedido.status.tag }}
             </p>
-            <p v-if="pedido.status.id === 19" class="tag-anulado">
+            <p v-if="pedido.status.id === 6" class="tag-anulado">
               {{ pedido.status.tag }}
             </p>
           </div>
@@ -168,7 +162,7 @@
               class="cursor-pointer"
             >
               <font-awesome-icon
-                class="text-primary"
+                class="text-2xl text-primary"
                 icon="pencil-alt"
                 @click="navigate"
                 role="link"
@@ -201,13 +195,14 @@ import MobikerService from "@/services/mobiker.service";
 import ReporteComisiones from "@/components/ReporteComisiones";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
+import { mapState, mapActions } from "vuex";
 
 export default {
   name: "Comisiones",
   components: { ReporteComisiones, Datepicker, Pagination },
   data() {
     return {
-      mobikers: [],
+      mobikersFiltrados: [],
       pedidosMobiker: [],
       showDetalle: false,
       currentMobiker: null,
@@ -221,30 +216,39 @@ export default {
     };
   },
   mounted() {
-    this.retrieveMobikers();
+    this.mobikersFiltrados = this.mobikers
+      .filter((mobiker) => mobiker.status === "Activo")
+      .sort((a, b) => {
+        return a.fullName.localeCompare(b.fullName);
+      });
+  },
+  computed: {
+    ...mapState("mobikers", ["mobikers"]),
   },
   methods: {
-    retrieveMobikers() {
-      MobikerService.getMobikers().then(
-        (response) => {
-          this.mobikers = response.data
-            .filter(
-              (mobiker) =>
-                mobiker.status === "Activo" &&
-                mobiker.fullName !== "Asignar MoBiker"
-            )
-            .sort((a, b) => {
-              return a.biciEnvios > b.biciEnvios ? 1 : -1;
-            });
-        },
-        (error) => {
-          this.mobikers =
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString();
-        }
-      );
-    },
+    ...mapActions("mobikers", ["getMobikers", "buscarMobikers"]),
+
+    // retrieveMobikers() {
+    //   MobikerService.getMobikers().then(
+    //     (response) => {
+    //       this.mobikers = response.data
+    //         .filter(
+    //           (mobiker) =>
+    //             mobiker.status === "Activo" &&
+    //             mobiker.fullName !== "Asignar MoBiker"
+    //         )
+    //         .sort((a, b) => {
+    //           return a.biciEnvios > b.biciEnvios ? 1 : -1;
+    //         });
+    //     },
+    //     (error) => {
+    //       this.mobikers =
+    //         (error.response && error.response.data) ||
+    //         error.message ||
+    //         error.toString();
+    //     }
+    //   );
+    // },
 
     getRequestParams(desde, hasta, id, page, pageSize) {
       let params = {};
@@ -307,11 +311,22 @@ export default {
       this.retrievePedidosMobikers();
     },
 
-    refreshList() {
-      this.retrievePedidos();
+    async refreshList() {
+      try {
+        await this.getMobikers();
+        this.mobikersFiltrados = this.mobikers
+          .filter((mobiker) => mobiker.status === "Activo")
+          .sort((a, b) => {
+            return a.fullName.localeCompare(b.fullName);
+          });
+        this.pedidosMobiker = [];
+        this.cantidadPedidos = 0;
 
-      this.currentMobiker = null;
-      this.currentIndex = -1;
+        this.currentMobiker = null;
+        this.currentIndex = -1;
+      } catch (error) {
+        console.error(`Error al refrescar la lista: ${error.message}`);
+      }
     },
 
     sortPorId() {

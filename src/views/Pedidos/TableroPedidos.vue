@@ -83,10 +83,7 @@
       <div class="flex flex-row justify-center">
         <p>
           <span class="resalta">N° de Pedidos del día:</span>
-          {{
-            pedidos.filter((pedido) => pedido.statusId !== (17 && 18 && 19))
-              .length
-          }}
+          {{ pedidos.filter((pedido) => pedido.statusId !== 6).length }}
         </p>
       </div>
 
@@ -228,19 +225,13 @@
             <p v-if="pedido.status.id === 3" class="tag-transito">
               {{ pedido.status.tag }}
             </p>
-            <p v-if="pedido.status.id === (4 || 5 || 6)" class="tag-entregado">
+            <p v-if="pedido.status.id === 4" class="tag-entregado">
               {{ pedido.status.tag }}
             </p>
-            <p
-              v-if="
-                pedido.status.id ===
-                  (7 || 8 || 9 || 10 || 11 || 12 || 13 || 14 || 16)
-              "
-              class="tag-falso-flete"
-            >
+            <p v-if="pedido.status.id === 5" class="tag-falso-flete">
               {{ pedido.status.tag }}
             </p>
-            <p v-if="pedido.status.id === (17 || 18 || 19)" class="tag-anulado">
+            <p v-if="pedido.status.id === 6" class="tag-anulado">
               {{ pedido.status.tag }}
             </p>
           </div>
@@ -253,7 +244,7 @@
               @click="showComanda = true"
               title="Emitir Comanda"
             >
-              <font-awesome-icon class="text-primary" icon="receipt" />
+              <font-awesome-icon class="text-2xl text-primary" icon="receipt" />
             </button>
 
             <button
@@ -262,7 +253,7 @@
               title="Detalles del Pedido"
             >
               <font-awesome-icon
-                class="ml-6 text-primary"
+                class="ml-6 text-2xl text-primary"
                 icon="window-maximize"
               />
             </button>

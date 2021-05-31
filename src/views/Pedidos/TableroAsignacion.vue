@@ -120,8 +120,8 @@
       </div>
       <div
         class="overflow-y-auto bg-white border border-black max-h-96 h-96 pedidos-scroll"
-        v-click-outside="clickExterno"
       >
+        <!-- v-click-outside="clickExterno" -->
         <div
           class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 gap-x-1 h-14 border-primary hover:bg-info"
           :class="{
@@ -139,8 +139,7 @@
             {{
               pedidosMobiker.filter(
                 (pedido) =>
-                  pedido.mobikerId === mobiker.id &&
-                  pedido.statusId !== (17 || 18 || 19)
+                  pedido.mobikerId === mobiker.id && pedido.statusId !== 6
               ).length
             }}
           </div>
@@ -231,7 +230,7 @@
 </template>
 
 <script>
-import vClickOutside from "v-click-outside";
+// import vClickOutside from "v-click-outside";
 import PedidoService from "@/services/pedido.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
 import ResumenPedido from "@/components/ResumenPedido.vue";
@@ -413,6 +412,7 @@ export default {
     },
 
     refreshList() {
+      this.buscador = "";
       this.fechaInicio = new Date(
         new Date().getTime() - 1000 * 60 * 60 * 24 * 6 // 6 días
       );
@@ -470,20 +470,20 @@ export default {
       });
     },
 
-    clickExterno() {
-      this.buscador = "";
-      this.currentIndexMobiker = -1;
+    // clickExterno() {
+    //   this.buscador = "";
+    //   this.currentIndexMobiker = -1;
 
-      this.pedidosFiltrados = this.pedidos
-        .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
-        .sort((a, b) => {
-          return a.statusId > b.statusId ? 1 : -1;
-        });
-    },
+    //   this.pedidosFiltrados = this.pedidos
+    //     .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
+    //     .sort((a, b) => {
+    //       return a.statusId > b.statusId ? 1 : -1;
+    //     });
+    // },
   },
-  directives: {
-    vClickOutside: vClickOutside.directive,
-  },
+  // directives: {
+  //   vClickOutside: vClickOutside.directive,
+  // },
 };
 </script>
 

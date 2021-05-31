@@ -229,13 +229,17 @@ export default {
     },
 
     async refreshList() {
-      await this.getMobikers();
-      this.mobikersFiltrados = this.mobikers.sort((a, b) => {
-        return a.fullName.localeCompare(b.fullName);
-      });
+      try {
+        await this.getMobikers();
+        this.mobikersFiltrados = this.mobikers.sort((a, b) => {
+          return a.fullName.localeCompare(b.fullName);
+        });
 
-      this.currentMobiker = null;
-      this.currentIndex = -1;
+        this.currentMobiker = null;
+        this.currentIndex = -1;
+      } catch (error) {
+        console.error(`Error al refrescar la lista: ${error.message}`);
+      }
     },
 
     setActiveMobiker(mobiker, index) {
