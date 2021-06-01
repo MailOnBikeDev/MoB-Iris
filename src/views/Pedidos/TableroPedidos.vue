@@ -44,7 +44,7 @@
           placeholder="Buscar Pedido..."
           class="input"
           v-model="buscador"
-          @keyup="buscarPedido"
+          @keyup.enter="buscarPedido"
         />
       </div>
 
@@ -307,7 +307,7 @@ export default {
 
       page: 1,
       cantidadPedidos: 0,
-      pageSize: 50,
+      pageSize: 200,
     };
   },
   mounted() {
@@ -350,20 +350,17 @@ export default {
       }
     },
 
-    buscarPedido() {
-      this.pedidosFiltrados = this.pedidos.filter((pedido) => {
-        if (
-          pedido.contactoRemitente
-            .toLowerCase()
-            .includes(this.buscador.toLowerCase()) ||
-          pedido.id.toString().includes(this.buscador.toLowerCase())
-        ) {
-          return pedido;
-        }
-      });
+    async buscarPedido() {
+      try {
+        const response = await PedidoService.searchPedido(this.buscador);
 
-      if (this.buscador.trim() === "") {
-        this.pedidosFiltrados = this.pedidos;
+        this.pedidosFiltrados = response.data;
+
+        if (this.buscador.trim() === "") {
+          this.pedidosFiltrados = this.pedidos;
+        }
+      } catch (error) {
+        console.error(`Error al buscar un Pedido. ${error.message}`);
       }
     },
 
