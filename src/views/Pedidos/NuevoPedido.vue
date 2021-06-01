@@ -561,6 +561,7 @@ export default {
       "tiposDeEnvio",
       "statusDelPedido",
     ]),
+
     calcularComision() {
       let comisionMoBiker = 0.6;
       let comision = this.nuevoPedido.tarifa * comisionMoBiker;
@@ -595,6 +596,8 @@ export default {
           return;
         }
 
+        this.nuevoPedido.operador = this.$store.getters.operador;
+
         const response = await PedidoService.storageNuevoPedido(
           this.nuevoPedido
         );
@@ -622,6 +625,8 @@ export default {
         if (!isValid) {
           return;
         }
+
+        this.nuevoPedido.operador = this.$store.getters.operador;
 
         const response = await PedidoService.storageNuevoPedido(
           this.nuevoPedido
@@ -763,6 +768,7 @@ export default {
     asignarHoy() {
       let hoy = new Date();
       console.log(hoy);
+
       return (this.nuevoPedido.fecha = hoy);
     },
 
