@@ -4,16 +4,9 @@
       <h1
         class="relative inline-block px-6 py-2 mb-4 text-2xl font-bold text-center bg-gray-100 text-primary rounded-xl -top-12"
       >
-        Comisiones de Pedidos
+        Facturación de Pedidos
       </h1>
     </div>
-
-    <ReporteComisiones
-      :showDetalle="showDetalle"
-      @cerrarDetalle="showDetalle = false"
-      :detalles="pedidosMobiker"
-      :mobiker="currentMobiker"
-    />
 
     <DetallePedidoComisiones
       :showResumen="showResumen"
@@ -27,8 +20,8 @@
           type="search"
           class="input"
           v-model="buscador"
-          @keyup="searchMobiker"
-          placeholder="Buscar mobiker..."
+          @keyup.enter="searchCliente"
+          placeholder="Buscar contacto o empresa..."
         />
       </div>
 
@@ -48,7 +41,6 @@
         <button
           type="button"
           class="px-2 py-1 mb-1 font-bold bg-white rounded-r-xl hover:bg-info hover:text-white focus:outline-none text-secondary"
-          @click="retrievePedidosMobikers"
         >
           Buscar
         </button>
@@ -74,7 +66,6 @@
 
       <button
         class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
-        @click="showDetalle = true"
       >
         Enviar reporte
       </button>
@@ -82,10 +73,11 @@
 
     <div class="grid grid-cols-4 gap-2">
       <div class="flex flex-row justify-center">
-        <p>
+        {{ clientes.length }}
+        <!-- <p>
           <span class="resalta">Total de Pedidos:</span>
           {{ cantidadPedidos }}
-        </p>
+        </p> -->
       </div>
 
       <div
@@ -116,14 +108,14 @@
         <div
           class="grid items-center px-2 text-sm text-center border-b-2 cursor-pointer h-14 border-primary hover:bg-info"
           :class="{
-            'bg-info text-white font-bold': mobiker.id == currentIndex,
+            'bg-info text-white font-bold': cliente.id == currentIndex,
           }"
-          v-for="mobiker in mobikersFiltrados"
-          :key="mobiker.id"
-          @click="setActiveMobiker(mobiker, mobiker.id)"
+          v-for="cliente in clientesFiltrados"
+          :key="cliente.id"
+          @click="setActiveCliente(cliente, cliente.id)"
         >
           <div class="col-span-2">
-            {{ mobiker.fullName }}
+            {{ cliente.razonComercial }}
           </div>
         </div>
       </div>
@@ -136,7 +128,7 @@
           :class="{
             'bg-info text-white font-bold': pedido.id == currentPedidoIndex,
           }"
-          v-for="pedido in pedidosMobiker"
+          v-for="pedido in pedidosCliente"
           :key="pedido.id"
         >
           <div @click="setActivePedido(pedido, pedido.id)">
@@ -203,26 +195,24 @@
 <script>
 import DetallePedidoComisiones from "@/components/DetallePedidoComisiones";
 import MobikerService from "@/services/mobiker.service";
-import ReporteComisiones from "@/components/ReporteComisiones";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { mapState, mapActions } from "vuex";
 
 export default {
-  name: "Comisiones",
+  name: "Facturacion",
   components: {
-    ReporteComisiones,
     Datepicker,
     Pagination,
     DetallePedidoComisiones,
   },
   data() {
     return {
-      mobikersFiltrados: [],
-      pedidosMobiker: [],
+      clientesFiltrados: [],
+      pedidosCliente: [],
       showDetalle: false,
       showResumen: false,
-      currentMobiker: null,
+      currentCliente: null,
       currentIndex: -1,
       currentPedido: null,
       currentPedidoIndex: -1,
@@ -236,17 +226,13 @@ export default {
     };
   },
   mounted() {
-    this.mobikersFiltrados = this.mobikers
-      .filter((mobiker) => mobiker.status === "Activo")
-      .sort((a, b) => {
-        return a.fullName.localeCompare(b.fullName);
-      });
+    this.clientesFiltrados = this.clientes;
   },
   computed: {
-    ...mapState("mobikers", ["mobikers"]),
+    ...mapState("clientes", ["clientes"]),
   },
   methods: {
-    ...mapActions("mobikers", ["getMobikers", "buscarMobikers"]),
+    ...mapActions("clientes", ["getClientes", "buscarCliente"]),
 
     getRequestParams(desde, hasta, id, page, pageSize) {
       let params = {};
@@ -303,24 +289,18 @@ export default {
       this.retrievePedidos();
     },
 
-    setActiveMobiker(mobiker, index) {
-      this.currentMobiker = mobiker;
+    setActiveCliente(cliente, index) {
+      this.currentCliente = cliente;
       this.currentIndex = index;
       this.retrievePedidosMobikers();
     },
 
     async refreshList() {
       try {
-        await this.getMobikers();
-        this.mobikersFiltrados = this.mobikers
-          .filter((mobiker) => mobiker.status === "Activo")
-          .sort((a, b) => {
-            return a.fullName.localeCompare(b.fullName);
-          });
-        this.pedidosMobiker = [];
+        this.pedidosCliente = [];
         this.cantidadPedidos = 0;
 
-        this.currentMobiker = null;
+        this.currentCliente = null;
         this.currentIndex = -1;
       } catch (error) {
         console.error(`Error al refrescar la lista: ${error.message}`);
@@ -341,24 +321,15 @@ export default {
       this.currentPedidoIndex = -1;
     },
 
-    async searchMobiker() {
+    async searchCliente() {
       try {
-        const response = await this.buscarMobikers(this.buscador);
-        this.mobikersFiltrados = response
-          .filter((mobiker) => mobiker.status === "Activo")
-          .sort((a, b) => {
-            return a.fullName.localeCompare(b.fullName);
-          });
+        this.clientesFiltrados = await this.buscarCliente(this.buscador);
 
         if (this.buscador.trim() === "") {
-          this.mobikersFiltrados = this.mobikers
-            .filter((mobiker) => mobiker.status === "Activo")
-            .sort((a, b) => {
-              return a.fullName.localeCompare(b.fullName);
-            });
+          this.refreshList();
         }
       } catch (error) {
-        console.error(`Error en el buscador de MoBikers: ${error.message}`);
+        console.error(`Error en el buscador de Clientes: ${error.message}`);
       }
     },
 

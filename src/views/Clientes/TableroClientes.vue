@@ -186,7 +186,7 @@ export default {
     ...mapActions("clientes", ["getClientes", "buscarCliente"]),
 
     retrievePedidosCliente(id) {
-      ClienteService.getPedidosDelCliente(id).then(
+      ClienteService.getPedidosDelClienteById(id).then(
         (response) => {
           this.pedidosCliente = response.data;
         },

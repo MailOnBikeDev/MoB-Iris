@@ -46,7 +46,17 @@ class ClienteService {
     }
   }
 
-  async getPedidosDelCliente(id) {
+  async getPedidosDelCliente(params) {
+    try {
+      let pedidos = await http.get("clientes/pedidos", { params });
+
+      return pedidos;
+    } catch (error) {
+      console.error("Mensaje de error: ", error.message);
+    }
+  }
+
+  async getPedidosDelClienteById(id) {
     try {
       let pedidos = await http.get(`clientes/pedidos/${id}`);
 
