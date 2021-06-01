@@ -194,7 +194,7 @@
 
 <script>
 import DetallePedidoComisiones from "@/components/DetallePedidoComisiones";
-import MobikerService from "@/services/mobiker.service";
+import ClienteService from "@/services/cliente.service";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { mapState, mapActions } from "vuex";
@@ -260,7 +260,7 @@ export default {
       return params;
     },
 
-    retrievePedidosMobikers() {
+    retrievePedidosClientes() {
       const params = this.getRequestParams(
         this.$date(this.fechaInicio).format("YYYY-MM-DD"),
         this.$date(this.fechaFin).format("YYYY-MM-DD"),
@@ -269,10 +269,10 @@ export default {
         this.pageSize
       );
 
-      MobikerService.getPedidosDelMobiker(params).then(
+      ClienteService.getPedidosDelCliente(params).then(
         (response) => {
           const { pedidos, totalPedidos } = response.data;
-          this.pedidosMobiker = pedidos; // rows
+          this.pedidosCliente = pedidos; // rows
           this.cantidadPedidos = totalPedidos; // count
         },
         (error) => {
@@ -292,7 +292,7 @@ export default {
     setActiveCliente(cliente, index) {
       this.currentCliente = cliente;
       this.currentIndex = index;
-      this.retrievePedidosMobikers();
+      this.retrievePedidosClientes();
     },
 
     async refreshList() {
