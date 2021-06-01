@@ -58,7 +58,7 @@ class ClienteService {
 
   async getPedidosDelClienteById(id) {
     try {
-      let pedidos = await http.get(`clientes/pedidos/${id}`);
+      let pedidos = await http.get(`clientes/pedidos-del-cliente/${id}`);
 
       return pedidos;
     } catch (error) {
