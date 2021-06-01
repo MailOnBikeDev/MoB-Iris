@@ -134,7 +134,7 @@
               class="cursor-pointer"
             >
               <font-awesome-icon
-                class="text-primary"
+                class="text-2xl text-primary"
                 icon="pencil-alt"
                 @click="navigate"
                 role="link"
