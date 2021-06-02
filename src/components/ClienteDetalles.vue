@@ -10,7 +10,7 @@
     </p>
     <p class="mb-2">
       <span class="resalta">Razón Comercial: </span>
-      {{ estadisticas.razonSocial }}
+      {{ estadisticas.razonComercial }}
     </p>
     <p class="mb-2">
       <span class="resalta">Teléfono: </span>
