@@ -22,7 +22,7 @@ vue.<template>
       />
     </div>
 
-    <div class="h-56 mt-6 overflow-y-auto">
+    <div class="h-56 mt-6 overflow-y-auto bg-white">
       <div
         class="grid items-center grid-cols-3 py-2 text-sm text-center bg-white border-b-2 cursor-default hover:bg-info border-primary"
         :class="{ 'bg-info': cliente.id == currentIndex }"

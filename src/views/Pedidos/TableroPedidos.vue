@@ -380,6 +380,8 @@ export default {
       this.retrievePedidos();
       this.pedidosFiltrados = this.pedidos;
 
+      console.log(this.$date(this.buscadorFecha).format("YYYY-MM-DD"));
+
       this.currentPedido = null;
       this.currentIndex = -1;
     },

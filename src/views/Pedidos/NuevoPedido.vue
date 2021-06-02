@@ -71,6 +71,7 @@
               name="fecha"
               input-class="input"
               :monday-first="true"
+              placeholder="Fecha del Pedido"
             />
             <div
               v-if="errors.has('fecha')"
@@ -597,6 +598,7 @@ export default {
         }
 
         this.nuevoPedido.operador = this.$store.getters.operador;
+        console.log(this.nuevoPedido.fecha);
 
         const response = await PedidoService.storageNuevoPedido(
           this.nuevoPedido
@@ -768,6 +770,7 @@ export default {
     asignarHoy() {
       let hoy = new Date();
       console.log(hoy);
+      console.log(this.nuevoPedido.fecha);
 
       return (this.nuevoPedido.fecha = hoy);
     },

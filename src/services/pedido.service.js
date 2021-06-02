@@ -92,6 +92,7 @@ class PedidoService {
         tipoEnvio: editarPedido.tipoDeEnvio.tipo,
         modalidad: editarPedido.modalidad.tipo,
         rolCliente: editarPedido.rolCliente,
+        operador: editarPedido.operador,
       });
 
       return pedidoEditado;
