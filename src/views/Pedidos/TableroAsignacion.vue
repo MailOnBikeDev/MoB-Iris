@@ -120,10 +120,10 @@
       </div>
       <div
         class="overflow-y-auto bg-white border border-black max-h-96 h-96 pedidos-scroll"
-        v-click-outside="clickExterno"
       >
+        <!-- v-click-outside="clickExterno" -->
         <div
-          class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 gap-x-1 h-14 border-primary hover:bg-info"
+          class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': mobiker.id == currentIndexMobiker,
           }"
@@ -139,8 +139,7 @@
             {{
               pedidosMobiker.filter(
                 (pedido) =>
-                  pedido.mobikerId === mobiker.id &&
-                  pedido.statusId !== (17 || 18 || 19)
+                  pedido.mobikerId === mobiker.id && pedido.statusId !== 6
               ).length
             }}
           </div>
@@ -157,34 +156,33 @@
           }"
           v-for="pedido in pedidosFiltrados"
           :key="pedido.id"
-          @click="setActivePedido(pedido, pedido.id)"
           :title="
             `Cliente: ${pedido.contactoRemitente}. Observaciones: Del origen: ${pedido.otroDatoRemitente} / Del destino: ${pedido.otroDatoConsignado}`
           "
         >
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p>{{ pedido.id }}</p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p v-if="pedido.rolCliente === 'Remitente'">
               {{ pedido.distritoRemitente }}
             </p>
             <p v-else>{{ pedido.distrito.distrito }}</p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p v-if="pedido.rolCliente === 'Remitente'">
               {{ pedido.distrito.distrito }}
             </p>
             <p v-else>{{ pedido.distritoRemitente }}</p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p>{{ pedido.mobiker.fullName }}</p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p v-if="pedido.status.id === 1" class="tag-programado">
               {{ pedido.status.tag }}
             </p>
@@ -193,7 +191,7 @@
             </p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p
               v-if="pedido.otroDatoRemitente || pedido.otroDatoConsignado"
               class="text-2xl font-bold text-red-500"
@@ -203,7 +201,7 @@
             <p v-else></p>
           </div>
 
-          <div>
+          <div @click="setActivePedido(pedido, pedido.id)">
             <p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
           </div>
 
@@ -232,7 +230,7 @@
 </template>
 
 <script>
-import vClickOutside from "v-click-outside";
+// import vClickOutside from "v-click-outside";
 import PedidoService from "@/services/pedido.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
 import ResumenPedido from "@/components/ResumenPedido.vue";
@@ -335,7 +333,11 @@ export default {
           .sort((a, b) => {
             return a.statusId > b.statusId ? 1 : -1;
           }); // rows
-        this.pedidosMobiker = pedidos;
+        this.pedidosMobiker = pedidos
+          .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
+          .sort((a, b) => {
+            return a.statusId > b.statusId ? 1 : -1;
+          });
         this.cantidadPedidos = totalPedidos; // count
         this.pedidosPorAsignar = pedidos.filter(
           (pedido) =>
@@ -355,19 +357,21 @@ export default {
     },
 
     buscarPedido() {
-      this.pedidosFiltrados = this.pedidos.filter((pedido) => {
-        if (
-          pedido.contactoRemitente
-            .toLowerCase()
-            .includes(this.buscador.toLowerCase()) ||
-          pedido.id.toString().includes(this.buscador.toLowerCase()) ||
-          pedido.mobiker.fullName
-            .toLowerCase()
-            .includes(this.buscador.toLowerCase())
-        ) {
-          return pedido;
-        }
-      });
+      this.pedidosFiltrados = this.pedidos
+        .filter((pedido) => {
+          if (
+            pedido.contactoRemitente
+              .toLowerCase()
+              .includes(this.buscador.toLowerCase()) ||
+            pedido.id.toString().includes(this.buscador.toLowerCase()) ||
+            pedido.mobiker.fullName
+              .toLowerCase()
+              .includes(this.buscador.toLowerCase())
+          ) {
+            return pedido;
+          }
+        })
+        .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2);
 
       if (this.buscador.trim() === "") {
         this.pedidosFiltrados = this.pedidos;
@@ -414,6 +418,7 @@ export default {
     },
 
     refreshList() {
+      this.buscador = "";
       this.fechaInicio = new Date(
         new Date().getTime() - 1000 * 60 * 60 * 24 * 6 // 6 días
       );
@@ -471,20 +476,20 @@ export default {
       });
     },
 
-    clickExterno() {
-      this.buscador = "";
-      this.currentIndexMobiker = -1;
+    // clickExterno() {
+    //   this.buscador = "";
+    //   this.currentIndexMobiker = -1;
 
-      this.pedidosFiltrados = this.pedidos
-        .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
-        .sort((a, b) => {
-          return a.statusId > b.statusId ? 1 : -1;
-        });
-    },
+    //   this.pedidosFiltrados = this.pedidos
+    //     .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
+    //     .sort((a, b) => {
+    //       return a.statusId > b.statusId ? 1 : -1;
+    //     });
+    // },
   },
-  directives: {
-    vClickOutside: vClickOutside.directive,
-  },
+  // directives: {
+  //   vClickOutside: vClickOutside.directive,
+  // },
 };
 </script>
 

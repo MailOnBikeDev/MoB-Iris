@@ -53,7 +53,7 @@
           <input
             v-model="editarMobiker.telefono"
             type="number"
-            v-validate="'required|length:9'"
+            v-validate="'required|min:6|max:9'"
             name="telefono"
             class="input"
           />

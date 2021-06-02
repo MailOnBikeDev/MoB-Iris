@@ -32,11 +32,11 @@ body {
 }
 
 .mob-inactivo {
-  @apply inline-block px-2 font-bold text-white bg-red-800 rounded-full;
+  @apply inline-block px-2 font-bold text-white bg-yellow-600 rounded-full;
 }
 
 .mob-retirado {
-  @apply inline-block px-2 font-bold text-white bg-yellow-600 rounded-full;
+  @apply inline-block px-2 font-bold text-white bg-red-800 rounded-full;
 }
 
 .input {
@@ -61,7 +61,7 @@ body {
 }
 
 .tag-transito {
-  @apply inline px-2 py-1 font-bold text-white bg-indigo-400 rounded-full;
+  @apply inline px-2 py-1 font-bold text-white rounded-full bg-primary;
 }
 
 .tag-entregado {

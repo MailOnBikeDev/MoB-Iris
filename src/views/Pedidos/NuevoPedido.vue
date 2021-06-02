@@ -123,7 +123,7 @@
             <input
               v-model.number="nuevoPedido.telefonoRemitente"
               type="number"
-              v-validate="'required|length:9'"
+              v-validate="'required|min:6|max:9'"
               name="telefonoRemitente"
               class="input"
             />
@@ -347,7 +347,7 @@
             <input
               v-model.number="nuevoPedido.telefonoConsignado"
               type="number"
-              v-validate="'required|length:9'"
+              v-validate="'required|min:6|max:9'"
               name="telefonoConsignado"
               class="input"
             />
@@ -561,6 +561,7 @@ export default {
       "tiposDeEnvio",
       "statusDelPedido",
     ]),
+
     calcularComision() {
       let comisionMoBiker = 0.6;
       let comision = this.nuevoPedido.tarifa * comisionMoBiker;
@@ -595,6 +596,8 @@ export default {
           return;
         }
 
+        this.nuevoPedido.operador = this.$store.getters.operador;
+
         const response = await PedidoService.storageNuevoPedido(
           this.nuevoPedido
         );
@@ -623,12 +626,15 @@ export default {
           return;
         }
 
+        this.nuevoPedido.operador = this.$store.getters.operador;
+
         const response = await PedidoService.storageNuevoPedido(
           this.nuevoPedido
         );
         this.alert.message = response.data.message;
         this.alert.show = true;
         this.alert.success = true;
+        this.memoriaCliente.fecha = this.nuevoPedido.fecha;
 
         setTimeout(() => {
           this.alert.show = false;
@@ -647,9 +653,9 @@ export default {
     },
 
     resetForm() {
-      this.nuevoPedido.fecha = new Date();
+      this.nuevoPedido.fecha = this.memoriaCliente.fecha;
       this.nuevoPedido.contactoRemitente = this.memoriaCliente.contacto;
-      this.nuevoPedido.empresaRemitente = this.memoriaCliente.empresa;
+      this.nuevoPedido.empresaRemitente = this.memoriaCliente.razonComercial;
       this.nuevoPedido.telefonoRemitente = this.memoriaCliente.telefono;
       this.nuevoPedido.direccionRemitente = this.memoriaCliente.direccion;
       this.nuevoPedido.distritoRemitente = this.memoriaCliente.distrito.distrito;
@@ -661,7 +667,6 @@ export default {
       this.nuevoPedido.rolCliente = this.memoriaCliente.rolCliente.rol;
       this.nuevoPedido.tipoEnvio = this.memoriaCliente.tipoDeEnvio.tipo;
       this.nuevoPedido.modalidad = "Una vía";
-      this.nuevoPedido.status = 1;
       this.nuevoPedido.contactoConsignado = null;
       this.nuevoPedido.empresaConsignado = null;
       this.nuevoPedido.telefonoConsignado = null;
@@ -669,10 +674,14 @@ export default {
       this.nuevoPedido.distritoConsignado = "";
       this.nuevoPedido.otroDatoConsignado = null;
       this.nuevoPedido.comision = 0;
-      this.nuevoPedido.mobiker = "Asignar MoBiker";
       this.nuevoPedido.distancia = 0;
-      this.nuevoPedido.recaudo = null;
-      this.nuevoPedido.tramite = null;
+      this.nuevoPedido.recaudo = 0;
+      this.nuevoPedido.tramite = 0;
+
+      if (this.nuevoPedido.mobiker === "Asignar MoBiker") {
+        this.nuevoPedido.status = 1;
+        this.nuevoPedido.mobiker = "Asignar MoBiker";
+      }
 
       console.log(
         `Original: ${this.nuevoPedido.otroDatoRemitente} y respaldo: ${this.memoriaCliente.otroDato}`
@@ -738,7 +747,7 @@ export default {
     activarCliente(cliente) {
       if (cliente) {
         this.nuevoPedido.contactoRemitente = cliente.contacto;
-        this.nuevoPedido.empresaRemitente = cliente.empresa;
+        this.nuevoPedido.empresaRemitente = cliente.razonComercial;
         this.nuevoPedido.telefonoRemitente = cliente.telefono;
         this.nuevoPedido.direccionRemitente = cliente.direccion;
         this.nuevoPedido.distritoRemitente = cliente.distrito.distrito;
@@ -752,12 +761,14 @@ export default {
         this.nuevoPedido.status = 1;
 
         this.memoriaCliente = cliente;
+        this.memoriaCliente.fecha = new Date();
       }
     },
 
     asignarHoy() {
       let hoy = new Date();
       console.log(hoy);
+
       return (this.nuevoPedido.fecha = hoy);
     },
 

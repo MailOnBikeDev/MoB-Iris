@@ -5,8 +5,12 @@
       {{ estadisticas.contacto }}
     </p>
     <p class="mb-2">
-      <span class="resalta">Empresa: </span>
-      {{ estadisticas.empresa }}
+      <span class="resalta">Razón Social: </span>
+      {{ estadisticas.razonSocial }}
+    </p>
+    <p class="mb-2">
+      <span class="resalta">Razón Comercial: </span>
+      {{ estadisticas.razonSocial }}
     </p>
     <p class="mb-2">
       <span class="resalta">Teléfono: </span>
