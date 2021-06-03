@@ -425,6 +425,14 @@ export default {
       es: es,
     };
   },
+  mounted() {
+    this.nuevoMobiker.rango = "Pre-MoBiker";
+    this.nuevoMobiker.fechaIngreso = new Date();
+    this.nuevoMobiker.banco = "Sin Banco";
+    this.nuevoMobiker.tipoCuenta = "Sin Cuenta";
+    this.nuevoMobiker.numeroCuentaBancaria = 0;
+    this.nuevoMobiker.status = "Activo";
+  },
   computed: {
     ...mapState("auxiliares", [
       "distritos",
@@ -434,6 +442,7 @@ export default {
   },
   methods: {
     ...mapActions("mobikers", ["getMobikers"]),
+
     async handleNuevoMobiker() {
       try {
         const isValid = await this.$validator.validateAll();

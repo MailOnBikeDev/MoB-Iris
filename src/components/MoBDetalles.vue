@@ -2,7 +2,7 @@
   <div class="flex flex-col w-full h-full p-4 text-sm" v-if="estadisticas">
     <p class="mb-2">
       <span class="resalta">Nombres: </span>
-      {{ estadisticas.fullName }}
+      {{ estadisticas.nombres }} {{ estadisticas.apellidos }}
     </p>
     <p class="mb-2">
       <span class="resalta">Teléfono: </span>

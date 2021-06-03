@@ -35,7 +35,6 @@
           <label for="razonSocial" class="label-input">Razón Social</label>
           <input
             v-model="nuevoCliente.razonSocial"
-            v-validate="'required'"
             type="text"
             name="razonSocial"
             class="input"
@@ -53,6 +52,12 @@
             name="razonComercial"
             class="input"
           />
+          <div
+            v-if="errors.has('razonComercial')"
+            class="p-2 text-sm text-white bg-red-500 rounded"
+          >
+            <p>La Razón Comercial es requerida</p>
+          </div>
         </div>
 
         <div>
@@ -296,6 +301,10 @@ export default {
     ]),
   },
   mounted() {
+    this.nuevoCliente.carga = "Paquete";
+    this.nuevoCliente.pago = "Efectivo en Origen";
+    this.nuevoCliente.comprobante = "Ninguno";
+    this.nuevoCliente.tipoEnvio = "E-Commerce";
     this.nuevoCliente.rol = "Remitente";
   },
   methods: {
