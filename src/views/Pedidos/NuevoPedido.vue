@@ -124,7 +124,7 @@
             <input
               v-model="nuevoPedido.telefonoRemitente"
               type="string"
-              v-validate="'required|min:6|max:9'"
+              v-validate="'required|min:6|max:12'"
               name="telefonoRemitente"
               class="input"
             />
@@ -348,7 +348,7 @@
             <input
               v-model="nuevoPedido.telefonoConsignado"
               type="string"
-              v-validate="'required|min:6|max:9'"
+              v-validate="'required|min:6|max:12'"
               name="telefonoConsignado"
               class="input"
             />
@@ -422,7 +422,7 @@
               name="mobiker"
               v-model="nuevoPedido.mobiker"
               placeholder="Buscar distrito..."
-              :list="mobikers"
+              :list="mobikersFiltrados"
               v-validate="'required'"
               option-text="fullName"
               option-value="fullName"
@@ -518,7 +518,6 @@
 import BaseAlerta from "@/components/BaseAlerta.vue";
 import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
-import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
 import Datepicker from "vuejs-datepicker";
@@ -530,6 +529,7 @@ export default {
     return {
       nuevoPedido: new Pedido(),
       showBuscador: false,
+      mobikersFiltrados: [],
       alert: {
         message: "",
         success: false,
@@ -546,17 +546,11 @@ export default {
     this.nuevoPedido.recaudo = 0;
     this.nuevoPedido.tramite = 0;
 
-    try {
-      let mobiker = await MobikerService.getMobikers();
-
-      this.mobikers = mobiker.data
-        .filter((mobiker) => mobiker.status === "Activo")
-        .sort((a, b) => {
-          return a.fullName.localeCompare(b.fullName);
-        });
-    } catch (error) {
-      console.error("Mensaje de error: ", error);
-    }
+    this.mobikersFiltrados = this.mobikers
+      .filter((mobiker) => mobiker.status === "Activo")
+      .sort((a, b) => {
+        return a.fullName.localeCompare(b.fullName);
+      });
   },
   computed: {
     ...mapState("auxiliares", [
@@ -568,6 +562,8 @@ export default {
       "tiposDeEnvio",
       "statusDelPedido",
     ]),
+
+    ...mapState("mobikers", ["mobikers"]),
   },
   watch: {
     "nuevoPedido.mobiker": function() {
