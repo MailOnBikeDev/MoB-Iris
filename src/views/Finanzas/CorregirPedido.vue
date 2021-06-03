@@ -123,7 +123,7 @@
             >
             <input
               v-model="editarPedido.telefonoRemitente"
-              type="number"
+              type="string"
               v-validate="'required|min:6|max:9'"
               name="telefonoRemitente"
               class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
@@ -405,7 +405,7 @@
             >
             <input
               v-model="editarPedido.telefonoConsignado"
-              type="number"
+              type="string"
               v-validate="'required|min:6|max:9'"
               name="telefonoConsignado"
               class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"

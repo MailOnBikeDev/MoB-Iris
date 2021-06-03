@@ -52,8 +52,8 @@
           <label for="telefono" class="label-input">Teléfono</label>
           <input
             v-model="editarMobiker.telefono"
-            type="number"
-            v-validate="'required|min:6|max:9'"
+            type="string"
+            v-validate="'required|min:6|max:12'"
             name="telefono"
             class="input"
           />
@@ -164,7 +164,7 @@
           >
           <input
             v-model="editarMobiker.numeroDocumento"
-            type="number"
+            type="string"
             v-validate="'required|min:8|max:10'"
             name="numeroDocumento"
             class="input"

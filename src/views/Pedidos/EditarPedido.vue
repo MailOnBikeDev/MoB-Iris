@@ -115,7 +115,7 @@
             >
             <input
               v-model="editarPedido.telefonoRemitente"
-              type="number"
+              type="string"
               v-validate="'required|min:6|max:9'"
               name="telefonoRemitente"
               class="input"
@@ -345,7 +345,7 @@
             <label for="telefonoConsignado" class="label-input">Teléfono</label>
             <input
               v-model="editarPedido.telefonoConsignado"
-              type="number"
+              type="string"
               v-validate="'required|min:6|max:9'"
               name="telefonoConsignado"
               class="input"
@@ -410,7 +410,7 @@
           <div>
             <label for="comision" class="label-input">Comisión</label>
             <p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
-              {{ (editarPedido.comision = calcularComision) }}
+              {{ editarPedido.comision }}
             </p>
           </div>
 
@@ -525,8 +525,6 @@ export default {
         show: false,
       },
       errorCalcularDistancia: false,
-      mobikers: [],
-      tarifaSugerida: null,
     };
   },
   async mounted() {
@@ -552,16 +550,6 @@ export default {
       "tiposDeEnvio",
       "statusDelPedido",
     ]),
-    calcularComision() {
-      let comision = this.editarPedido.tarifa * 0.6;
-      return comision.toFixed(2);
-    },
-
-    sugerirTarifa() {
-      let tarifaPorKm = 0.8;
-      let tarifaSugerida = this.editarPedido.distancia * tarifaPorKm;
-      return tarifaSugerida.toFixed(2);
-    },
   },
   watch: {
     "editarPedido.mobiker": function() {

@@ -64,8 +64,8 @@
           <label for="telefono" class="label-input">Teléfono</label>
           <input
             v-model="nuevoCliente.telefono"
-            v-validate="'required|min:6|max:9'"
-            type="number"
+            v-validate="'required|min:6|max:12'"
+            type="string"
             name="telefono"
             class="input"
           />
@@ -93,9 +93,9 @@
           <label for="ruc" class="label-input">RUC</label>
           <input
             v-model="nuevoCliente.ruc"
-            v-validate="'length:11'"
+            v-validate="'max:11'"
             name="ruc"
-            type="number"
+            type="string"
             class="input"
           />
           <div
