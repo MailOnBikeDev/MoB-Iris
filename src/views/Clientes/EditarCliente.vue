@@ -35,7 +35,6 @@
           <label for="razonSocial" class="label-input">Razón Social</label>
           <input
             v-model="editarCliente.razonSocial"
-            v-validate="'required'"
             type="text"
             name="razonSocial"
             class="input"
@@ -68,7 +67,7 @@
             v-if="errors.has('telefono')"
             class="p-2 text-sm text-white bg-red-500 rounded"
           >
-            <p>El telefono es requerido y debe tener 9 caracteres</p>
+            <p>El telefono es requerido y debe tener máximo 9 números</p>
           </div>
         </div>
       </div>
@@ -304,6 +303,7 @@ export default {
   },
   methods: {
     ...mapActions("clientes", ["getClientes"]),
+
     async getCliente(id) {
       try {
         let response = await ClienteService.getClienteById(id);
@@ -342,7 +342,7 @@ export default {
         await this.getClientes();
 
         setTimeout(() => {
-          this.$router.push("/clientes/tablero-clientes");
+          history.go(-1);
         }, 1500);
       } catch (error) {
         console.error(`Error al editar el cliente: ${error.message}`);
@@ -354,7 +354,7 @@ export default {
     },
 
     cancelar() {
-      this.$router.push("/clientes/tablero-clientes");
+      history.go(-1);
     },
   },
   components: {
