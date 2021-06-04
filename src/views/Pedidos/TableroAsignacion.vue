@@ -128,6 +128,9 @@
             'bg-info text-white font-bold': mobiker.id == currentIndexMobiker,
           }"
           v-for="mobiker in mobikersFiltrados"
+          :title="
+            `Bicicleta: ${mobiker.tipoBicicleta} - Equipo: ${mobiker.equipo}`
+          "
           :key="mobiker.id"
           @click="checkPedidosMobikers(mobiker, mobiker.id)"
         >
