@@ -631,7 +631,7 @@ export default {
         this.alert.success = true;
 
         setTimeout(() => {
-          this.$router.push("/pedidos/tablero-pedidos");
+          history.go(-1);
         }, 1500);
       } catch (error) {
         console.log(`Error al Editar Pedido: ${error.response.data.message}`);
@@ -675,7 +675,7 @@ export default {
     },
 
     cancelar() {
-      this.$router.push("/pedidos/tablero-pedidos");
+      history.go(-1);
     },
 
     activarCliente(cliente) {
@@ -706,7 +706,7 @@ export default {
             this.editarPedido
           ).then(
             (response) => {
-              this.$router.push("/pedidos/tablero-pedidos");
+              history.go(-1);
               console.log(response.data.message);
               this.message = response.data.message;
             },

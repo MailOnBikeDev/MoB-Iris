@@ -625,7 +625,7 @@ export default {
         this.alert.success = true;
 
         setTimeout(() => {
-          this.$router.push("/pedidos/tablero-pedidos");
+          history.go(-1);
         }, 1500);
       } catch (error) {
         console.log(
@@ -749,7 +749,7 @@ export default {
 
     cancelar() {
       console.log("Creación de Pedido cancelada");
-      this.$router.push("/pedidos/tablero-pedidos");
+      history.go(-1);
     },
 
     activarCliente(cliente) {
