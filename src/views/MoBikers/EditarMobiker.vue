@@ -44,7 +44,7 @@
             v-if="errors.has('apellidos')"
             class="p-2 text-sm text-white bg-red-500 rounded"
           >
-            <p>Los apellidos son requeridos</p>
+            <p>Al menos 1 apellido es requerido</p>
           </div>
         </div>
 
@@ -61,7 +61,7 @@
             v-if="errors.has('telefono')"
             class="p-2 text-sm text-white bg-red-500 rounded"
           >
-            <p>El teléfono es requerido</p>
+            <p>El teléfono es requerido y debe tener máximo 9 números</p>
           </div>
         </div>
 
@@ -144,11 +144,11 @@
           >
           <model-list-select
             v-model="editarMobiker.tipoDocumento"
-            v-validate="'required'"
             name="tipoDocumento"
             :list="tiposDocumentos"
             option-text="doc"
             option-value="doc"
+            placeholder="Opcional"
           />
           <div
             v-if="errors.has('tipoDocumento')"
@@ -165,15 +165,16 @@
           <input
             v-model="editarMobiker.numeroDocumento"
             type="string"
-            v-validate="'required|min:8|max:10'"
+            v-validate="'min:8|max:10'"
             name="numeroDocumento"
             class="input"
+            placeholder="Opcional"
           />
           <div
             v-if="errors.has('numeroDocumento')"
             class="p-2 text-sm text-white bg-red-500 rounded"
           >
-            <p>El número de documento es requerido</p>
+            <p>Ingrese número de documento válido</p>
           </div>
         </div>
       </div>
@@ -206,6 +207,7 @@
             type="email"
             name="email"
             class="input"
+            placeholder="Opcional"
           />
         </div>
 
@@ -293,6 +295,7 @@
             :list="entidadesBancarias"
             option-text="banco"
             option-value="banco"
+            placeholder="Opcional"
           />
         </div>
 
@@ -306,6 +309,7 @@
             name="tipoCuenta"
             option-text="cuenta"
             option-value="cuenta"
+            placeholder="Opcional"
           />
         </div>
 
@@ -317,6 +321,7 @@
             v-model="editarMobiker.numeroCuentaBancaria"
             type="text"
             class="input"
+            placeholder="Opcional"
           />
         </div>
 
@@ -439,6 +444,7 @@ export default {
   },
   methods: {
     ...mapActions("mobikers", ["getMobikers"]),
+
     async getMobiker(id) {
       try {
         let response = await MobikerService.getMobikerById(id);
@@ -468,7 +474,7 @@ export default {
         await this.getMobikers();
 
         setTimeout(() => {
-          this.$router.push("/mobikers/equipo-mobiker");
+          history.go(-1);
         }, 1500);
       } catch (error) {
         console.error(`Error al actualizar al MoBiker: ${error}`);
@@ -480,7 +486,7 @@ export default {
     },
 
     cancelar() {
-      this.$router.push("/mobikers/equipo-mobiker");
+      history.go(-1);
     },
   },
   components: {

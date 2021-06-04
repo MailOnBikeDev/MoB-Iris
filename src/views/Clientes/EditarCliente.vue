@@ -38,6 +38,7 @@
             type="text"
             name="razonSocial"
             class="input"
+            placeholder="Opcional"
           />
         </div>
 
@@ -80,6 +81,7 @@
             type="email"
             name="email"
             class="input"
+            placeholder="Opcional"
           />
         </div>
 
@@ -91,6 +93,7 @@
             name="ruc"
             type="string"
             class="input"
+            placeholder="Opcional"
           />
           <div
             v-if="errors.has('ruc')"
@@ -145,6 +148,7 @@
             name="otroDato"
             type="text"
             class="input"
+            placeholder="Opcional"
           />
         </div>
       </div>
