@@ -20,7 +20,7 @@ body {
     rgba(70, 185, 195, 0.75) 100%
   );
   background-repeat: no-repeat;
-  min-height: 100vh;
+  min-height: calc(100vh + 72px);
 }
 
 .resalta {
