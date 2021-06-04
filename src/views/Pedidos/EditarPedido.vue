@@ -575,13 +575,15 @@ export default {
         this.editarPedido.statusId = 2;
       }
 
-      const comision = await this.obtenerComision(
-        this.editarPedido.mobiker.fullName
-      );
-      this.editarPedido.comision =
-        this.editarPedido.tarifa !== 0
-          ? (this.editarPedido.tarifa * comision).toFixed(2)
-          : 0;
+      if (this.editarPedido.mobiker.fullName) {
+        const comision = await this.obtenerComision(
+          this.editarPedido.mobiker.fullName
+        );
+        this.editarPedido.comision =
+          this.editarPedido.tarifa !== 0
+            ? (this.editarPedido.tarifa * comision).toFixed(2)
+            : 0;
+      }
     },
 
     "editarPedido.statusId": function() {
@@ -591,13 +593,15 @@ export default {
     },
 
     "editarPedido.tarifa": async function() {
-      const comision = await this.obtenerComision(
-        this.editarPedido.mobiker.fullName
-      );
-      this.editarPedido.comision =
-        this.editarPedido.tarifa !== 0
-          ? (this.editarPedido.tarifa * comision).toFixed(2)
-          : 0;
+      if (this.editarPedido.mobiker.fullName) {
+        const comision = await this.obtenerComision(
+          this.editarPedido.mobiker.fullName
+        );
+        this.editarPedido.comision =
+          this.editarPedido.tarifa !== 0
+            ? (this.editarPedido.tarifa * comision).toFixed(2)
+            : 0;
+      }
     },
   },
   methods: {
