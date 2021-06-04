@@ -60,9 +60,10 @@
               Para mañana
             </button>
           </div>
+
           <div>
             <label for="fecha" class="block ml-1 text-sm font-bold text-primary"
-              >Fecha</label
+              >Fecha Seleccionada</label
             >
             <datepicker
               v-model="editarPedido.fecha"
@@ -71,6 +72,12 @@
               input-class="input"
               :monday-first="true"
             />
+            <div
+              v-if="errors.has('fecha')"
+              class="p-2 text-sm text-white bg-red-500 rounded"
+            >
+              <p>La fecha es requerida</p>
+            </div>
           </div>
 
           <div>
@@ -116,7 +123,7 @@
             <input
               v-model="editarPedido.telefonoRemitente"
               type="string"
-              v-validate="'required|min:6|max:9'"
+              v-validate="'required|min:6|max:12'"
               name="telefonoRemitente"
               class="input"
             />
@@ -124,7 +131,7 @@
               v-if="errors.has('telefonoRemitente')"
               class="p-2 text-sm text-white bg-red-500 rounded"
             >
-              <p>El teléfono es requerido</p>
+              <p>El teléfono es requerido y debe tener máximo 9 números</p>
             </div>
           </div>
 
@@ -217,7 +224,7 @@
               >Tarifa Sugerida</label
             >
             <p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
-              {{ (tarifaSugerida = sugerirTarifa) }}
+              {{ tarifaSugerida }}
             </p>
           </div>
 
@@ -346,7 +353,7 @@
             <input
               v-model="editarPedido.telefonoConsignado"
               type="string"
-              v-validate="'required|min:6|max:9'"
+              v-validate="'required|min:6|max:12'"
               name="telefonoConsignado"
               class="input"
             />
@@ -354,7 +361,7 @@
               v-if="errors.has('telefonoConsignado')"
               class="p-2 text-sm text-white bg-red-500 rounded"
             >
-              <p>El telefono es requerido y debe tener 9 caracteres</p>
+              <p>El telefono es requerido y debe tener máximo 9 números</p>
             </div>
           </div>
 
@@ -420,7 +427,7 @@
               name="mobiker"
               v-model="editarPedido.mobiker"
               placeholder="Buscar distrito..."
-              :list="mobikers"
+              :list="mobikersFiltrados"
               v-validate="'required'"
               option-text="fullName"
               option-value="fullName"
@@ -447,6 +454,12 @@
             <p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
               {{ editarPedido.distancia }}
             </p>
+            <div
+              v-if="errorCalcularDistancia === true"
+              class="p-2 text-sm text-white bg-red-500 rounded"
+            >
+              <p>Falta calcular la distancia</p>
+            </div>
           </div>
 
           <div>
@@ -506,11 +519,10 @@
 import BaseAlerta from "@/components/BaseAlerta.vue";
 import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
-import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
 import Datepicker from "vuejs-datepicker";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 // import axios from "axios";
 // import googleMaps_API from "@/googleMaps-API";
 
@@ -519,23 +531,25 @@ export default {
     return {
       editarPedido: new Pedido(),
       showBuscador: false,
+      mobikersFiltrados: [],
       alert: {
         message: "",
         success: false,
         show: false,
       },
       errorCalcularDistancia: false,
+      tarifaSugerida: 0,
     };
   },
   async mounted() {
     try {
       this.getPedido(this.$route.params.id);
 
-      let mobiker = await MobikerService.getMobikers();
-
-      this.mobikers = mobiker.data.filter(
-        (mobiker) => mobiker.status === "Activo"
-      );
+      this.mobikersFiltrados = this.mobikers
+        .filter((mobiker) => mobiker.status === "Activo")
+        .sort((a, b) => {
+          return a.fullName.localeCompare(b.fullName);
+        });
     } catch (error) {
       console.error("Mensaje de error:", error);
     }
@@ -550,22 +564,45 @@ export default {
       "tiposDeEnvio",
       "statusDelPedido",
     ]),
+
+    ...mapState("mobikers", ["mobikers"]),
   },
   watch: {
-    "editarPedido.mobiker": function() {
+    "editarPedido.mobiker": async function() {
       if (this.editarPedido.mobiker.fullName === "Asignar MoBiker") {
         this.editarPedido.statusId = 1;
       } else {
         this.editarPedido.statusId = 2;
       }
+
+      const comision = await this.obtenerComision(
+        this.editarPedido.mobiker.fullName
+      );
+      this.editarPedido.comision =
+        this.editarPedido.tarifa !== 0
+          ? (this.editarPedido.tarifa * comision).toFixed(2)
+          : 0;
     },
+
     "editarPedido.statusId": function() {
       if (this.editarPedido.statusId === 1) {
         this.editarPedido.mobiker.fullName = "Asignar MoBiker";
       }
     },
+
+    "editarPedido.tarifa": async function() {
+      const comision = await this.obtenerComision(
+        this.editarPedido.mobiker.fullName
+      );
+      this.editarPedido.comision =
+        this.editarPedido.tarifa !== 0
+          ? (this.editarPedido.tarifa * comision).toFixed(2)
+          : 0;
+    },
   },
   methods: {
+    ...mapActions("mobikers", ["obtenerComision"]),
+
     async getPedido(id) {
       try {
         let response = await PedidoService.getPedidoById(id);
@@ -609,10 +646,11 @@ export default {
       try {
         if (
           !(
-            this.nuevoPedido.direccionRemitente &&
-            this.nuevoPedido.distritoRemitente &&
-            this.nuevoPedido.direccionConsignado &&
-            this.nuevoPedido.distritoConsignado
+            this.editarPedido.direccionRemitente &&
+            this.editarPedido.distritoRemitente &&
+            this.editarPedido.direccionConsignado &&
+            this.editarPedido.distritoConsignado &&
+            this.editarPedido.mobiker
           )
         ) {
           this.errorCalcularDistancia = true;
@@ -620,50 +658,17 @@ export default {
           return;
         }
         this.errorCalcularDistancia = false;
-        // let origen = `${this.nuevoPedido.direccionRemitente.replace(
-        // 	/ /g,
-        // 	"+"
-        // )}+${this.nuevoPedido.distritoRemitente.replace(/ /g, "+")}`;
-        // let destino = `${this.nuevoPedido.direccionConsignado.replace(
-        // 	/ /g,
-        // 	"+"
-        // )}+${this.nuevoPedido.distritoConsignado.replace(/ /g, "+")}`;
-
-        // // console.log("Origen:", origen);
-        // // console.log("Destino:", destino);
-
-        // const API_URL = `https://cors-anywhere.herokuapp.com/${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
-
-        // let distancia = await axios.get(API_URL);
-        // // console.log(`Distancia: ${distancia}`);
-
-        // let distanciaCalculada =
-        // 	distancia.data.rows[0].elements[0].distance.value / 1000;
-
-        // console.log(`distancia calculada: ${distanciaCalculada}`);
+        const tarifaPorKm = 1.2;
 
         let distanciaCalculada = 3.8;
 
-        this.nuevoPedido.distancia = distanciaCalculada.toFixed(1);
-        this.nuevoPedido.tarifa = 7.0;
-        this.nuevoPedido.CO2Ahorrado = (
-          this.nuevoPedido.distancia / 12
+        this.editarPedido.distancia = distanciaCalculada;
+        this.editarPedido.tarifa = 7.0;
+        this.tarifaSugerida = (distanciaCalculada * tarifaPorKm).toFixed(2);
+        this.editarPedido.CO2Ahorrado = (
+          this.editarPedido.distancia / 12
         ).toFixed(1);
-        this.nuevoPedido.ruido = (this.nuevoPedido.distancia / 24).toFixed(2);
-        this.nuevoPedido.recaudo = 0;
-        this.nuevoPedido.tramite = 0;
-
-        console.log(`
-					\n distancia: ${this.nuevoPedido.distancia} Km,
-					\n CO2: ${this.nuevoPedido.CO2Ahorrado} Kg,
-					\n ruido: ${this.nuevoPedido.ruido} h`);
-
-        return (
-          this.nuevoPedido.distancia,
-          this.nuevoPedido.tarifa,
-          this.nuevoPedido.CO2Ahorrado,
-          this.nuevoPedido.ruido
-        );
+        this.editarPedido.ruido = (this.editarPedido.distancia / 24).toFixed(2);
       } catch (error) {
         console.error("Mensaje de error: ", error.message);
       }
@@ -694,7 +699,7 @@ export default {
           console.error("Mensaje de error: No se pudo editar el Pedido");
           return;
         } else {
-          this.editarPedido.statusId = 17;
+          this.editarPedido.statusId = 6;
           // console.log(this.editarPedido.status);
           PedidoService.editPedido(
             this.$route.params.id,

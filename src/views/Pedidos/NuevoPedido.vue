@@ -132,7 +132,7 @@
               v-if="errors.has('telefonoRemitente')"
               class="p-2 text-sm text-white bg-red-500 rounded"
             >
-              <p>El teléfono es requerido</p>
+              <p>El teléfono es requerido y tener máximo 9 números</p>
             </div>
           </div>
 
@@ -210,7 +210,7 @@
               type="number"
               v-validate="'required'"
               name="tarifa"
-              class="w-full p-2 text-gray-700 transition duration-500 bg-white border-b-4 border-gray-300 rounded focus:outline-none focus:border-blue-600"
+              class="input"
             />
             <div
               v-if="errors.has('tarifa')"
@@ -356,7 +356,7 @@
               v-if="errors.has('telefonoConsignado')"
               class="p-2 text-sm text-white bg-red-500 rounded"
             >
-              <p>El telefono es requerido y debe tener 9 caracteres</p>
+              <p>El telefono es requerido y debe tener máximo 9 números</p>
             </div>
           </div>
 
@@ -449,6 +449,12 @@
             <p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
               {{ nuevoPedido.distancia }}
             </p>
+            <div
+              v-if="errorCalcularDistancia === true"
+              class="p-2 text-sm text-white bg-red-500 rounded"
+            >
+              <p>Falta calcular la distancia</p>
+            </div>
           </div>
 
           <div>
@@ -521,7 +527,7 @@ import { ModelListSelect } from "vue-search-select";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
 import Datepicker from "vuejs-datepicker";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 // import consultarApi from "@/services/maps.service";
 
 export default {
@@ -566,23 +572,44 @@ export default {
     ...mapState("mobikers", ["mobikers"]),
   },
   watch: {
-    "nuevoPedido.mobiker": function() {
+    "nuevoPedido.mobiker": async function() {
       if (this.nuevoPedido.mobiker === "Asignar MoBiker") {
         this.nuevoPedido.status = 1;
       } else {
         this.nuevoPedido.status = 2;
       }
+
+      const comision = await this.obtenerComision(this.nuevoPedido.mobiker);
+      this.nuevoPedido.comision =
+        this.nuevoPedido.tarifa !== 0
+          ? (this.nuevoPedido.tarifa * comision).toFixed(2)
+          : 0;
     },
+
     "nuevoPedido.status": function() {
       if (this.nuevoPedido.status === 1) {
         this.nuevoPedido.mobiker = "Asignar MoBiker";
       }
     },
+
+    "nuevoPedido.tarifa": async function() {
+      const comision = await this.obtenerComision(this.nuevoPedido.mobiker);
+      this.nuevoPedido.comision =
+        this.nuevoPedido.tarifa !== 0
+          ? (this.nuevoPedido.tarifa * comision).toFixed(2)
+          : 0;
+    },
   },
   methods: {
+    ...mapActions("mobikers", ["obtenerComision"]),
+
     async handleNuevoPedido() {
       try {
         const isValid = await this.$validator.validateAll();
+        if (this.nuevoPedido.distancia === (null || undefined)) {
+          this.errorCalcularDistancia = true;
+          return;
+        }
         if (!isValid) {
           return;
         }
@@ -710,13 +737,11 @@ export default {
 
         this.nuevoPedido.distancia = distanciaCalculada;
         this.nuevoPedido.tarifa = 7.0;
-        this.nuevoPedido.comision = (this.nuevoPedido.tarifa * 0.6).toFixed(2);
+        this.tarifaSugerida = (distanciaCalculada * tarifaPorKm).toFixed(2);
         this.nuevoPedido.CO2Ahorrado = (
           this.nuevoPedido.distancia / 12
         ).toFixed(1);
         this.nuevoPedido.ruido = (this.nuevoPedido.distancia / 24).toFixed(2);
-
-        this.tarifaSugerida = (distanciaCalculada * tarifaPorKm).toFixed(2);
       } catch (error) {
         console.error("Mensaje de error: ", error.message);
       }
@@ -750,9 +775,6 @@ export default {
 
     asignarHoy() {
       let hoy = new Date();
-      console.log(hoy);
-      console.log(this.nuevoPedido.fecha);
-
       return (this.nuevoPedido.fecha = hoy);
     },
 
@@ -760,7 +782,6 @@ export default {
       let hoy = new Date();
       let DIA_EN_MS = 24 * 60 * 60 * 1000;
       let manana = new Date(hoy.getTime() + DIA_EN_MS);
-      console.log(manana);
       return (this.nuevoPedido.fecha = manana);
     },
   },

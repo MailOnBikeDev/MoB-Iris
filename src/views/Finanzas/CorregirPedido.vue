@@ -60,6 +60,7 @@
               Para mañana
             </button>
           </div>
+
           <div>
             <label for="fecha" class="block ml-1 text-sm font-bold text-primary"
               >Fecha</label
@@ -68,23 +69,19 @@
               v-model="editarPedido.fecha"
               v-validate="'required'"
               name="fechaNacimiento"
-              input-class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              input-class="input"
               :monday-first="true"
             />
           </div>
 
           <div>
-            <label
-              for="contactoRemitente"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Contacto</label
-            >
+            <label for="contactoRemitente" class="label-input">Contacto</label>
             <input
               v-model="editarPedido.contactoRemitente"
               type="text"
               v-validate="'required'"
               name="contactoRemitente"
-              class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              class="input"
             />
             <div
               v-if="errors.has('contactoRemitente')"
@@ -95,17 +92,13 @@
           </div>
 
           <div>
-            <label
-              for="empresaRemitente"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Empresa</label
-            >
+            <label for="empresaRemitente" class="label-input">Empresa</label>
             <input
               v-model="editarPedido.empresaRemitente"
               type="text"
               v-validate="'required'"
               name="empresaRemitente"
-              class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              class="input"
             />
             <div
               v-if="errors.has('empresaRemitente')"
@@ -124,22 +117,20 @@
             <input
               v-model="editarPedido.telefonoRemitente"
               type="string"
-              v-validate="'required|min:6|max:9'"
+              v-validate="'required|min:6|max:12'"
               name="telefonoRemitente"
-              class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              class="input"
             />
             <div
               v-if="errors.has('telefonoRemitente')"
               class="p-2 text-sm text-white bg-red-500 rounded"
             >
-              <p>El teléfono es requerido</p>
+              <p>El teléfono es requerido y tener máximo 9 números</p>
             </div>
           </div>
 
           <div class="col-span-2 ">
-            <label
-              for="direccionRemitente"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
+            <label for="direccionRemitente" class="label-input"
               >Direccion</label
             >
             <input
@@ -147,7 +138,7 @@
               type="text"
               v-validate="'required'"
               name="direccionRemitente"
-              class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              class="input"
             />
             <div
               v-if="errors.has('direccionRemitente') || errorCalcularDistancia"
@@ -158,11 +149,7 @@
           </div>
 
           <div>
-            <label
-              for="distritoRemitente"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Distrito</label
-            >
+            <label for="distritoRemitente" class="label-input">Distrito</label>
             <model-list-select
               name="distritoRemitente"
               v-model="editarPedido.distritoRemitente"
@@ -182,24 +169,16 @@
           </div>
 
           <div class="col-span-3">
-            <label
-              for="otroDatoRemitente"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Otro Dato</label
-            >
+            <label for="otroDatoRemitente" class="label-input">Otro Dato</label>
             <input
               v-model="editarPedido.otroDatoRemitente"
               type="text"
-              class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              class="input"
             />
           </div>
 
           <div>
-            <label
-              for="formaPago"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Forma de pago</label
-            >
+            <label for="formaPago" class="label-input">Forma de pago</label>
             <model-list-select
               name="formaPago"
               v-model="editarPedido.formaPago"
@@ -218,11 +197,7 @@
           </div>
 
           <div>
-            <label
-              for="tarifa"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Tarifa</label
-            >
+            <label for="tarifa" class="label-input">Tarifa</label>
             <input
               v-model.number="editarPedido.tarifa"
               type="number"
@@ -239,22 +214,16 @@
           </div>
 
           <div>
-            <label
-              for="tarifaSugerida"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
+            <label for="tarifaSugerida" class="label-input"
               >Tarifa Sugerida</label
             >
             <p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
-              {{ (tarifaSugerida = sugerirTarifa) }}
+              {{ tarifaSugerida }}
             </p>
           </div>
 
           <div class="col-span-2">
-            <label
-              for="tipoCarga"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Tipo de Carga</label
-            >
+            <label for="tipoCarga" class="label-input">Tipo de Carga</label>
             <model-list-select
               name="tipoCarga"
               v-model="editarPedido.tipoCarga"
@@ -272,14 +241,10 @@
           </div>
 
           <div>
-            <label
-              for="rol"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Rol</label
-            >
+            <label for="rol" class="label-input">Rol</label>
             <model-list-select
               name="rolCliente"
-              :list="rolesCliente"
+              :list="rolCliente"
               v-model="editarPedido.rolCliente"
               v-validate="'required'"
               option-text="rol"
@@ -297,11 +262,7 @@
         <!-- FORMULARIO DESTINO -->
         <div class="grid grid-cols-3 gap-2 p-2">
           <div>
-            <label
-              for="tipoEnvio"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Tipo de Envío</label
-            >
+            <label for="tipoEnvio" class="label-input">Tipo de Envío</label>
             <model-list-select
               name="tipoEnvio"
               v-model="editarPedido.tipoEnvio"
@@ -319,11 +280,7 @@
           </div>
 
           <div>
-            <label
-              for="modalidad"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Modalidad</label
-            >
+            <label for="modalidad" class="label-input">Modalidad</label>
             <model-list-select
               name="modalidad"
               v-model="editarPedido.modalidad"
@@ -341,15 +298,11 @@
           </div>
 
           <div>
-            <label
-              for="status"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Estado del Pedido</label
-            >
+            <label for="status" class="label-input">Estado del Pedido</label>
             <model-list-select
               name="status"
               v-model="editarPedido.statusId"
-              :list="estadosPedido"
+              :list="statusDelPedido"
               v-validate="'required'"
               option-text="tag"
               option-value="id"
@@ -363,17 +316,13 @@
           </div>
 
           <div>
-            <label
-              for="contactoConsignado"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Contacto</label
-            >
+            <label for="contactoConsignado" class="label-input">Contacto</label>
             <input
               v-model="editarPedido.contactoConsignado"
               type="text"
               v-validate="'required'"
               name="contactoConsignado"
-              class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              class="input"
             />
             <div
               v-if="errors.has('contactoConsignado')"
@@ -384,44 +333,34 @@
           </div>
 
           <div>
-            <label
-              for="empresaConsignado"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Empresa</label
-            >
+            <label for="empresaConsignado" class="label-input">Empresa</label>
             <input
               v-model="editarPedido.empresaConsignado"
               type="text"
               name="empresaConsignado"
-              class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              class="input"
             />
           </div>
 
           <div>
-            <label
-              for="telefonoConsignado"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Teléfono</label
-            >
+            <label for="telefonoConsignado" class="label-input">Teléfono</label>
             <input
               v-model="editarPedido.telefonoConsignado"
               type="string"
-              v-validate="'required|min:6|max:9'"
+              v-validate="'required|min:6|max:12'"
               name="telefonoConsignado"
-              class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              class="input"
             />
             <div
               v-if="errors.has('telefonoConsignado')"
               class="p-2 text-sm text-white bg-red-500 rounded"
             >
-              <p>El telefono es requerido y debe tener 9 caracteres</p>
+              <p>El telefono es requerido y debe tener máximo 9 números</p>
             </div>
           </div>
 
           <div class="col-span-2">
-            <label
-              for="direccionConsignado"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
+            <label for="direccionConsignado" class="label-input"
               >Dirección</label
             >
             <input
@@ -429,7 +368,7 @@
               type="text"
               v-validate="'required'"
               name="direccionConsignado"
-              class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              class="input"
             />
             <div
               v-if="errors.has('direccionConsignado') || errorCalcularDistancia"
@@ -440,11 +379,7 @@
           </div>
 
           <div>
-            <label
-              for="distritoConsignado"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Distrito</label
-            >
+            <label for="distritoConsignado" class="label-input">Distrito</label>
             <model-list-select
               name="distritoConsignado"
               v-model="editarPedido.distritoConsignado"
@@ -463,40 +398,30 @@
           </div>
 
           <div class="col-span-3">
-            <label
-              for="otroDatoConsignado"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
+            <label for="otroDatoConsignado" class="label-input"
               >Otro Dato</label
             >
             <input
               v-model="editarPedido.otroDatoConsignado"
               type="text"
-              class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              class="input"
             />
           </div>
 
           <div>
-            <label
-              for="comision"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Comisión</label
-            >
+            <label for="comision" class="label-input">Comisión</label>
             <p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
-              {{ (editarPedido.comision = calcularComision) }}
+              {{ editarPedido.comision }}
             </p>
           </div>
 
           <div>
-            <label
-              for="mobiker"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Mobiker</label
-            >
+            <label for="mobiker" class="label-input">Mobiker</label>
             <model-list-select
               name="mobiker"
               v-model="editarPedido.mobiker"
               placeholder="Buscar distrito..."
-              :list="mobikers"
+              :list="mobikersFiltrados"
               v-validate="'required'"
               option-text="fullName"
               option-value="fullName"
@@ -519,39 +444,33 @@
           </div>
 
           <div>
-            <label
-              for="distancia"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Distancia</label
-            >
+            <label for="distancia" class="label-input">Distancia</label>
             <p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
               {{ editarPedido.distancia }}
             </p>
+            <div
+              v-if="errorCalcularDistancia === true"
+              class="p-2 text-sm text-white bg-red-500 rounded"
+            >
+              <p>Falta calcular la distancia</p>
+            </div>
           </div>
 
           <div>
-            <label
-              for="recaudo"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Recaudo</label
-            >
+            <label for="recaudo" class="label-input">Recaudo</label>
             <input
               v-model.number="editarPedido.recaudo"
               type="number"
-              class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              class="input"
             />
           </div>
 
           <div>
-            <label
-              for="tramite"
-              class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Trámite</label
-            >
+            <label for="tramite" class="label-input">Trámite</label>
             <input
               v-model.number="editarPedido.tramite"
               type="number"
-              class="w-full p-2 text-gray-700 transition duration-500 border-b-4 rounded focus:outline-none focus:border-info"
+              class="input"
             />
           </div>
         </div>
@@ -583,17 +502,21 @@
         </button>
       </div>
     </form>
+
+    <transition name="alerta">
+      <BaseAlerta v-if="alert.show" :alert="alert" />
+    </transition>
   </div>
 </template>
 
 <script>
+import BaseAlerta from "@/components/BaseAlerta.vue";
 import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
-import AuxiliarService from "@/services/auxiliares.service";
-import MobikerService from "@/services/mobiker.service";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
 import Datepicker from "vuejs-datepicker";
+import { mapState, mapActions } from "vuex";
 // import axios from "axios";
 // import googleMaps_API from "@/googleMaps-API";
 
@@ -602,62 +525,78 @@ export default {
     return {
       editarPedido: new Pedido(),
       showBuscador: false,
-      message: "",
+      mobikersFiltrados: [],
+      alert: {
+        message: "",
+        success: false,
+        show: false,
+      },
       errorCalcularDistancia: false,
-      distritos: [],
-      tiposDeCarga: [],
-      formasDePago: [],
-      rolesCliente: [],
-      modalidades: [],
-      mobikers: [],
-      tiposDeEnvio: [],
-      estadosPedido: [],
-      rolDelCliente: "",
-      tarifaSugerida: null,
+      tarifaSugerida: 0,
     };
   },
   async mounted() {
     try {
       this.getPedido(this.$route.params.id);
 
-      let resDistritos = await AuxiliarService.getDistritos();
-      let resCarga = await AuxiliarService.getTipoCarga();
-      let pagos = await AuxiliarService.getFormasPago();
-      let roles = await AuxiliarService.getRolCliente();
-      let modalidad = await AuxiliarService.getModalidad();
-      let envios = await AuxiliarService.getTipoEnvio();
-      let estados = await AuxiliarService.getStatusPedidos();
-
-      let mobiker = await MobikerService.getMobikers();
-
-      this.distritos = resDistritos.data;
-      this.tiposDeCarga = resCarga.data;
-      this.formasDePago = pagos.data;
-      this.rolesCliente = roles.data;
-      this.modalidades = modalidad.data;
-      this.tiposDeEnvio = envios.data;
-      this.estadosPedido = estados.data;
-
-      this.mobikers = mobiker.data.filter(
-        (mobiker) => mobiker.status === "Activo"
-      );
+      this.mobikersFiltrados = this.mobikers
+        .filter((mobiker) => mobiker.status === "Activo")
+        .sort((a, b) => {
+          return a.fullName.localeCompare(b.fullName);
+        });
     } catch (error) {
       console.error("Mensaje de error:", error);
     }
   },
   computed: {
-    calcularComision() {
-      let comision = this.editarPedido.tarifa * 0.6;
-      return comision.toFixed(2);
+    ...mapState("auxiliares", [
+      "distritos",
+      "formasDePago",
+      "tiposDeCarga",
+      "rolCliente",
+      "modalidades",
+      "tiposDeEnvio",
+      "statusDelPedido",
+    ]),
+
+    ...mapState("mobikers", ["mobikers"]),
+  },
+  watch: {
+    "editarPedido.mobiker": async function() {
+      if (this.editarPedido.mobiker.fullName === "Asignar MoBiker") {
+        this.editarPedido.statusId = 1;
+      } else {
+        this.editarPedido.statusId = 2;
+      }
+
+      const comision = await this.obtenerComision(
+        this.editarPedido.mobiker.fullName
+      );
+      this.editarPedido.comision =
+        this.editarPedido.tarifa !== 0
+          ? (this.editarPedido.tarifa * comision).toFixed(2)
+          : 0;
     },
 
-    sugerirTarifa() {
-      let tarifaPorKm = 0.8;
-      let tarifaSugerida = this.editarPedido.distancia * tarifaPorKm;
-      return tarifaSugerida.toFixed(2);
+    "editarPedido.statusId": function() {
+      if (this.editarPedido.statusId === 1) {
+        this.editarPedido.mobiker.fullName = "Asignar MoBiker";
+      }
+    },
+
+    "editarPedido.tarifa": async function() {
+      const comision = await this.obtenerComision(
+        this.editarPedido.mobiker.fullName
+      );
+      this.editarPedido.comision =
+        this.editarPedido.tarifa !== 0
+          ? (this.editarPedido.tarifa * comision).toFixed(2)
+          : 0;
     },
   },
   methods: {
+    ...mapActions("mobikers", ["obtenerComision"]),
+
     async getPedido(id) {
       try {
         let response = await PedidoService.getPedidoById(id);
@@ -670,35 +609,42 @@ export default {
       }
     },
 
-    handleEditarPedido() {
-      this.$validator.validateAll().then((isValid) => {
+    async handleEditarPedido() {
+      try {
+        const isValid = await this.$validator.validateAll();
         if (!isValid) {
-          console.error("Mensaje de error: No se pudo editar el Pedido");
           return;
-        } else {
-          PedidoService.editPedido(
-            this.$route.params.id,
-            this.editarPedido
-          ).then(
-            (response) => {
-              history.go(-1);
-              console.log(response.data.message);
-              this.message = response.data.message;
-            },
-            (err) => console.error(`Mensaje de error: ${err.message}`)
-          );
         }
-      });
+
+        const response = await PedidoService.editPedido(
+          this.$route.params.id,
+          this.editarPedido
+        );
+        this.alert.message = response.data.message;
+        this.alert.show = true;
+        this.alert.success = true;
+
+        setTimeout(() => {
+          history.go(-1);
+        }, 1500);
+      } catch (error) {
+        console.log(`Error al Editar Pedido: ${error.response.data.message}`);
+        this.alert.message = error.response.data.message;
+        this.alert.show = true;
+        this.alert.success = false;
+        setTimeout(() => (this.alert.show = false), 2500);
+      }
     },
 
     async calcularDistancia() {
       try {
         if (
           !(
-            this.nuevoPedido.direccionRemitente &&
-            this.nuevoPedido.distritoRemitente &&
-            this.nuevoPedido.direccionConsignado &&
-            this.nuevoPedido.distritoConsignado
+            this.editarPedido.direccionRemitente &&
+            this.editarPedido.distritoRemitente &&
+            this.editarPedido.direccionConsignado &&
+            this.editarPedido.distritoConsignado &&
+            this.editarPedido.mobiker
           )
         ) {
           this.errorCalcularDistancia = true;
@@ -706,50 +652,17 @@ export default {
           return;
         }
         this.errorCalcularDistancia = false;
-        // let origen = `${this.nuevoPedido.direccionRemitente.replace(
-        // 	/ /g,
-        // 	"+"
-        // )}+${this.nuevoPedido.distritoRemitente.replace(/ /g, "+")}`;
-        // let destino = `${this.nuevoPedido.direccionConsignado.replace(
-        // 	/ /g,
-        // 	"+"
-        // )}+${this.nuevoPedido.distritoConsignado.replace(/ /g, "+")}`;
+        const tarifaPorKm = 1.2;
 
-        // // console.log("Origen:", origen);
-        // // console.log("Destino:", destino);
+        let distanciaCalculada = 3.8;
 
-        // const API_URL = `https://cors-anywhere.herokuapp.com/${googleMaps_API.BASE_URL}/json?&origins=${origen}&destinations=${destino}&mode=walking&key=${process.env.VUE_APP_GOOGLEMAPS_API_KEY}`;
-
-        // let distancia = await axios.get(API_URL);
-        // // console.log(`Distancia: ${distancia}`);
-
-        // let distanciaCalculada =
-        // 	distancia.data.rows[0].elements[0].distance.value / 1000;
-
-        // console.log(`distancia calculada: ${distanciaCalculada}`);
-
-        let distanciaCalculada = 6.8;
-
-        this.nuevoPedido.distancia = distanciaCalculada.toFixed(1);
-        this.nuevoPedido.tarifa = 7.0;
-        this.nuevoPedido.CO2Ahorrado = (
-          this.nuevoPedido.distancia / 12
+        this.editarPedido.distancia = distanciaCalculada;
+        this.editarPedido.tarifa = 7.0;
+        this.tarifaSugerida = (distanciaCalculada * tarifaPorKm).toFixed(2);
+        this.editarPedido.CO2Ahorrado = (
+          this.editarPedido.distancia / 12
         ).toFixed(1);
-        this.nuevoPedido.ruido = (this.nuevoPedido.distancia / 24).toFixed(2);
-        this.nuevoPedido.recaudo = 0;
-        this.nuevoPedido.tramite = 0;
-
-        console.log(`
-					\n distancia: ${this.nuevoPedido.distancia} Km,
-					\n CO2: ${this.nuevoPedido.CO2Ahorrado} Kg,
-					\n ruido: ${this.nuevoPedido.ruido} h`);
-
-        return (
-          this.nuevoPedido.distancia,
-          this.nuevoPedido.tarifa,
-          this.nuevoPedido.CO2Ahorrado,
-          this.nuevoPedido.ruido
-        );
+        this.editarPedido.ruido = (this.editarPedido.distancia / 24).toFixed(2);
       } catch (error) {
         console.error("Mensaje de error: ", error.message);
       }
@@ -780,7 +693,7 @@ export default {
           console.error("Mensaje de error: No se pudo editar el Pedido");
           return;
         } else {
-          this.editarPedido.statusId = 17;
+          this.editarPedido.statusId = 6;
           // console.log(this.editarPedido.status);
           PedidoService.editPedido(
             this.$route.params.id,
@@ -813,6 +726,7 @@ export default {
     ModelListSelect,
     BuscadorCliente,
     Datepicker,
+    BaseAlerta,
   },
 };
 </script>
