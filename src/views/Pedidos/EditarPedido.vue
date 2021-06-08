@@ -70,8 +70,9 @@
               v-validate="'required'"
               name="fecha"
               input-class="input"
-              :format="customDateFormat"
               :monday-first="true"
+              :language="es"
+              :use-utc="true"
             />
             <div
               v-if="errors.has('fecha')"
@@ -524,6 +525,7 @@ import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
 import Datepicker from "vuejs-datepicker";
 import { mapState, mapActions } from "vuex";
+import { es } from "vuejs-datepicker/dist/locale";
 // import axios from "axios";
 // import googleMaps_API from "@/googleMaps-API";
 
@@ -540,6 +542,7 @@ export default {
       },
       errorCalcularDistancia: false,
       tarifaSugerida: 0,
+      es: es,
     };
   },
   async mounted() {
@@ -615,6 +618,7 @@ export default {
         this.editarPedido = response.data;
         this.editarPedido.distritoConsignado = response.data.distrito.distrito;
         this.editarPedido.tipoEnvio = response.data.tipoDeEnvio.tipo;
+        console.log(this.editarPedido.fecha);
       } catch (error) {
         console.error("Mensaje de error:", error);
       }
@@ -721,21 +725,17 @@ export default {
       });
     },
 
-    customDateFormat(date) {
-      let formatDate = date.toISOString().split("T")[0];
-      formatDate = this.$date(formatDate).format("DD MMM YYYY");
-      return formatDate;
-    },
-
     asignarHoy() {
-      let hoy = new Date();
+      let hoy = new Date().toISOString().split("T")[0];
       return (this.editarPedido.fecha = hoy);
     },
 
     asignarMañana() {
       let hoy = new Date();
       let DIA_EN_MS = 24 * 60 * 60 * 1000;
-      let manana = new Date(hoy.getTime() + DIA_EN_MS);
+      let manana = new Date(hoy.getTime() + DIA_EN_MS)
+        .toISOString()
+        .split("T")[0];
       return (this.editarPedido.fecha = manana);
     },
   },

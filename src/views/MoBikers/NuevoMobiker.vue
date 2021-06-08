@@ -191,6 +191,7 @@
             input-class="input"
             :monday-first="true"
             :language="es"
+            :use-utc="true"
           />
           <div
             v-if="errors.has('fechaNacimiento')"
@@ -277,6 +278,7 @@
             name="fechaIngreso"
             input-class="input"
             :monday-first="true"
+            :use-utc="true"
             :language="es"
           />
           <div

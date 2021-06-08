@@ -29,12 +29,16 @@
           name="fechaInicio"
           input-class="w-32 p-2 mb-1 font-bold cursor-pointer rounded-l-xl focus:outline-none text-primary"
           :monday-first="true"
+          :language="es"
+          :use-utc="true"
         />
         <datepicker
           v-model="fechaFin"
           name="fechaFin"
           input-class="w-32 p-2 mb-1 font-bold cursor-pointer focus:outline-none text-primary"
           :monday-first="true"
+          :language="es"
+          :use-utc="true"
         />
         <button
           type="button"
@@ -240,6 +244,7 @@ import ResumenPedido from "@/components/ResumenPedido.vue";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { mapState, mapActions } from "vuex";
+import { es } from "vuejs-datepicker/dist/locale";
 
 export default {
   name: "Pedidos",
@@ -269,7 +274,8 @@ export default {
 
       page: 1,
       cantidadPedidos: 0,
-      pageSize: 50,
+      pageSize: 200,
+      es: es,
     };
   },
   mounted() {

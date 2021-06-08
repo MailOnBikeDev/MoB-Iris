@@ -72,6 +72,8 @@
               input-class="input"
               :monday-first="true"
               placeholder="Fecha del Pedido"
+              :use-utc="true"
+              :language="es"
             />
             <div
               v-if="errors.has('fecha')"
@@ -528,9 +530,11 @@ import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
 import Datepicker from "vuejs-datepicker";
 import { mapState, mapActions } from "vuex";
+import { es } from "vuejs-datepicker/dist/locale";
 // import consultarApi from "@/services/maps.service";
 
 export default {
+  name: "nuevoPedido",
   data() {
     return {
       nuevoPedido: new Pedido(),
@@ -544,6 +548,7 @@ export default {
       errorCalcularDistancia: false,
       tarifaSugerida: 0,
       memoriaCliente: null,
+      es: es,
     };
   },
   async mounted() {
@@ -773,14 +778,16 @@ export default {
     },
 
     asignarHoy() {
-      let hoy = new Date();
+      let hoy = new Date().toISOString().split("T")[0];
       return (this.nuevoPedido.fecha = hoy);
     },
 
     asignarMañana() {
       let hoy = new Date();
       let DIA_EN_MS = 24 * 60 * 60 * 1000;
-      let manana = new Date(hoy.getTime() + DIA_EN_MS);
+      let manana = new Date(hoy.getTime() + DIA_EN_MS)
+        .toISOString()
+        .split("T")[0];
       return (this.nuevoPedido.fecha = manana);
     },
   },

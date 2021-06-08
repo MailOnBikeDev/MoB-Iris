@@ -28,6 +28,8 @@
           name="buscadorFecha"
           input-class="p-2 mb-1 font-bold cursor-pointer rounded-l-xl w-28 focus:outline-none text-primary"
           :monday-first="true"
+          :language="es"
+          :use-utc="true"
         />
         <button
           type="button"
@@ -285,6 +287,7 @@ import ReporteComanda from "@/components/ReporteComanda";
 import DetallePedido from "@/components/DetallePedido";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
+import { es } from "vuejs-datepicker/dist/locale";
 
 export default {
   name: "Pedidos",
@@ -308,6 +311,7 @@ export default {
       page: 1,
       cantidadPedidos: 0,
       pageSize: 200,
+      es: es,
     };
   },
   mounted() {
