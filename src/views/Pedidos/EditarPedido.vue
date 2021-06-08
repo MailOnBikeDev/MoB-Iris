@@ -68,8 +68,9 @@
             <datepicker
               v-model="editarPedido.fecha"
               v-validate="'required'"
-              name="fechaNacimiento"
+              name="fecha"
               input-class="input"
+              :format="customDateFormat"
               :monday-first="true"
             />
             <div
@@ -718,6 +719,10 @@ export default {
           );
         }
       });
+    },
+
+    customDateFormat(date) {
+      return this.$date(date).utc().format("DD MMM YYYY");
     },
 
     asignarHoy() {

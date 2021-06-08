@@ -620,10 +620,6 @@ export default {
 
         this.nuevoPedido.operador = this.$store.getters.operador;
 
-        this.nuevoPedido.fecha = new Date(this.nuevoPedido.fecha)
-          .toISOString()
-          .split("T")[0];
-
         const response = await PedidoService.storageNuevoPedido(
           this.nuevoPedido
         );
