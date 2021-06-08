@@ -722,7 +722,9 @@ export default {
     },
 
     customDateFormat(date) {
-      return this.$date(date).utc().format("DD MMM YYYY");
+      let formatDate = date.toISOString().split("T")[0];
+      formatDate = this.$date(formatDate).format("DD MMM YYYY");
+      return formatDate;
     },
 
     asignarHoy() {
