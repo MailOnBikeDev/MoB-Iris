@@ -213,6 +213,8 @@ import Pagination from "@/components/Pagination.vue";
 import { mapState, mapActions } from "vuex";
 import { es } from "vuejs-datepicker/dist/locale";
 
+const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
+
 export default {
   name: "Comisiones",
   components: {
@@ -231,7 +233,7 @@ export default {
       currentIndex: -1,
       currentPedido: null,
       currentPedidoIndex: -1,
-      fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
+      fechaInicio: new Date(seisDiasAtras),
       fechaFin: new Date(),
       buscador: "",
 
@@ -282,8 +284,8 @@ export default {
 
     retrievePedidosMobikers() {
       const params = this.getRequestParams(
-        this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-        this.$date(this.fechaFin).format("YYYY-MM-DD"),
+        this.fechaInicio.toISOString().split("T")[0],
+        this.fechaFin.toISOString().split("T")[0],
         this.currentIndex,
         this.page,
         this.pageSize

@@ -161,6 +161,15 @@
           </div>
 
           <div @click="setActivePedido(pedido, pedido.id)">
+            <p v-if="pedido.status.id === 1" class="tag-programado">
+              {{ pedido.status.tag }}
+            </p>
+            <p v-if="pedido.status.id === 2" class="tag-recoger">
+              {{ pedido.status.tag }}
+            </p>
+            <p v-if="pedido.status.id === 3" class="tag-transito">
+              {{ pedido.status.tag }}
+            </p>
             <p v-if="pedido.status.id === 4" class="tag-entregado">
               {{ pedido.status.tag }}
             </p>
@@ -204,6 +213,8 @@ import Pagination from "@/components/Pagination.vue";
 import { mapState, mapActions } from "vuex";
 import { es } from "vuejs-datepicker/dist/locale";
 
+const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
+
 export default {
   name: "Facturacion",
   components: {
@@ -221,7 +232,7 @@ export default {
       currentIndex: -1,
       currentPedido: null,
       currentPedidoIndex: -1,
-      fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
+      fechaInicio: new Date(seisDiasAtras),
       fechaFin: new Date(),
       buscador: "",
 
@@ -268,8 +279,8 @@ export default {
 
     retrievePedidosClientes() {
       const params = this.getRequestParams(
-        this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-        this.$date(this.fechaFin).format("YYYY-MM-DD"),
+        this.fechaInicio.toISOString().split("T")[0],
+        this.fechaFin.toISOString().split("T")[0],
         this.currentIndex,
         this.page,
         this.pageSize

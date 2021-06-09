@@ -246,6 +246,9 @@ import Pagination from "@/components/Pagination.vue";
 import { mapState, mapActions } from "vuex";
 import { es } from "vuejs-datepicker/dist/locale";
 
+const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
+const manana = new Date().getTime() + 1000 * 60 * 60 * 24;
+
 export default {
   name: "Pedidos",
   components: {
@@ -265,8 +268,8 @@ export default {
       currentIndexMobiker: -1,
       currentPedido: null,
       currentIndex: -1,
-      fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
-      fechaFin: new Date(new Date().getTime() + 1000 * 60 * 60 * 24),
+      fechaInicio: new Date(seisDiasAtras),
+      fechaFin: new Date(manana),
       pedidosPorAsignar: 0,
       pedidosArray: [],
 
@@ -328,8 +331,8 @@ export default {
     async retrievePedidos() {
       try {
         const params = this.getRequestParams(
-          this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-          this.$date(this.fechaFin).format("YYYY-MM-DD"),
+          this.fechaInicio.toISOString().split("T")[0],
+          this.fechaFin.toISOString().split("T")[0],
           this.page,
           this.pageSize
         );
@@ -484,21 +487,7 @@ export default {
         return a.fecha > b.fecha ? -1 : 1;
       });
     },
-
-    // clickExterno() {
-    //   this.buscador = "";
-    //   this.currentIndexMobiker = -1;
-
-    //   this.pedidosFiltrados = this.pedidos
-    //     .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
-    //     .sort((a, b) => {
-    //       return a.statusId > b.statusId ? 1 : -1;
-    //     });
-    // },
   },
-  // directives: {
-  //   vClickOutside: vClickOutside.directive,
-  // },
 };
 </script>
 

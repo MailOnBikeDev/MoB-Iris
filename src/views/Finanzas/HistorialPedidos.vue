@@ -272,6 +272,8 @@ import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
 import Pagination from "@/components/Pagination.vue";
 
+const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
+
 export default {
   name: "HistorialPedidos",
   components: { DetalleHistorialPedido, Datepicker, Pagination },
@@ -282,7 +284,7 @@ export default {
       showDetalle: false,
       currentPedido: null,
       currentIndex: -1,
-      fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
+      fechaInicio: new Date(seisDiasAtras),
       fechaFin: new Date(),
       buscador: "",
 
@@ -334,8 +336,8 @@ export default {
 
     retrievePedidos() {
       const params = this.getRequestParams(
-        this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-        this.$date(this.fechaFin).format("YYYY-MM-DD"),
+        this.fechaInicio.toISOString().split("T")[0],
+        this.fechaFin.toISOString().split("T")[0],
         this.page,
         this.pageSize
       );
