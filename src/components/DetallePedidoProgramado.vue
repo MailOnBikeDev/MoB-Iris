@@ -53,7 +53,10 @@ __Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
       >
     </div>
 
-    <form class="grid grid-cols-2 p-4 bg-white gap-x-4 rounded-t-xl">
+    <form
+      class="grid grid-cols-2 p-4 bg-white gap-x-4 rounded-t-xl"
+      ref="formAsignar"
+    >
       <div>
         <label
           for="status"
@@ -241,7 +244,7 @@ export default {
             pedido.id,
             this.pedidoAsignado
           );
-          console.log(response.message);
+          console.log(`Respuesta de la asignación: ${response.message}`);
 
           if (
             this.pedidoAsignado.statusId !== 1 &&
@@ -252,6 +255,8 @@ export default {
             this.statusAsignado = false;
           }
         });
+
+        this.$refs.formAsignar.reset();
       } catch (error) {
         console.error(`Error al asignar Pedidos: ${error.message}`);
       }

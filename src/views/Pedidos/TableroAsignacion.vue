@@ -407,7 +407,7 @@ export default {
     closeModal() {
       this.showDetalle = false;
       this.showResumen = false;
-      this.pedidosArray = [];
+      this.pedidosArray.length = 0;
 
       this.currentPedido = null;
       this.currentIndex = -1;
