@@ -108,6 +108,7 @@
               v-validate="'required'"
               name="empresaRemitente"
               class="input"
+              :disabled="true"
             />
             <div
               v-if="errors.has('empresaRemitente')"
@@ -688,8 +689,6 @@ export default {
       this.nuevoPedido.distritoRemitente = this.memoriaCliente.distrito.distrito;
       // this.nuevoPedido.otroDatoRemitente = this.memoriaCliente.otroDato;
       this.nuevoPedido.formaPago = this.memoriaCliente.formaDePago.pago;
-      this.nuevoPedido.tarifa = 0;
-      this.nuevoPedido.tarifaSugerida = 0;
       this.nuevoPedido.tipoCarga = this.memoriaCliente.tipoDeCarga.tipo;
       this.nuevoPedido.rolCliente = this.memoriaCliente.rolCliente.rol;
       this.nuevoPedido.tipoEnvio = this.memoriaCliente.tipoDeEnvio.tipo;
@@ -700,8 +699,10 @@ export default {
       this.nuevoPedido.direccionConsignado = null;
       this.nuevoPedido.distritoConsignado = "";
       this.nuevoPedido.otroDatoConsignado = null;
+      this.nuevoPedido.tarifa = null;
+      this.nuevoPedido.tarifaSugerida = 0;
       this.nuevoPedido.comision = 0;
-      this.nuevoPedido.distancia = 0;
+      this.nuevoPedido.distancia = null;
       this.nuevoPedido.recaudo = 0;
       this.nuevoPedido.tramite = 0;
 

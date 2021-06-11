@@ -107,6 +107,7 @@
               v-validate="'required'"
               name="empresaRemitente"
               class="input"
+              :disabled="true"
             />
             <div
               v-if="errors.has('empresaRemitente')"

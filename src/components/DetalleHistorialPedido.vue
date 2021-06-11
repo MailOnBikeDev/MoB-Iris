@@ -298,7 +298,7 @@
 
     <div class="flex flex-row justify-around mt-6">
       <router-link
-        :to="`/finanzas/historial-pedidos/${currentPedido.id}`"
+        :to="`/pedidos/tablero-pedidos/${currentPedido.id}`"
         custom
         v-slot="{ navigate }"
         class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
