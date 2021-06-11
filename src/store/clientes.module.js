@@ -19,26 +19,6 @@ export const clientes = {
         console.error(`Mensaje de error desde la Store: ${error.message}`);
       }
     },
-
-    async buscarCliente({ state }, buscador) {
-      try {
-        const filtro = state.clientes.filter((cliente) => {
-          if (
-            cliente.contacto.toLowerCase().includes(buscador.toLowerCase()) ||
-            cliente.razonComercial
-              .toLowerCase()
-              .includes(buscador.toLowerCase()) ||
-            cliente.razonSocial.toLowerCase().includes(buscador.toLowerCase())
-          ) {
-            return cliente;
-          }
-        });
-
-        return filtro;
-      } catch (error) {
-        console.error(`Mensaje de error desde la Store: ${error.message}`);
-      }
-    },
   },
   getters: {},
 };

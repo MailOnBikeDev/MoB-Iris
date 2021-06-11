@@ -60,7 +60,8 @@ vue.<template>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState } from "vuex";
+import ClienteService from "@/services/cliente.service";
 
 export default {
   name: "BuscadorCliente",
@@ -73,6 +74,7 @@ export default {
   data() {
     return {
       buscador: "",
+      clientesFiltrados: [],
       currentCliente: null,
       currentIndex: -1,
     };
@@ -84,11 +86,11 @@ export default {
     ...mapState("clientes", ["clientes"]),
   },
   methods: {
-    ...mapActions("clientes", ["buscarCliente"]),
-
     async searchCliente() {
       try {
-        this.clientesFiltrados = await this.buscarCliente(this.buscador);
+        this.clientesFiltrados = await ClienteService.searchCliente(
+          this.buscador
+        );
 
         if (this.buscador.trim() === "") {
           this.clientesFiltrados = this.clientes;
