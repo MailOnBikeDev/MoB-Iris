@@ -96,6 +96,11 @@ const routes = [
     name: "CorregirPedido",
     component: () => import("@/views/Finanzas/CorregirPedido.vue"),
   },
+  {
+    path: "/testing",
+    name: "Testing",
+    component: () => import("@/views/Testing/Testing.vue"),
+  },
 ];
 
 const router = new VueRouter({
