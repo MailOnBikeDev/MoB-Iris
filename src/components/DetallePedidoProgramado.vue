@@ -53,10 +53,7 @@ __Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
       >
     </div>
 
-    <form
-      class="grid grid-cols-2 p-4 bg-white gap-x-4 rounded-t-xl"
-      ref="formAsignar"
-    >
+    <form class="grid grid-cols-2 p-4 bg-white gap-x-4 rounded-t-xl">
       <div>
         <label
           for="status"
@@ -67,16 +64,9 @@ __Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
           name="status"
           v-model="pedidoAsignado.statusId"
           :list="statusDelPedido"
-          v-validate="'required'"
           option-text="tag"
           option-value="id"
         />
-        <div
-          v-if="errors.has('status')"
-          class="p-2 text-sm text-white bg-red-500 rounded"
-        >
-          <p>El estado es requerido</p>
-        </div>
       </div>
 
       <div>
@@ -90,16 +80,9 @@ __Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
           v-model="pedidoAsignado.mobiker"
           placeholder="Buscar MoBiker..."
           :list="mobikersFiltrados"
-          v-validate="'required'"
           option-text="fullName"
           option-value="fullName"
         />
-        <div
-          v-if="errors.has('mobiker')"
-          class="p-2 text-sm text-white bg-red-500 rounded"
-        >
-          <p>El MoBiker es requerido</p>
-        </div>
       </div>
     </form>
 
@@ -174,8 +157,8 @@ __Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
 </template>
 
 <script>
-import { ModelListSelect } from "vue-search-select";
 import PedidoService from "@/services/pedido.service";
+import { ModelListSelect } from "vue-search-select";
 import { mapState } from "vuex";
 
 export default {
@@ -197,6 +180,7 @@ export default {
       pedidoAsignado: {
         statusId: 1,
         mobiker: "Asignar MoBiker",
+        comision: 0,
       },
       statusAsignado: false,
       comandaCopiada: false,
@@ -210,11 +194,9 @@ export default {
     ...mapState("auxiliares", ["statusDelPedido"]),
   },
   async mounted() {
-    this.mobikersFiltrados = this.mobikers
-      .filter((mobiker) => mobiker.status === "Activo")
-      .sort((a, b) => {
-        return a.fullName.localeCompare(b.fullName);
-      });
+    this.mobikersFiltrados = this.mobikers.filter(
+      (mobiker) => mobiker.status === "Activo"
+    );
   },
   watch: {
     "pedidoAsignado.mobiker": function() {
@@ -229,22 +211,32 @@ export default {
         this.pedidoAsignado.mobiker = "Asignar MoBiker";
       }
     },
+    showDetalle: function() {
+      if (this.showDetalle && this.pedidosArray.length === 1) {
+        this.pedidoAsignado.mobiker = this.pedidosArray[0].mobiker.fullName;
+      }
+    },
   },
   methods: {
     handleAsignarPedido() {
       try {
-        const isValid = this.$validator.validateAll();
-        if (!isValid) {
-          console.error("Mensaje de error: No se pudo asignar el Pedido");
-          return;
-        }
+        const mobikerAsignado = this.mobikers.filter(
+          (mobiker) => mobiker.fullName === this.pedidoAsignado.mobiker
+        );
 
         this.pedidosArray.forEach(async (pedido) => {
+          this.pedidoAsignado.comision = +(
+            parseFloat(pedido.tarifa) *
+            parseFloat(mobikerAsignado[0].rango.comision)
+          ).toFixed(2);
+
+          console.log(this.pedidoAsignado);
           const response = await PedidoService.asignarPedido(
             pedido.id,
             this.pedidoAsignado
           );
-          console.log(`Respuesta de la asignación: ${response.message}`);
+
+          console.log(`Respuesta de la asignación: ${response.data.message}`);
 
           if (
             this.pedidoAsignado.statusId !== 1 &&
@@ -255,8 +247,6 @@ export default {
             this.statusAsignado = false;
           }
         });
-
-        this.$refs.formAsignar.reset();
       } catch (error) {
         console.error(`Error al asignar Pedidos: ${error.message}`);
       }
