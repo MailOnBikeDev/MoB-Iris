@@ -532,7 +532,7 @@ import BuscadorCliente from "@/components/BuscadorCliente";
 import Datepicker from "vuejs-datepicker";
 import { mapState, mapActions } from "vuex";
 import { es } from "vuejs-datepicker/dist/locale";
-// import consultarApi from "@/services/maps.service";
+import consultarApi from "@/services/maps.service";
 
 export default {
   name: "nuevoPedido",
@@ -730,25 +730,42 @@ export default {
         this.errorCalcularDistancia = false;
         const tarifaPorKm = 1.2;
 
-        let distanciaCalculada = 6.8; // Mientras no funciona la API
+        let distanciaCalculada = await consultarApi(
+          this.nuevoPedido.direccionRemitente,
+          this.nuevoPedido.distritoRemitente,
+          this.nuevoPedido.direccionConsignado,
+          this.nuevoPedido.distritoConsignado
+        );
 
-        // let distanciaCalculada = await consultarApi(
-        //   this.nuevoPedido.direccionRemitente,
-        //   this.nuevoPedido.distritoRemitente,
-        //   this.nuevoPedido.direccionConsignado,
-        //   this.nuevoPedido.distritoConsignado
-        // );
-        // console.log(distanciaCalculada);
+        if (this.nuevoPedido.tipoEnvio === "E-Commerce") {
+          this.nuevoPedido.tarifa = 7.0;
+        }
+
+        if (this.nuevoPedido.empresaRemitente === "PHILIP MORRIS PERU S.A.") {
+          this.nuevoPedido.tarifa = 10.0;
+        }
+
+        if (this.nuevoPedido.modalidad === "Con Retorno") {
+          if (this.nuevoPedido.tipoEnvio === "E-Commerce") {
+            this.nuevoPedido.tarifa *= 2;
+          }
+          if (this.nuevoPedido.tipoEnvio === "Express") {
+            this.nuevoPedido.tarifa += +(
+              Math.floor(this.nuevoPedido.tarifa / 2) + 1
+            );
+          }
+        }
 
         this.nuevoPedido.distancia = distanciaCalculada;
-        this.nuevoPedido.tarifa = 7.0;
-        this.tarifaSugerida = (distanciaCalculada * tarifaPorKm).toFixed(2);
-        this.nuevoPedido.CO2Ahorrado = (
+        this.tarifaSugerida = +(
+          Math.floor(distanciaCalculada * tarifaPorKm) + 1
+        );
+        this.nuevoPedido.CO2Ahorrado = +(
           this.nuevoPedido.distancia / 12
         ).toFixed(1);
-        this.nuevoPedido.ruido = (this.nuevoPedido.distancia / 24).toFixed(2);
+        this.nuevoPedido.ruido = +(this.nuevoPedido.distancia / 24).toFixed(2);
       } catch (error) {
-        console.error("Mensaje de error: ", error.message);
+        console.error(`Error al calcular la distancia: ${error.message}`);
       }
     },
 

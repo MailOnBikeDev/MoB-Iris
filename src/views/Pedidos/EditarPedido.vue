@@ -527,8 +527,7 @@ import BuscadorCliente from "@/components/BuscadorCliente";
 import Datepicker from "vuejs-datepicker";
 import { mapState, mapActions } from "vuex";
 import { es } from "vuejs-datepicker/dist/locale";
-// import axios from "axios";
-// import googleMaps_API from "@/googleMaps-API";
+import consultarApi from "@/services/maps.service";
 
 export default {
   data() {
@@ -670,17 +669,44 @@ export default {
         this.errorCalcularDistancia = false;
         const tarifaPorKm = 1.2;
 
-        let distanciaCalculada = 3.8;
+        let distanciaCalculada = await consultarApi(
+          this.editarPedido.direccionRemitente,
+          this.editarPedido.distritoRemitente,
+          this.editarPedido.direccionConsignado,
+          this.editarPedido.distritoConsignado
+        );
+
+        if (this.editarPedido.tipoEnvio === "E-Commerce") {
+          this.editarPedido.tarifa = 7.0;
+        }
+
+        if (this.editarPedido.empresaRemitente === "PHILIP MORRIS PERU S.A.") {
+          this.editarPedido.tarifa = 10.0;
+        }
+
+        if (this.editarPedido.modalidad === "Con Retorno") {
+          if (this.editarPedido.tipoEnvio === "E-Commerce") {
+            this.editarPedido.tarifa *= 2;
+          }
+          if (this.editarPedido.tipoEnvio === "Express") {
+            this.editarPedido.tarifa += +(
+              Math.floor(this.editarPedido.tarifa / 2) + 1
+            );
+          }
+        }
 
         this.editarPedido.distancia = distanciaCalculada;
-        this.editarPedido.tarifa = 7.0;
-        this.tarifaSugerida = (distanciaCalculada * tarifaPorKm).toFixed(2);
-        this.editarPedido.CO2Ahorrado = (
+        this.tarifaSugerida = +(
+          Math.floor(distanciaCalculada * tarifaPorKm) + 1
+        );
+        this.editarPedido.CO2Ahorrado = +(
           this.editarPedido.distancia / 12
         ).toFixed(1);
-        this.editarPedido.ruido = (this.editarPedido.distancia / 24).toFixed(2);
+        this.editarPedido.ruido = +(this.editarPedido.distancia / 24).toFixed(
+          2
+        );
       } catch (error) {
-        console.error("Mensaje de error: ", error.message);
+        console.error(`Error al calcular la distancia: ${error.message}`);
       }
     },
 
