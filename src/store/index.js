@@ -8,6 +8,7 @@ import AuthService from "../services/auth.service";
 import { auxiliares } from "./auxiliares.module";
 import { mobikers } from "./mobikers.module";
 import { clientes } from "./clientes.module";
+import { destinos } from "./destino.module";
 
 const initialState = JSON.parse(localStorage.getItem("user"));
 
@@ -67,5 +68,6 @@ export default new Vuex.Store({
     auxiliares,
     mobikers,
     clientes,
+    destinos,
   },
 });

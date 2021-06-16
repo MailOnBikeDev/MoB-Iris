@@ -54,6 +54,7 @@ export default {
       try {
         await this.$store.dispatch("mobikers/getMobikers");
         await this.$store.dispatch("clientes/getClientes");
+        await this.$store.dispatch("destinos/getDestinos");
         console.log("Se cargaron los MoBikers y los Clientes");
       } catch (error) {
         console.error(
