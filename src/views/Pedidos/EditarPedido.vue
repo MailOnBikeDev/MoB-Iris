@@ -8,13 +8,22 @@
       </h1>
     </div>
 
-    <div class="flex flex-row px-4 -mt-12">
+    <div class="flex flex-row justify-around px-4 mx-auto -mt-12">
       <div>
         <button
-          class="relative px-4 py-1 font-bold text-white bg-primary left-56 rounded-xl focus:outline-none"
+          class="relative px-4 py-1 font-bold text-white bg-primary rounded-xl focus:outline-none"
           @click="showBuscador = true"
         >
           Buscar cliente
+        </button>
+      </div>
+
+      <div>
+        <button
+          class="relative px-4 py-1 font-bold text-white bg-primary rounded-xl focus:outline-none"
+          @click="showBuscadorDestinos = true"
+        >
+          Destinos Recurrentes
         </button>
       </div>
 
@@ -22,6 +31,12 @@
         :showBuscador="showBuscador"
         @cerrarBuscador="showBuscador = false"
         @activarCliente="activarCliente"
+      />
+
+      <BuscadorDestino
+        :showBuscadorDestinos="showBuscadorDestinos"
+        @cerrarBuscador="showBuscadorDestinos = false"
+        @activarDestino="activarDestino"
       />
     </div>
 
@@ -524,6 +539,7 @@ import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
+import BuscadorDestino from "@/components/BuscadorDestino";
 import Datepicker from "vuejs-datepicker";
 import { mapState, mapActions } from "vuex";
 import { es } from "vuejs-datepicker/dist/locale";
@@ -534,6 +550,7 @@ export default {
     return {
       editarPedido: new Pedido(),
       showBuscador: false,
+      showBuscadorDestinos: false,
       mobikersFiltrados: [],
       alert: {
         message: "",
@@ -549,11 +566,9 @@ export default {
     try {
       this.getPedido(this.$route.params.id);
 
-      this.mobikersFiltrados = this.mobikers
-        .filter((mobiker) => mobiker.status === "Activo")
-        .sort((a, b) => {
-          return a.fullName.localeCompare(b.fullName);
-        });
+      this.mobikersFiltrados = this.mobikers.filter(
+        (mobiker) => mobiker.status === "Activo"
+      );
     } catch (error) {
       console.error("Mensaje de error:", error);
     }
@@ -605,6 +620,12 @@ export default {
           this.editarPedido.tarifa !== 0
             ? (this.editarPedido.tarifa * comision).toFixed(2)
             : 0;
+      }
+    },
+
+    "editarPedido.recaudo": async function() {
+      if (this.editarPedido.recaudo !== 0) {
+        this.editarPedido.tarifa += 2;
       }
     },
   },
@@ -729,6 +750,17 @@ export default {
       }
     },
 
+    activarDestino(destino) {
+      if (destino) {
+        this.editarPedido.contactoConsignado = destino.contacto;
+        this.editarPedido.empresaConsignado = destino.empresa;
+        this.editarPedido.telefonoConsignado = destino.telefono;
+        this.editarPedido.direccionConsignado = destino.direccion;
+        this.editarPedido.distritoConsignado = destino.distrito.distrito;
+        this.editarPedido.otroDatoConsignado = destino.otroDato;
+      }
+    },
+
     anularPedido() {
       this.$validator.validateAll().then((isValid) => {
         if (!isValid) {
@@ -771,6 +803,7 @@ export default {
     BuscadorCliente,
     Datepicker,
     BaseAlerta,
+    BuscadorDestino,
   },
 };
 </script>

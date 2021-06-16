@@ -17,7 +17,7 @@
         type="search"
         class="input"
         v-model="buscador"
-        @keyup="searchCliente"
+        @keyup.enter="searchCliente"
         placeholder="Buscar contacto o empresa..."
         autofocus
       />

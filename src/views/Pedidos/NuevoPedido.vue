@@ -575,11 +575,9 @@ export default {
     this.nuevoPedido.recaudo = 0;
     this.nuevoPedido.tramite = 0;
 
-    this.mobikersFiltrados = this.mobikers
-      .filter((mobiker) => mobiker.status === "Activo")
-      .sort((a, b) => {
-        return a.fullName.localeCompare(b.fullName);
-      });
+    this.mobikersFiltrados = this.mobikers.filter(
+      (mobiker) => mobiker.status === "Activo"
+    );
   },
   computed: {
     ...mapState("auxiliares", [
@@ -624,6 +622,12 @@ export default {
           this.nuevoPedido.tarifa !== 0
             ? (this.nuevoPedido.tarifa * comision).toFixed(2)
             : 0;
+      }
+    },
+
+    "nuevoPedido.recaudo": async function() {
+      if (this.nuevoPedido.recaudo !== 0) {
+        this.nuevoPedido.tarifa += 2;
       }
     },
   },

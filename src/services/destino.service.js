@@ -18,7 +18,7 @@ class DestinoService {
 
   async searchDestinos(findDestino) {
     try {
-      let destino = await axios.get(`${API_URL}/destinosq=${findDestino}`, {
+      let destino = await axios.get(`${API_URL}/destinos?q=${findDestino}`, {
         headers: authHeader(),
       });
 
