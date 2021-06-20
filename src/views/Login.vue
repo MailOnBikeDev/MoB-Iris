@@ -44,7 +44,9 @@
           </div>
           <button
             class="block w-full py-2 my-6 font-bold text-white transition duration-200 rounded shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
+            :class="{ 'opacity-50': bloquearBtn === true }"
             type="submit"
+            :disabled="bloquearBtn"
           >
             <span>Iniciar Sesión</span>
           </button>
@@ -73,6 +75,7 @@ export default {
         success: false,
         show: false,
       },
+      bloquearBtn: false,
     };
   },
   computed: {
@@ -97,6 +100,7 @@ export default {
         if (this.user.username && this.user.password) {
           const response = await this.$store.dispatch("login", this.user);
           console.log(response.message);
+          this.bloquearBtn = true;
           this.alert.message = response.message;
           this.alert.show = true;
           this.alert.success = true;
@@ -104,6 +108,7 @@ export default {
           await this.getAllTablasAuxiliares();
           await this.getMoBikersAndClientes();
           setTimeout(() => {
+            this.bloquearBtn = false;
             this.$router.push("/perfil");
           }, 1500);
         }
