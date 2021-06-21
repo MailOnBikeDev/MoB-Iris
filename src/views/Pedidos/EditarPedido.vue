@@ -543,7 +543,10 @@ import BuscadorDestino from "@/components/BuscadorDestino";
 import Datepicker from "vuejs-datepicker";
 import { mapState, mapActions } from "vuex";
 import { es } from "vuejs-datepicker/dist/locale";
+
 import consultarApi from "@/services/maps.service";
+import calcularTarifa from "@/services/tarifa.service";
+import calcularEstadisticas from "@/services/ecoamigable.service";
 
 export default {
   data() {
@@ -560,6 +563,7 @@ export default {
       errorCalcularDistancia: false,
       tarifaSugerida: 0,
       es: es,
+      tarifaMemoria: 0,
     };
   },
   async mounted() {
@@ -623,9 +627,23 @@ export default {
       }
     },
 
-    "editarPedido.recaudo": async function() {
+    "editarPedido.recaudo": function() {
       if (this.editarPedido.recaudo !== 0) {
         this.editarPedido.tarifa += 2;
+      }
+    },
+
+    "editarPedido.modalidad": function() {
+      if (this.editarPedido.modalidad === "Con Retorno") {
+        if (this.editarPedido.tipoEnvio === "E-Commerce") {
+          this.editarPedido.tarifa *= 2;
+        } else {
+          this.editarPedido.tarifa += +Math.ceil(this.editarPedido.tarifa / 2);
+        }
+      }
+      if (this.editarPedido.modalidad === "Una vía") {
+        this.editarPedido.tarifa = this.tarifaMemoria;
+        console.log(this.tarifaMemoria);
       }
     },
   },
@@ -688,44 +706,29 @@ export default {
           return;
         }
         this.errorCalcularDistancia = false;
-        const tarifaPorKm = 1.2;
 
-        let distanciaCalculada = await consultarApi(
+        // Calcular Distancia
+        this.editarPedido.distancia = await consultarApi(
           this.editarPedido.direccionRemitente,
           this.editarPedido.distritoRemitente,
           this.editarPedido.direccionConsignado,
           this.editarPedido.distritoConsignado
         );
 
-        if (this.editarPedido.tipoEnvio === "E-Commerce") {
-          this.editarPedido.tarifa = 7.0;
-        }
-
-        if (this.editarPedido.empresaRemitente === "PHILIP MORRIS PERU S.A.") {
-          this.editarPedido.tarifa = 10.0;
-        }
-
-        if (this.editarPedido.modalidad === "Con Retorno") {
-          if (this.editarPedido.tipoEnvio === "E-Commerce") {
-            this.editarPedido.tarifa *= 2;
-          }
-          if (this.editarPedido.tipoEnvio === "Express") {
-            this.editarPedido.tarifa += +(
-              Math.floor(this.editarPedido.tarifa / 2) + 1
-            );
-          }
-        }
-
-        this.editarPedido.distancia = distanciaCalculada;
-        this.tarifaSugerida = +(
-          Math.floor(distanciaCalculada * tarifaPorKm) + 1
+        // Calcular la tarifa
+        const response = calcularTarifa(
+          this.editarPedido.distancia,
+          this.editarPedido.tipoEnvio
         );
-        this.editarPedido.CO2Ahorrado = +(
-          this.editarPedido.distancia / 12
-        ).toFixed(1);
-        this.editarPedido.ruido = +(this.editarPedido.distancia / 24).toFixed(
-          2
-        );
+
+        this.editarPedido.tarifa = response.tarifa;
+        this.tarifaMemoria = response.tarifa;
+        this.tarifaSugerida = response.tarifaSugerida;
+
+        // Calcular las estadísticas Ecoamigables
+        const stats = calcularEstadisticas(this.editarPedido.distancia);
+        this.editarPedido.CO2Ahorrado = stats.co2;
+        this.editarPedido.ruido = stats.ruido;
       } catch (error) {
         console.error(`Error al calcular la distancia: ${error.message}`);
       }
