@@ -71,7 +71,7 @@
 
       <router-link
         to="/finanzas/facturacion"
-        class="px-6 py-2 font-bold text-white bg-indigo-600 rounded-xl focus:outline-none hover:bg-indigo-500"
+        class="px-6 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
         custom
         v-slot="{ navigate }"
       >

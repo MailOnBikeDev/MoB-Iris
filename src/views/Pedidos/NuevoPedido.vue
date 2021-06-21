@@ -8,13 +8,22 @@
       </h1>
     </div>
 
-    <div class="flex flex-row px-4 -mt-12">
+    <div class="flex flex-row justify-around px-4 mx-auto -mt-12">
       <div>
         <button
-          class="relative px-4 py-1 font-bold text-white bg-primary left-56 rounded-xl focus:outline-none"
+          class="relative px-4 py-1 font-bold text-white bg-primary rounded-xl focus:outline-none"
           @click="showBuscador = true"
         >
           Buscar cliente
+        </button>
+      </div>
+
+      <div>
+        <button
+          class="relative px-4 py-1 font-bold text-white bg-primary rounded-xl focus:outline-none"
+          @click="showBuscadorDestinos = true"
+        >
+          Destinos Recurrentes
         </button>
       </div>
 
@@ -22,6 +31,12 @@
         :showBuscador="showBuscador"
         @cerrarBuscador="showBuscador = false"
         @activarCliente="activarCliente"
+      />
+
+      <BuscadorDestino
+        :showBuscadorDestinos="showBuscadorDestinos"
+        @cerrarBuscador="showBuscadorDestinos = false"
+        @activarDestino="activarDestino"
       />
     </div>
 
@@ -108,6 +123,7 @@
               v-validate="'required'"
               name="empresaRemitente"
               class="input"
+              :disabled="true"
             />
             <div
               v-if="errors.has('empresaRemitente')"
@@ -528,10 +544,14 @@ import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
+import BuscadorDestino from "@/components/BuscadorDestino";
 import Datepicker from "vuejs-datepicker";
 import { mapState, mapActions } from "vuex";
 import { es } from "vuejs-datepicker/dist/locale";
-// import consultarApi from "@/services/maps.service";
+
+import consultarApi from "@/services/maps.service";
+import calcularTarifa from "@/services/tarifa.service";
+import calcularEstadisticas from "@/services/ecoamigable.service";
 
 export default {
   name: "nuevoPedido",
@@ -539,6 +559,7 @@ export default {
     return {
       nuevoPedido: new Pedido(),
       showBuscador: false,
+      showBuscadorDestinos: false,
       mobikersFiltrados: [],
       alert: {
         message: "",
@@ -549,6 +570,7 @@ export default {
       tarifaSugerida: 0,
       memoriaCliente: null,
       es: es,
+      tarifaMemoria: 0,
     };
   },
   async mounted() {
@@ -557,11 +579,9 @@ export default {
     this.nuevoPedido.recaudo = 0;
     this.nuevoPedido.tramite = 0;
 
-    this.mobikersFiltrados = this.mobikers
-      .filter((mobiker) => mobiker.status === "Activo")
-      .sort((a, b) => {
-        return a.fullName.localeCompare(b.fullName);
-      });
+    this.mobikersFiltrados = this.mobikers.filter(
+      (mobiker) => mobiker.status === "Activo"
+    );
   },
   computed: {
     ...mapState("auxiliares", [
@@ -606,6 +626,26 @@ export default {
           this.nuevoPedido.tarifa !== 0
             ? (this.nuevoPedido.tarifa * comision).toFixed(2)
             : 0;
+      }
+    },
+
+    "nuevoPedido.recaudo": function() {
+      if (this.nuevoPedido.recaudo !== 0) {
+        this.nuevoPedido.tarifa += 2;
+      }
+    },
+
+    "nuevoPedido.modalidad": function() {
+      if (this.nuevoPedido.modalidad === "Con Retorno") {
+        if (this.nuevoPedido.tipoEnvio === "E-Commerce") {
+          this.nuevoPedido.tarifa *= 2;
+        } else {
+          this.nuevoPedido.tarifa += +Math.ceil(this.nuevoPedido.tarifa / 2);
+        }
+      }
+      if (this.nuevoPedido.modalidad === "Una vía") {
+        this.nuevoPedido.tarifa = this.tarifaMemoria;
+        console.log(this.tarifaMemoria);
       }
     },
   },
@@ -686,10 +726,7 @@ export default {
       this.nuevoPedido.telefonoRemitente = this.memoriaCliente.telefono;
       this.nuevoPedido.direccionRemitente = this.memoriaCliente.direccion;
       this.nuevoPedido.distritoRemitente = this.memoriaCliente.distrito.distrito;
-      // this.nuevoPedido.otroDatoRemitente = this.memoriaCliente.otroDato;
       this.nuevoPedido.formaPago = this.memoriaCliente.formaDePago.pago;
-      this.nuevoPedido.tarifa = 0;
-      this.nuevoPedido.tarifaSugerida = 0;
       this.nuevoPedido.tipoCarga = this.memoriaCliente.tipoDeCarga.tipo;
       this.nuevoPedido.rolCliente = this.memoriaCliente.rolCliente.rol;
       this.nuevoPedido.tipoEnvio = this.memoriaCliente.tipoDeEnvio.tipo;
@@ -700,8 +737,10 @@ export default {
       this.nuevoPedido.direccionConsignado = null;
       this.nuevoPedido.distritoConsignado = "";
       this.nuevoPedido.otroDatoConsignado = null;
+      this.nuevoPedido.tarifa = null;
+      this.nuevoPedido.tarifaSugerida = 0;
       this.nuevoPedido.comision = 0;
-      this.nuevoPedido.distancia = 0;
+      this.nuevoPedido.distancia = null;
       this.nuevoPedido.recaudo = 0;
       this.nuevoPedido.tramite = 0;
 
@@ -727,27 +766,31 @@ export default {
           return;
         }
         this.errorCalcularDistancia = false;
-        const tarifaPorKm = 1.2;
 
-        let distanciaCalculada = 6.8; // Mientras no funciona la API
+        // Calcular Distancia
+        this.nuevoPedido.distancia = await consultarApi(
+          this.nuevoPedido.direccionRemitente,
+          this.nuevoPedido.distritoRemitente,
+          this.nuevoPedido.direccionConsignado,
+          this.nuevoPedido.distritoConsignado
+        );
 
-        // let distanciaCalculada = await consultarApi(
-        //   this.nuevoPedido.direccionRemitente,
-        //   this.nuevoPedido.distritoRemitente,
-        //   this.nuevoPedido.direccionConsignado,
-        //   this.nuevoPedido.distritoConsignado
-        // );
-        // console.log(distanciaCalculada);
+        // Calcular la tarifa
+        const response = calcularTarifa(
+          this.nuevoPedido.distancia,
+          this.nuevoPedido.tipoEnvio
+        );
 
-        this.nuevoPedido.distancia = distanciaCalculada;
-        this.nuevoPedido.tarifa = 7.0;
-        this.tarifaSugerida = (distanciaCalculada * tarifaPorKm).toFixed(2);
-        this.nuevoPedido.CO2Ahorrado = (
-          this.nuevoPedido.distancia / 12
-        ).toFixed(1);
-        this.nuevoPedido.ruido = (this.nuevoPedido.distancia / 24).toFixed(2);
+        this.nuevoPedido.tarifa = response.tarifa;
+        this.tarifaMemoria = response.tarifa;
+        this.tarifaSugerida = response.tarifaSugerida;
+
+        // Calcular las estadísticas Ecoamigables
+        const stats = calcularEstadisticas(this.nuevoPedido.distancia);
+        this.nuevoPedido.CO2Ahorrado = stats.co2;
+        this.nuevoPedido.ruido = stats.ruido;
       } catch (error) {
-        console.error("Mensaje de error: ", error.message);
+        console.error(`Error al calcular la distancia: ${error.message}`);
       }
     },
 
@@ -766,7 +809,6 @@ export default {
         this.nuevoPedido.otroDatoRemitente = cliente.otroDato;
         this.nuevoPedido.tipoCarga = cliente.tipoDeCarga.tipo;
         this.nuevoPedido.formaPago = cliente.formaDePago.pago;
-        this.nuevoPedido.statusFinanciero = 1;
         this.nuevoPedido.rolCliente = cliente.rolCliente.rol;
         this.nuevoPedido.tipoEnvio = cliente.tipoDeEnvio.tipo;
         this.nuevoPedido.modalidad = "Una vía";
@@ -774,6 +816,17 @@ export default {
 
         this.memoriaCliente = cliente;
         this.memoriaCliente.fecha = new Date();
+      }
+    },
+
+    activarDestino(destino) {
+      if (destino) {
+        this.nuevoPedido.contactoConsignado = destino.contacto;
+        this.nuevoPedido.empresaConsignado = destino.empresa;
+        this.nuevoPedido.telefonoConsignado = destino.telefono;
+        this.nuevoPedido.direccionConsignado = destino.direccion;
+        this.nuevoPedido.distritoConsignado = destino.distrito.distrito;
+        this.nuevoPedido.otroDatoConsignado = destino.otroDato;
       }
     },
 
@@ -796,6 +849,7 @@ export default {
     BuscadorCliente,
     Datepicker,
     BaseAlerta,
+    BuscadorDestino,
   },
 };
 </script>

@@ -119,7 +119,7 @@ class ClienteService {
         headers: authHeader(),
       });
 
-      return cliente;
+      return cliente.data;
     } catch (error) {
       console.error("Mensaje de error: ", error.message);
     }

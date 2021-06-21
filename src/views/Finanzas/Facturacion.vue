@@ -249,7 +249,7 @@ export default {
     ...mapState("clientes", ["clientes"]),
   },
   methods: {
-    ...mapActions("clientes", ["getClientes", "buscarCliente"]),
+    ...mapActions("clientes", ["getClientes"]),
 
     getRequestParams(desde, hasta, id, page, pageSize) {
       let params = {};
@@ -317,8 +317,11 @@ export default {
         this.pedidosCliente = [];
         this.cantidadPedidos = 0;
 
+        this.clientesFiltrados = this.clientes;
+
         this.currentCliente = null;
         this.currentIndex = -1;
+        this.buscador = "";
       } catch (error) {
         console.error(`Error al refrescar la lista: ${error.message}`);
       }
@@ -340,7 +343,9 @@ export default {
 
     async searchCliente() {
       try {
-        this.clientesFiltrados = await this.buscarCliente(this.buscador);
+        this.clientesFiltrados = await ClienteService.searchCliente(
+          this.buscador
+        );
 
         if (this.buscador.trim() === "") {
           this.refreshList();

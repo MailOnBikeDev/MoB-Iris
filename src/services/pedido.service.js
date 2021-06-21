@@ -149,6 +149,7 @@ class PedidoService {
         {
           status: pedidoAsignado.statusId,
           mobiker: pedidoAsignado.mobiker,
+          comision: pedidoAsignado.comision,
         },
         { headers: authHeader() }
       );
