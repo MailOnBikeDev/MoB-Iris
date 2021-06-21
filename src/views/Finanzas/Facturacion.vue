@@ -8,6 +8,13 @@
       </h1>
     </div>
 
+    <ReporteFacturacion
+      :showDetalle="showDetalle"
+      @cerrarDetalle="showDetalle = false"
+      :detalles="pedidosCliente"
+      :cliente="currentCliente"
+    />
+
     <DetallePedidoComisiones
       :showResumen="showResumen"
       @cerrarResumen="closeResumen"
@@ -70,6 +77,7 @@
 
       <button
         class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+        @click="showDetalle = true"
       >
         Enviar reporte
       </button>
@@ -207,6 +215,7 @@
 
 <script>
 import DetallePedidoComisiones from "@/components/DetallePedidoComisiones";
+import ReporteFacturacion from "@/components/ReporteFacturacion";
 import ClienteService from "@/services/cliente.service";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
@@ -221,6 +230,7 @@ export default {
     Datepicker,
     Pagination,
     DetallePedidoComisiones,
+    ReporteFacturacion,
   },
   data() {
     return {

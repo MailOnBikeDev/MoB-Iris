@@ -63,7 +63,7 @@
         <p>Mis BiciEnvíos = {{ mobiker.biciEnvios }}</p>
         <p>Mis Kilómetros = {{ mobiker.kilometros }}km</p>
         <p>CO2 Ahorrado = {{ mobiker.CO2Ahorrado }}kg</p>
-        <p>Horas de Ruido Ahorrado = {{ mobiker.CO2Ahorrado }}h</p>
+        <p>Horas de Ruido Ahorrado = {{ mobiker.ruido }}h</p>
         <p>Mi nivel es: {{ mobiker.rango.rangoMoBiker }}</p>
       </div>
     </div>
@@ -147,7 +147,7 @@ export default {
       let contadorExpress = 0;
 
       this.detalles.forEach((pedido) => {
-        if (pedido.tipoDeEnvioId === 3) {
+        if (pedido.tipoDeEnvioId === (2 || 3 || 4)) {
           contadorExpress++;
         }
       });
@@ -159,7 +159,7 @@ export default {
       let tarifaExpress = 0;
 
       this.detalles.forEach((pedido) => {
-        if (pedido.tipoDeEnvioId === 3) {
+        if (pedido.tipoDeEnvioId === (2 || 3 || 4)) {
           tarifaExpress += pedido.tarifa;
         }
       });
@@ -171,7 +171,7 @@ export default {
       let comisionExpress = 0;
 
       this.detalles.forEach((pedido) => {
-        if (pedido.tipoDeEnvioId === 3) {
+        if (pedido.tipoDeEnvioId === (2 || 3 || 4)) {
           comisionExpress += pedido.comision;
         }
       });
@@ -184,7 +184,6 @@ export default {
 
       this.detalles.forEach((pedido) => {
         if (
-          pedido.tipoDeEnvioId === (1 || 3) &&
           pedido.formaPago === ("Efectivo en Origen" || "Efectivo en Destino")
         ) {
           pagoEfectivo += pedido.tarifa;
@@ -224,7 +223,7 @@ export default {
     },
 
     copiarReporte() {
-      console.log(this.$el.children[2].innerText);
+      // console.log(this.$el.children[2].innerText);
       this.$copyText(this.$el.children[2].innerText).then(() => {
         this.reporteCopiado = true;
         console.log("Texto copiado");

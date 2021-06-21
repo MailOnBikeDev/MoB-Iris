@@ -206,7 +206,6 @@ export default {
     refreshList() {
       this.getClientes();
       this.clientesFiltrados = this.clientes;
-      this.clientesFiltrados.length = 100;
 
       this.currentCliente = null;
       this.currentIndex = -1;
