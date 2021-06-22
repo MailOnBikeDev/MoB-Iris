@@ -311,6 +311,25 @@
               <p>El rol del cliente es requerido</p>
             </div>
           </div>
+
+          <div>
+            <label for="mobiker" class="label-input">Mobiker</label>
+            <model-list-select
+              name="mobiker"
+              v-model="nuevoPedido.mobiker"
+              placeholder="Buscar distrito..."
+              :list="mobikersFiltrados"
+              v-validate="'required'"
+              option-text="fullName"
+              option-value="fullName"
+            />
+            <div
+              v-if="errors.has('mobiker') || errorCalcularDistancia"
+              class="p-2 text-sm text-white bg-red-500 rounded"
+            >
+              <p>El MoBiker es requerido</p>
+            </div>
+          </div>
         </div>
 
         <!-- FORMULARIO DESTINO --
@@ -556,18 +575,21 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="pedido in pedidos" :key="pedido.nombre">
+              <tr v-for="pedido in pedidos" :key="pedido.contactoConsignado">
                 <td>{{pedido.contactoConsignado}}</td>
                 <td>{{pedido.empresaConsignado}}</td>
                 <td>{{pedido.telefonoConsignado}}</td>
                 <td><input class="input input2" type="text" v-model="pedido.direccionConsignado"></td>
                 <td>
-                  <input class="input input2" type="text" v-model="pedido.distritoConsignado"></td>
+                  <!-- <input class="input input2" type="text" v-model="pedido.distritoConsignado"> -->
+                  {{ pedido.distritoConsignado }}
+                </td>
                 <td>{{pedido.otroDatoConsignado}}</td>
-                <td><input class="input input2" type="number" v-model="pedido.distancia"></td>
+                <!-- <td><input class="input input2" type="number" v-model="pedido.distancia"></td> -->
+                <td>{{ pedido.distancia }}</td>
                 <td><input class="input input2" type="number" v-model="pedido.tarifa"></td>
-                <td><input class="input input2" type="number"></td>
-                <td><input class="input input2" type="number"></td>
+                <td><input class="input input2" type="number" v-model="pedido.recaudo"></td>
+                <td><input class="input input2" type="number" v-model="pedido.tramite"></td>
               </tr>
             </tbody>
           </table>
@@ -628,7 +650,10 @@ import Datepicker from "vuejs-datepicker";
 import { mapState, mapActions } from "vuex";
 import { es } from "vuejs-datepicker/dist/locale";
 import TestingService from "@/services/testing.service";
-// import consultarApi from "@/services/maps.service";
+
+import consultarApi from "@/services/maps.service";
+import calcularTarifa from "@/services/tarifa.service";
+import calcularEstadisticas from "@/services/ecoamigable.service";
 
 export default {
   name: "nuevoPedido",
@@ -687,7 +712,7 @@ export default {
         const comision = await this.obtenerComision(this.nuevoPedido.mobiker);
         this.nuevoPedido.comision =
           this.nuevoPedido.tarifa !== 0
-            ? (this.nuevoPedido.tarifa * comision).toFixed(2)
+            ? +(this.nuevoPedido.tarifa * comision).toFixed(2)
             : 0;
       }
     },
@@ -713,23 +738,59 @@ export default {
 
     async handleNuevoPedido() {
       try {
-        const isValid = await this.$validator.validateAll();
-        if (this.nuevoPedido.distancia === (null || undefined)) {
-          this.errorCalcularDistancia = true;
-          return;
-        }
-        if (!isValid) {
-          return;
-        }
+        for(let i = 0; i < this.pedidos.length; i++){
+          this.nuevoPedido.operador = this.$store.getters.operador;
+          let pedido = {
+            fecha: this.nuevoPedido.fecha,
+            contactoRemitente: this.nuevoPedido.contactoRemitente,
+            empresaRemitente: this.nuevoPedido.empresaRemitente,
+            direccionRemitente: this.nuevoPedido.direccionRemitente,
+            distritoRemitente: this.nuevoPedido.distritoRemitente,
+            telefonoRemitente: this.nuevoPedido.telefonoRemitente,
+            otroDatoRemitente: this.nuevoPedido.otroDatoRemitente,
+            contactoConsignado: this.pedidos[i].contactoConsignado,
+            empresaConsignado: this.pedidos[i].empresaConsignado,
+            direccionConsignado: this.pedidos[i].direccionConsignado,
+            telefonoConsignado: this.pedidos[i].telefonoConsignado,
+            otroDatoConsignado: this.pedidos[i].otroDatoConsignado,
+            distritoConsignado: this.pedidos[i].distritoConsignado,
+            tipoCarga: this.nuevoPedido.tipoCarga,
+            formaPago: this.nuevoPedido.formaPago,
+            tarifa: this.pedidos[i].tarifa,
+            recaudo: this.pedidos[i].recaudo,
+            tramite: this.pedidos[i].tramite,
+            comision: this.nuevoPedido.comision,
+            distancia: this.pedidos[i].distancia,
+            CO2Ahorrado: this.pedidos[i].CO2Ahorrado,
+            ruido: this.pedidos[i].ruido,
+            status: this.nuevoPedido.status,
+            mobiker: this.nuevoPedido.mobiker,
+            tipoEnvio: this.nuevoPedido.tipoEnvio,
+            modalidad: this.nuevoPedido.modalidad,
+            operador: this.nuevoPedido.operador,
+            rolCliente: this.nuevoPedido.rolCliente
+          }
+          const isValid = await this.$validator.validateAll();
+          // if (this.nuevoPedido.distancia === (null || undefined)) {
+          //   this.errorCalcularDistancia = true;
+          //   return;
+          // }
+          if (!isValid) {
+            return;
+          }
 
-        this.nuevoPedido.operador = this.$store.getters.operador;
+          console.log(pedido)
 
-        const response = await PedidoService.storageNuevoPedido(
-          this.nuevoPedido
-        );
-        this.alert.message = response.data.message;
-        this.alert.show = true;
-        this.alert.success = true;
+          
+
+          const response = await PedidoService.storageNuevoPedido(
+            pedido
+          );
+          console.log(response)
+          this.alert.message = response.data.message;
+          this.alert.show = true;
+          this.alert.success = true;
+        }
 
         setTimeout(() => {
           history.go(-1);
@@ -810,34 +871,62 @@ export default {
       }
     },
 
-    calcularDistancia(direccion = null, distrito = null) {
+    async probandoDistancia(direccion, distrito){
+      let response = await consultarApi(
+        this.nuevoPedido.direccionRemitente,
+        this.nuevoPedido.distritoRemitente,
+        direccion,
+        distrito
+      )
+      return response;
+    },
+
+    async calcularDistancia(direccion = null, distrito = null) {
+      let data = {
+        distancia: null,
+        tarifa: null,
+        tarifaMemoria: null,
+        tarifaSugerida: null,
+        CO2Ahorrado: null,
+        ruido:null
+      }
       try {
         if (direccion != null && distrito != null) {
-          const tarifaPorKm = 1.2;
+          
 
-          let distanciaCalculada = 6.8; // Mientras no funciona la API
+          
 
-          // let distanciaCalculada = await consultarApi(
-          //   this.nuevoPedido.direccionRemitente,
-          //   this.nuevoPedido.distritoRemitente,
-          //   this.nuevoPedido.direccionConsignado,
-          //   this.nuevoPedido.distritoConsignado
-          // );
-          // console.log(distanciaCalculada);
-          let data = {
-            distancia: distanciaCalculada,
-            tarifa: 7.0,
-            tarifaSugerida: (distanciaCalculada * tarifaPorKm).toFixed(2),
-            CO2Ahorrado: distanciaCalculada / 12,
-            ruido: (distanciaCalculada / 24).toFixed(2)
-          }
+          // data.distancia = this.probandoDistancia(direccion, distrito);
+          // console.log(data)
+          data.distancia = await consultarApi(
+            this.nuevoPedido.direccionRemitente,
+            this.nuevoPedido.distritoRemitente,
+            direccion,
+            distrito
+          );
+
+          const response = calcularTarifa(
+            data.distancia,
+            this.nuevoPedido.tipoEnvio
+          );
+
+          data.tarifa = response.tarifa;
+          data.tarifaMemoria = response.tarifa;
+          data.tarifaSugerida = response.tarifaSugerida;
+
+          // Calcular las estadísticas Ecoamigables
+          const stats = calcularEstadisticas(data.distancia);
+          data.CO2Ahorrado = stats.co2;
+          data.ruido = stats.ruido; 
+
           return data;
+          
         }else{
           return 0;
         }
       } catch (error) {
         console.error("Mensaje de error: ", error.message);
-      }
+      } 
     },
 
     cancelar() {
@@ -895,15 +984,18 @@ export default {
         // }
         let response = await TestingService.testFile(mypostparameters);
 				let data = response.data.data;
+        console.log(data)
         //this.data = response.data.data;
         for(let i = 0; i < data.length; i++){
-          let info = this.calcularDistancia(data[i].direccionConsignado, data[i].distritoConsignado);
+          let info = await this.calcularDistancia(data[i].direccionConsignado, data[i].distritoConsignado);
           data[i]['distancia'] = info.distancia;
           data[i]['tarifa'] = info.tarifa;
           data[i]['tarifaSugerida'] = info.tarifaSugerida;
           data[i]['CO2Ahorrado'] = info.CO2Ahorrado;
           data[i]['ruido'] = info.ruido;
-          data[i]['distritoConsignado'] = "Surco";
+          data[i]['recaudo'] = 0;
+          data[i]['tramite'] = 0;
+          this.nuevoPedido.tarifa = this.nuevoPedido.tarifa + info.tarifa;
         }  
         this.pedidos = [];
         this.pedidos = data;
