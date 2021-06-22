@@ -54,7 +54,8 @@ export default new Vuex.Store({
         const usuarioRegistrado = await AuthService.register(user);
         return Promise.resolve(usuarioRegistrado.data);
       } catch (error) {
-        console.error(`Error en el register: ${error}`);
+        console.error(`Error en el register: ${error.message}`);
+        console.error(error);
         return Promise.reject(error);
       }
     },
