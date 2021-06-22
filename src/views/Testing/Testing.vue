@@ -202,7 +202,7 @@
             </div>
           </div>
 
-          <div>
+          <!-- <div>
             <label for="tarifa" class="label-input">Tarifa</label>
             <input
               v-model.number="nuevoPedido.tarifa"
@@ -217,18 +217,19 @@
             >
               <p>La tarifa es requerida</p>
             </div>
-          </div>
+          </div> -->
 
-          <div>
+          <!-- <div>
             <label for="tarifaSugerida" class="label-input"
               >Tarifa Sugerida</label
             >
             <p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
               {{ tarifaSugerida }}
             </p>
-          </div>
+          </div> -->
 
-          <div class="col-span-2">
+          <!-- <div class="col-span-2"> -->
+          <div>
             <label for="tipoCarga" class="label-input">Tipo de Carga</label>
             <model-list-select
               name="tipoCarga"
@@ -276,7 +277,7 @@
             />
           </div>
 
-          <div>
+          <!-- <div>
             <label for="modalidad" class="label-input">Modalidad</label>
             <model-list-select
               name="modalidad"
@@ -292,7 +293,7 @@
             >
               <p>La modalidad es requerida</p>
             </div>
-          </div>
+          </div> -->
 
           <div>
             <label for="rol" class="label-input">Rol</label>
@@ -559,10 +560,15 @@
         <!-- <button @click="uploadFile">Enviar</button> -->
 
         <div style="width: 100%; min-height: 250px">
-          <table class="table">
+          <div v-if="showLoading" wire:loading class="fixed top-0 left-0 right-0 bottom-0 w-full h-screen z-50 overflow-hidden bg-gray-700 opacity-75 flex flex-col items-center justify-center">
+            <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+            <h2 class="text-center text-white text-xl font-semibold">Loading...</h2>
+            <p class="w-1/3 text-center text-white">This may take a few seconds, please don't close this page.</p>
+          </div>                                      
+          <table class="table-auto">
             <thead>
               <tr>
-                <th>Nombre Contacto</th>
+                <th>Contacto</th>
                 <th>Empresa</th>
                 <th>Telefono</th>
                 <th>Direccion</th>
@@ -572,32 +578,53 @@
                 <th>Tarifa</th>
                 <th>Recaudo</th>
                 <th>Tramite</th>
+                <th>Modalidad</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="pedido in pedidos" :key="pedido.contactoConsignado">
+              <tr v-for="(pedido, index) in pedidos" :key="pedido.contactoConsignado">
                 <td>{{pedido.contactoConsignado}}</td>
                 <td>{{pedido.empresaConsignado}}</td>
                 <td>{{pedido.telefonoConsignado}}</td>
                 <td><input class="input input2" type="text" v-model="pedido.direccionConsignado"></td>
-                <td>
-                  <!-- <input class="input input2" type="text" v-model="pedido.distritoConsignado"> -->
-                  {{ pedido.distritoConsignado }}
-                </td>
+                <td>{{ pedido.distritoConsignado }}</td>
                 <td>{{pedido.otroDatoConsignado}}</td>
-                <!-- <td><input class="input input2" type="number" v-model="pedido.distancia"></td> -->
                 <td>{{ pedido.distancia }}</td>
-                <td><input class="input input2" type="number" v-model="pedido.tarifa"></td>
-                <td><input class="input input2" type="number" v-model="pedido.recaudo"></td>
-                <td><input class="input input2" type="number" v-model="pedido.tramite"></td>
+                <td><input class="input input2" type="number" v-model="pedido.tarifa" v-on:keyup="changeTarifa" @change="changeTarifa"></td>
+                <td><input class="input input2" type="number" v-model="pedido.recaudo" v-on:keyup="changeRecaudo" @change="changeRecaudo"></td>
+                <td><input class="input input2" type="number" v-model="pedido.tramite" v-on:keyup="changeTramite" @change="changeTramite"></td>
+                <td>
+                  <model-list-select
+                    name="modalidad"
+                    v-model="pedido.modalidad"
+                    v-validate="'required'"
+                    :list="modalidades"
+                    option-text="tipo"
+                    option-value="tipo"
+                    @input="changeModalidad(pedido.modalidad, index)"
+                  />
+                </td>
+              </tr>
+              <tr style="background-color: aliceblue;">
+                 <td style="font-weight: 600; font-size:18px; padding: 5px;">Total: </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="font-weight: 600;text-align:center; font-size:18px; padding: 5px;">$ <span>{{ tarifaTotal }}</span></td>
+                <td style="font-weight: 600;text-align:center; font-size:18px; padding: 5px;">$ <span>{{ recaudoTotal }}</span></td>
+                <td style="font-weight: 600;text-align:center; font-size:18px; padding: 5px;">$ <span>{{ tramiteTotal }}</span></td>
+                <td></td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
       <!-- Aqui termina CSV -->
-
-       <button
+      <div style="width: 100%; display: flex; justify-content: space-between;">
+<button
           @click="cancelar"
           type="button"
           class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 bg-red-500 rounded-lg shadow-lg hover:bg-red-700 hover:shadow-xl focus:outline-none"
@@ -605,13 +632,13 @@
           Cancelar
         </button>
 
-        <button
+        <!-- <button
           type="submit"
           @click.prevent="handleAnadirPedido"
           class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 bg-green-500 rounded-lg shadow-lg hover:bg-green-700 hover:shadow-xl focus:outline-none"
         >
           Añadir otro Pedido
-        </button>
+        </button> -->
 
         <button
           v-if="nuevoPedido.mobiker === 'Asignar MoBiker'"
@@ -630,6 +657,9 @@
         >
           Asignar Pedido
         </button>
+      </div>
+
+       
     </form>
 
     
@@ -673,6 +703,12 @@ export default {
       es: es,
       file: null,
       pedidos: [],
+      tarifaTotal: 0,
+      tarifaTotalSugerida:0,
+      distanciaTotal: 0,
+      recaudoTotal: 0,
+      tramiteTotal: 0,
+      showLoading: false,
     };
   },
   async mounted() {
@@ -732,12 +768,80 @@ export default {
             : 0;
       }
     },
+
+    "nuevoPedido.modalidad": function() {
+      if (this.nuevoPedido.modalidad === "Con Retorno") {
+        this.nuevoPedido.viajes = 2;
+        // if (this.nuevoPedido.tipoEnvio === "E-Commerce") {
+        //   this.nuevoPedido.tarifa *= 2;
+        // } else {
+        //   this.nuevoPedido.tarifa += +Math.ceil(this.nuevoPedido.tarifa / 2);
+        // }
+      }
+      if (this.nuevoPedido.modalidad === "Una vía") {
+        this.nuevoPedido.viajes = 1;
+        //this.nuevoPedido.tarifa = this.tarifaMemoria;
+      }
+    },
   },
   methods: {
     ...mapActions("mobikers", ["obtenerComision"]),
 
+    changeModalidad (modalidad, index) {
+      if (modalidad === "Con Retorno") {
+        if(this.pedidos[index].viajes !== 2){
+          if (this.nuevoPedido.tipoEnvio === "E-Commerce") {
+            this.pedidos[index].tarifa *= 2;
+          } else {
+            this.pedidos[index].tarifa += +Math.ceil(this.pedidos[index].tarifa / 2);
+          }
+        }
+        this.pedidos[index].viajes = 2;
+      }
+      if (modalidad === "Una vía") {
+        this.pedidos[index].viajes = 1;
+        this.pedidos[index].tarifa = this.pedidos[index].tarifaMemoria;
+      }
+      this.changeTarifa();
+    },
+
+    changeTarifa(){
+      let total = 0;
+      for(let i in this.pedidos){
+        if(this.pedidos[i].tarifa === '' || this.pedidos[i].tarifa === null){
+          this.pedidos[i].tarifa = 0;
+        }
+        total += parseFloat(this.pedidos[i].tarifa);
+      }
+      this.tarifaTotal = total;
+    },
+
+    changeRecaudo(){
+      let total = 0;
+      for(let i in this.pedidos){
+        if(this.pedidos[i].recaudo === '' || this.pedidos[i].recaudo === null){
+          this.pedidos[i].recaudo = 0;
+        }
+        total += parseFloat(this.pedidos[i].recaudo);
+      }
+      this.recaudoTotal = total;
+    },
+
+    changeTramite(){
+      let total = 0;
+      for(let i in this.pedidos){
+        if(this.pedidos[i].tramite === '' || this.pedidos[i].tramite === null){
+          this.pedidos[i].tramite = 0;
+        }
+        total += parseFloat(this.pedidos[i].tramite);
+      }
+      this.tramiteTotal = total;
+    },
+
     async handleNuevoPedido() {
       try {
+        this.showLoading = true;
+        let response = {};
         for(let i = 0; i < this.pedidos.length; i++){
           this.nuevoPedido.operador = this.$store.getters.operador;
           let pedido = {
@@ -768,7 +872,8 @@ export default {
             tipoEnvio: this.nuevoPedido.tipoEnvio,
             modalidad: this.nuevoPedido.modalidad,
             operador: this.nuevoPedido.operador,
-            rolCliente: this.nuevoPedido.rolCliente
+            rolCliente: this.nuevoPedido.rolCliente,
+            viajes: this.pedidos[i].viajes
           }
           const isValid = await this.$validator.validateAll();
           // if (this.nuevoPedido.distancia === (null || undefined)) {
@@ -778,22 +883,17 @@ export default {
           if (!isValid) {
             return;
           }
-
-          console.log(pedido)
-
-          
-
-          const response = await PedidoService.storageNuevoPedido(
+          response = await PedidoService.storageNuevoPedido(
             pedido
           );
-          console.log(response)
-          this.alert.message = response.data.message;
-          this.alert.show = true;
-          this.alert.success = true;
         }
+        this.showLoading = false;
+        this.alert.message = response.data.message;
+        this.alert.show = true;
+        this.alert.success = true;
 
         setTimeout(() => {
-          history.go(-1);
+          this.$router.push("pedidos/tablero-pedidos");
         }, 1500);
       } catch (error) {
         console.log(
@@ -892,12 +992,7 @@ export default {
       }
       try {
         if (direccion != null && distrito != null) {
-          
 
-          
-
-          // data.distancia = this.probandoDistancia(direccion, distrito);
-          // console.log(data)
           data.distancia = await consultarApi(
             this.nuevoPedido.direccionRemitente,
             this.nuevoPedido.distritoRemitente,
@@ -976,29 +1071,33 @@ export default {
 
     async uploadFile() {
       try {
+        this.showLoading = true;
         const mypostparameters = new FormData();
         mypostparameters.append("file", this.file, this.file.name);
 
-        // for (var key of mypostparameters.entries()) {
-        //   console.log(key[0] + ", " + key[1]);
-        // }
         let response = await TestingService.testFile(mypostparameters);
 				let data = response.data.data;
-        console.log(data)
-        //this.data = response.data.data;
+
         for(let i = 0; i < data.length; i++){
           let info = await this.calcularDistancia(data[i].direccionConsignado, data[i].distritoConsignado);
           data[i]['distancia'] = info.distancia;
           data[i]['tarifa'] = info.tarifa;
+          data[i]['tarifaMemoria'] = info.tarifaMemoria;
           data[i]['tarifaSugerida'] = info.tarifaSugerida;
           data[i]['CO2Ahorrado'] = info.CO2Ahorrado;
           data[i]['ruido'] = info.ruido;
           data[i]['recaudo'] = 0;
           data[i]['tramite'] = 0;
-          this.nuevoPedido.tarifa = this.nuevoPedido.tarifa + info.tarifa;
+          data[i]['modalidad'] = 'Una vía';
+          data[i]['viajes'] = 1;
+          this.tarifaTotal = this.tarifaTotal + info.tarifa;
+          this.distancia += info.distancia;
+          this.recaudoTotal = 0;
+          this.tramiteTotal = 0;
         }  
         this.pedidos = [];
         this.pedidos = data;
+        this.showLoading = false;
       } catch (error) {
         console.log(error);
       }
@@ -1051,6 +1150,30 @@ export default {
     width: 90%;
     border-radius: 3px;
     margin: 5px;
+  }
+
+  .loader {
+    border-top-color: #3498db;
+    -webkit-animation: spinner 1.5s linear infinite;
+    animation: spinner 1.5s linear infinite;
+  }
+
+  @-webkit-keyframes spinner {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spinner {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 </style>
     
