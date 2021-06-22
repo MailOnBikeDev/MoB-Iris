@@ -44,13 +44,13 @@ class PedidoService {
           CO2Ahorrado: nuevoPedido.CO2Ahorrado,
           ruido: nuevoPedido.ruido,
           status: nuevoPedido.status,
-          statusFinanciero: nuevoPedido.statusFinanciero,
           distritoConsignado: nuevoPedido.distritoConsignado,
           mobiker: nuevoPedido.mobiker,
           tipoEnvio: nuevoPedido.tipoEnvio,
           modalidad: nuevoPedido.modalidad,
           rolCliente: nuevoPedido.rolCliente,
           operador: nuevoPedido.operador,
+          viajes: nuevoPedido.viajes,
         },
         { headers: authHeader() }
       );
@@ -107,6 +107,7 @@ class PedidoService {
           modalidad: editarPedido.modalidad.tipo,
           rolCliente: editarPedido.rolCliente,
           operador: editarPedido.operador,
+          viajes: editarPedido.viajes,
         },
         { headers: authHeader() }
       );
