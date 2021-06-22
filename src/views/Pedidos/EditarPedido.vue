@@ -635,6 +635,7 @@ export default {
 
     "editarPedido.modalidad": function() {
       if (this.editarPedido.modalidad === "Con Retorno") {
+        this.editarPedido.viajes = 2
         if (this.editarPedido.tipoEnvio === "E-Commerce") {
           this.editarPedido.tarifa *= 2;
         } else {
@@ -642,6 +643,7 @@ export default {
         }
       }
       if (this.editarPedido.modalidad === "Una vía") {
+        this.editarPedido.viajes = 1;
         this.editarPedido.tarifa = this.tarifaMemoria;
         console.log(this.tarifaMemoria);
       }

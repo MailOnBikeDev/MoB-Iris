@@ -637,6 +637,7 @@ export default {
 
     "nuevoPedido.modalidad": function() {
       if (this.nuevoPedido.modalidad === "Con Retorno") {
+        this.nuevoPedido.viajes = 2;
         if (this.nuevoPedido.tipoEnvio === "E-Commerce") {
           this.nuevoPedido.tarifa *= 2;
         } else {
@@ -644,8 +645,8 @@ export default {
         }
       }
       if (this.nuevoPedido.modalidad === "Una vía") {
+        this.nuevoPedido.viajes = 1;
         this.nuevoPedido.tarifa = this.tarifaMemoria;
-        console.log(this.tarifaMemoria);
       }
     },
   },
