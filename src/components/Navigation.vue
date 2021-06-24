@@ -111,10 +111,10 @@ export default {
 					title: "Pedidos",
 					link: "/pedidos/tablero-pedidos",
 				},
-				{
-					title: "Testing",
-					link: "/testing",
-				},
+				// {
+				// 	title: "Testing",
+				// 	link: "/testing",
+				// },
 			],
 		};
 	},

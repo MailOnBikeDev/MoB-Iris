@@ -45,6 +45,11 @@ const routes = [
     name: "EditarPedido",
     component: () => import("@/views/Pedidos/EditarPedido.vue"),
   },
+  {
+    path: "/pedidos/ruteo",
+    name: "Ruteo",
+    component: () => import("@/views/Pedidos/Ruteo.vue"),
+  },
 
   {
     path: "/mobikers/equipo-mobiker",
@@ -90,11 +95,6 @@ const routes = [
     path: "/finanzas/facturacion",
     name: "Facturacion",
     component: () => import("@/views/Finanzas/Facturacion.vue"),
-  },
-  {
-    path: "/testing",
-    name: "Testing",
-    component: () => import("@/views/Testing/Testing.vue"),
   },
 ];
 

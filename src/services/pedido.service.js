@@ -173,6 +173,21 @@ class PedidoService {
       console.error("Mensaje de error: ", error.message);
     }
   }
+
+  async procesarCSV(file) {
+    try {
+        let result = await axios.post(`${API_URL}/procesar-csv`, file,
+            {
+                headers: authHeader(),
+                'Content-Type' : 'multipart/form-data'
+            }
+        );
+
+        return result;
+    } catch (error) {
+        console.error(`Mensaje de error desde MobikerService: ${error.message}`);
+    }
+  }
 }
 
 export default new PedidoService();
