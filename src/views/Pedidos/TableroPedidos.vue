@@ -205,9 +205,7 @@
           v-for="pedido in pedidosFiltrados"
           :key="pedido.id"
           @click="setActivePedido(pedido, pedido.id)"
-          :title="
-            `Cliente: ${pedido.contactoRemitente}. Observaciones: Del origen: ${pedido.otroDatoRemitente} / Del destino: ${pedido.otroDatoConsignado}`
-          "
+          :title="`Cliente: ${pedido.contactoRemitente}`"
         >
           <div>
             <p>{{ pedido.id }}</p>

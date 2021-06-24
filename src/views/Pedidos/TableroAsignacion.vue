@@ -163,9 +163,7 @@
           }"
           v-for="pedido in pedidosFiltrados"
           :key="pedido.id"
-          :title="
-            `Cliente: ${pedido.contactoRemitente}. Observaciones: Del origen: ${pedido.otroDatoRemitente} / Del destino: ${pedido.otroDatoConsignado}`
-          "
+          :title="`Cliente: ${pedido.contactoRemitente}`"
         >
           <div @click="setActivePedido(pedido, pedido.id)">
             <p>{{ pedido.id }}</p>
@@ -199,12 +197,12 @@
           </div>
 
           <div @click="setActivePedido(pedido, pedido.id)">
-            <p
+            <font-awesome-icon
               v-if="pedido.otroDatoRemitente || pedido.otroDatoConsignado"
               class="text-2xl font-bold text-red-500"
-            >
-              !
-            </p>
+              icon="eye"
+            />
+
             <p v-else></p>
           </div>
 
@@ -237,7 +235,6 @@
 </template>
 
 <script>
-// import vClickOutside from "v-click-outside";
 import PedidoService from "@/services/pedido.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
 import ResumenPedido from "@/components/ResumenPedido.vue";
@@ -404,7 +401,6 @@ export default {
 
     createArrayPedidos() {
       this.showDetalle = true;
-      // console.log(this.pedidosArray);
     },
 
     closeModal() {
