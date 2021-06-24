@@ -629,17 +629,20 @@ export default {
 
     "editarPedido.recaudo": function() {
       if (this.editarPedido.recaudo !== 0) {
-        this.editarPedido.tarifa += 2;
+        this.editarPedido.tarifa = +(this.tarifaMemoria + 2);
+      }
+      if (this.editarPedido.recaudo === 0) {
+        this.editarPedido.tarifa = this.tarifaMemoria;
       }
     },
 
     "editarPedido.modalidad": function() {
       if (this.editarPedido.modalidad === "Con Retorno") {
-        this.editarPedido.viajes = 2
+        this.editarPedido.viajes = 2;
         if (this.editarPedido.tipoEnvio === "E-Commerce") {
-          this.editarPedido.tarifa *= 2;
+          this.editarPedido.tarifa = this.tarifaMemoria * 2;
         } else {
-          this.editarPedido.tarifa += +Math.ceil(this.editarPedido.tarifa / 2);
+          this.editarPedido.tarifa += +Math.ceil(this.tarifaMemoria / 2);
         }
       }
       if (this.editarPedido.modalidad === "Una vía") {
