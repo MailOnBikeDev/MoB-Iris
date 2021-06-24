@@ -79,6 +79,16 @@
           >Crear nuevo Pedido</span
         >
       </router-link>
+      <router-link
+        to="/pedidos/ruteo"
+        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+        custom
+        v-slot="{ navigate }"
+      >
+        <span @click="navigate" role="link" class="text-center cursor-pointer"
+          >Crear nuevo Ruteo</span
+        >
+      </router-link>
     </div>
 
     <div class="grid grid-cols-4 gap-2">
