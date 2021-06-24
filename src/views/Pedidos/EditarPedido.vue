@@ -8,13 +8,22 @@
       </h1>
     </div>
 
-    <div class="flex flex-row px-4 -mt-12">
+    <div class="flex flex-row justify-around px-4 mx-auto -mt-12">
       <div>
         <button
-          class="relative px-4 py-1 font-bold text-white bg-primary left-56 rounded-xl focus:outline-none"
+          class="relative px-4 py-1 font-bold text-white bg-primary rounded-xl focus:outline-none"
           @click="showBuscador = true"
         >
           Buscar cliente
+        </button>
+      </div>
+
+      <div>
+        <button
+          class="relative px-4 py-1 font-bold text-white bg-primary rounded-xl focus:outline-none"
+          @click="showBuscadorDestinos = true"
+        >
+          Destinos Recurrentes
         </button>
       </div>
 
@@ -22,6 +31,12 @@
         :showBuscador="showBuscador"
         @cerrarBuscador="showBuscador = false"
         @activarCliente="activarCliente"
+      />
+
+      <BuscadorDestino
+        :showBuscadorDestinos="showBuscadorDestinos"
+        @cerrarBuscador="showBuscadorDestinos = false"
+        @activarDestino="activarDestino"
       />
     </div>
 
@@ -68,9 +83,11 @@
             <datepicker
               v-model="editarPedido.fecha"
               v-validate="'required'"
-              name="fechaNacimiento"
+              name="fecha"
               input-class="input"
               :monday-first="true"
+              :language="es"
+              :use-utc="true"
             />
             <div
               v-if="errors.has('fecha')"
@@ -105,6 +122,7 @@
               v-validate="'required'"
               name="empresaRemitente"
               class="input"
+              :disabled="true"
             />
             <div
               v-if="errors.has('empresaRemitente')"
@@ -521,16 +539,21 @@ import Pedido from "@/models/pedido";
 import { ModelListSelect } from "vue-search-select";
 import PedidoService from "@/services/pedido.service";
 import BuscadorCliente from "@/components/BuscadorCliente";
+import BuscadorDestino from "@/components/BuscadorDestino";
 import Datepicker from "vuejs-datepicker";
 import { mapState, mapActions } from "vuex";
-// import axios from "axios";
-// import googleMaps_API from "@/googleMaps-API";
+import { es } from "vuejs-datepicker/dist/locale";
+
+import consultarApi from "@/services/maps.service";
+import calcularTarifa from "@/services/tarifa.service";
+import calcularEstadisticas from "@/services/ecoamigable.service";
 
 export default {
   data() {
     return {
       editarPedido: new Pedido(),
       showBuscador: false,
+      showBuscadorDestinos: false,
       mobikersFiltrados: [],
       alert: {
         message: "",
@@ -539,17 +562,17 @@ export default {
       },
       errorCalcularDistancia: false,
       tarifaSugerida: 0,
+      es: es,
+      tarifaMemoria: 0,
     };
   },
   async mounted() {
     try {
       this.getPedido(this.$route.params.id);
 
-      this.mobikersFiltrados = this.mobikers
-        .filter((mobiker) => mobiker.status === "Activo")
-        .sort((a, b) => {
-          return a.fullName.localeCompare(b.fullName);
-        });
+      this.mobikersFiltrados = this.mobikers.filter(
+        (mobiker) => mobiker.status === "Activo"
+      );
     } catch (error) {
       console.error("Mensaje de error:", error);
     }
@@ -603,6 +626,31 @@ export default {
             : 0;
       }
     },
+
+    "editarPedido.recaudo": function() {
+      if (this.editarPedido.recaudo !== 0) {
+        this.editarPedido.tarifa = +(this.tarifaMemoria + 2);
+      }
+      if (this.editarPedido.recaudo === 0) {
+        this.editarPedido.tarifa = this.tarifaMemoria;
+      }
+    },
+
+    "editarPedido.modalidad": function() {
+      if (this.editarPedido.modalidad === "Con Retorno") {
+        this.editarPedido.viajes = 2;
+        if (this.editarPedido.tipoEnvio === "E-Commerce") {
+          this.editarPedido.tarifa = this.tarifaMemoria * 2;
+        } else {
+          this.editarPedido.tarifa += +Math.ceil(this.tarifaMemoria / 2);
+        }
+      }
+      if (this.editarPedido.modalidad === "Una vía") {
+        this.editarPedido.viajes = 1;
+        this.editarPedido.tarifa = this.tarifaMemoria;
+        console.log(this.tarifaMemoria);
+      }
+    },
   },
   methods: {
     ...mapActions("mobikers", ["obtenerComision"]),
@@ -614,6 +662,7 @@ export default {
         this.editarPedido = response.data;
         this.editarPedido.distritoConsignado = response.data.distrito.distrito;
         this.editarPedido.tipoEnvio = response.data.tipoDeEnvio.tipo;
+        console.log(this.editarPedido.fecha);
       } catch (error) {
         console.error("Mensaje de error:", error);
       }
@@ -662,19 +711,31 @@ export default {
           return;
         }
         this.errorCalcularDistancia = false;
-        const tarifaPorKm = 1.2;
 
-        let distanciaCalculada = 3.8;
+        // Calcular Distancia
+        this.editarPedido.distancia = await consultarApi(
+          this.editarPedido.direccionRemitente,
+          this.editarPedido.distritoRemitente,
+          this.editarPedido.direccionConsignado,
+          this.editarPedido.distritoConsignado
+        );
 
-        this.editarPedido.distancia = distanciaCalculada;
-        this.editarPedido.tarifa = 7.0;
-        this.tarifaSugerida = (distanciaCalculada * tarifaPorKm).toFixed(2);
-        this.editarPedido.CO2Ahorrado = (
-          this.editarPedido.distancia / 12
-        ).toFixed(1);
-        this.editarPedido.ruido = (this.editarPedido.distancia / 24).toFixed(2);
+        // Calcular la tarifa
+        const response = calcularTarifa(
+          this.editarPedido.distancia,
+          this.editarPedido.tipoEnvio
+        );
+
+        this.editarPedido.tarifa = response.tarifa;
+        this.tarifaMemoria = response.tarifa;
+        this.tarifaSugerida = response.tarifaSugerida;
+
+        // Calcular las estadísticas Ecoamigables
+        const stats = calcularEstadisticas(this.editarPedido.distancia);
+        this.editarPedido.CO2Ahorrado = stats.co2;
+        this.editarPedido.ruido = stats.ruido;
       } catch (error) {
-        console.error("Mensaje de error: ", error.message);
+        console.error(`Error al calcular la distancia: ${error.message}`);
       }
     },
 
@@ -694,6 +755,17 @@ export default {
         this.editarPedido.formaPago = cliente.formaDePago.pago;
         this.editarPedido.statusFinanciero = 1;
         this.editarPedido.rolCliente = cliente.rolCliente.rol;
+      }
+    },
+
+    activarDestino(destino) {
+      if (destino) {
+        this.editarPedido.contactoConsignado = destino.contacto;
+        this.editarPedido.empresaConsignado = destino.empresa;
+        this.editarPedido.telefonoConsignado = destino.telefono;
+        this.editarPedido.direccionConsignado = destino.direccion;
+        this.editarPedido.distritoConsignado = destino.distrito.distrito;
+        this.editarPedido.otroDatoConsignado = destino.otroDato;
       }
     },
 
@@ -721,14 +793,16 @@ export default {
     },
 
     asignarHoy() {
-      let hoy = new Date();
+      let hoy = new Date().toISOString().split("T")[0];
       return (this.editarPedido.fecha = hoy);
     },
 
     asignarMañana() {
       let hoy = new Date();
       let DIA_EN_MS = 24 * 60 * 60 * 1000;
-      let manana = new Date(hoy.getTime() + DIA_EN_MS);
+      let manana = new Date(hoy.getTime() + DIA_EN_MS)
+        .toISOString()
+        .split("T")[0];
       return (this.editarPedido.fecha = manana);
     },
   },
@@ -737,6 +811,7 @@ export default {
     BuscadorCliente,
     Datepicker,
     BaseAlerta,
+    BuscadorDestino,
   },
 };
 </script>

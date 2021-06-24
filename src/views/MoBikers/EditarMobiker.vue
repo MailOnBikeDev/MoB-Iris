@@ -191,6 +191,8 @@
             name="fechaNacimiento"
             input-class="input"
             :monday-first="true"
+            :use-utc="true"
+            :language="es"
           />
           <div
             v-if="errors.has('fechaNacimiento')"
@@ -278,6 +280,8 @@
             type="date"
             input-class="input"
             :monday-first="true"
+            :use-utc="true"
+            :language="es"
           />
           <div
             v-if="errors.has('fechaIngreso')"
@@ -373,6 +377,7 @@ import BaseAlerta from "@/components/BaseAlerta.vue";
 import Mobiker from "@/models/mobiker";
 import { ModelListSelect } from "vue-search-select";
 import { mapState, mapActions } from "vuex";
+import { es } from "vuejs-datepicker/dist/locale";
 import MobikerService from "@/services/mobiker.service";
 import Datepicker from "vuejs-datepicker";
 
@@ -426,6 +431,7 @@ export default {
           status: "Retirado",
         },
       ],
+      es: es,
     };
   },
   async mounted() {
@@ -451,6 +457,17 @@ export default {
 
         this.editarMobiker = response.data;
         this.editarMobiker.rango = response.data.rango.rangoMoBiker;
+        this.editarMobiker.fechaNacimiento = new Date(
+          this.editarMobiker.fechaNacimiento
+        )
+          .toISOString()
+          .split("T")[0];
+
+        this.editarMobiker.fechaIngreso = new Date(
+          this.editarMobiker.fechaIngreso
+        )
+          .toISOString()
+          .split("T")[0];
       } catch (error) {
         console.error(`Error al obtener el MoBiker: ${error}`);
       }

@@ -14,13 +14,21 @@ import {
   faTimes,
   faReceipt,
   faWindowMaximize,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 import VueDayjs from "vue-dayjs-plugin";
 import VueClipboard from "vue-clipboard2";
 
 Vue.use(VueClipboard);
 
-library.add(faPencilAlt, faSyncAlt, faTimes, faReceipt, faWindowMaximize);
+library.add(
+  faPencilAlt,
+  faSyncAlt,
+  faTimes,
+  faReceipt,
+  faWindowMaximize,
+  faEye
+);
 
 Vue.config.productionTip = false;
 

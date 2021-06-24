@@ -29,12 +29,16 @@
           name="fechaInicio"
           input-class="w-32 p-2 mb-1 font-bold cursor-pointer rounded-l-xl focus:outline-none text-primary"
           :monday-first="true"
+          :language="es"
+          :use-utc="true"
         />
         <datepicker
           v-model="fechaFin"
           name="fechaFin"
           input-class="w-32 p-2 mb-1 font-bold cursor-pointer focus:outline-none text-primary"
           :monday-first="true"
+          :language="es"
+          :use-utc="true"
         />
         <button
           type="button"
@@ -128,6 +132,9 @@
             'bg-info text-white font-bold': mobiker.id == currentIndexMobiker,
           }"
           v-for="mobiker in mobikersFiltrados"
+          :title="
+            `Bicicleta: ${mobiker.tipoBicicleta} - Equipo: ${mobiker.equipo}`
+          "
           :key="mobiker.id"
           @click="checkPedidosMobikers(mobiker, mobiker.id)"
         >
@@ -156,9 +163,7 @@
           }"
           v-for="pedido in pedidosFiltrados"
           :key="pedido.id"
-          :title="
-            `Cliente: ${pedido.contactoRemitente}. Observaciones: Del origen: ${pedido.otroDatoRemitente} / Del destino: ${pedido.otroDatoConsignado}`
-          "
+          :title="`Cliente: ${pedido.contactoRemitente}`"
         >
           <div @click="setActivePedido(pedido, pedido.id)">
             <p>{{ pedido.id }}</p>
@@ -192,12 +197,12 @@
           </div>
 
           <div @click="setActivePedido(pedido, pedido.id)">
-            <p
+            <font-awesome-icon
               v-if="pedido.otroDatoRemitente || pedido.otroDatoConsignado"
               class="text-2xl font-bold text-red-500"
-            >
-              !
-            </p>
+              icon="eye"
+            />
+
             <p v-else></p>
           </div>
 
@@ -230,13 +235,16 @@
 </template>
 
 <script>
-// import vClickOutside from "v-click-outside";
 import PedidoService from "@/services/pedido.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
 import ResumenPedido from "@/components/ResumenPedido.vue";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { mapState, mapActions } from "vuex";
+import { es } from "vuejs-datepicker/dist/locale";
+
+const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
+const manana = new Date().getTime() + 1000 * 60 * 60 * 24;
 
 export default {
   name: "Pedidos",
@@ -257,8 +265,8 @@ export default {
       currentIndexMobiker: -1,
       currentPedido: null,
       currentIndex: -1,
-      fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
-      fechaFin: new Date(new Date().getTime() + 1000 * 60 * 60 * 24),
+      fechaInicio: new Date(seisDiasAtras),
+      fechaFin: new Date(manana),
       pedidosPorAsignar: 0,
       pedidosArray: [],
 
@@ -266,7 +274,8 @@ export default {
 
       page: 1,
       cantidadPedidos: 0,
-      pageSize: 50,
+      pageSize: 200,
+      es: es,
     };
   },
   mounted() {
@@ -319,8 +328,8 @@ export default {
     async retrievePedidos() {
       try {
         const params = this.getRequestParams(
-          this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-          this.$date(this.fechaFin).format("YYYY-MM-DD"),
+          this.fechaInicio.toISOString().split("T")[0],
+          this.fechaFin.toISOString().split("T")[0],
           this.page,
           this.pageSize
         );
@@ -392,13 +401,12 @@ export default {
 
     createArrayPedidos() {
       this.showDetalle = true;
-      // console.log(this.pedidosArray);
     },
 
     closeModal() {
       this.showDetalle = false;
       this.showResumen = false;
-      this.pedidosArray = [];
+      this.pedidosArray.length = 0;
 
       this.currentPedido = null;
       this.currentIndex = -1;
@@ -475,21 +483,7 @@ export default {
         return a.fecha > b.fecha ? -1 : 1;
       });
     },
-
-    // clickExterno() {
-    //   this.buscador = "";
-    //   this.currentIndexMobiker = -1;
-
-    //   this.pedidosFiltrados = this.pedidos
-    //     .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
-    //     .sort((a, b) => {
-    //       return a.statusId > b.statusId ? 1 : -1;
-    //     });
-    // },
   },
-  // directives: {
-  //   vClickOutside: vClickOutside.directive,
-  // },
 };
 </script>
 

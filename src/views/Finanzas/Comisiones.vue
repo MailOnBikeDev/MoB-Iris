@@ -38,12 +38,16 @@
           name="fechaInicio"
           input-class="w-32 p-2 font-bold cursor-pointer rounded-l-xl focus:outline-none text-primary"
           :monday-first="true"
+          :language="es"
+          :use-utc="true"
         />
         <datepicker
           v-model="fechaFin"
           name="fechaFin"
           input-class="w-32 p-2 font-bold cursor-pointer focus:outline-none text-primary"
           :monday-first="true"
+          :language="es"
+          :use-utc="true"
         />
         <button
           type="button"
@@ -207,6 +211,9 @@ import ReporteComisiones from "@/components/ReporteComisiones";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { mapState, mapActions } from "vuex";
+import { es } from "vuejs-datepicker/dist/locale";
+
+const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
 
 export default {
   name: "Comisiones",
@@ -226,21 +233,20 @@ export default {
       currentIndex: -1,
       currentPedido: null,
       currentPedidoIndex: -1,
-      fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
+      fechaInicio: new Date(seisDiasAtras),
       fechaFin: new Date(),
       buscador: "",
 
       page: 1,
       cantidadPedidos: 0,
       pageSize: 200,
+      es: es,
     };
   },
   mounted() {
-    this.mobikersFiltrados = this.mobikers
-      .filter((mobiker) => mobiker.status === "Activo")
-      .sort((a, b) => {
-        return a.fullName.localeCompare(b.fullName);
-      });
+    this.mobikersFiltrados = this.mobikers.filter(
+      (mobiker) => mobiker.status === "Activo"
+    );
   },
   computed: {
     ...mapState("mobikers", ["mobikers"]),
@@ -276,8 +282,8 @@ export default {
 
     retrievePedidosMobikers() {
       const params = this.getRequestParams(
-        this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-        this.$date(this.fechaFin).format("YYYY-MM-DD"),
+        this.fechaInicio.toISOString().split("T")[0],
+        this.fechaFin.toISOString().split("T")[0],
         this.currentIndex,
         this.page,
         this.pageSize

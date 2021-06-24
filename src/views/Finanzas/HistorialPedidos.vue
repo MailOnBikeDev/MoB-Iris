@@ -21,12 +21,16 @@
           name="fechaInicio"
           input-class="w-32 p-2 font-bold cursor-pointer rounded-l-xl focus:outline-none text-primary"
           :monday-first="true"
+          :language="es"
+          :use-utc="true"
         />
         <datepicker
           v-model="fechaFin"
           name="fechaFin"
           input-class="w-32 p-2 font-bold cursor-pointer focus:outline-none text-primary"
           :monday-first="true"
+          :language="es"
+          :use-utc="true"
         />
         <button
           type="button"
@@ -67,7 +71,7 @@
 
       <router-link
         to="/finanzas/facturacion"
-        class="px-6 py-2 font-bold text-white bg-indigo-600 rounded-xl focus:outline-none hover:bg-indigo-500"
+        class="px-6 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
         custom
         v-slot="{ navigate }"
       >
@@ -265,7 +269,10 @@
 import PedidoService from "@/services/pedido.service";
 import DetalleHistorialPedido from "@/components/DetalleHistorialPedido";
 import Datepicker from "vuejs-datepicker";
+import { es } from "vuejs-datepicker/dist/locale";
 import Pagination from "@/components/Pagination.vue";
+
+const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
 
 export default {
   name: "HistorialPedidos",
@@ -277,13 +284,14 @@ export default {
       showDetalle: false,
       currentPedido: null,
       currentIndex: -1,
-      fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
+      fechaInicio: new Date(seisDiasAtras),
       fechaFin: new Date(),
       buscador: "",
 
       page: 1,
       cantidadPedidos: 0,
-      pageSize: 50,
+      pageSize: 200,
+      es: es,
     };
   },
   mounted() {
@@ -328,8 +336,8 @@ export default {
 
     retrievePedidos() {
       const params = this.getRequestParams(
-        this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-        this.$date(this.fechaFin).format("YYYY-MM-DD"),
+        this.fechaInicio.toISOString().split("T")[0],
+        this.fechaFin.toISOString().split("T")[0],
         this.page,
         this.pageSize
       );

@@ -180,10 +180,9 @@ export default {
     this.clientesFiltrados = this.clientes.sort((a, b) => {
       return a.razonComercial > b.razonComercial ? 1 : -1;
     });
-    this.clientesFiltrados.length = 100;
   },
   methods: {
-    ...mapActions("clientes", ["getClientes", "buscarCliente"]),
+    ...mapActions("clientes", ["getClientes"]),
 
     retrievePedidosCliente(id) {
       ClienteService.getPedidosDelClienteById(id).then(
@@ -206,13 +205,11 @@ export default {
 
     refreshList() {
       this.getClientes();
-      this.clientesFiltrados = this.clientes.sort((a, b) => {
-        return a.razonComercial > b.razonComercial ? 1 : -1;
-      });
-      this.clientesFiltrados.length = 100;
+      this.clientesFiltrados = this.clientes;
 
       this.currentCliente = null;
       this.currentIndex = -1;
+      this.buscador = "";
     },
 
     setActiveCliente(cliente, index) {
@@ -224,7 +221,9 @@ export default {
 
     async searchCliente() {
       try {
-        this.clientesFiltrados = await this.buscarCliente(this.buscador);
+        this.clientesFiltrados = await ClienteService.searchCliente(
+          this.buscador
+        );
 
         if (this.buscador.trim() === "") {
           this.refreshList();

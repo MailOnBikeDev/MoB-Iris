@@ -1,49 +1,51 @@
-import http from "@/http-common";
+import axios from "axios";
+
+const API_URL = process.env.VUE_APP_HERMES;
 
 class AuxiliarService {
-	getRolesUsers() {
-		return http.get("auxiliares/roles-usuarios");
-	}
+  getRolesUsers() {
+    return axios.get(`${API_URL}/auxiliares/roles-usuarios`);
+  }
 
-	getDistritos() {
-		return http.get("auxiliares/distritos");
-	}
+  getDistritos() {
+    return axios.get(`${API_URL}/auxiliares/distritos`);
+  }
 
-	getTipoCarga() {
-		return http.get("auxiliares/tipos-de-carga");
-	}
+  getTipoCarga() {
+    return axios.get(`${API_URL}/auxiliares/tipos-de-carga`);
+  }
 
-	getTipoComprobante() {
-		return http.get("auxiliares/tipos-de-comprobantes");
-	}
+  getTipoComprobante() {
+    return axios.get(`${API_URL}/auxiliares/tipos-de-comprobantes`);
+  }
 
-	getTipoEnvio() {
-		return http.get("auxiliares/tipos-de-envios");
-	}
+  getTipoEnvio() {
+    return axios.get(`${API_URL}/auxiliares/tipos-de-envios`);
+  }
 
-	getFormasPago() {
-		return http.get("auxiliares/formas-de-pago");
-	}
+  getFormasPago() {
+    return axios.get(`${API_URL}/auxiliares/formas-de-pago`);
+  }
 
-	getModalidad() {
-		return http.get("auxiliares/modalidad");
-	}
+  getModalidad() {
+    return axios.get(`${API_URL}/auxiliares/modalidad`);
+  }
 
-	getRangosMoB() {
-		return http.get("auxiliares/rangos-MoBiker");
-	}
+  getRangosMoB() {
+    return axios.get(`${API_URL}/auxiliares/rangos-MoBiker`);
+  }
 
-	getRolCliente() {
-		return http.get("auxiliares/roles-clientes");
-	}
+  getRolCliente() {
+    return axios.get(`${API_URL}/auxiliares/roles-clientes`);
+  }
 
-	getEntidadesBancarias() {
-		return http.get("auxiliares/entidades-financieras");
-	}
+  getEntidadesBancarias() {
+    return axios.get(`${API_URL}/auxiliares/entidades-financieras`);
+  }
 
-	getStatusPedidos() {
-		return http.get("auxiliares/status");
-	}
+  getStatusPedidos() {
+    return axios.get(`${API_URL}/auxiliares/status`);
+  }
 }
 
 export default new AuxiliarService();

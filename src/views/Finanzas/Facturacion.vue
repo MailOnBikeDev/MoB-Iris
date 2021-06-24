@@ -8,6 +8,13 @@
       </h1>
     </div>
 
+    <ReporteFacturacion
+      :showDetalle="showDetalle"
+      @cerrarDetalle="showDetalle = false"
+      :detalles="pedidosCliente"
+      :cliente="currentCliente"
+    />
+
     <DetallePedidoComisiones
       :showResumen="showResumen"
       @cerrarResumen="closeResumen"
@@ -31,12 +38,16 @@
           name="fechaInicio"
           input-class="w-32 p-2 font-bold cursor-pointer rounded-l-xl focus:outline-none text-primary"
           :monday-first="true"
+          :language="es"
+          :use-utc="true"
         />
         <datepicker
           v-model="fechaFin"
           name="fechaFin"
           input-class="w-32 p-2 font-bold cursor-pointer focus:outline-none text-primary"
           :monday-first="true"
+          :language="es"
+          :use-utc="true"
         />
         <button
           type="button"
@@ -66,6 +77,7 @@
 
       <button
         class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+        @click="showDetalle = true"
       >
         Enviar reporte
       </button>
@@ -157,6 +169,15 @@
           </div>
 
           <div @click="setActivePedido(pedido, pedido.id)">
+            <p v-if="pedido.status.id === 1" class="tag-programado">
+              {{ pedido.status.tag }}
+            </p>
+            <p v-if="pedido.status.id === 2" class="tag-recoger">
+              {{ pedido.status.tag }}
+            </p>
+            <p v-if="pedido.status.id === 3" class="tag-transito">
+              {{ pedido.status.tag }}
+            </p>
             <p v-if="pedido.status.id === 4" class="tag-entregado">
               {{ pedido.status.tag }}
             </p>
@@ -194,10 +215,14 @@
 
 <script>
 import DetallePedidoComisiones from "@/components/DetallePedidoComisiones";
+import ReporteFacturacion from "@/components/ReporteFacturacion";
 import ClienteService from "@/services/cliente.service";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { mapState, mapActions } from "vuex";
+import { es } from "vuejs-datepicker/dist/locale";
+
+const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
 
 export default {
   name: "Facturacion",
@@ -205,6 +230,7 @@ export default {
     Datepicker,
     Pagination,
     DetallePedidoComisiones,
+    ReporteFacturacion,
   },
   data() {
     return {
@@ -216,13 +242,14 @@ export default {
       currentIndex: -1,
       currentPedido: null,
       currentPedidoIndex: -1,
-      fechaInicio: new Date(new Date().getTime() - 1000 * 60 * 60 * 24 * 6),
+      fechaInicio: new Date(seisDiasAtras),
       fechaFin: new Date(),
       buscador: "",
 
       page: 1,
       cantidadPedidos: 0,
       pageSize: 200,
+      es: es,
     };
   },
   mounted() {
@@ -232,7 +259,7 @@ export default {
     ...mapState("clientes", ["clientes"]),
   },
   methods: {
-    ...mapActions("clientes", ["getClientes", "buscarCliente"]),
+    ...mapActions("clientes", ["getClientes"]),
 
     getRequestParams(desde, hasta, id, page, pageSize) {
       let params = {};
@@ -262,8 +289,8 @@ export default {
 
     retrievePedidosClientes() {
       const params = this.getRequestParams(
-        this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-        this.$date(this.fechaFin).format("YYYY-MM-DD"),
+        this.fechaInicio.toISOString().split("T")[0],
+        this.fechaFin.toISOString().split("T")[0],
         this.currentIndex,
         this.page,
         this.pageSize
@@ -300,8 +327,11 @@ export default {
         this.pedidosCliente = [];
         this.cantidadPedidos = 0;
 
+        this.clientesFiltrados = this.clientes;
+
         this.currentCliente = null;
         this.currentIndex = -1;
+        this.buscador = "";
       } catch (error) {
         console.error(`Error al refrescar la lista: ${error.message}`);
       }
@@ -323,7 +353,9 @@ export default {
 
     async searchCliente() {
       try {
-        this.clientesFiltrados = await this.buscarCliente(this.buscador);
+        this.clientesFiltrados = await ClienteService.searchCliente(
+          this.buscador
+        );
 
         if (this.buscador.trim() === "") {
           this.refreshList();

@@ -91,11 +91,6 @@ const routes = [
     name: "Facturacion",
     component: () => import("@/views/Finanzas/Facturacion.vue"),
   },
-  {
-    path: "/finanzas/historial-pedidos/:id",
-    name: "CorregirPedido",
-    component: () => import("@/views/Finanzas/CorregirPedido.vue"),
-  },
 ];
 
 const router = new VueRouter({
