@@ -1,7 +1,19 @@
 export default function calcularEstadisticas(distancia) {
-  const co2 = +(distancia / 12).toFixed(1);
+  const emisionAutomovil = 97.8 / 1000; // 100 gramos de CO2 por cada Km
+  const emisionBicicleta = 8.6 / 1000; // 8.6 gramos de CO2 por cada Km
 
-  const ruido = +(distancia / 24).toFixed(2);
+  const velocidadPromedioBicicleta = 15; // 15 Km/h velocidad estimada de un ciclista
+  const velocidadPromedioAutomovil = 40; // 40 Km/h velocidad estimada de los vehículos en la ciudad de Lima
+
+  const co2 = +(
+    distancia * emisionAutomovil -
+    distancia * emisionBicicleta
+  ).toFixed(1);
+
+  const ruido = +(
+    distancia / velocidadPromedioAutomovil -
+    distancia / velocidadPromedioBicicleta
+  ).toFixed(2);
 
   return { co2, ruido };
 }
