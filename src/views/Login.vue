@@ -54,9 +54,7 @@
       </form>
     </div>
 
-    <transition name="alerta">
-      <BaseAlerta v-if="alert.show" :alert="alert" />
-    </transition>
+    <BaseAlerta v-if="alert.show" :alert="alert" />
   </div>
 </template>
 
@@ -157,16 +155,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.alerta-enter-from,
-.alerta-leave-to {
-  opacity: 0;
-  transform: translateX(200px);
-}
-
-.alerta-enter-active,
-.alerta-leave-active {
-  transition: all 0.5s ease;
-}
-</style>

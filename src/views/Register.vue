@@ -125,9 +125,7 @@
         </button>
       </form>
 
-      <transition name="alerta">
-        <BaseAlerta v-if="alert.show" :alert="alert" />
-      </transition>
+      <BaseAlerta v-if="alert.show" :alert="alert" />
     </div>
   </div>
 </template>
