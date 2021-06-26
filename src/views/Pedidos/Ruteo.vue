@@ -8,10 +8,10 @@
       </h1>
     </div>
 
-    <div class="flex flex-row px-4 -mt-12">
+    <div class="flex flex-row justify-center px-4 -mt-12">
       <div>
         <button
-          class="relative px-4 py-1 font-bold text-white bg-primary left-56 rounded-xl focus:outline-none"
+          class="px-4 py-1 font-bold text-white bg-primary rounded-xl focus:outline-none"
           @click="showBuscador = true"
         >
           Buscar cliente
@@ -32,7 +32,7 @@
         </div>
 
         <!-- FORMULARIO ORIGEN -->
-        <div class="grid grid-cols-6 gap-2 p-2 border-r-2 border-secondary">
+        <div class="grid grid-cols-6 gap-2 p-2">
           <div>
             <button
               class="w-full py-2 mt-6 font-bold text-white rounded bg-secondary focus:outline-none"
@@ -280,217 +280,6 @@
             </div>
           </div>
         </div>
-
-        <!-- FORMULARIO DESTINO --
-        <div class="grid grid-cols-3 gap-2 p-2">
-          <div>
-            <label for="tipoEnvio" class="label-input">Tipo de Envío</label>
-            <model-list-select
-              name="tipoEnvio"
-              v-model="nuevoPedido.tipoEnvio"
-              v-validate="'required'"
-              :list="tiposDeEnvio"
-              option-text="tipo"
-              option-value="tipo"
-            />
-            <div
-              v-if="errors.has('tipoEnvio')"
-              class="p-2 text-sm text-white bg-red-500 rounded"
-            >
-              <p>El tipo de Envío es requerido</p>
-            </div>
-          </div>
-
-          <div>
-            <label for="modalidad" class="label-input">Modalidad</label>
-            <model-list-select
-              name="modalidad"
-              v-model="nuevoPedido.modalidad"
-              v-validate="'required'"
-              :list="modalidades"
-              option-text="tipo"
-              option-value="tipo"
-            />
-            <div
-              v-if="errors.has('modalidad')"
-              class="p-2 text-sm text-white bg-red-500 rounded"
-            >
-              <p>La modalidad es requerida</p>
-            </div>
-          </div>
-
-          <div>
-            <label for="status" class="label-input">Estado del Pedido</label>
-            <model-list-select
-              name="status"
-              v-model="nuevoPedido.status"
-              :list="statusDelPedido"
-              v-validate="'required'"
-              option-text="tag"
-              option-value="id"
-            />
-          </div>
-
-          <div>
-            <label for="contactoConsignado" class="label-input">Contacto</label>
-            <input
-              v-model="nuevoPedido.contactoConsignado"
-              type="text"
-              v-validate="'required'"
-              name="contactoConsignado"
-              class="input"
-            />
-            <div
-              v-if="errors.has('contactoConsignado')"
-              class="p-2 text-sm text-white bg-red-500 rounded"
-            >
-              <p>El contacto es requerido</p>
-            </div>
-          </div>
-
-          <div>
-            <label for="empresaConsignado" class="label-input">Empresa</label>
-            <input
-              v-model="nuevoPedido.empresaConsignado"
-              type="text"
-              name="empresaConsignado"
-              class="input"
-            />
-          </div>
-
-          <div>
-            <label for="telefonoConsignado" class="label-input">Teléfono</label>
-            <input
-              v-model="nuevoPedido.telefonoConsignado"
-              type="string"
-              v-validate="'required|min:6|max:12'"
-              name="telefonoConsignado"
-              class="input"
-            />
-            <div
-              v-if="errors.has('telefonoConsignado')"
-              class="p-2 text-sm text-white bg-red-500 rounded"
-            >
-              <p>El telefono es requerido y debe tener máximo 9 números</p>
-            </div>
-          </div>
-
-          <div class="col-span-2">
-            <label for="direccionConsignado" class="label-input"
-              >Dirección</label
-            >
-            <input
-              v-model="nuevoPedido.direccionConsignado"
-              type="text"
-              v-validate="'required'"
-              name="direccionConsignado"
-              class="input"
-            />
-            <div
-              v-if="errors.has('direccionConsignado') || errorCalcularDistancia"
-              class="p-2 text-sm text-white bg-red-500 rounded"
-            >
-              <p>La dirección es requerida</p>
-            </div>
-          </div>
-
-          <div>
-            <label for="distritoConsignado" class="label-input">Distrito</label>
-            <model-list-select
-              name="distritoConsignado"
-              v-model="nuevoPedido.distritoConsignado"
-              placeholder="Buscar distrito..."
-              v-validate="'required'"
-              :list="distritos"
-              option-text="distrito"
-              option-value="distrito"
-            />
-            <div
-              v-if="errors.has('distritoConsignado') || errorCalcularDistancia"
-              class="p-2 text-sm text-white bg-red-500 rounded"
-            >
-              <p>El distrito es requerido</p>
-            </div>
-          </div>
-
-          <div class="col-span-3">
-            <label for="otroDatoConsignado" class="label-input"
-              >Otro Dato</label
-            >
-            <input
-              v-model="nuevoPedido.otroDatoConsignado"
-              type="text"
-              class="input"
-            />
-          </div>
-
-          <div>
-            <label for="comision" class="label-input">Comisión</label>
-            <p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
-              {{ nuevoPedido.comision }}
-            </p>
-          </div>
-
-          <div>
-            <label for="mobiker" class="label-input">Mobiker</label>
-            <model-list-select
-              name="mobiker"
-              v-model="nuevoPedido.mobiker"
-              placeholder="Buscar distrito..."
-              :list="mobikersFiltrados"
-              v-validate="'required'"
-              option-text="fullName"
-              option-value="fullName"
-            />
-            <div
-              v-if="errors.has('mobiker') || errorCalcularDistancia"
-              class="p-2 text-sm text-white bg-red-500 rounded"
-            >
-              <p>El MoBiker es requerido</p>
-            </div>
-          </div>
-
-          <div class="text-center">
-            <button
-              class="p-2 mt-6 font-bold text-white bg-primary rounded-xl focus:outline-none"
-              @click.prevent="calcularDistancia"
-            >
-              Calcular distancia
-            </button>
-          </div>
-
-          <div>
-            <label for="distancia" class="label-input">Distancia</label>
-            <p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
-              {{ nuevoPedido.distancia }}
-            </p>
-            <div
-              v-if="errorCalcularDistancia === true"
-              class="p-2 text-sm text-white bg-red-500 rounded"
-            >
-              <p>Falta calcular la distancia</p>
-            </div>
-          </div>
-
-          <div>
-            <label for="recaudo" class="label-input">Recaudo</label>
-            <input
-              v-model.number="nuevoPedido.recaudo"
-              type="number"
-              class="input"
-            />
-          </div>
-
-          <div>
-            <label for="tramite" class="label-input">Trámite</label>
-            <input
-              v-model.number="nuevoPedido.tramite"
-              type="number"
-              class="input"
-            />
-          </div>
-        </div>
-        -->
       </div>
 
       <div class="flex flex-row justify-between mt-2"></div>
@@ -522,7 +311,7 @@
             </p>
           </div>
           <table class="table-auto">
-            <thead>
+            <thead class="text-primary">
               <tr>
                 <th>Contacto</th>
                 <th>Empresa</th>
@@ -594,8 +383,8 @@
                   />
                 </td>
               </tr>
-              <tr style="background-color: aliceblue;">
-                <td style="font-weight: 600; font-size:18px; padding: 5px;">
+              <tr class="bg-opacity-25 bg-info">
+                <td class="p-1 text-lg font-bold text-primary">
                   Total:
                 </td>
                 <td></td>
@@ -604,20 +393,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td
-                  style="font-weight: 600;text-align:center; font-size:18px; padding: 5px;"
-                >
-                  $ <span>{{ tarifaTotal }}</span>
+                <td class="p-1 text-lg font-bold text-center text-primary">
+                  S/. <span>{{ tarifaTotal }}</span>
                 </td>
-                <td
-                  style="font-weight: 600;text-align:center; font-size:18px; padding: 5px;"
-                >
-                  $ <span>{{ recaudoTotal }}</span>
+                <td class="p-1 text-lg font-bold text-center text-primary">
+                  S/. <span>{{ recaudoTotal }}</span>
                 </td>
-                <td
-                  style="font-weight: 600;text-align:center; font-size:18px; padding: 5px;"
-                >
-                  $ <span>{{ tramiteTotal }}</span>
+                <td class="p-1 text-lg font-bold text-center text-primary">
+                  S/. <span>{{ tramiteTotal }}</span>
                 </td>
                 <td></td>
               </tr>
@@ -626,7 +409,7 @@
         </div>
       </div>
       <!-- Aqui termina CSV -->
-      <div style="width: 100%; display: flex; justify-content: space-between;">
+      <div class="flex justify-between w-full">
         <button
           @click="cancelar"
           type="button"
@@ -634,6 +417,7 @@
         >
           Cancelar
         </button>
+
         <button
           v-if="nuevoPedido.mobiker === 'Asignar MoBiker'"
           type="submit"
@@ -685,7 +469,6 @@ export default {
         show: false,
       },
       errorCalcularDistancia: false,
-      tarifaSugerida: 0,
       memoriaCliente: null,
       es: es,
       file: null,
@@ -700,15 +483,14 @@ export default {
   },
   async mounted() {
     this.nuevoPedido.tarifa = 0;
+    this.nuevoPedido.tarifaSugerida = 0;
     this.nuevoPedido.comision = 0.0;
     this.nuevoPedido.recaudo = 0;
     this.nuevoPedido.tramite = 0;
 
-    this.mobikersFiltrados = this.mobikers
-      .filter((mobiker) => mobiker.status === "Activo")
-      .sort((a, b) => {
-        return a.fullName.localeCompare(b.fullName);
-      });
+    this.mobikersFiltrados = this.mobikers.filter(
+      (mobiker) => mobiker.status === "Activo"
+    );
   },
   computed: {
     ...mapState("auxiliares", [

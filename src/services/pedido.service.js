@@ -37,6 +37,7 @@ class PedidoService {
           tipoCarga: nuevoPedido.tipoCarga,
           formaPago: nuevoPedido.formaPago,
           tarifa: nuevoPedido.tarifa,
+          tarifaSugerida: nuevoPedido.tarifaSugerida,
           recaudo: nuevoPedido.recaudo,
           tramite: nuevoPedido.tramite,
           comision: nuevoPedido.comision,
@@ -93,6 +94,7 @@ class PedidoService {
           tipoCarga: editarPedido.tipoCarga,
           formaPago: editarPedido.formaPago,
           tarifa: editarPedido.tarifa,
+          tarifaSugerida: editarPedido.tarifaSugerida,
           recaudo: editarPedido.recaudo,
           tramite: editarPedido.tramite,
           comision: editarPedido.comision,
@@ -100,7 +102,6 @@ class PedidoService {
           CO2Ahorrado: editarPedido.CO2Ahorrado,
           ruido: editarPedido.ruido,
           status: editarPedido.statusId,
-          // statusFinanciero: editarPedido.statusFinanciero,
           distritoConsignado: editarPedido.distrito.distrito,
           mobiker: editarPedido.mobiker.fullName,
           tipoEnvio: editarPedido.tipoDeEnvio.tipo,
@@ -176,16 +177,14 @@ class PedidoService {
 
   async procesarCSV(file) {
     try {
-        let result = await axios.post(`${API_URL}/procesar-csv`, file,
-            {
-                headers: authHeader(),
-                'Content-Type' : 'multipart/form-data'
-            }
-        );
+      let result = await axios.post(`${API_URL}/procesar-csv`, file, {
+        headers: authHeader(),
+        "Content-Type": "multipart/form-data",
+      });
 
-        return result;
+      return result;
     } catch (error) {
-        console.error(`Mensaje de error desde MobikerService: ${error.message}`);
+      console.error(`Mensaje de error desde MobikerService: ${error.message}`);
     }
   }
 }

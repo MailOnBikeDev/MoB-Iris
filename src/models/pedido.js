@@ -15,6 +15,7 @@ export default class Pedido {
     tipoCarga,
     formaPago,
     tarifa,
+    tarifaSugerida,
     recaudo,
     tramite,
     comision,
@@ -45,6 +46,7 @@ export default class Pedido {
     this.tipoCarga = tipoCarga;
     this.formaPago = formaPago;
     this.tarifa = tarifa;
+    this.tarifaSugerida = tarifaSugerida;
     this.recaudo = recaudo;
     this.tramite = tramite;
     this.comision = comision;
