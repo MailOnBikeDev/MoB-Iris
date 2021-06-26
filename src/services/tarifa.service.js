@@ -50,10 +50,10 @@ export default function calcularTarifa(distancia, tipoEnvio) {
       if (distancia >= distanciaBase * 5.5) {
         tarifaBase = 18;
         tarifa = +Math.ceil(
-          tarifaBase + (distancia - distanciaBase) * factorKmBase
+          tarifaBase + (distancia - distanciaBase * 5.5) * factorKmBase
         );
         tarifaSugerida = +Math.ceil(
-          tarifaBase + (distancia - distanciaBase) * factorKmBase
+          tarifaBase + (distancia - distanciaBase * 5.5) * factorKmBase
         );
       }
       break;
