@@ -314,13 +314,13 @@
             <thead class="text-primary">
               <tr>
                 <th>Contacto</th>
-                <th>Empresa</th>
                 <th>Teléfono</th>
                 <th>Dirección</th>
                 <th>Distrito</th>
                 <th>Observaciones</th>
                 <th>Distancia</th>
                 <th>Tarifa</th>
+                <th>Tarifa Sugerida</th>
                 <th>Recaudo</th>
                 <th>Trámite</th>
                 <th>Modalidad</th>
@@ -332,15 +332,8 @@
                 :key="pedido.contactoConsignado"
               >
                 <td>{{ pedido.contactoConsignado }}</td>
-                <td>{{ pedido.empresaConsignado }}</td>
                 <td>{{ pedido.telefonoConsignado }}</td>
-                <td>
-                  <input
-                    class="input input2"
-                    type="text"
-                    v-model="pedido.direccionConsignado"
-                  />
-                </td>
+                <td>{{ pedido.direccionConsignado }}</td>
                 <td>{{ pedido.distritoConsignado }}</td>
                 <td>{{ pedido.otroDatoConsignado }}</td>
                 <td>{{ pedido.distancia }} km</td>
@@ -353,6 +346,7 @@
                     @change="changeTarifa"
                   />
                 </td>
+                <td>{{ pedido.tarifaSugerida }}</td>
                 <td>
                   <input
                     class="input input2"
@@ -392,9 +386,11 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
                 <td class="p-1 text-lg font-bold text-center text-primary">
                   S/. <span>{{ tarifaTotal }}</span>
+                </td>
+                <td class="p-1 text-lg font-bold text-center text-primary">
+                  S/. <span>{{ tarifaTotalSugerida }}</span>
                 </td>
                 <td class="p-1 text-lg font-bold text-center text-primary">
                   S/. <span>{{ recaudoTotal }}</span>
@@ -638,6 +634,7 @@ export default {
             tipoCarga: this.nuevoPedido.tipoCarga,
             formaPago: this.nuevoPedido.formaPago,
             tarifa: this.pedidos[i].tarifa,
+            tarifaSugerida: this.pedidos[i].tarifaSugerida,
             recaudo: this.pedidos[i].recaudo,
             tramite: this.pedidos[i].tramite,
             comision: this.nuevoPedido.comision,
@@ -678,71 +675,6 @@ export default {
         this.alert.show = true;
         this.alert.success = false;
         setTimeout(() => (this.alert.show = false), 2500);
-      }
-    },
-
-    async handleAnadirPedido() {
-      try {
-        const isValid = await this.$validator.validateAll();
-        if (!isValid) {
-          return;
-        }
-
-        this.nuevoPedido.operador = this.$store.getters.operador;
-
-        const response = await PedidoService.storageNuevoPedido(
-          this.nuevoPedido
-        );
-        this.alert.message = response.data.message;
-        this.alert.show = true;
-        this.alert.success = true;
-        this.memoriaCliente.fecha = this.nuevoPedido.fecha;
-
-        setTimeout(() => {
-          this.alert.show = false;
-        }, 1500);
-
-        this.resetForm();
-      } catch (error) {
-        console.log(
-          `Error al añadir Nuevo Pedido: ${error.response.data.message}`
-        );
-        this.alert.message = error.response.data.message;
-        this.alert.show = true;
-        this.alert.success = false;
-        setTimeout(() => (this.alert.show = false), 2500);
-      }
-    },
-
-    resetForm() {
-      this.nuevoPedido.fecha = this.memoriaCliente.fecha;
-      this.nuevoPedido.contactoRemitente = this.memoriaCliente.contacto;
-      this.nuevoPedido.empresaRemitente = this.memoriaCliente.razonComercial;
-      this.nuevoPedido.telefonoRemitente = this.memoriaCliente.telefono;
-      this.nuevoPedido.direccionRemitente = this.memoriaCliente.direccion;
-      this.nuevoPedido.distritoRemitente = this.memoriaCliente.distrito.distrito;
-      // this.nuevoPedido.otroDatoRemitente = this.memoriaCliente.otroDato;
-      this.nuevoPedido.formaPago = this.memoriaCliente.formaDePago.pago;
-      this.nuevoPedido.tarifa = 0;
-      this.nuevoPedido.tarifaSugerida = 0;
-      this.nuevoPedido.tipoCarga = this.memoriaCliente.tipoDeCarga.tipo;
-      this.nuevoPedido.rolCliente = this.memoriaCliente.rolCliente.rol;
-      this.nuevoPedido.tipoEnvio = this.memoriaCliente.tipoDeEnvio.tipo;
-      this.nuevoPedido.modalidad = "Una vía";
-      this.nuevoPedido.contactoConsignado = null;
-      this.nuevoPedido.empresaConsignado = null;
-      this.nuevoPedido.telefonoConsignado = null;
-      this.nuevoPedido.direccionConsignado = null;
-      this.nuevoPedido.distritoConsignado = "";
-      this.nuevoPedido.otroDatoConsignado = null;
-      this.nuevoPedido.comision = 0;
-      this.nuevoPedido.distancia = 0;
-      this.nuevoPedido.recaudo = 0;
-      this.nuevoPedido.tramite = 0;
-
-      if (this.nuevoPedido.mobiker === "Asignar MoBiker") {
-        this.nuevoPedido.status = 1;
-        this.nuevoPedido.mobiker = "Asignar MoBiker";
       }
     },
 
@@ -867,6 +799,7 @@ export default {
           data[i]["modalidad"] = "Una vía";
           data[i]["viajes"] = 1;
           this.tarifaTotal = this.tarifaTotal + info.tarifa;
+          this.tarifaTotalSugerida = this.tarifaTotalSugerida + info.tarifaSugerida;
           this.distancia += info.distancia;
           this.recaudoTotal = 0;
           this.tramiteTotal = 0;
