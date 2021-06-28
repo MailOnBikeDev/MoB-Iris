@@ -1,5 +1,5 @@
 export default function calcularEstadisticas(distancia) {
-  const emisionAutomovil = 97.8 / 1000; // 100 gramos de CO2 por cada Km
+  const emisionAutomovil = 300 / 1000; // 300 gramos de CO2 por cada Km
   const emisionBicicleta = 8.6 / 1000; // 8.6 gramos de CO2 por cada Km
 
   // const velocidadPromedioBicicleta = 15; // 15 Km/h velocidad estimada de un ciclista
