@@ -59,6 +59,7 @@ export default function calcularTarifa(distancia, tipoEnvio) {
       break;
 
     case "Express":
+      tarifaBase = 7;
       if (distancia <= 11) {
         tarifa = +Math.ceil(
           tarifaBase + (distancia - distanciaBase) * factorKmBase
