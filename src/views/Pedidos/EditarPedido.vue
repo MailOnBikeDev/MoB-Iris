@@ -718,6 +718,18 @@ export default {
           this.editarPedido.distritoConsignado
         );
 
+        if (
+          this.editarPedido.distancia === null ||
+          this.editarPedido.distancia === undefined ||
+          this.editarPedido.distancia <= -0.1 ||
+          this.editarPedido.distancia >= 100
+        ) {
+          this.alert.message = "No se ha podido calcular la distancia...";
+          this.alert.show = true;
+          this.alert.success = false;
+          setTimeout(() => (this.alert.show = false), 2500);
+        }
+
         // Calcular la tarifa
         const response = calcularTarifa(
           this.editarPedido.distancia,
