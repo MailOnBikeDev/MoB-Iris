@@ -777,6 +777,18 @@ export default {
           this.nuevoPedido.distritoConsignado
         );
 
+        if (
+          this.nuevoPedido.distancia === null ||
+          this.nuevoPedido.distancia === undefined ||
+          this.nuevoPedido.distancia <= -0.1 ||
+          this.nuevoPedido.distancia >= 100
+        ) {
+          this.alert.message = "No se ha podido calcular la distancia...";
+          this.alert.show = true;
+          this.alert.success = false;
+          setTimeout(() => (this.alert.show = false), 2500);
+        }
+
         // Calcular la tarifa
         const response = calcularTarifa(
           this.nuevoPedido.distancia,
@@ -793,6 +805,10 @@ export default {
         this.nuevoPedido.ruido = stats.ruido;
       } catch (error) {
         console.error(`Error al calcular la distancia: ${error.message}`);
+        // this.alert.message = "No se ha podido calcular la distancia...";
+        // this.alert.show = true;
+        // this.alert.success = false;
+        // setTimeout(() => (this.alert.show = false), 2500);
       }
     },
 
