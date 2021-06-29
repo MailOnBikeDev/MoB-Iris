@@ -162,6 +162,24 @@ class PedidoService {
     }
   }
 
+  async cambiarEstadoPedido(id, pedidoCambiado) {
+    try {
+      let pedidoEditado = await axios.put(
+        `${API_URL}/pedidos/cambiar-estado/${id}`,
+        {
+          status: pedidoCambiado.statusId,
+          comentario: pedidoCambiado.comentario,
+          mobiker: pedidoCambiado.mobiker,
+        },
+        { headers: authHeader() }
+      );
+
+      return pedidoEditado;
+    } catch (error) {
+      console.error("Mensaje de error: ", error.message);
+    }
+  }
+
   async historialPedidos(params) {
     try {
       let pedido = await axios.get(`${API_URL}/historial-pedidos`, {

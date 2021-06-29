@@ -66,7 +66,7 @@
         v-slot="{ navigate }"
       >
         <span @click="navigate" role="link" class="text-center cursor-pointer"
-          >Regresar al Tablero</span
+          >Regresar a Pedidos</span
         >
       </router-link>
 
@@ -78,7 +78,7 @@
       </button>
 
       <button
-        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500 disabled:opacity-90 disabled:bg-green-900"
         @click="createArrayPedidos"
         :disabled="emptyArray"
       >

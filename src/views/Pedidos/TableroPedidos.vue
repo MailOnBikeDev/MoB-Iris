@@ -21,6 +21,13 @@
       :currentPedido="currentPedido"
     />
 
+    <CambiarStatusPedido
+      :showCambiarStatus="showCambiarStatus"
+      @cerrarModal="showCambiarStatus = false"
+      @refresh="refreshList"
+      :currentPedido="currentPedido"
+    />
+
     <div class="flex flex-row items-center mb-4 -mt-10 justify-evenly">
       <div class="flex flex-row">
         <datepicker
@@ -57,7 +64,7 @@
         v-slot="{ navigate }"
       >
         <span @click="navigate" role="link" class="text-center cursor-pointer"
-          >Asignar Pedidos</span
+          >Asignación</span
         >
       </router-link>
 
@@ -76,7 +83,7 @@
         v-slot="{ navigate }"
       >
         <span @click="navigate" role="link" class="text-center cursor-pointer"
-          >Crear nuevo Pedido</span
+          >Nuevo Pedido</span
         >
       </router-link>
       <router-link
@@ -86,7 +93,7 @@
         v-slot="{ navigate }"
       >
         <span @click="navigate" role="link" class="text-center cursor-pointer"
-          >Crear nuevo Ruteo</span
+          >Nuevo Ruteo</span
         >
       </router-link>
     </div>
@@ -248,7 +255,7 @@
           <div>
             <p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
           </div>
-          <div class="flex items-center justify-center">
+          <div class="flex items-center justify-evenly">
             <button
               class="focus:outline-none"
               @click="showComanda = true"
@@ -258,12 +265,19 @@
             </button>
 
             <button
+              @click="showCambiarStatus = true"
+              class="focus:outline-none"
+            >
+              x
+            </button>
+
+            <button
               class="focus:outline-none"
               @click="showDetalle = true"
               title="Detalles del Pedido"
             >
               <font-awesome-icon
-                class="ml-6 text-2xl text-primary"
+                class="text-2xl text-primary"
                 icon="window-maximize"
               />
             </button>
@@ -293,6 +307,7 @@
 import PedidoService from "@/services/pedido.service";
 import ReporteComanda from "@/components/ReporteComanda";
 import DetallePedido from "@/components/DetallePedido";
+import CambiarStatusPedido from "@/components/CambiarStatusPedido";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { es } from "vuejs-datepicker/dist/locale";
@@ -304,6 +319,7 @@ export default {
     DetallePedido,
     Datepicker,
     Pagination,
+    CambiarStatusPedido,
   },
   data() {
     return {
@@ -312,6 +328,7 @@ export default {
       buscador: "",
       showComanda: false,
       showDetalle: false,
+      showCambiarStatus: false,
       currentPedido: null,
       currentIndex: -1,
       buscadorFecha: new Date(),
