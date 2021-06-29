@@ -724,9 +724,11 @@ export default {
           this.editarPedido.distancia <= -0.1 ||
           this.editarPedido.distancia >= 100
         ) {
+          this.editarPedido.distancia = null;
           this.alert.message = "No se ha podido calcular la distancia...";
           this.alert.show = true;
           this.alert.success = false;
+          this.errorCalcularDistancia = true;
           setTimeout(() => (this.alert.show = false), 2500);
         }
 

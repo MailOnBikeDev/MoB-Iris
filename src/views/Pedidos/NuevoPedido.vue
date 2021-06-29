@@ -783,9 +783,11 @@ export default {
           this.nuevoPedido.distancia <= -0.1 ||
           this.nuevoPedido.distancia >= 100
         ) {
+          this.nuevoPedido.distancia = null;
           this.alert.message = "No se ha podido calcular la distancia...";
           this.alert.show = true;
           this.alert.success = false;
+          this.errorCalcularDistancia = true;
           setTimeout(() => (this.alert.show = false), 2500);
         }
 
@@ -805,10 +807,6 @@ export default {
         this.nuevoPedido.ruido = stats.ruido;
       } catch (error) {
         console.error(`Error al calcular la distancia: ${error.message}`);
-        // this.alert.message = "No se ha podido calcular la distancia...";
-        // this.alert.show = true;
-        // this.alert.success = false;
-        // setTimeout(() => (this.alert.show = false), 2500);
       }
     },
 
