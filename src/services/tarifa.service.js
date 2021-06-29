@@ -50,24 +50,27 @@ export default function calcularTarifa(distancia, tipoEnvio) {
       if (distancia >= distanciaBase * 5.5) {
         tarifaBase = 18;
         tarifa = +Math.ceil(
-          tarifaBase + (distancia - distanciaBase) * factorKmBase
+          tarifaBase + (distancia - distanciaBase * 5.5) * factorKmBase
         );
         tarifaSugerida = +Math.ceil(
-          tarifaBase + (distancia - distanciaBase) * factorKmBase
+          tarifaBase + (distancia - distanciaBase * 5.5) * factorKmBase
         );
       }
       break;
 
     case "Express":
       tarifaBase = 7;
-
       if (distancia <= 11) {
-        tarifa = tarifaBase;
+        tarifa = +Math.ceil(
+          tarifaBase + (distancia - distanciaBase) * factorKmBase
+        );
         tarifaSugerida = +Math.ceil(
           tarifaBase + (distancia - distanciaBase) * factorKmBase
         );
       } else {
-        tarifa = tarifaBase;
+        tarifa = +Math.ceil(
+          tarifaBase + (distancia - distanciaBase) * factorKmEspecial
+        );
         tarifaSugerida = +Math.ceil(
           tarifaBase + (distancia - distanciaBase) * factorKmEspecial
         );

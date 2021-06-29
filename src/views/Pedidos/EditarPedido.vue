@@ -242,7 +242,7 @@
               >Tarifa Sugerida</label
             >
             <p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
-              {{ tarifaSugerida }}
+              {{ editarPedido.tarifaSugerida }}
             </p>
           </div>
 
@@ -527,9 +527,7 @@
       </div>
     </form>
 
-    <transition name="alerta">
-      <BaseAlerta v-if="alert.show" :alert="alert" />
-    </transition>
+    <BaseAlerta v-if="alert.show" :alert="alert" />
   </div>
 </template>
 
@@ -561,7 +559,6 @@ export default {
         show: false,
       },
       errorCalcularDistancia: false,
-      tarifaSugerida: 0,
       es: es,
       tarifaMemoria: 0,
     };
@@ -662,6 +659,7 @@ export default {
         this.editarPedido = response.data;
         this.editarPedido.distritoConsignado = response.data.distrito.distrito;
         this.editarPedido.tipoEnvio = response.data.tipoDeEnvio.tipo;
+        this.tarifaMemoria = this.editarPedido.tarifa;
         console.log(this.editarPedido.fecha);
       } catch (error) {
         console.error("Mensaje de error:", error);
@@ -728,7 +726,7 @@ export default {
 
         this.editarPedido.tarifa = response.tarifa;
         this.tarifaMemoria = response.tarifa;
-        this.tarifaSugerida = response.tarifaSugerida;
+        this.editarPedido.tarifaSugerida = response.tarifaSugerida;
 
         // Calcular las estadísticas Ecoamigables
         const stats = calcularEstadisticas(this.editarPedido.distancia);

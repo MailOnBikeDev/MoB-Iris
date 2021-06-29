@@ -243,7 +243,7 @@
               >Tarifa Sugerida</label
             >
             <p class="w-full h-10 p-2 bg-white rounded tex-gray-700">
-              {{ tarifaSugerida }}
+              {{ nuevoPedido.tarifaSugerida }}
             </p>
           </div>
 
@@ -532,9 +532,7 @@
       </div>
     </form>
 
-    <transition name="alerta">
-      <BaseAlerta v-if="alert.show" :alert="alert" />
-    </transition>
+    <BaseAlerta v-if="alert.show" :alert="alert" />
   </div>
 </template>
 
@@ -567,7 +565,6 @@ export default {
         show: false,
       },
       errorCalcularDistancia: false,
-      tarifaSugerida: 0,
       memoriaCliente: null,
       es: es,
       tarifaMemoria: 0,
@@ -575,6 +572,7 @@ export default {
   },
   async mounted() {
     this.nuevoPedido.tarifa = 0;
+    this.nuevoPedido.tarifaSugerida = 0;
     this.nuevoPedido.comision = 0.0;
     this.nuevoPedido.recaudo = 0;
     this.nuevoPedido.tramite = 0;
@@ -787,7 +785,7 @@ export default {
 
         this.nuevoPedido.tarifa = response.tarifa;
         this.tarifaMemoria = response.tarifa;
-        this.tarifaSugerida = response.tarifaSugerida;
+        this.nuevoPedido.tarifaSugerida = response.tarifaSugerida;
 
         // Calcular las estadísticas Ecoamigables
         const stats = calcularEstadisticas(this.nuevoPedido.distancia);

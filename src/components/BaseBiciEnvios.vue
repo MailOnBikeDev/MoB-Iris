@@ -40,7 +40,11 @@ export default {
       let contadorEcommerce = 0;
 
       this.pedidos.forEach((pedido) => {
-        if (pedido.tipoDeEnvioId === (1 || 2 || 4)) {
+        if (
+          pedido.tipoDeEnvioId === 1 ||
+          pedido.tipoDeEnvioId === 2 ||
+          pedido.tipoDeEnvioId === 4
+        ) {
           contadorEcommerce++;
         }
       });

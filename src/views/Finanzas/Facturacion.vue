@@ -85,11 +85,10 @@
 
     <div class="grid grid-cols-4 gap-2">
       <div class="flex flex-row justify-center">
-        {{ clientes.length }}
-        <!-- <p>
+        <p>
           <span class="resalta">Total de Pedidos:</span>
           {{ cantidadPedidos }}
-        </p> -->
+        </p>
       </div>
 
       <div
@@ -322,19 +321,19 @@ export default {
       this.retrievePedidosClientes();
     },
 
-    async refreshList() {
-      try {
-        this.pedidosCliente = [];
-        this.cantidadPedidos = 0;
+    refreshList() {
+      this.getClientes();
+      this.pedidosCliente = [];
+      this.cantidadPedidos = 0;
 
-        this.clientesFiltrados = this.clientes;
+      this.clientesFiltrados = this.clientes;
 
-        this.currentCliente = null;
-        this.currentIndex = -1;
-        this.buscador = "";
-      } catch (error) {
-        console.error(`Error al refrescar la lista: ${error.message}`);
-      }
+      this.fechaInicio = new Date(seisDiasAtras);
+      this.fechaFin = new Date();
+
+      this.currentCliente = null;
+      this.currentIndex = -1;
+      this.buscador = "";
     },
 
     setActivePedido(pedido, index) {

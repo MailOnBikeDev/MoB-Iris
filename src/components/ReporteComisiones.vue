@@ -147,7 +147,11 @@ export default {
       let contadorExpress = 0;
 
       this.detalles.forEach((pedido) => {
-        if (pedido.tipoDeEnvioId === (2 || 3 || 4)) {
+        if (
+          pedido.tipoDeEnvioId === 2 ||
+          pedido.tipoDeEnvioId === 3 ||
+          pedido.tipoDeEnvioId === 4
+        ) {
           contadorExpress++;
         }
       });
@@ -159,7 +163,11 @@ export default {
       let tarifaExpress = 0;
 
       this.detalles.forEach((pedido) => {
-        if (pedido.tipoDeEnvioId === (2 || 3 || 4)) {
+        if (
+          pedido.tipoDeEnvioId === 2 ||
+          pedido.tipoDeEnvioId === 3 ||
+          pedido.tipoDeEnvioId === 4
+        ) {
           tarifaExpress += pedido.tarifa;
         }
       });
@@ -171,7 +179,11 @@ export default {
       let comisionExpress = 0;
 
       this.detalles.forEach((pedido) => {
-        if (pedido.tipoDeEnvioId === (2 || 3 || 4)) {
+        if (
+          pedido.tipoDeEnvioId === 2 ||
+          pedido.tipoDeEnvioId === 3 ||
+          pedido.tipoDeEnvioId === 4
+        ) {
           comisionExpress += pedido.comision;
         }
       });
@@ -184,10 +196,12 @@ export default {
 
       this.detalles.forEach((pedido) => {
         if (
-          pedido.formaPago === ("Efectivo en Origen" || "Efectivo en Destino")
+          pedido.formaPago === "Efectivo en Origen" ||
+          pedido.formaPago === "Efectivo en Destino"
         ) {
           pagoEfectivo += pedido.tarifa;
         }
+        // pagoEfectivo += pedido.recaudo;
       });
 
       return pagoEfectivo.toFixed(2);

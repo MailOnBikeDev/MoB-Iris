@@ -369,9 +369,7 @@ export default {
     },
 
     refreshList() {
-      this.fechaInicio = new Date(
-        new Date().getTime() - 1000 * 60 * 60 * 24 * 7
-      );
+      this.fechaInicio = new Date(seisDiasAtras);
       this.fechaFin = new Date();
       this.retrievePedidos();
 
