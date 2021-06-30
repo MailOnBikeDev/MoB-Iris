@@ -16,8 +16,9 @@ module.exports = {
   variants: {
     extend: {
       maxHeight: ["focus"],
-      backgroundColor: ["active", "disabled"],
+      backgroundColor: ["active", "disabled", "odd"],
       opacity: ["disabled"],
+      textColor: ["odd"],
     },
   },
   plugins: [],

@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="showDetalle"
-    class="absolute z-40 w-1/2 h-auto px-10 py-4 shadow-xl bg-primary top-14 left-1/4 rounded-xl"
+    class="absolute z-40 w-11/12 h-auto p-4 mx-auto shadow-xl bg-primary top-20 rounded-xl"
   >
     <div class="absolute -top-4 -right-2">
       <button
@@ -21,35 +21,82 @@
     </div>
 
     <div
-      class="p-4 overflow-y-auto text-sm bg-white rounded-xl pedidos-scroll h-96 max-h-96"
+      class="flex flex-col items-center p-4 overflow-y-auto text-sm bg-white justify-evenly rounded-xl pedidos-scroll h-96 max-h-96"
     >
-      <div v-for="detalle in detalles" :key="detalle.id">
-        <p>
-          {{ $date(detalle.fecha).format("DD/MM") }}: {{ detalle.id }} - [{{
-            detalle.contactoConsignado.toUpperCase()
-          }}] = {{ detalle.tarifa }}
-        </p>
-      </div>
-      <br />
+      <table
+        class="table w-full border-2 border-collapse table-auto border-secondary"
+      >
+        <tr
+          class="table-row text-center text-white border-2 bg-secondary border-secondary"
+        >
+          <th class="table-cell">Fecha</th>
+          <th class="table-cell">Consignado</th>
+          <th class="table-cell">Dirección</th>
+          <th class="table-cell">Distrito</th>
+          <th class="table-cell">Tarifa</th>
+          <th class="table-cell">Texto Factura</th>
+          <th class="table-cell">Forma de Pago</th>
+        </tr>
+
+        <tr
+          class="table-row border-2 odd:bg-info odd:text-white text-secondary border-secondary"
+          v-for="detalle in detalles"
+          :key="detalle.id"
+        >
+          <td class="table-cell px-2 text-center border-2 border-secondary">
+            {{ $date(detalle.fecha).format("DD MMM") }}
+          </td>
+          <td class="table-cell px-2 border-2 border-secondary">
+            {{ capitalizar(detalle.contactoConsignado) }}
+          </td>
+          <td class="table-cell px-2 border-2 border-secondary">
+            {{ capitalizar(detalle.direccionConsignado) }}
+          </td>
+          <td class="table-cell px-2 border-2 border-secondary">
+            {{ detalle.distrito.distrito }}
+          </td>
+          <td class="table-cell px-2 text-center border-2 border-secondary">
+            {{ detalle.tarifa }}
+          </td>
+          <td class="table-cell px-2 border-2 border-secondary">
+            BICIDELIVERY: {{ capitalizar(detalle.contactoConsignado) }}
+          </td>
+          <td class="table-cell px-2 text-center border-2 border-secondary">
+            {{ detalle.formaPago }}
+          </td>
+        </tr>
+
+        <tr class="table-row">
+          <td class="table-cell"></td>
+          <td class="table-cell"></td>
+          <td class="table-cell"></td>
+          <td class="table-cell"></td>
+          <td
+            class="table-cell font-bold text-center border-2 border-secondary text-primary"
+          >
+            {{ totalTarifa }}
+          </td>
+        </tr>
+      </table>
+
       <div>
+        <p class="mb-2 resalta">Mis Estadísticas:</p>
         <p>
-          Total de tarifas =
-          {{ totalTarifa }}
+          Mis BiciEnvíos =
+          <span class="select-all">{{ cliente.biciEnvios }}</span>
         </p>
-        <br />
-        <p>Pagos en Efectivo = {{ pagosEfectivo }}</p>
-
         <p>
-          Total a pagar =
-          {{ totalPagar }}
+          Mis Kilómetros =
+          <span class="select-all">{{ cliente.kilometros }}km</span>
         </p>
-        <br />
-
-        <p class="resalta">Mis Estadísticas:</p>
-        <p>Mis BiciEnvíos = {{ cliente.biciEnvios }}</p>
-        <p>Mis Kilómetros = {{ cliente.kilometros }}km</p>
-        <p>CO2 Ahorrado = {{ cliente.CO2Ahorrado }}kg</p>
-        <p>Horas de Ruido Ahorrado = {{ cliente.ruido }}h</p>
+        <p>
+          CO2 Ahorrado =
+          <span class="select-all">{{ cliente.CO2Ahorrado }}kg</span>
+        </p>
+        <p>
+          Horas de Ruido Ahorrado =
+          <span class="select-all">{{ cliente.ruido }}h</span>
+        </p>
       </div>
     </div>
 
@@ -130,6 +177,15 @@ export default {
         this.reporteCopiado = true;
         console.log("Texto copiado");
       });
+    },
+
+    capitalizar(texto) {
+      const nuevoTexto = texto
+        .trim()
+        .toLowerCase()
+        .replace(/\w\S*/g, (w) => w.replace(/^\w/, (c) => c.toUpperCase()));
+
+      return nuevoTexto;
     },
   },
 };
