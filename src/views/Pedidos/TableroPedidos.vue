@@ -267,8 +267,9 @@
             <button
               @click="showCambiarStatus = true"
               class="focus:outline-none"
+              title="Estado del Pedido"
             >
-              x
+              <font-awesome-icon class="text-2xl text-primary" icon="bicycle" />
             </button>
 
             <button
