@@ -21,81 +21,40 @@
     </div>
 
     <div
-      class="flex flex-col items-center p-4 overflow-y-auto text-sm bg-white justify-evenly rounded-xl pedidos-scroll h-96 max-h-96"
+      class="flex flex-col items-center p-4 overflow-y-auto text-sm bg-white rounded-xl pedidos-scroll h-96 max-h-96"
     >
-      <table
-        class="table w-full border-2 border-collapse table-auto border-secondary"
-      >
-        <tr
-          class="table-row text-center text-white border-2 bg-secondary border-secondary"
-        >
-          <th class="table-cell">Fecha</th>
-          <th class="table-cell">Consignado</th>
-          <th class="table-cell">Dirección</th>
-          <th class="table-cell">Distrito</th>
-          <th class="table-cell">Tarifa</th>
-          <th class="table-cell">Texto Factura</th>
-          <th class="table-cell">Forma de Pago</th>
-        </tr>
+      <!-- Por cobrar -->
+      <h2 class="text-xl resalta">Por cobrar</h2>
+      <TablaFacturacion :casoEspecial="casoEspecial" :info="nuevosDetalles" />
 
-        <tr
-          class="table-row border-2 odd:bg-info odd:text-white text-secondary border-secondary"
-          v-for="detalle in detalles"
-          :key="detalle.id"
-        >
-          <td class="table-cell px-2 text-center border-2 border-secondary">
-            {{ $date(detalle.fecha).format("DD MMM") }}
-          </td>
-          <td class="table-cell px-2 border-2 border-secondary">
-            {{ capitalizar(detalle.contactoConsignado) }}
-          </td>
-          <td class="table-cell px-2 border-2 border-secondary">
-            {{ capitalizar(detalle.direccionConsignado) }}
-          </td>
-          <td class="table-cell px-2 border-2 border-secondary">
-            {{ detalle.distrito.distrito }}
-          </td>
-          <td class="table-cell px-2 text-center border-2 border-secondary">
-            {{ detalle.tarifa }}
-          </td>
-          <td class="table-cell px-2 border-2 border-secondary">
-            BICIDELIVERY: {{ capitalizar(detalle.contactoConsignado) }}
-          </td>
-          <td class="table-cell px-2 text-center border-2 border-secondary">
-            {{ detalle.formaPago }}
-          </td>
-        </tr>
+      <!-- Pagos en Efectivo -->
+      <h2 class="mt-4 text-xl resalta">Pagos en Efectivo</h2>
+      <TablaFacturacion :casoEspecial="casoEspecial" :info="pagosEfectivo" />
 
-        <tr class="table-row">
-          <td class="table-cell"></td>
-          <td class="table-cell"></td>
-          <td class="table-cell"></td>
-          <td class="table-cell"></td>
-          <td
-            class="table-cell font-bold text-center border-2 border-secondary text-primary"
-          >
-            {{ totalTarifa }}
-          </td>
-        </tr>
-      </table>
-
-      <div>
-        <p class="mb-2 resalta">Mis Estadísticas:</p>
+      <div class="mt-4 text-lg">
+        <p class="mb-2 resalta">Estadísticas:</p>
         <p>
           Mis BiciEnvíos =
-          <span class="select-all">{{ cliente.biciEnvios }}</span>
+          <span class="cursor-pointer select-all">{{
+            cliente.biciEnvios
+          }}</span>
         </p>
         <p>
           Mis Kilómetros =
-          <span class="select-all">{{ cliente.kilometros }}km</span>
+          <span class="cursor-pointer select-all">{{ cliente.kilometros }}</span
+          >km
         </p>
         <p>
           CO2 Ahorrado =
-          <span class="select-all">{{ cliente.CO2Ahorrado }}kg</span>
+          <span class="cursor-pointer select-all">{{
+            cliente.CO2Ahorrado
+          }}</span
+          >kg
         </p>
         <p>
           Horas de Ruido Ahorrado =
-          <span class="select-all">{{ cliente.ruido }}h</span>
+          <span class="cursor-pointer select-all">{{ cliente.ruido }}</span
+          >h
         </p>
       </div>
     </div>
@@ -121,8 +80,11 @@
 </template>
 
 <script>
+import TablaFacturacion from "./TablaFacturacion.vue";
+
 export default {
   name: "ReporteFacturacion",
+  components: { TablaFacturacion },
   props: {
     showDetalle: {
       type: Boolean,
@@ -136,56 +98,50 @@ export default {
     },
   },
   data() {
-    return { reporteCopiado: false };
+    return {
+      reporteCopiado: false,
+      nuevosDetalles: [],
+      pagosEfectivo: [],
+      casoEspecial: false,
+    };
   },
-  computed: {
-    totalTarifa() {
-      let total = 0;
-      this.detalles.forEach((detalle) => {
-        total += detalle.tarifa;
-      });
-      return total.toFixed(2);
-    },
-
-    pagosEfectivo() {
-      let nuevoDetalle = this.detalles.filter(
-        (detalle) =>
-          detalle.formaPago === ("Efectivo en Origen" || "Efectivo en Destino")
-      );
-      console.log(nuevoDetalle);
-      let total = 0;
-      nuevoDetalle.forEach((detalle) => {
-        total += detalle.tarifa;
-      });
-      return total.toFixed(2);
-    },
-
-    totalPagar() {
-      let total = +(this.totalTarifa - this.pagosEfectivo);
-      return total.toFixed(2);
-    },
+  created() {
+    this.filtrandoDetalles();
+    this.fitradoPagosEfectivo();
   },
   methods: {
+    filtrandoDetalles() {
+      this.nuevosDetalles = this.detalles.filter(
+        (detalle) =>
+          detalle.formaPago !== "Efectivo en Origen" &&
+          detalle.formaPago !== "Efectivo en Destino"
+      );
+      console.log("asdasd");
+      if (
+        this.nuevosDetalles[0].empresaRemitente === "PHILIP MORRIS PERU S.A."
+      ) {
+        this.casoEspecial = true;
+      }
+    },
+
+    fitradoPagosEfectivo() {
+      this.pagosEfectivo = this.detalles.filter(
+        (detalle) =>
+          detalle.formaPago === "Efectivo en Origen" ||
+          detalle.formaPago === "Efectivo en Destino"
+      );
+    },
+
     cerrarDetalle() {
       this.$emit("cerrarDetalle");
       this.reporteCopiado = false;
     },
 
     copiarReporte() {
-      //   console.log(this.$el.children[2].innerText);
-      this.$copyText(this.$el.children[2].innerText).then(() => {
+      this.$copyText(this.$refs.facturado.innerText).then(() => {
         this.reporteCopiado = true;
         console.log("Texto copiado");
       });
-    },
-
-    capitalizar(texto) {
-      const nuevoTexto = texto
-        .trim()
-        .toLowerCase()
-        .replace(/\w\S*/g, (w) => w.replace(/^\w/, (c) => c.toUpperCase()));
-
-      return nuevoTexto;
     },
   },
 };

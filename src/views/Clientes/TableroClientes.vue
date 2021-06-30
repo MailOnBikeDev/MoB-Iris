@@ -177,9 +177,7 @@ export default {
     ...mapState("clientes", ["clientes"]),
   },
   mounted() {
-    this.clientesFiltrados = this.clientes.sort((a, b) => {
-      return a.razonComercial > b.razonComercial ? 1 : -1;
-    });
+    this.clientesFiltrados = this.clientes;
   },
   methods: {
     ...mapActions("clientes", ["getClientes"]),
