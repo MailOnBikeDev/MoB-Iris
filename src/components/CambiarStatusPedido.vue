@@ -54,8 +54,8 @@
           class="mx-auto"
           name="comentario"
           id="comentario"
-          cols="30"
-          rows="4"
+          cols="26"
+          rows="3"
           v-model="currentPedido.comentario"
         ></textarea>
       </div>
@@ -118,13 +118,15 @@ export default {
           pedidoCambiado
         );
 
-        console.log(response);
+        console.log(response.data.message);
 
         if (this.currentPedido.statusId !== 1) {
           this.statusAsignado = true;
         } else {
           this.statusAsignado = false;
         }
+
+        this.cerrarModal();
       } catch (error) {
         console.error(`Error al cambiar estado del Pedido: ${error.message}`);
       }
