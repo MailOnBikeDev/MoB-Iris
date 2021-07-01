@@ -26,7 +26,7 @@ class AuthService {
 
   async register(user) {
     try {
-      await axios.post(
+      const response = await axios.post(
         `${API_URL}/registro`,
         {
           fullName: user.fullName,
@@ -38,6 +38,8 @@ class AuthService {
         },
         { headers: authHeader() }
       );
+
+      return response.data;
     } catch (error) {
       console.error(`Error al registrar nuevo usuario: ${error.message}`);
     }
