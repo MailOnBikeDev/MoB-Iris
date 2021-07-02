@@ -117,17 +117,30 @@
       <div
         class="overflow-y-auto bg-white border border-black max-h-96 h-96 pedidos-scroll"
       >
+        <div v-if="loading" class="text-center mt-36">
+          <font-awesome-icon
+            size="5x"
+            class="animate-spin text-primary"
+            icon="spinner"
+          />
+        </div>
+
         <div
-          class="grid items-center px-2 text-sm text-center border-b-2 cursor-pointer h-14 border-primary hover:bg-info"
+          v-else
+          class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 cursor-pointer h-14 border-primary hover:bg-info"
           :class="{
-            'bg-info text-white font-bold': mobiker.id == currentIndex,
+            'bg-info text-white font-bold': mobiker.mobiker.id == currentIndex,
           }"
           v-for="mobiker in mobikersFiltrados"
-          :key="mobiker.id"
-          @click="setActiveMobiker(mobiker, mobiker.id)"
+          :key="mobiker.mobiker.id"
+          @click="setActiveMobiker(mobiker.mobiker, mobiker.mobiker.id)"
         >
           <div class="col-span-2">
-            {{ mobiker.fullName }}
+            {{ mobiker.mobiker.fullName }}
+          </div>
+
+          <div>
+            {{ mobiker.cantidadPedidos }}
           </div>
         </div>
       </div>
@@ -210,7 +223,6 @@ import MobikerService from "@/services/mobiker.service";
 import ReporteComisiones from "@/components/ReporteComisiones";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
-import { mapState, mapActions } from "vuex";
 import { es } from "vuejs-datepicker/dist/locale";
 
 const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
@@ -225,6 +237,7 @@ export default {
   },
   data() {
     return {
+      mobikers: [],
       mobikersFiltrados: [],
       pedidosMobiker: [],
       showDetalle: false,
@@ -237,23 +250,15 @@ export default {
       fechaFin: new Date(),
       buscador: "",
 
+      loading: false,
+
       page: 1,
       cantidadPedidos: 0,
       pageSize: 200,
       es: es,
     };
   },
-  mounted() {
-    this.mobikersFiltrados = this.mobikers.filter(
-      (mobiker) => mobiker.status === "Activo"
-    );
-  },
-  computed: {
-    ...mapState("mobikers", ["mobikers"]),
-  },
   methods: {
-    ...mapActions("mobikers", ["getMobikers", "buscarMobikers"]),
-
     getRequestParams(desde, hasta, id, page, pageSize) {
       let params = {};
 
@@ -304,6 +309,27 @@ export default {
       );
     },
 
+    async retrieveMoBikersConPedidos() {
+      try {
+        this.loading = true;
+        const params = {
+          desde: this.fechaInicio.toISOString().split("T")[0],
+          hasta: this.fechaFin.toISOString().split("T")[0],
+        };
+
+        const response = await MobikerService.getMobikersConPedidos(params);
+
+        this.mobikers = response.data;
+        this.mobikersFiltrados = response.data;
+
+        this.loading = false;
+      } catch (error) {
+        console.error(
+          `Error al obtener MoBikers con Pedidos: ${error.message}`
+        );
+      }
+    },
+
     handlePageChange(value) {
       this.page = value;
       this.retrievePedidos();
@@ -317,12 +343,7 @@ export default {
 
     async refreshList() {
       try {
-        await this.getMobikers();
-        this.mobikersFiltrados = this.mobikers
-          .filter((mobiker) => mobiker.status === "Activo")
-          .sort((a, b) => {
-            return a.fullName.localeCompare(b.fullName);
-          });
+        this.retrieveMoBikersConPedidos();
         this.pedidosMobiker = [];
         this.cantidadPedidos = 0;
 
@@ -349,19 +370,25 @@ export default {
 
     async searchMobiker() {
       try {
-        const response = await this.buscarMobikers(this.buscador);
-        this.mobikersFiltrados = response
-          .filter((mobiker) => mobiker.status === "Activo")
+        this.mobikersFiltrados = this.mobikers
+          .filter((mobiker) => {
+            if (
+              mobiker.mobiker.fullName
+                .toLowerCase()
+                .includes(this.buscador.toLowerCase())
+            ) {
+              return mobiker;
+            }
+          })
           .sort((a, b) => {
-            return a.fullName.localeCompare(b.fullName);
+            return a.mobiker.fullName.toLowerCase() >
+              b.mobiker.fullName.toLowerCase()
+              ? 1
+              : -1;
           });
 
         if (this.buscador.trim() === "") {
-          this.mobikersFiltrados = this.mobikers
-            .filter((mobiker) => mobiker.status === "Activo")
-            .sort((a, b) => {
-              return a.fullName.localeCompare(b.fullName);
-            });
+          this.mobikersFiltrados = this.mobikers;
         }
       } catch (error) {
         console.error(`Error en el buscador de MoBikers: ${error.message}`);

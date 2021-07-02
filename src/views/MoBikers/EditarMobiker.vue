@@ -455,17 +455,6 @@ export default {
 
         this.editarMobiker = response.data;
         this.editarMobiker.rango = response.data.rango.rangoMoBiker;
-        this.editarMobiker.fechaNacimiento = new Date(
-          this.editarMobiker.fechaNacimiento
-        )
-          .toISOString()
-          .split("T")[0];
-
-        this.editarMobiker.fechaIngreso = new Date(
-          this.editarMobiker.fechaIngreso
-        )
-          .toISOString()
-          .split("T")[0];
       } catch (error) {
         console.error(`Error al obtener el MoBiker: ${error}`);
       }

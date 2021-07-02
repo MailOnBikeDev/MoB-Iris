@@ -29,7 +29,7 @@
           type="search"
           class="input"
           v-model="buscador"
-          @keyup.enter="searchCliente"
+          @keyup="searchCliente"
           placeholder="Buscar contacto o empresa..."
         />
       </div>
@@ -54,7 +54,7 @@
         <button
           type="button"
           class="px-2 py-1 mb-1 font-bold bg-white rounded-r-xl hover:bg-info hover:text-white focus:outline-none text-secondary"
-          @click="retrievePedidosClientes"
+          @click="buscarPorFecha"
         >
           Buscar
         </button>
@@ -129,7 +129,7 @@
 
         <div
           v-else
-          class="grid items-center grid-cols-2 px-2 text-sm text-center border-b-2 cursor-pointer h-14 border-primary hover:bg-info hover:text-white"
+          class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 cursor-pointer h-14 border-primary hover:bg-info hover:text-white"
           :class="{
             'bg-info text-white font-bold': cliente.cliente.id == currentIndex,
           }"
@@ -137,7 +137,7 @@
           :key="cliente.cliente.id"
           @click="setActiveCliente(cliente.cliente, cliente.cliente.id)"
         >
-          <div>
+          <div class="col-span-2">
             {{ cliente.cliente.razonComercial }}
           </div>
 
@@ -248,6 +248,7 @@ export default {
   },
   data() {
     return {
+      clientes: [],
       clientesFiltrados: [],
       pedidosCliente: [],
       pagosPorCobrar: [],
@@ -332,6 +333,7 @@ export default {
 
         const response = await ClienteService.getClientesConPedidos(params);
 
+        this.clientes = response.data;
         this.clientesFiltrados = response.data;
 
         this.loading = false;
@@ -407,14 +409,29 @@ export default {
       );
     },
 
+    buscarPorFecha() {
+      this.retrieveClientesConPedidos();
+      this.currentCliente = null;
+      this.currentIndex = -1;
+    },
+
     async searchCliente() {
       try {
-        this.clientesFiltrados = await ClienteService.searchCliente(
-          this.buscador
-        );
+        this.clientesFiltrados = this.clientes.filter((cliente) => {
+          if (
+            cliente.cliente.razonComercial
+              .toLowerCase()
+              .includes(this.buscador.toLowerCase()) ||
+            cliente.cliente.contacto
+              .toLowerCase()
+              .includes(this.buscador.toLowerCase())
+          ) {
+            return cliente;
+          }
+        });
 
         if (this.buscador.trim() === "") {
-          this.refreshList();
+          this.clientesFiltrados = this.clientes;
         }
       } catch (error) {
         console.error(`Error en el buscador de Clientes: ${error.message}`);
