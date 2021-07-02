@@ -22,23 +22,23 @@
       :currentPedido="currentPedido"
     />
 
-    <div class="flex flex-row justify-between mb-4 -mt-10">
+    <div class="flex flex-row mb-4 -mt-10 justify-evenly">
       <div class="flex flex-row">
         <datepicker
           v-model="fechaInicio"
           name="fechaInicio"
-          input-class="w-32 p-2 mb-1 font-bold cursor-pointer rounded-l-xl focus:outline-none text-primary"
+          input-class="w-20 p-2 mb-1 font-bold text-center cursor-pointer rounded-l-xl focus:outline-none text-primary"
           :monday-first="true"
           :language="es"
-          :use-utc="true"
+          format="dd MMM"
         />
         <datepicker
           v-model="fechaFin"
           name="fechaFin"
-          input-class="w-32 p-2 mb-1 font-bold cursor-pointer focus:outline-none text-primary"
+          input-class="w-20 p-2 mb-1 font-bold text-center cursor-pointer focus:outline-none text-primary"
           :monday-first="true"
           :language="es"
-          :use-utc="true"
+          format="dd MMM"
         />
         <button
           type="button"

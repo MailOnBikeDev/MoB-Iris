@@ -33,10 +33,10 @@
         <datepicker
           v-model="buscadorFecha"
           name="buscadorFecha"
-          input-class="p-2 mb-1 font-bold cursor-pointer rounded-l-xl w-28 focus:outline-none text-primary"
+          input-class="w-24 p-2 mb-1 font-bold text-center cursor-pointer rounded-l-xl focus:outline-none text-primary"
           :monday-first="true"
           :language="es"
-          :use-utc="true"
+          format="dd MMM"
         />
         <button
           type="button"

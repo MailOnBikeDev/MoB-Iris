@@ -87,7 +87,7 @@
               input-class="input"
               :monday-first="true"
               placeholder="Fecha del Pedido"
-              :use-utc="true"
+              format="dd MMMM yyyy"
               :language="es"
             />
             <div

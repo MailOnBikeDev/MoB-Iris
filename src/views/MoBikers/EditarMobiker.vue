@@ -191,8 +191,8 @@
             name="fechaNacimiento"
             input-class="input"
             :monday-first="true"
-            :use-utc="true"
             :language="es"
+            format="dd MMMM yyyy"
           />
           <div
             v-if="errors.has('fechaNacimiento')"
@@ -280,8 +280,8 @@
             type="date"
             input-class="input"
             :monday-first="true"
-            :use-utc="true"
             :language="es"
+            format="dd MMMM yyyy"
           />
           <div
             v-if="errors.has('fechaIngreso')"
@@ -455,6 +455,7 @@ export default {
 
         this.editarMobiker = response.data;
         this.editarMobiker.rango = response.data.rango.rangoMoBiker;
+        console.log(this.editarMobiker.fechaIngreso);
       } catch (error) {
         console.error(`Error al obtener el MoBiker: ${error}`);
       }
@@ -466,6 +467,15 @@ export default {
         if (!isValid) {
           return;
         }
+
+        console.log(typeof this.editarMobiker.fechaNacimiento);
+        console.log(this.editarMobiker.fechaNacimiento);
+        // this.editarMobiker.fechaIngreso = this.editarMobiker.fechaIngreso
+        //   .toISOString()
+        //   .split("T")[0];
+        // this.editarMobiker.fechaNacimiento = this.editarMobiker.fechaNacimiento
+        //   .toISOString()
+        //   .split("T")[0];
 
         const response = await MobikerService.editMobiker(
           this.$route.params.id,

@@ -62,7 +62,7 @@
               input-class="input"
               :monday-first="true"
               placeholder="Fecha del Pedido"
-              :use-utc="true"
+              format="dd MMMM yyyy"
               :language="es"
             />
             <div
@@ -799,7 +799,8 @@ export default {
           data[i]["modalidad"] = "Una vía";
           data[i]["viajes"] = 1;
           this.tarifaTotal = this.tarifaTotal + info.tarifa;
-          this.tarifaTotalSugerida = this.tarifaTotalSugerida + info.tarifaSugerida;
+          this.tarifaTotalSugerida =
+            this.tarifaTotalSugerida + info.tarifaSugerida;
           this.distancia += info.distancia;
           this.recaudoTotal = 0;
           this.tramiteTotal = 0;

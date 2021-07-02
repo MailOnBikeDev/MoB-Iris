@@ -87,7 +87,7 @@
               input-class="input"
               :monday-first="true"
               :language="es"
-              :use-utc="true"
+              format="dd MMMM yyyy"
             />
             <div
               v-if="errors.has('fecha')"
