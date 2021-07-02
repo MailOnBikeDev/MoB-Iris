@@ -1,13 +1,16 @@
 import DestinoService from "@/services/destino.service";
 
+const destinosStorage = JSON.parse(localStorage.getItem("destinos"));
+
 export const destinos = {
   namespaced: true,
   state: {
-    destinos: [],
+    destinos: destinosStorage ? destinosStorage : [],
   },
   mutations: {
     setDestinosArray(state, payload) {
       state.destinos = payload;
+      localStorage.setItem("destinos", JSON.stringify(payload));
     },
   },
   actions: {

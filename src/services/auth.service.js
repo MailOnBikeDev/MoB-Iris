@@ -21,7 +21,24 @@ class AuthService {
   }
 
   logout() {
+    // Eliminar Tablas Principales
     localStorage.removeItem("user");
+    localStorage.removeItem("clientes");
+    localStorage.removeItem("mobikers");
+    localStorage.removeItem("destinos");
+
+    // Eliminar Tablas Auxiliares
+    localStorage.removeItem("rolesUsuarios");
+    localStorage.removeItem("distritos");
+    localStorage.removeItem("tiposDeCarga");
+    localStorage.removeItem("tiposDeComprobante");
+    localStorage.removeItem("tiposDeEnvio");
+    localStorage.removeItem("formasDePago");
+    localStorage.removeItem("modalidades");
+    localStorage.removeItem("rangosMoBiker");
+    localStorage.removeItem("rolCliente");
+    localStorage.removeItem("entidadesBancarias");
+    localStorage.removeItem("statusDelPedido");
   }
 
   async register(user) {
