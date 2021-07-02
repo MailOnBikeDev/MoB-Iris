@@ -11,7 +11,9 @@
     <ReporteFacturacion
       :showDetalle="showDetalle"
       @cerrarDetalle="showDetalle = false"
-      :detalles="pedidosCliente"
+      :pagosPorCobrar="pagosPorCobrar"
+      :pagosEfectivo="pagosEfectivo"
+      :casoEspecial="casoEspecial"
       :cliente="currentCliente"
     />
 
@@ -52,6 +54,7 @@
         <button
           type="button"
           class="px-2 py-1 mb-1 font-bold bg-white rounded-r-xl hover:bg-info hover:text-white focus:outline-none text-secondary"
+          @click="retrievePedidosClientes"
         >
           Buscar
         </button>
@@ -68,16 +71,16 @@
         >
       </router-link>
 
-      <button
-        class="px-4 py-2 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none"
-        @click="refreshList"
-      >
-        <font-awesome-icon class="text-white" icon="sync-alt" />
+      <button class="refresh-btn" @click="refreshList">
+        <font-awesome-icon
+          class="text-white group-hover:animate-spin"
+          icon="sync-alt"
+        />
       </button>
 
       <button
         class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
-        @click="showDetalle = true"
+        @click="openDetalle"
       >
         Enviar reporte
       </button>
@@ -116,17 +119,30 @@
       <div
         class="overflow-y-auto bg-white border border-black max-h-96 h-96 pedidos-scroll"
       >
+        <div v-if="loading" class="text-center mt-36">
+          <font-awesome-icon
+            size="5x"
+            class="animate-spin text-primary"
+            icon="spinner"
+          />
+        </div>
+
         <div
-          class="grid items-center px-2 text-sm text-center border-b-2 cursor-pointer h-14 border-primary hover:bg-info"
+          v-else
+          class="grid items-center grid-cols-2 px-2 text-sm text-center border-b-2 cursor-pointer h-14 border-primary hover:bg-info hover:text-white"
           :class="{
-            'bg-info text-white font-bold': cliente.id == currentIndex,
+            'bg-info text-white font-bold': cliente.cliente.id == currentIndex,
           }"
           v-for="cliente in clientesFiltrados"
-          :key="cliente.id"
-          @click="setActiveCliente(cliente, cliente.id)"
+          :key="cliente.cliente.id"
+          @click="setActiveCliente(cliente.cliente, cliente.cliente.id)"
         >
-          <div class="col-span-2">
-            {{ cliente.razonComercial }}
+          <div>
+            {{ cliente.cliente.razonComercial }}
+          </div>
+
+          <div>
+            {{ cliente.cantidadPedidos }}
           </div>
         </div>
       </div>
@@ -218,7 +234,6 @@ import ReporteFacturacion from "@/components/ReporteFacturacion";
 import ClienteService from "@/services/cliente.service";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
-import { mapState, mapActions } from "vuex";
 import { es } from "vuejs-datepicker/dist/locale";
 
 const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
@@ -235,6 +250,9 @@ export default {
     return {
       clientesFiltrados: [],
       pedidosCliente: [],
+      pagosPorCobrar: [],
+      pagosEfectivo: [],
+      casoEspecial: false,
       showDetalle: false,
       showResumen: false,
       currentCliente: null,
@@ -245,21 +263,15 @@ export default {
       fechaFin: new Date(),
       buscador: "",
 
+      loading: false,
+
       page: 1,
       cantidadPedidos: 0,
       pageSize: 200,
       es: es,
     };
   },
-  mounted() {
-    this.clientesFiltrados = this.clientes;
-  },
-  computed: {
-    ...mapState("clientes", ["clientes"]),
-  },
   methods: {
-    ...mapActions("clientes", ["getClientes"]),
-
     getRequestParams(desde, hasta, id, page, pageSize) {
       let params = {};
 
@@ -310,6 +322,24 @@ export default {
       );
     },
 
+    async retrieveClientesConPedidos() {
+      try {
+        this.loading = true;
+        const params = {
+          desde: this.fechaInicio.toISOString().split("T")[0],
+          hasta: this.fechaFin.toISOString().split("T")[0],
+        };
+
+        const response = await ClienteService.getClientesConPedidos(params);
+
+        this.clientesFiltrados = response.data;
+
+        this.loading = false;
+      } catch (error) {
+        console.error(`Error al traer clientes con Pedidos: ${error.message}`);
+      }
+    },
+
     handlePageChange(value) {
       this.page = value;
       this.retrievePedidos();
@@ -322,7 +352,7 @@ export default {
     },
 
     refreshList() {
-      this.getClientes();
+      this.retrieveClientesConPedidos();
       this.pedidosCliente = [];
       this.cantidadPedidos = 0;
 
@@ -343,11 +373,38 @@ export default {
       this.showResumen = true;
     },
 
+    openDetalle() {
+      this.showDetalle = true;
+      this.filtroPorCobrar();
+      this.filtroEfectivo();
+    },
+
     closeResumen() {
       this.showResumen = false;
 
       this.currentPedido = null;
       this.currentPedidoIndex = -1;
+    },
+
+    filtroPorCobrar() {
+      this.pagosPorCobrar = this.pedidosCliente.filter(
+        (detalle) =>
+          detalle.formaPago !== "Efectivo en Origen" &&
+          detalle.formaPago !== "Efectivo en Destino"
+      );
+      if (
+        this.pagosPorCobrar[0].empresaRemitente === "PHILIP MORRIS PERU S.A."
+      ) {
+        this.casoEspecial = true;
+      }
+    },
+
+    filtroEfectivo() {
+      this.pagosEfectivo = this.pedidosCliente.filter(
+        (detalle) =>
+          detalle.formaPago === "Efectivo en Origen" ||
+          detalle.formaPago === "Efectivo en Destino"
+      );
     },
 
     async searchCliente() {

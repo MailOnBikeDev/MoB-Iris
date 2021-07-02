@@ -68,12 +68,11 @@
         >
       </router-link>
 
-      <button
-        class="px-4 py-2 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none"
-        @click="refreshList"
-        title="Actualizar listado"
-      >
-        <font-awesome-icon class="text-white" icon="sync-alt" />
+      <button class="h-10 refresh-btn" @click="refreshList" title="Actualizar">
+        <font-awesome-icon
+          class="text-white group-hover:animate-spin"
+          icon="sync-alt"
+        />
       </button>
 
       <router-link

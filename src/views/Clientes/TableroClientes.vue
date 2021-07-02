@@ -20,7 +20,10 @@
       </div>
 
       <button class="refresh-btn" @click="refreshList">
-        <font-awesome-icon class="text-white" icon="sync-alt" />
+        <font-awesome-icon
+          class="text-white group-hover:animate-spin"
+          icon="sync-alt"
+        />
       </button>
 
       <router-link

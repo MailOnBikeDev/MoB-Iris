@@ -124,6 +124,19 @@ class ClienteService {
       console.error("Mensaje de error: ", error.message);
     }
   }
+
+  async getClientesConPedidos(params) {
+    try {
+      let clientes = await axios.get(`${API_URL}/clientes-con-pedidos`, {
+        params,
+        headers: authHeader(),
+      });
+
+      return clientes;
+    } catch (error) {
+      console.error("Mensaje de error: ", error.message);
+    }
+  }
 }
 
 export default new ClienteService();

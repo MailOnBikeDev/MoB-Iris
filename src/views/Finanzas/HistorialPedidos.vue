@@ -58,11 +58,11 @@
         />
       </div>
 
-      <button
-        class="px-4 py-2 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none"
-        @click="refreshList"
-      >
-        <font-awesome-icon class="text-white" icon="sync-alt" />
+      <button class="refresh-btn" @click="refreshList">
+        <font-awesome-icon
+          class="text-white group-hover:animate-spin"
+          icon="sync-alt"
+        />
       </button>
 
       <router-link

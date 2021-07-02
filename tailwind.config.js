@@ -19,6 +19,7 @@ module.exports = {
       backgroundColor: ["active", "disabled", "odd"],
       opacity: ["disabled"],
       textColor: ["odd"],
+      animation: ["group-hover"],
     },
   },
   plugins: [],

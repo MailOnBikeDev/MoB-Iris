@@ -25,7 +25,7 @@
     >
       <!-- Por cobrar -->
       <h2 class="text-xl resalta">Por cobrar</h2>
-      <TablaFacturacion :casoEspecial="casoEspecial" :info="nuevosDetalles" />
+      <TablaFacturacion :casoEspecial="casoEspecial" :info="pagosPorCobrar" />
 
       <!-- Pagos en Efectivo -->
       <h2 class="mt-4 text-xl resalta">Pagos en Efectivo</h2>
@@ -90,8 +90,14 @@ export default {
       type: Boolean,
       required: true,
     },
-    detalles: {
+    pagosPorCobrar: {
       type: Array,
+    },
+    pagosEfectivo: {
+      type: Array,
+    },
+    casoEspecial: {
+      type: Boolean,
     },
     cliente: {
       type: Object,
@@ -100,38 +106,9 @@ export default {
   data() {
     return {
       reporteCopiado: false,
-      nuevosDetalles: [],
-      pagosEfectivo: [],
-      casoEspecial: false,
     };
   },
-  created() {
-    this.filtrandoDetalles();
-    this.fitradoPagosEfectivo();
-  },
   methods: {
-    filtrandoDetalles() {
-      this.nuevosDetalles = this.detalles.filter(
-        (detalle) =>
-          detalle.formaPago !== "Efectivo en Origen" &&
-          detalle.formaPago !== "Efectivo en Destino"
-      );
-      console.log("asdasd");
-      if (
-        this.nuevosDetalles[0].empresaRemitente === "PHILIP MORRIS PERU S.A."
-      ) {
-        this.casoEspecial = true;
-      }
-    },
-
-    fitradoPagosEfectivo() {
-      this.pagosEfectivo = this.detalles.filter(
-        (detalle) =>
-          detalle.formaPago === "Efectivo en Origen" ||
-          detalle.formaPago === "Efectivo en Destino"
-      );
-    },
-
     cerrarDetalle() {
       this.$emit("cerrarDetalle");
       this.reporteCopiado = false;
