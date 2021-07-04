@@ -52,7 +52,7 @@
         <button
           type="button"
           class="px-2 py-1 mb-1 font-bold bg-white rounded-r-xl hover:bg-info hover:text-white focus:outline-none text-secondary"
-          @click="retrievePedidosMobikers"
+          @click="buscarPorFecha"
         >
           Buscar
         </button>
@@ -328,6 +328,12 @@ export default {
           `Error al obtener MoBikers con Pedidos: ${error.message}`
         );
       }
+    },
+
+    buscarPorFecha() {
+      this.retrieveMobikersConPedidos();
+      this.currentMobiker = null;
+      this.currentIndex = -1;
     },
 
     handlePageChange(value) {
