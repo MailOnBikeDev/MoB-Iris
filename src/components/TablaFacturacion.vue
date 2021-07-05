@@ -37,7 +37,12 @@
         {{ detalle.tarifa }}
       </td>
       <td class="table-cell px-2 border-2 select-all border-secondary">
-        BICIDELIVERY: {{ capitalizar(detalle.contactoConsignado) }}
+        <span v-if="!detalle.otroDatoConsignado">{{
+          detalle.otroDatoConsignado
+        }}</span>
+        <span v-else
+          >BICIDELIVERY: {{ capitalizar(detalle.contactoConsignado) }}</span
+        >
       </td>
       <td class="table-cell px-2 text-center border-2 border-secondary">
         {{ detalle.formaPago }}
@@ -93,7 +98,12 @@
         {{ detalle.tarifa }}
       </td>
       <td class="table-cell px-2 border-2 select-all border-secondary">
-        BICIDELIVERY: {{ capitalizar(detalle.contactoConsignado) }}
+        <span v-if="!detalle.otroDatoConsignado">{{
+          detalle.otroDatoConsignado
+        }}</span>
+        <span v-else
+          >BICIDELIVERY: {{ capitalizar(detalle.contactoConsignado) }}</span
+        >
       </td>
       <td class="table-cell px-2 text-center border-2 border-secondary">
         {{ detalle.formaPago }}
