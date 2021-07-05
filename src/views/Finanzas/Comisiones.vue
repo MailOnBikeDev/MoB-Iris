@@ -331,7 +331,7 @@ export default {
     },
 
     buscarPorFecha() {
-      this.retrieveMobikersConPedidos();
+      this.retrieveMoBikersConPedidos();
       this.currentMobiker = null;
       this.currentIndex = -1;
     },
