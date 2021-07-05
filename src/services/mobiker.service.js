@@ -158,6 +158,19 @@ class MobikerService {
       console.error("Mensaje de error: ", error.message);
     }
   }
+
+  async getMobikersConPedidos(params) {
+    try {
+      let mobikers = await axios.get(`${API_URL}/mobikers-con-pedidos`, {
+        params,
+        headers: authHeader(),
+      });
+
+      return mobikers;
+    } catch (error) {
+      console.error("Mensaje de error: ", error.message);
+    }
+  }
 }
 
 export default new MobikerService();

@@ -62,7 +62,7 @@
               input-class="input"
               :monday-first="true"
               placeholder="Fecha del Pedido"
-              :use-utc="true"
+              format="dd MMMM yyyy"
               :language="es"
             />
             <div
@@ -756,16 +756,14 @@ export default {
     },
 
     asignarHoy() {
-      let hoy = new Date().toISOString().split("T")[0];
+      let hoy = new Date();
       return (this.nuevoPedido.fecha = hoy);
     },
 
     asignarMañana() {
       let hoy = new Date();
       let DIA_EN_MS = 24 * 60 * 60 * 1000;
-      let manana = new Date(hoy.getTime() + DIA_EN_MS)
-        .toISOString()
-        .split("T")[0];
+      let manana = new Date(hoy.getTime() + DIA_EN_MS);
       return (this.nuevoPedido.fecha = manana);
     },
 
@@ -799,7 +797,8 @@ export default {
           data[i]["modalidad"] = "Una vía";
           data[i]["viajes"] = 1;
           this.tarifaTotal = this.tarifaTotal + info.tarifa;
-          this.tarifaTotalSugerida = this.tarifaTotalSugerida + info.tarifaSugerida;
+          this.tarifaTotalSugerida =
+            this.tarifaTotalSugerida + info.tarifaSugerida;
           this.distancia += info.distancia;
           this.recaudoTotal = 0;
           this.tramiteTotal = 0;

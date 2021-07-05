@@ -27,6 +27,10 @@ body {
   @apply font-bold text-primary;
 }
 
+.refresh-btn {
+  @apply bg-yellow-600 rounded-full group hover:bg-yellow-500 focus:outline-none;
+}
+
 .mob-activo {
   @apply inline-block px-2 font-bold text-white bg-green-500 rounded-full;
 }

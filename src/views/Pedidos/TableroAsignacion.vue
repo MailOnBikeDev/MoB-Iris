@@ -22,23 +22,23 @@
       :currentPedido="currentPedido"
     />
 
-    <div class="flex flex-row justify-between mb-4 -mt-10">
+    <div class="flex flex-row mb-4 -mt-10 justify-evenly">
       <div class="flex flex-row">
         <datepicker
           v-model="fechaInicio"
           name="fechaInicio"
-          input-class="w-32 p-2 mb-1 font-bold cursor-pointer rounded-l-xl focus:outline-none text-primary"
+          input-class="w-20 p-2 mb-1 font-bold text-center cursor-pointer rounded-l-xl focus:outline-none text-primary"
           :monday-first="true"
           :language="es"
-          :use-utc="true"
+          format="dd MMM"
         />
         <datepicker
           v-model="fechaFin"
           name="fechaFin"
-          input-class="w-32 p-2 mb-1 font-bold cursor-pointer focus:outline-none text-primary"
+          input-class="w-20 p-2 mb-1 font-bold text-center cursor-pointer focus:outline-none text-primary"
           :monday-first="true"
           :language="es"
-          :use-utc="true"
+          format="dd MMM"
         />
         <button
           type="button"
@@ -66,19 +66,19 @@
         v-slot="{ navigate }"
       >
         <span @click="navigate" role="link" class="text-center cursor-pointer"
-          >Regresar al Tablero</span
+          >Regresar a Pedidos</span
         >
       </router-link>
 
-      <button
-        class="px-4 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none"
-        @click="refreshList"
-      >
-        <font-awesome-icon class="text-white" icon="sync-alt" />
+      <button class="refresh-btn" @click="refreshList">
+        <font-awesome-icon
+          class="text-white group-hover:animate-spin"
+          icon="sync-alt"
+        />
       </button>
 
       <button
-        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500 disabled:opacity-90 disabled:bg-green-900"
         @click="createArrayPedidos"
         :disabled="emptyArray"
       >

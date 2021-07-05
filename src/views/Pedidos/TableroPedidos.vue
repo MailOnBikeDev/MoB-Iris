@@ -21,15 +21,22 @@
       :currentPedido="currentPedido"
     />
 
+    <CambiarStatusPedido
+      :showCambiarStatus="showCambiarStatus"
+      @cerrarModal="showCambiarStatus = false"
+      @refresh="refreshList"
+      :currentPedido="currentPedido"
+    />
+
     <div class="flex flex-row items-center mb-4 -mt-10 justify-evenly">
       <div class="flex flex-row">
         <datepicker
           v-model="buscadorFecha"
           name="buscadorFecha"
-          input-class="p-2 mb-1 font-bold cursor-pointer rounded-l-xl w-28 focus:outline-none text-primary"
+          input-class="w-24 p-2 mb-1 font-bold text-center cursor-pointer rounded-l-xl focus:outline-none text-primary"
           :monday-first="true"
           :language="es"
-          :use-utc="true"
+          format="dd MMM"
         />
         <button
           type="button"
@@ -57,16 +64,15 @@
         v-slot="{ navigate }"
       >
         <span @click="navigate" role="link" class="text-center cursor-pointer"
-          >Asignar Pedidos</span
+          >Asignación</span
         >
       </router-link>
 
-      <button
-        class="px-4 py-2 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none"
-        @click="refreshList"
-        title="Actualizar listado"
-      >
-        <font-awesome-icon class="text-white" icon="sync-alt" />
+      <button class="h-10 refresh-btn" @click="refreshList" title="Actualizar">
+        <font-awesome-icon
+          class="text-white group-hover:animate-spin"
+          icon="sync-alt"
+        />
       </button>
 
       <router-link
@@ -76,7 +82,7 @@
         v-slot="{ navigate }"
       >
         <span @click="navigate" role="link" class="text-center cursor-pointer"
-          >Crear nuevo Pedido</span
+          >Nuevo Pedido</span
         >
       </router-link>
       <router-link
@@ -86,7 +92,7 @@
         v-slot="{ navigate }"
       >
         <span @click="navigate" role="link" class="text-center cursor-pointer"
-          >Crear nuevo Ruteo</span
+          >Nuevo Ruteo</span
         >
       </router-link>
     </div>
@@ -248,7 +254,7 @@
           <div>
             <p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
           </div>
-          <div class="flex items-center justify-center">
+          <div class="flex items-center justify-evenly">
             <button
               class="focus:outline-none"
               @click="showComanda = true"
@@ -258,12 +264,21 @@
             </button>
 
             <button
+              v-if="pedido.status.id !== 1"
+              @click="showCambiarStatus = true"
+              class="focus:outline-none"
+              title="Estado del Pedido"
+            >
+              <font-awesome-icon class="text-2xl text-primary" icon="bicycle" />
+            </button>
+
+            <button
               class="focus:outline-none"
               @click="showDetalle = true"
               title="Detalles del Pedido"
             >
               <font-awesome-icon
-                class="ml-6 text-2xl text-primary"
+                class="text-2xl text-primary"
                 icon="window-maximize"
               />
             </button>
@@ -293,6 +308,7 @@
 import PedidoService from "@/services/pedido.service";
 import ReporteComanda from "@/components/ReporteComanda";
 import DetallePedido from "@/components/DetallePedido";
+import CambiarStatusPedido from "@/components/CambiarStatusPedido";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { es } from "vuejs-datepicker/dist/locale";
@@ -304,6 +320,7 @@ export default {
     DetallePedido,
     Datepicker,
     Pagination,
+    CambiarStatusPedido,
   },
   data() {
     return {
@@ -312,6 +329,7 @@ export default {
       buscador: "",
       showComanda: false,
       showDetalle: false,
+      showCambiarStatus: false,
       currentPedido: null,
       currentIndex: -1,
       buscadorFecha: new Date(),

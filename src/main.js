@@ -15,6 +15,8 @@ import {
   faReceipt,
   faWindowMaximize,
   faEye,
+  faBicycle,
+  faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
 import VueDayjs from "vue-dayjs-plugin";
 import VueClipboard from "vue-clipboard2";
@@ -27,7 +29,9 @@ library.add(
   faTimes,
   faReceipt,
   faWindowMaximize,
-  faEye
+  faEye,
+  faBicycle,
+  faSpinner
 );
 
 Vue.config.productionTip = false;

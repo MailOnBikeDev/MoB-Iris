@@ -1,13 +1,16 @@
 import ClienteService from "@/services/cliente.service";
 
+const clientesStorage = JSON.parse(localStorage.getItem("clientes"));
+
 export const clientes = {
   namespaced: true,
   state: {
-    clientes: [],
+    clientes: clientesStorage ? clientesStorage : [],
   },
   mutations: {
     setClientesArray(state, payload) {
       state.clientes = payload;
+      localStorage.setItem("clientes", JSON.stringify(payload));
     },
   },
   actions: {

@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="showDetalle"
-    class="absolute z-40 w-1/2 h-auto px-10 py-4 shadow-xl bg-primary top-14 left-1/4 rounded-xl"
+    class="absolute z-40 w-11/12 h-auto p-4 mx-auto transform -translate-x-1/2 shadow-xl -translate-y-2/3 bg-primary rounded-xl top-2/3 left-1/2"
   >
     <div class="absolute -top-4 -right-2">
       <button
@@ -21,35 +21,50 @@
     </div>
 
     <div
-      class="p-4 overflow-y-auto text-sm bg-white rounded-xl pedidos-scroll h-96 max-h-96"
+      class="flex flex-col items-center p-4 overflow-y-auto text-sm bg-white rounded-xl pedidos-scroll h-96 max-h-96"
     >
-      <div v-for="detalle in detalles" :key="detalle.id">
-        <p>
-          {{ $date(detalle.fecha).format("DD/MM") }}: {{ detalle.id }} - [{{
-            detalle.contactoConsignado.toUpperCase()
-          }}] = {{ detalle.tarifa }}
-        </p>
+      <!-- Por cobrar -->
+      <h2 class="text-xl resalta">Por cobrar</h2>
+      <TablaFacturacion :casoEspecial="casoEspecial" :info="pagosPorCobrar" />
+
+      <!-- Pagos en Efectivo -->
+      <h2 class="mt-4 text-xl resalta">Pagos en Efectivo</h2>
+      <TablaFacturacion :casoEspecial="casoEspecial" :info="pagosEfectivo" />
+
+      <!-- Imagen de Tabla de Facturacion -->
+      <h2 class="mt-4 text-xl resalta">Reporte a copiar</h2>
+      <div class="w-full" ref="facturado">
+        <TablaEnviarFactura
+          :casoEspecial="casoEspecial"
+          :info="pagosPorCobrar"
+        />
       </div>
-      <br />
-      <div>
-        <p>
-          Total de tarifas =
-          {{ totalTarifa }}
-        </p>
-        <br />
-        <p>Pagos en Efectivo = {{ pagosEfectivo }}</p>
 
+      <div class="p-4 mt-6 text-lg border-2 border-primary">
+        <p class="mb-2 resalta">Estadísticas:</p>
         <p>
-          Total a pagar =
-          {{ totalPagar }}
+          Mis BiciEnvíos =
+          <span class="cursor-pointer select-all">{{
+            cliente.biciEnvios
+          }}</span>
         </p>
-        <br />
-
-        <p class="resalta">Mis Estadísticas:</p>
-        <p>Mis BiciEnvíos = {{ cliente.biciEnvios }}</p>
-        <p>Mis Kilómetros = {{ cliente.kilometros }}km</p>
-        <p>CO2 Ahorrado = {{ cliente.CO2Ahorrado }}kg</p>
-        <p>Horas de Ruido Ahorrado = {{ cliente.ruido }}h</p>
+        <p>
+          Mis Kilómetros =
+          <span class="cursor-pointer select-all">{{ cliente.kilometros }}</span
+          >km
+        </p>
+        <p>
+          CO2 Ahorrado =
+          <span class="cursor-pointer select-all">{{
+            cliente.CO2Ahorrado
+          }}</span
+          >kg
+        </p>
+        <p>
+          Horas de Ruido Ahorrado =
+          <span class="cursor-pointer select-all">{{ cliente.ruido }}</span
+          >h
+        </p>
       </div>
     </div>
 
@@ -59,7 +74,7 @@
         class="px-4 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
         @click="copiarReporte"
       >
-        Copiar
+        Copiar reporte
       </button>
 
       <button
@@ -74,49 +89,34 @@
 </template>
 
 <script>
+import TablaFacturacion from "./TablaFacturacion.vue";
+import TablaEnviarFactura from "./TablaEnviarFactura.vue";
+
 export default {
   name: "ReporteFacturacion",
+  components: { TablaFacturacion, TablaEnviarFactura },
   props: {
     showDetalle: {
       type: Boolean,
       required: true,
     },
-    detalles: {
+    pagosPorCobrar: {
       type: Array,
+    },
+    pagosEfectivo: {
+      type: Array,
+    },
+    casoEspecial: {
+      type: Boolean,
     },
     cliente: {
       type: Object,
     },
   },
   data() {
-    return { reporteCopiado: false };
-  },
-  computed: {
-    totalTarifa() {
-      let total = 0;
-      this.detalles.forEach((detalle) => {
-        total += detalle.tarifa;
-      });
-      return total.toFixed(2);
-    },
-
-    pagosEfectivo() {
-      let nuevoDetalle = this.detalles.filter(
-        (detalle) =>
-          detalle.formaPago === ("Efectivo en Origen" || "Efectivo en Destino")
-      );
-      console.log(nuevoDetalle);
-      let total = 0;
-      nuevoDetalle.forEach((detalle) => {
-        total += detalle.tarifa;
-      });
-      return total.toFixed(2);
-    },
-
-    totalPagar() {
-      let total = +(this.totalTarifa - this.pagosEfectivo);
-      return total.toFixed(2);
-    },
+    return {
+      reporteCopiado: false,
+    };
   },
   methods: {
     cerrarDetalle() {
@@ -125,8 +125,7 @@ export default {
     },
 
     copiarReporte() {
-      //   console.log(this.$el.children[2].innerText);
-      this.$copyText(this.$el.children[2].innerText).then(() => {
+      this.$copyText(this.$refs.facturado.innerText).then(() => {
         this.reporteCopiado = true;
         console.log("Texto copiado");
       });

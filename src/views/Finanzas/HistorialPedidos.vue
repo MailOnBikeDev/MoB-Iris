@@ -14,23 +14,30 @@
       :currentPedido="currentPedido"
     />
 
+    <CambiarStatusPedido
+      :showCambiarStatus="showCambiarStatus"
+      @cerrarModal="showCambiarStatus = false"
+      @refresh="refreshList"
+      :currentPedido="currentPedido"
+    />
+
     <div class="flex flex-row mb-4 -mt-10 justify-evenly">
       <div class="flex flex-row">
         <datepicker
           v-model="fechaInicio"
           name="fechaInicio"
-          input-class="w-32 p-2 font-bold cursor-pointer rounded-l-xl focus:outline-none text-primary"
+          input-class="w-24 p-2 font-bold text-center cursor-pointer rounded-l-xl focus:outline-none text-primary"
           :monday-first="true"
           :language="es"
-          :use-utc="true"
+          format="dd MMM"
         />
         <datepicker
           v-model="fechaFin"
           name="fechaFin"
-          input-class="w-32 p-2 font-bold cursor-pointer focus:outline-none text-primary"
+          input-class="w-24 p-2 font-bold text-center cursor-pointer focus:outline-none text-primary"
           :monday-first="true"
           :language="es"
-          :use-utc="true"
+          format="dd MMM"
         />
         <button
           type="button"
@@ -51,11 +58,11 @@
         />
       </div>
 
-      <button
-        class="px-4 py-2 bg-yellow-600 rounded-full hover:bg-yellow-500 focus:outline-none"
-        @click="refreshList"
-      >
-        <font-awesome-icon class="text-white" icon="sync-alt" />
+      <button class="refresh-btn" @click="refreshList">
+        <font-awesome-icon
+          class="text-white group-hover:animate-spin"
+          icon="sync-alt"
+        />
       </button>
 
       <router-link
@@ -236,7 +243,17 @@
           <div>
             <p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
           </div>
-          <div class="flex justify-center">
+
+          <div class="flex justify-evenly">
+            <button
+              v-if="pedido.status.id !== 1"
+              @click="showCambiarStatus = true"
+              class="focus:outline-none"
+              title="Estado del Pedido"
+            >
+              <font-awesome-icon class="text-2xl text-primary" icon="bicycle" />
+            </button>
+
             <button class="focus:outline-none" @click="showDetalle = true">
               <font-awesome-icon
                 class="text-2xl text-primary"
@@ -268,6 +285,7 @@
 <script>
 import PedidoService from "@/services/pedido.service";
 import DetalleHistorialPedido from "@/components/DetalleHistorialPedido";
+import CambiarStatusPedido from "@/components/CambiarStatusPedido";
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
 import Pagination from "@/components/Pagination.vue";
@@ -276,12 +294,18 @@ const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
 
 export default {
   name: "HistorialPedidos",
-  components: { DetalleHistorialPedido, Datepicker, Pagination },
+  components: {
+    DetalleHistorialPedido,
+    Datepicker,
+    Pagination,
+    CambiarStatusPedido,
+  },
   data() {
     return {
       pedidos: [],
       pedidosFiltrados: [],
       showDetalle: false,
+      showCambiarStatus: false,
       currentPedido: null,
       currentIndex: -1,
       fechaInicio: new Date(seisDiasAtras),
