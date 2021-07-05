@@ -12,45 +12,8 @@
       </button>
     </div>
 
-    <div class="hidden">
-      <pre v-if="currentComanda !== null">
-Tipo Envío: **{{ currentComanda.tipoDeEnvio.tipo }}**
-__Origen:__ {{ currentComanda.direccionRemitente }} - {{
-          currentComanda.distritoRemitente
-        }}
-__Empresa:__ {{ currentComanda.empresaRemitente }}
-__Contacto:__ {{ currentComanda.contactoRemitente }} - {{
-          currentComanda.telefonoRemitente
-        }}
-{{
-          currentComanda.otroDatoRemitente
-            ? `**IMPORTANTE:  ${currentComanda.otroDatoRemitente}**`
-            : null
-        }}
-			
-__Destino:__ {{ currentComanda.direccionConsignado }} - {{
-          currentComanda.distrito.distrito
-        }}
-__Contacto:__ {{ currentComanda.contactoConsignado }} {{
-          currentComanda.empresaConsignado
-            ? `- __Empresa:__ ${currentComanda.empresaConsignado}`
-            : null
-        }}
-__Teléfono:__ {{ currentComanda.telefonoConsignado }}
-__Llevar:__ {{ currentComanda.tipoCarga }}
-__Modalidad:__ {{ currentComanda.modalidad.tipo }}
-{{
-          currentComanda.otroDatoConsignado
-            ? `**IMPORTANTE:  ${currentComanda.otroDatoConsignado}**`
-            : null
-        }}
-
-__Tarifa:__ S/. {{ currentComanda.tarifa }}
-__Mi comisión:__ S/. {{ currentComanda.comision }}
-__Pedido:__ #{{ currentComanda.id }}
-__CO2:__ {{ currentComanda.CO2Ahorrado }} Kg
-__Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
-      >
+    <div class="hidden" ref="comanda">
+      <MensajeComanda :currentPedido="currentComanda" />
     </div>
 
     <form class="grid grid-cols-2 p-4 bg-white gap-x-4 rounded-t-xl">
@@ -157,6 +120,7 @@ __Horas de Ruido:__ {{ currentComanda.ruido }} h</pre
 </template>
 
 <script>
+import MensajeComanda from "./MensajeComanda.vue";
 import PedidoService from "@/services/pedido.service";
 import { ModelListSelect } from "vue-search-select";
 import { mapState } from "vuex";
@@ -174,6 +138,7 @@ export default {
   },
   components: {
     ModelListSelect,
+    MensajeComanda,
   },
   data() {
     return {
@@ -259,12 +224,11 @@ export default {
     },
 
     copiarComanda() {
-      // console.log(this.$el.children[2].children[0].innerText);
-      this.$copyText(this.$el.children[1].textContent).then(() => {
+      console.log(this.$refs.comanda.innerText);
+      this.$copyText(this.$refs.comanda.innerText).then(() => {
         this.comandaCopiada = true;
         console.log("Texto copiado");
         this.comandasEnviadas.push(this.currentComandaIdx);
-        console.log(this.comandasEnviadas);
       });
     },
 

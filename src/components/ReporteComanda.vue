@@ -22,45 +22,8 @@
 
     <div class="justify-center bg-white rounded-xl">
       <!-- Texto formateado como mensaje de Telegram a copiar -->
-      <div class="hidden">
-        <pre>
-Tipo Envío: **{{ currentPedido.tipoDeEnvio.tipo }}**
-__Origen:__ {{ currentPedido.direccionRemitente }} - {{
-            currentPedido.distritoRemitente
-          }}
-__Empresa:__ {{ currentPedido.empresaRemitente }}
-__Contacto:__ {{ currentPedido.contactoRemitente }} - {{
-            currentPedido.telefonoRemitente
-          }}
-{{
-            currentPedido.otroDatoRemitente
-              ? "**IMPORTANTE:" + currentPedido.otroDatoRemitente
-              : null
-          }}
-
-__Destino:__ {{ currentPedido.direccionConsignado }} - {{
-            currentPedido.distrito.distrito
-          }}
-__Contacto:__ {{ currentPedido.contactoConsignado }} {{
-            currentPedido.empresaConsignado
-              ? "- " + currentPedido.empresaConsignado
-              : null
-          }}
-__Teléfono:__ {{ currentPedido.telefonoConsignado }}
-__Llevar:__ {{ currentPedido.tipoCarga }}
-__Modalidad:__ {{ currentPedido.modalidad.tipo }}
-{{
-            currentPedido.otroDatoConsignado
-              ? "**IMPORTANTE:" + currentPedido.otroDatoConsignado
-              : null
-          }}
-
-__Tarifa:__ S/. {{ currentPedido.tarifa }} / {{ currentPedido.formaPago }}
-__Mi comisión:__ S/. {{ currentPedido.comision }}
-__Pedido:__ #{{ currentPedido.id }}
-__CO2:__ {{ currentPedido.CO2Ahorrado }} Kg
-__Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
-        >
+      <div class="hidden" ref="comanda">
+        <MensajeComanda :currentPedido="currentPedido" />
       </div>
 
       <!-- Texto de ejemplo para que el operador confirme la comanda -->
@@ -162,8 +125,11 @@ __Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
 </template>
 
 <script>
+import MensajeComanda from "./MensajeComanda.vue";
+
 export default {
   name: "ReporteComanda",
+  components: { MensajeComanda },
   props: {
     showComanda: {
       type: Boolean,
@@ -185,8 +151,8 @@ export default {
     },
 
     copiarComanda() {
-      // console.log(this.$el.children[2].children[0].innerText);
-      this.$copyText(this.$el.children[2].children[0].innerText).then(() => {
+      console.log(this.$refs.comanda.innerText);
+      this.$copyText(this.$refs.comanda.innerText).then(() => {
         this.comandaCopiada = true;
         console.log("Texto copiado");
       });

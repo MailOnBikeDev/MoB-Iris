@@ -246,6 +246,7 @@
 
           <div class="flex justify-evenly">
             <button
+              v-if="pedido.status.id !== 1"
               @click="showCambiarStatus = true"
               class="focus:outline-none"
               title="Estado del Pedido"
