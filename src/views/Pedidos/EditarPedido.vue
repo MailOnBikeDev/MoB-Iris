@@ -805,16 +805,14 @@ export default {
     },
 
     asignarHoy() {
-      let hoy = new Date().toISOString().split("T")[0];
+      let hoy = new Date();
       return (this.editarPedido.fecha = hoy);
     },
 
     asignarMañana() {
       let hoy = new Date();
       let DIA_EN_MS = 24 * 60 * 60 * 1000;
-      let manana = new Date(hoy.getTime() + DIA_EN_MS)
-        .toISOString()
-        .split("T")[0];
+      let manana = new Date(hoy.getTime() + DIA_EN_MS);
       return (this.editarPedido.fecha = manana);
     },
   },
