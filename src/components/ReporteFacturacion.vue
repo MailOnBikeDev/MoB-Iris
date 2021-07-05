@@ -31,7 +31,16 @@
       <h2 class="mt-4 text-xl resalta">Pagos en Efectivo</h2>
       <TablaFacturacion :casoEspecial="casoEspecial" :info="pagosEfectivo" />
 
-      <div class="mt-4 text-lg">
+      <!-- Imagen de Tabla de Facturacion -->
+      <h2 class="mt-4 text-xl resalta">Reporte a copiar</h2>
+      <div class="w-full" ref="facturado">
+        <TablaEnviarFactura
+          :casoEspecial="casoEspecial"
+          :info="pagosPorCobrar"
+        />
+      </div>
+
+      <div class="p-4 mt-6 text-lg border-2 border-primary">
         <p class="mb-2 resalta">Estadísticas:</p>
         <p>
           Mis BiciEnvíos =
@@ -65,7 +74,7 @@
         class="px-4 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
         @click="copiarReporte"
       >
-        Copiar
+        Copiar reporte
       </button>
 
       <button
@@ -81,10 +90,11 @@
 
 <script>
 import TablaFacturacion from "./TablaFacturacion.vue";
+import TablaEnviarFactura from "./TablaEnviarFactura.vue";
 
 export default {
   name: "ReporteFacturacion",
-  components: { TablaFacturacion },
+  components: { TablaFacturacion, TablaEnviarFactura },
   props: {
     showDetalle: {
       type: Boolean,

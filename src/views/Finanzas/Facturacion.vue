@@ -398,6 +398,8 @@ export default {
         this.pagosPorCobrar[0].empresaRemitente === "PHILIP MORRIS PERU S.A."
       ) {
         this.casoEspecial = true;
+      } else {
+        this.casoEspecial = false;
       }
     },
 
