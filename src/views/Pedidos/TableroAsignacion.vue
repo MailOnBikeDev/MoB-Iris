@@ -8,6 +8,8 @@
       </h1>
     </div>
 
+    <div class="overlay" v-if="showDetalle || showResumen"></div>
+
     <DetallePedidoProgramado
       :showDetalle="showDetalle"
       @cerrarDetalle="closeModal"
@@ -51,7 +53,7 @@
 
       <div>
         <input
-          type="text"
+          type="search"
           placeholder="Buscar Pedido..."
           class="input"
           v-model="buscador"

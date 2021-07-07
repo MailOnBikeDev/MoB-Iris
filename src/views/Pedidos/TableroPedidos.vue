@@ -8,6 +8,11 @@
       </h1>
     </div>
 
+    <div
+      class="overlay"
+      v-if="showDetalle || showComanda || showCambiarStatus"
+    ></div>
+
     <ReporteComanda
       :showComanda="showComanda"
       @cerrarComanda="showComanda = false"

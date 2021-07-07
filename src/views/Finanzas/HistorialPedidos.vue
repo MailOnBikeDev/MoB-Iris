@@ -8,6 +8,8 @@
       </h1>
     </div>
 
+    <div class="overlay" v-if="showDetalle || showCambiarStatus"></div>
+
     <DetalleHistorialPedido
       :showDetalle="showDetalle"
       @cerrarDetalle="showDetalle = false"

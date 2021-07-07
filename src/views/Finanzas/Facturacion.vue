@@ -8,6 +8,8 @@
       </h1>
     </div>
 
+    <div class="overlay" v-if="showDetalle || showResumen"></div>
+
     <ReporteFacturacion
       :showDetalle="showDetalle"
       @cerrarDetalle="showDetalle = false"

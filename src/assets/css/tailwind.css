@@ -23,6 +23,10 @@ body {
   min-height: calc(100vh + 72px);
 }
 
+.overlay {
+  @apply fixed inset-0 z-10 w-screen h-screen bg-black opacity-50;
+}
+
 .resalta {
   @apply font-bold text-primary;
 }
