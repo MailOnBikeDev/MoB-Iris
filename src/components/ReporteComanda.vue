@@ -30,7 +30,7 @@
       <div class="p-4">
         <div>
           <span class="resalta">Tipo Envío: </span
-          >{{ currentPedido.tipoDeEnvio.tipo }}
+          >{{ formatearTipoEnvio(currentPedido.tipoDeEnvio.tipo) }}
         </div>
         <div>
           <span class="resalta">
@@ -69,10 +69,6 @@
           <span class="resalta">Empresa: </span>
           {{ currentPedido.empresaConsignado }}
         </div>
-        <div v-if="currentPedido.otroDatoConsignado !== null">
-          <span class="resalta">IMPORTANTE: </span
-          >{{ currentPedido.otroDatoConsignado }}
-        </div>
         <div>
           <span class="resalta">Teléfono: </span>
           {{ currentPedido.telefonoConsignado }}
@@ -83,6 +79,14 @@
         <div>
           <span class="resalta">Modalidad: </span>
           {{ currentPedido.modalidad.tipo }}
+        </div>
+        <div v-if="currentPedido.otroDatoConsignado !== null">
+          <span class="resalta">IMPORTANTE: </span
+          >{{ currentPedido.otroDatoConsignado }}
+        </div>
+        <div>
+          <span class="resalta">Recaudo: </span>
+          S/. {{ currentPedido.recaudo }}
         </div>
         <br />
         <div>
@@ -170,6 +174,18 @@ export default {
       }
 
       return nuevaFormaPago;
+    },
+
+    formatearTipoEnvio(envio) {
+      let nuevoTipoEnvio;
+
+      if (envio === "EmpresaG" || envio === "Persona") {
+        nuevoTipoEnvio = "Express";
+      } else {
+        nuevoTipoEnvio = envio;
+      }
+
+      return nuevoTipoEnvio;
     },
   },
 };

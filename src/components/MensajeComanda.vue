@@ -1,7 +1,7 @@
 <template>
   <div>
     <pre>
-Tipo Envío: **{{ currentPedido.tipoDeEnvio.tipo }}**
+Tipo Envío: **{{ formatearTipoEnvio(currentPedido.tipoDeEnvio.tipo) }}**
 __Origen:__ {{ currentPedido.direccionRemitente }} - {{
         currentPedido.distritoRemitente
       }}
@@ -11,7 +11,7 @@ __Contacto:__ {{ currentPedido.contactoRemitente }} - {{
       }}
 {{
         currentPedido.otroDatoRemitente
-          ? "**IMPORTANTE:" + currentPedido.otroDatoRemitente + "**"
+          ? "**IMPORTANTE: " + currentPedido.otroDatoRemitente + "**"
           : null
       }}
 
@@ -28,7 +28,12 @@ __Llevar:__ {{ currentPedido.tipoCarga }}
 __Modalidad:__ {{ currentPedido.modalidad.tipo }}
 {{
         currentPedido.otroDatoConsignado
-          ? "**IMPORTANTE:" + currentPedido.otroDatoConsignado + "**"
+          ? "**IMPORTANTE: " + currentPedido.otroDatoConsignado + "**"
+          : null
+      }}
+{{
+        currentPedido.recaudo !== 0
+          ? "**COBRAR: S/. " + currentPedido.recaudo + "**"
           : null
       }}
 
@@ -63,6 +68,18 @@ export default {
       }
 
       return nuevaFormaPago;
+    },
+
+    formatearTipoEnvio(envio) {
+      let nuevoTipoEnvio;
+
+      if (envio === "EmpresaG" || envio === "Persona") {
+        nuevoTipoEnvio = "Express";
+      } else {
+        nuevoTipoEnvio = envio;
+      }
+
+      return nuevoTipoEnvio;
     },
   },
 };
