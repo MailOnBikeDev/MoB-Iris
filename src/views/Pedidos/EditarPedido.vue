@@ -561,6 +561,7 @@ export default {
       errorCalcularDistancia: false,
       es: es,
       tarifaMemoria: 0,
+      tarifaSugeridaMemoria: 0,
     };
   },
   async mounted() {
@@ -570,6 +571,9 @@ export default {
       this.mobikersFiltrados = this.mobikers.filter(
         (mobiker) => mobiker.status === "Activo"
       );
+
+      this.tarifaMemoria = this.editarPedido.tarifa;
+      this.tarifaSugeridaMemoria = this.editarPedido.tarifaSugerida;
     } catch (error) {
       console.error("Mensaje de error:", error);
     }
@@ -625,9 +629,9 @@ export default {
     },
 
     "editarPedido.recaudo": function() {
-      if (this.editarPedido.recaudo !== 0) {
-        this.editarPedido.tarifa = +(this.tarifaMemoria + 2);
-      }
+      // if (this.editarPedido.recaudo !== 0) {
+      //   this.editarPedido.tarifa = +(this.tarifaMemoria + 2);
+      // }
       if (this.editarPedido.recaudo === 0) {
         this.editarPedido.tarifa = this.tarifaMemoria;
       }
@@ -645,7 +649,6 @@ export default {
       if (this.editarPedido.modalidad === "Una vía") {
         this.editarPedido.viajes = 1;
         this.editarPedido.tarifa = this.tarifaMemoria;
-        console.log(this.tarifaMemoria);
       }
     },
   },
@@ -741,6 +744,7 @@ export default {
         this.editarPedido.tarifa = response.tarifa;
         this.tarifaMemoria = response.tarifa;
         this.editarPedido.tarifaSugerida = response.tarifaSugerida;
+        this.tarifaSugeridaMemoria = response.tarifaSugerida;
 
         // Calcular las estadísticas Ecoamigables
         const stats = calcularEstadisticas(this.editarPedido.distancia);

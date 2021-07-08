@@ -568,6 +568,7 @@ export default {
       memoriaCliente: null,
       es: es,
       tarifaMemoria: 0,
+      tarifaSugeridaMemoria: 0,
     };
   },
   async mounted() {
@@ -641,13 +642,18 @@ export default {
         this.nuevoPedido.viajes = 2;
         if (this.nuevoPedido.tipoEnvio === "E-Commerce") {
           this.nuevoPedido.tarifa = this.tarifaMemoria * 2;
+          this.nuevoPedido.tarifaSugerida = this.tarifaSugeridaMemoria * 2;
         } else {
           this.nuevoPedido.tarifa += +Math.ceil(this.tarifaMemoria / 2);
+          this.nuevoPedido.tarifaSugerida += +Math.ceil(
+            this.tarifaSugeridaMemoria / 2
+          );
         }
       }
       if (this.nuevoPedido.modalidad === "Una vía") {
         this.nuevoPedido.viajes = 1;
         this.nuevoPedido.tarifa = this.tarifaMemoria;
+        this.nuevoPedido.tarifaSugerida = this.tarifaSugeridaMemoria;
       }
     },
   },
@@ -794,12 +800,14 @@ export default {
         // Calcular la tarifa
         const response = calcularTarifa(
           this.nuevoPedido.distancia,
-          this.nuevoPedido.tipoEnvio
+          this.nuevoPedido.tipoEnvio,
+          this.nuevoPedido.modalidad
         );
 
         this.nuevoPedido.tarifa = response.tarifa;
         this.tarifaMemoria = response.tarifa;
         this.nuevoPedido.tarifaSugerida = response.tarifaSugerida;
+        this.tarifaSugeridaMemoria = response.tarifaSugerida;
 
         // Calcular las estadísticas Ecoamigables
         const stats = calcularEstadisticas(this.nuevoPedido.distancia);
