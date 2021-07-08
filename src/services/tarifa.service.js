@@ -60,14 +60,23 @@ export default function calcularTarifa(distancia, tipoEnvio) {
 
     case "Express":
       tarifaBase = 7;
+      if (distancia <= distanciaBase) {
+        tarifa = tarifaBase;
+        tarifaSugerida = tarifaBase;
+        break;
+      }
 
       if (distancia <= 11) {
-        tarifa = tarifaBase;
+        tarifa = +Math.ceil(
+          tarifaBase + (distancia - distanciaBase) * factorKmBase
+        );
         tarifaSugerida = +Math.ceil(
           tarifaBase + (distancia - distanciaBase) * factorKmBase
         );
       } else {
-        tarifa = tarifaBase;
+        tarifa = +Math.ceil(
+          tarifaBase + (distancia - distanciaBase) * factorKmEspecial
+        );
         tarifaSugerida = +Math.ceil(
           tarifaBase + (distancia - distanciaBase) * factorKmEspecial
         );
@@ -77,13 +86,23 @@ export default function calcularTarifa(distancia, tipoEnvio) {
     case "EmpresaG":
       tarifaBase = 10;
 
-      if (distancia <= 11) {
+      if (distancia <= distanciaBase) {
         tarifa = tarifaBase;
+        tarifaSugerida = tarifaBase;
+        break;
+      }
+
+      if (distancia <= 11) {
+        tarifa = +Math.ceil(
+          tarifaBase + (distancia - distanciaBase) * factorKmBase
+        );
         tarifaSugerida = +Math.ceil(
           tarifaBase + (distancia - distanciaBase) * factorKmBase
         );
       } else {
-        tarifa = tarifaBase;
+        tarifa = +Math.ceil(
+          tarifaBase + (distancia - distanciaBase) * factorKmEspecial
+        );
         tarifaSugerida = +Math.ceil(
           tarifaBase + (distancia - distanciaBase) * factorKmEspecial
         );
@@ -93,13 +112,23 @@ export default function calcularTarifa(distancia, tipoEnvio) {
     case "Persona":
       tarifaBase = 10;
 
-      if (distancia <= 11) {
+      if (distancia <= distanciaBase) {
         tarifa = tarifaBase;
+        tarifaSugerida = tarifaBase;
+        break;
+      }
+
+      if (distancia <= 11) {
+        tarifa = tarifaSugerida = +Math.ceil(
+          tarifaBase + (distancia - distanciaBase) * factorKmBase
+        );
         tarifaSugerida = +Math.ceil(
           tarifaBase + (distancia - distanciaBase) * factorKmBase
         );
       } else {
-        tarifa = tarifaBase;
+        tarifa = tarifaSugerida = +Math.ceil(
+          tarifaBase + (distancia - distanciaBase) * factorKmEspecial
+        );
         tarifaSugerida = +Math.ceil(
           tarifaBase + (distancia - distanciaBase) * factorKmEspecial
         );

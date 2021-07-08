@@ -87,7 +87,7 @@
               input-class="input"
               :monday-first="true"
               :language="es"
-              :use-utc="true"
+              format="dd MMMM yyyy"
             />
             <div
               v-if="errors.has('fecha')"
@@ -718,6 +718,20 @@ export default {
           this.editarPedido.distritoConsignado
         );
 
+        if (
+          this.editarPedido.distancia === null ||
+          this.editarPedido.distancia === undefined ||
+          this.editarPedido.distancia <= -0.1 ||
+          this.editarPedido.distancia >= 100
+        ) {
+          this.editarPedido.distancia = null;
+          this.alert.message = "No se ha podido calcular la distancia...";
+          this.alert.show = true;
+          this.alert.success = false;
+          this.errorCalcularDistancia = true;
+          setTimeout(() => (this.alert.show = false), 2500);
+        }
+
         // Calcular la tarifa
         const response = calcularTarifa(
           this.editarPedido.distancia,
@@ -791,16 +805,14 @@ export default {
     },
 
     asignarHoy() {
-      let hoy = new Date().toISOString().split("T")[0];
+      let hoy = new Date();
       return (this.editarPedido.fecha = hoy);
     },
 
     asignarMañana() {
       let hoy = new Date();
       let DIA_EN_MS = 24 * 60 * 60 * 1000;
-      let manana = new Date(hoy.getTime() + DIA_EN_MS)
-        .toISOString()
-        .split("T")[0];
+      let manana = new Date(hoy.getTime() + DIA_EN_MS);
       return (this.editarPedido.fecha = manana);
     },
   },

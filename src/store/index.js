@@ -48,17 +48,6 @@ export default new Vuex.Store({
       AuthService.logout();
       commit("logout");
     },
-
-    async register(user) {
-      try {
-        const usuarioRegistrado = await AuthService.register(user);
-        return Promise.resolve(usuarioRegistrado.data);
-      } catch (error) {
-        console.error(`Error en el register: ${error.message}`);
-        console.error(error);
-        return Promise.reject(error);
-      }
-    },
   },
   getters: {
     operador: (state) => {

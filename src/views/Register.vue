@@ -120,6 +120,7 @@
 
         <button
           class="block px-8 py-2 mx-auto my-4 font-bold text-white transition duration-200 rounded shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
+          type="submit"
         >
           Crear Nuevo Usuario
         </button>
@@ -132,6 +133,7 @@
 
 <script>
 import BaseAlerta from "@/components/BaseAlerta.vue";
+import AuthService from "../services/auth.service";
 import User from "../models/user";
 import { mapState } from "vuex";
 
@@ -160,12 +162,14 @@ export default {
       console.log(this.user);
       try {
         const isValid = await this.$validator.validateAll();
+
         if (!isValid) {
           return;
         }
 
-        const response = await this.$store.dispatch("register", this.user);
-        this.alert.message = response.data.message;
+        const response = await AuthService.register(this.user);
+        console.log(response);
+        this.alert.message = response.message;
         this.alert.show = true;
         this.alert.success = true;
 
@@ -173,10 +177,8 @@ export default {
           this.alert.show = false;
         }, 1500);
       } catch (error) {
-        console.log(
-          `Error al crear nuevo usuario: ${error.response.data.message}`
-        );
-        this.alert.message = error.response.data.message;
+        console.log(`Error al crear nuevo usuario: ${error.response.message}`);
+        this.alert.message = error.response.message;
         this.alert.show = true;
         this.alert.success = false;
         setTimeout(() => (this.alert.show = false), 2500);

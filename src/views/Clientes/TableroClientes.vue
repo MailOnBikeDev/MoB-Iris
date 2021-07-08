@@ -20,7 +20,10 @@
       </div>
 
       <button class="refresh-btn" @click="refreshList">
-        <font-awesome-icon class="text-white" icon="sync-alt" />
+        <font-awesome-icon
+          class="text-white group-hover:animate-spin"
+          icon="sync-alt"
+        />
       </button>
 
       <router-link
@@ -177,9 +180,7 @@ export default {
     ...mapState("clientes", ["clientes"]),
   },
   mounted() {
-    this.clientesFiltrados = this.clientes.sort((a, b) => {
-      return a.razonComercial > b.razonComercial ? 1 : -1;
-    });
+    this.clientesFiltrados = this.clientes;
   },
   methods: {
     ...mapActions("clientes", ["getClientes"]),

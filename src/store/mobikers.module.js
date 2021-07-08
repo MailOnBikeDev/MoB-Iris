@@ -1,13 +1,16 @@
 import MobikerService from "@/services/mobiker.service";
 
+const mobikersStorage = JSON.parse(localStorage.getItem("mobikers"));
+
 export const mobikers = {
   namespaced: true,
   state: {
-    mobikers: [],
+    mobikers: mobikersStorage ? mobikersStorage : [],
   },
   mutations: {
     setMobikersArray(state, payload) {
       state.mobikers = payload;
+      localStorage.setItem("mobikers", JSON.stringify(payload));
     },
   },
   actions: {

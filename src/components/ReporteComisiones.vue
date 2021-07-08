@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="showDetalle"
-    class="absolute z-40 w-1/2 h-auto px-10 py-4 shadow-xl bg-primary top-14 left-1/4 rounded-xl"
+    class="absolute z-40 w-1/2 h-auto px-10 py-4 transform -translate-x-1/2 -translate-y-1/2 shadow-xl bg-primary top-1/2 left-1/2 rounded-xl"
   >
     <div class="absolute -top-4 -right-2">
       <button
@@ -22,49 +22,47 @@
 
     <div
       class="p-4 overflow-y-auto text-sm bg-white rounded-xl pedidos-scroll h-96 max-h-96"
+      ref="comisiones"
     >
       <div v-for="detalle in detalles" :key="detalle.id">
-        <p>
+        <span>
           {{ $date(detalle.fecha).format("DD/MM") }}: {{ detalle.id }} - [{{
             detalle.empresaRemitente.toUpperCase().split(" ")[0]
           }}] = {{ detalle.tarifa }} {{ detalle.formaPago.split(" ")[0] }}
-        </p>
+        </span>
       </div>
       <br />
       <div>
-        <p>Envíos E-commerce = {{ contarEcommerce }}</p>
-        <p>Envíos Express = {{ contarExpress }}</p>
-        <p>Total de envíos = {{ detalles.length }}</p>
+        <span>Envíos E-commerce = {{ contarEcommerce }}</span>
+        <div>Envíos Express = {{ contarExpress }}</div>
+        <div>Total de envíos = {{ detalles.length }}</div>
         <br />
-
-        <p>Tarifas E-commerce = {{ calcularTarifaEcommerce }}</p>
-        <p>Tarifas Express = {{ calcularTarifaExpress }}</p>
-        <p>
+        <div>Tarifas E-commerce = {{ calcularTarifaEcommerce }}</div>
+        <div>Tarifas Express = {{ calcularTarifaExpress }}</div>
+        <div>
           Total de tarifas =
           {{ totalTarifa }}
-        </p>
+        </div>
         <br />
-
-        <p>Comisiones E-commerce = {{ calcularComisionEcommerce }}</p>
-        <p>Comisiones Express = {{ calcularComisionExpress }}</p>
-        <p>
+        <div>Comisiones E-commerce = {{ calcularComisionEcommerce }}</div>
+        <div>Comisiones Express = {{ calcularComisionExpress }}</div>
+        <div>
           Total de comisiones =
           {{ totalComisiones }}
-        </p>
+        </div>
         <br />
-        <p>Pagos en Efectivo = {{ calcularPagosEfectivo }}</p>
-        <p>
+        <div>Pagos en Efectivo = {{ calcularPagosEfectivo }}</div>
+        <div>
           Total a pagar =
           {{ totalPagar }}
-        </p>
+        </div>
         <br />
-
-        <p class="resalta">Mis Estadísticas:</p>
-        <p>Mis BiciEnvíos = {{ mobiker.biciEnvios }}</p>
-        <p>Mis Kilómetros = {{ mobiker.kilometros }}km</p>
-        <p>CO2 Ahorrado = {{ mobiker.CO2Ahorrado }}kg</p>
-        <p>Horas de Ruido Ahorrado = {{ mobiker.ruido }}h</p>
-        <p>Mi nivel es: {{ mobiker.rango.rangoMoBiker }}</p>
+        <div class="resalta">Mis Estadísticas:</div>
+        <div>Mis BiciEnvíos = {{ mobiker.biciEnvios }}</div>
+        <div>Mis Kilómetros = {{ mobiker.kilometros }}km</div>
+        <div>CO2 Ahorrado = {{ mobiker.CO2Ahorrado }}kg</div>
+        <div>Horas de Ruido Ahorrado = {{ mobiker.ruido }}h</div>
+        <div>Mi nivel es: {{ mobiker.rango.rangoMoBiker }}</div>
       </div>
     </div>
 
@@ -147,7 +145,11 @@ export default {
       let contadorExpress = 0;
 
       this.detalles.forEach((pedido) => {
-        if (pedido.tipoDeEnvioId === (2 || 3 || 4)) {
+        if (
+          pedido.tipoDeEnvioId === 2 ||
+          pedido.tipoDeEnvioId === 3 ||
+          pedido.tipoDeEnvioId === 4
+        ) {
           contadorExpress++;
         }
       });
@@ -159,7 +161,11 @@ export default {
       let tarifaExpress = 0;
 
       this.detalles.forEach((pedido) => {
-        if (pedido.tipoDeEnvioId === (2 || 3 || 4)) {
+        if (
+          pedido.tipoDeEnvioId === 2 ||
+          pedido.tipoDeEnvioId === 3 ||
+          pedido.tipoDeEnvioId === 4
+        ) {
           tarifaExpress += pedido.tarifa;
         }
       });
@@ -171,7 +177,11 @@ export default {
       let comisionExpress = 0;
 
       this.detalles.forEach((pedido) => {
-        if (pedido.tipoDeEnvioId === (2 || 3 || 4)) {
+        if (
+          pedido.tipoDeEnvioId === 2 ||
+          pedido.tipoDeEnvioId === 3 ||
+          pedido.tipoDeEnvioId === 4
+        ) {
           comisionExpress += pedido.comision;
         }
       });
@@ -184,10 +194,12 @@ export default {
 
       this.detalles.forEach((pedido) => {
         if (
-          pedido.formaPago === ("Efectivo en Origen" || "Efectivo en Destino")
+          pedido.formaPago === "Efectivo en Origen" ||
+          pedido.formaPago === "Efectivo en Destino"
         ) {
           pagoEfectivo += pedido.tarifa;
         }
+        // pagoEfectivo += pedido.recaudo;
       });
 
       return pagoEfectivo.toFixed(2);
@@ -223,8 +235,8 @@ export default {
     },
 
     copiarReporte() {
-      // console.log(this.$el.children[2].innerText);
-      this.$copyText(this.$el.children[2].innerText).then(() => {
+      console.log(this.$refs.comisiones.innerText);
+      this.$copyText(this.$refs.comisiones.innerText).then(() => {
         this.reporteCopiado = true;
         console.log("Texto copiado");
       });
