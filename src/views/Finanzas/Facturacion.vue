@@ -397,6 +397,7 @@ export default {
           detalle.formaPago !== "Efectivo en Destino"
       );
       if (
+        this.pagosPorCobrar[0] &&
         this.pagosPorCobrar[0].empresaRemitente === "PHILIP MORRIS PERU S.A."
       ) {
         this.casoEspecial = true;
