@@ -1,308 +1,251 @@
 <template>
-	<div
-		v-if="showDetalle"
-		class="bg-primary w-1/2 h-auto absolute top-14 left-1/4 z-40 py-4 px-10 rounded-xl shadow-xl"
-	>
-		<div class="absolute -top-4 -right-2">
-			<button
-				class="rounded-full bg-info hover:bg-secondary px-2 text-2xl focus:outline-none text-white"
-				@click.prevent="cerrarDetalle"
-			>
-				<font-awesome-icon icon="times" />
-			</button>
-		</div>
+  <div
+    v-if="showDetalle"
+    class="absolute z-40 w-1/2 h-auto px-10 py-4 transform -translate-x-1/2 -translate-y-1/2 shadow-xl bg-primary top-1/2 left-1/2 rounded-xl"
+  >
+    <div class="absolute -top-4 -right-2">
+      <button
+        class="px-2 text-2xl text-white rounded-full bg-info hover:bg-secondary focus:outline-none"
+        @click.prevent="cerrarDetalle"
+      >
+        <font-awesome-icon icon="times" />
+      </button>
+    </div>
 
-		<div class="flex justify-center">
-			<h1
-				class="bg-white inline-block text-2xl text-primary font-bold px-6 pt-1 rounded-t-xl"
-			>
-				Pedido #<span class="text-red-500">{{ currentPedido.id }}</span>
-			</h1>
-		</div>
+    <div class="hidden" ref="comanda">
+      <MensajeComanda :currentPedido="currentComanda" />
+    </div>
 
-		<div class="hidden">
-			<pre>
-Tipo Envío: **{{ currentPedido.tipoDeEnvio.tipo }}**
-__Origen:__ {{ currentPedido.direccionRemitente }} - {{
-					currentPedido.distritoRemitente
-				}}
-__Empresa:__ {{ currentPedido.empresaRemitente }}
-__Contacto:__ {{ currentPedido.contactoRemitente }} - {{
-					currentPedido.telefonoRemitente
-				}}
-{{
-					currentPedido.otroDatoRemitente
-						? "**IMPORTANTE:" + currentPedido.otroDatoRemitente
-						: null
-				}}
+    <form class="grid grid-cols-2 p-4 bg-white gap-x-4 rounded-t-xl">
+      <div>
+        <label
+          for="status"
+          class="block mb-1 ml-1 text-sm font-bold text-primary"
+          >Estado del Pedido</label
+        >
+        <model-list-select
+          name="status"
+          v-model="pedidoAsignado.statusId"
+          :list="statusDelPedido"
+          option-text="tag"
+          option-value="id"
+        />
+      </div>
 
-__Destino:__ {{ currentPedido.direccionConsignado }} - {{
-					currentPedido.distrito.distrito
-				}}
-__Contacto:__ {{ currentPedido.contactoConsignado }} - {{
-					currentPedido.empresaConsignado
-						? "- __Empresa:__" + currentPedido.empresaConsignado
-						: null
-				}}
-__Teléfono:__ {{ currentPedido.telefonoConsignado }}
-__Llevar:__ {{ currentPedido.tipoCarga }}
-__Modalidad:__ {{ currentPedido.modalidad.tipo }}
-{{
-					currentPedido.otroDatoConsignado
-						? "**IMPORTANTE:" + currentPedido.otroDatoConsignado
-						: null
-				}}
+      <div>
+        <label
+          for="mobiker"
+          class="block mb-1 ml-1 text-sm font-bold text-primary"
+          >MoBiker</label
+        >
+        <model-list-select
+          name="mobiker"
+          v-model="pedidoAsignado.mobiker"
+          placeholder="Buscar MoBiker..."
+          :list="mobikersFiltrados"
+          option-text="fullName"
+          option-value="fullName"
+        />
+      </div>
+    </form>
 
-__Tarifa:__ S/. {{ currentPedido.tarifa }}
-__Mi comisión:__ S/. {{ currentPedido.comision }}
-__Pedido:__ #{{ currentPedido.id }}
-__CO2:__ {{ currentPedido.CO2Ahorrado }} Kg
-__Horas de Ruido:__ {{ currentPedido.ruido }} h</pre
-			>
-		</div>
+    <div class="grid grid-cols-4 my-2 font-bold text-center text-white">
+      <h4>#</h4>
+      <h4>Cliente</h4>
+      <h4>Origen</h4>
+      <h4>Destino</h4>
+    </div>
 
-		<form class="grid grid-cols-2 gap-x-4 bg-white p-4 rounded-t-xl">
-			<div>
-				<label
-					for="status"
-					class="block text-primary text-sm font-bold mb-1 ml-1"
-					>Estado del Pedido</label
-				>
-				<model-list-select
-					name="status"
-					v-model="pedidoAsignado.statusId"
-					:list="estadosPedido"
-					v-validate="'required'"
-					option-text="tag"
-					option-value="id"
-				/>
-				<div
-					v-if="errors.has('status')"
-					class="bg-red-500 text-white text-sm rounded p-2"
-				>
-					<p>El estado es requerido</p>
-				</div>
-			</div>
+    <div class="p-2 overflow-y-auto bg-white h-72">
+      <div
+        class="grid grid-cols-4 py-2 mb-2 text-center cursor-pointer"
+        :class="{
+          'bg-info text-white font-bold': pedido.id == currentComandaIdx,
+          'bg-green-600 text-white font-bold': comandasEnviadas.includes(
+            pedido.id
+          ),
+        }"
+        v-for="pedido in pedidosArray"
+        :key="pedido.id"
+        @click="seleccionComanda(pedido, pedido.id)"
+      >
+        <p>
+          {{ pedido.id }}
+        </p>
 
-			<div>
-				<label
-					for="mobiker"
-					class="block text-primary text-sm font-bold mb-1 ml-1"
-					>MoBiker</label
-				>
-				<model-list-select
-					name="mobiker"
-					v-model="pedidoAsignado.mobiker"
-					placeholder="Buscar MoBiker..."
-					:list="mobikers"
-					v-validate="'required'"
-					option-text="fullName"
-					option-value="fullName"
-				/>
-				<div
-					v-if="errors.has('mobiker')"
-					class="bg-red-500 text-white text-sm rounded p-2"
-				>
-					<p>El MoBiker es requerido</p>
-				</div>
-			</div>
-		</form>
+        <p>
+          {{ pedido.contactoRemitente }}
+        </p>
 
-		<div class="bg-white rounded-b-xl grid grid-cols-2 gap-x-8 p-4">
-			<div class="grid grid-flow-row text-sm py-2 px-4">
-				<h2 class="text-3xl text-primary font-bold mb-4 text-center">
-					Origen
-				</h2>
+        <p>
+          {{ pedido.distritoRemitente }}
+        </p>
 
-				<p class="mb-2">
-					<span class="resalta">Contacto: </span>
-					{{ currentPedido.contactoRemitente }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Empresa: </span
-					>{{ currentPedido.empresaRemitente }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Dirección: </span
-					>{{ currentPedido.direccionRemitente }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Distrito: </span
-					>{{ currentPedido.distritoRemitente }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Otro dato: </span
-					>{{ currentPedido.otroDatoRemitente }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Tarifa: </span>S/.
-					{{ currentPedido.tarifa }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Recaudo: </span>S/.
-					{{ currentPedido.recaudo }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Trámite: </span>S/.
-					{{ currentPedido.tramite }}
-				</p>
-			</div>
+        <p>
+          {{ pedido.distrito.distrito }}
+        </p>
+      </div>
+    </div>
 
-			<div class="grid grid-flow-row text-sm py-2 px-4">
-				<h2 class="text-3xl text-primary font-bold mb-4 text-center">
-					Destino
-				</h2>
-				<p class="mb-2">
-					<span class="resalta">Carga: </span>
-					{{ currentPedido.tipoCarga }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Modalidad: </span
-					>{{ currentPedido.modalidad.tipo }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Contacto: </span>
-					{{ currentPedido.contactoConsignado }}
-				</p>
-				<p class="mb-2" v-if="currentPedido.empresaConsignado">
-					<span class="resalta">Empresa: </span
-					>{{ currentPedido.empresaConsignado }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Dirección: </span
-					>{{ currentPedido.direccionConsignado }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Distrito: </span
-					>{{ currentPedido.distrito.distrito }}
-				</p>
-				<p class="mb-2" v-if="currentPedido.otroDatoConsignado">
-					<span class="resalta">Otro dato: </span
-					>{{ currentPedido.otroDatoConsignado }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Comisión: </span>S/.
-					{{ currentPedido.comision }}
-				</p>
-				<p class="mb-2">
-					<span class="resalta">Distancia: </span
-					>{{ currentPedido.distancia }}Km
-				</p>
-			</div>
-		</div>
+    <div class="flex flex-row justify-around mt-6">
+      <button
+        type="button"
+        @click="handleAsignarPedido"
+        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+      >
+        <span v-if="!statusAsignado">
+          Asignar MoBiker
+        </span>
 
-		<div class="mt-6 flex flex-row justify-around">
-			<button
-				type="button"
-				@click="handleAsignarPedido"
-				class="bg-green-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-green-500"
-			>
-				Asignar MoBiker
-			</button>
+        <span v-else>Asignado</span>
+      </button>
 
-			<button
-				v-if="comandaCopiada === false"
-				class="bg-secondary text-white font-bold px-4 py-2 rounded-xl focus:outline-none hover:bg-info"
-				@click="copiarComanda"
-			>
-				Copiar
-			</button>
+      <button
+        v-if="comandaCopiada === false"
+        class="px-4 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
+        @click="copiarComanda"
+      >
+        Copiar
+      </button>
 
-			<button
-				v-else
-				class="bg-green-600 text-white font-bold px-4 py-2 rounded-xl focus:outline-none hover:bg-green-500"
-				@click="copiarComanda"
-			>
-				Copiado
-			</button>
-		</div>
-	</div>
+      <button
+        v-else
+        class="px-4 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+        @click="copiarComanda"
+      >
+        Copiado
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>
-import AuxiliarService from "@/services/auxiliares.service";
-import MobikerService from "@/services/mobiker.service";
-import { ModelListSelect } from "vue-search-select";
+import MensajeComanda from "./MensajeComanda.vue";
 import PedidoService from "@/services/pedido.service";
+import { ModelListSelect } from "vue-search-select";
+import { mapState } from "vuex";
 
 export default {
-	name: "DetallePedidoProgramado",
-	props: {
-		showDetalle: {
-			type: Boolean,
-			required: true,
-		},
-		currentPedido: {
-			type: Object,
-		},
-	},
-	components: {
-		ModelListSelect,
-	},
-	data() {
-		return {
-			pedidoAsignado: {
-				statusId: this.currentPedido ? this.currentPedido.statusId : 1,
-				mobiker: this.currentPedido
-					? this.currentPedido.mobiker
-					: "Asignar MoBiker",
-			},
-			mobikers: [],
-			estadosPedido: [],
-			comandaCopiada: false,
-		};
-	},
-	async mounted() {
-		let estados = await AuxiliarService.getStatusPedidos();
-		let mobiker = await MobikerService.getMobikers();
+  name: "DetallePedidoProgramado",
+  props: {
+    showDetalle: {
+      type: Boolean,
+      required: true,
+    },
+    pedidosArray: {
+      type: Array,
+    },
+  },
+  components: {
+    ModelListSelect,
+    MensajeComanda,
+  },
+  data() {
+    return {
+      pedidoAsignado: {
+        statusId: 1,
+        mobiker: "Asignar MoBiker",
+        comision: 0,
+      },
+      statusAsignado: false,
+      comandaCopiada: false,
+      currentComanda: null,
+      currentComandaIdx: -1,
+      comandasEnviadas: [],
+    };
+  },
+  computed: {
+    ...mapState("mobikers", ["mobikers"]),
+    ...mapState("auxiliares", ["statusDelPedido"]),
+  },
+  async mounted() {
+    this.mobikersFiltrados = this.mobikers.filter(
+      (mobiker) => mobiker.status === "Activo"
+    );
+  },
+  watch: {
+    "pedidoAsignado.mobiker": function() {
+      if (this.pedidoAsignado.mobiker === "Asignar MoBiker") {
+        this.pedidoAsignado.statusId = 1;
+      } else {
+        this.pedidoAsignado.statusId = 2;
+      }
+    },
+    "pedidoAsignado.statusId": function() {
+      if (this.pedidoAsignado.statusId === 1) {
+        this.pedidoAsignado.mobiker = "Asignar MoBiker";
+      }
+    },
+    showDetalle: function() {
+      if (this.showDetalle && this.pedidosArray.length === 1) {
+        this.pedidoAsignado.mobiker = this.pedidosArray[0].mobiker.fullName;
+      }
+    },
+  },
+  methods: {
+    handleAsignarPedido() {
+      try {
+        const mobikerAsignado = this.mobikers.filter(
+          (mobiker) => mobiker.fullName === this.pedidoAsignado.mobiker
+        );
 
-		this.estadosPedido = estados.data;
+        this.pedidosArray.forEach(async (pedido) => {
+          this.pedidoAsignado.comision = +(
+            parseFloat(pedido.tarifa) *
+            parseFloat(mobikerAsignado[0].rango.comision)
+          ).toFixed(2);
 
-		this.mobikers = mobiker.data.filter(
-			(mobiker) => mobiker.status === "Activo"
-		);
-	},
-	methods: {
-		handleAsignarPedido() {
-			this.$validator.validateAll().then((isValid) => {
-				if (!isValid) {
-					console.error("Mensaje de error: No se pudo asignar el Pedido");
-					return;
-				} else {
-					PedidoService.asignarPedido(
-						this.currentPedido.id,
-						this.pedidoAsignado
-					).then(
-						(response) => {
-							console.log(response.data.message);
-							this.message = response.data.message;
-							// this.cerrarDetalle();
-							// this.refresh();
-						},
-						(err) => console.error(`Mensaje de error: ${err.message}`)
-					);
-				}
-			});
-		},
+          console.log(this.pedidoAsignado);
+          const response = await PedidoService.asignarPedido(
+            pedido.id,
+            this.pedidoAsignado
+          );
 
-		copiarComanda() {
-			// console.log(this.$el.children[2].children[0].innerText);
-			this.$copyText(this.$el.children[2].children[0].innerText).then(() => {
-				this.comandaCopiada = true;
-				console.log("Texto copiado");
-			});
-		},
+          console.log(`Respuesta de la asignación: ${response.data.message}`);
 
-		cerrarDetalle() {
-			this.$emit("cerrarDetalle");
-			this.comandaCopiada = false;
-			this.pedidoAsignado = {};
-			this.refresh();
-		},
+          if (
+            this.pedidoAsignado.statusId !== 1 &&
+            this.pedidoAsignado.mobiker !== "Asignar MoBiker"
+          ) {
+            this.statusAsignado = true;
+          } else {
+            this.statusAsignado = false;
+          }
+        });
+      } catch (error) {
+        console.error(`Error al asignar Pedidos: ${error.message}`);
+      }
+    },
 
-		refresh() {
-			this.$emit("refresh");
-		},
-	},
+    seleccionComanda(comanda, index) {
+      this.currentComanda = comanda;
+      this.currentComandaIdx = index;
+      this.comandaCopiada = false;
+    },
+
+    copiarComanda() {
+      console.log(this.$refs.comanda.innerText);
+      this.$copyText(this.$refs.comanda.innerText).then(() => {
+        this.comandaCopiada = true;
+        console.log("Texto copiado");
+        this.comandasEnviadas.push(this.currentComandaIdx);
+      });
+    },
+
+    cerrarDetalle() {
+      this.$emit("cerrarDetalle");
+      this.comandaCopiada = false;
+      this.statusAsignado = false;
+      this.pedidoAsignado.statusId = 1;
+      this.comandasEnviadas.length = 0;
+      this.pedidoAsignado.mobiker = "Asignar MoBiker";
+
+      this.refresh();
+    },
+
+    refresh() {
+      this.$emit("refresh");
+    },
+  },
 };
 </script>

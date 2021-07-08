@@ -1,33 +1,66 @@
-import http from "@/http-common";
+import axios from "axios";
+import authHeader from "@/services/auth-header";
+
+const API_URL = process.env.VUE_APP_HERMES;
 class AuthService {
-	login(user) {
-		return http
-			.post("login", {
-				username: user.username,
-				password: user.password,
-			})
-			.then((response) => {
-				if (response.data.accessToken) {
-					localStorage.setItem("user", JSON.stringify(response.data));
-				}
-				return response.data;
-			});
-	}
+  async login(user) {
+    try {
+      const response = await axios.post(`${API_URL}/login`, {
+        username: user.username,
+        password: user.password,
+      });
 
-	logout() {
-		localStorage.removeItem("user");
-	}
+      if (response.data.accessToken) {
+        localStorage.setItem("user", JSON.stringify(response.data));
 
-	register(user) {
-		return http.post("registro", {
-			fullName: user.fullName,
-			username: user.username,
-			email: user.email,
-			empresa: user.empresa,
-			password: user.password,
-			roles: user.roles,
-		});
-	}
+        return response.data;
+      }
+    } catch (error) {
+      console.error(`Error al iniciar sesión: ${error.message}`);
+    }
+  }
+
+  logout() {
+    // Eliminar Tablas Principales
+    localStorage.removeItem("user");
+    localStorage.removeItem("clientes");
+    localStorage.removeItem("mobikers");
+    localStorage.removeItem("destinos");
+
+    // Eliminar Tablas Auxiliares
+    localStorage.removeItem("rolesUsuarios");
+    localStorage.removeItem("distritos");
+    localStorage.removeItem("tiposDeCarga");
+    localStorage.removeItem("tiposDeComprobante");
+    localStorage.removeItem("tiposDeEnvio");
+    localStorage.removeItem("formasDePago");
+    localStorage.removeItem("modalidades");
+    localStorage.removeItem("rangosMoBiker");
+    localStorage.removeItem("rolCliente");
+    localStorage.removeItem("entidadesBancarias");
+    localStorage.removeItem("statusDelPedido");
+  }
+
+  async register(user) {
+    try {
+      const response = await axios.post(
+        `${API_URL}/registro`,
+        {
+          fullName: user.fullName,
+          username: user.username,
+          email: user.email,
+          empresa: user.empresa,
+          password: user.password,
+          roles: user.roles,
+        },
+        { headers: authHeader() }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error(`Error al registrar nuevo usuario: ${error.message}`);
+    }
+  }
 }
 
 export default new AuthService();

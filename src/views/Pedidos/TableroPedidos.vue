@@ -1,484 +1,480 @@
 <template>
-	<div class="w-full max-h-screen p-4 bg-gray-100 rounded-xl mt-10">
-		<div class="flex justify-end">
-			<h1
-				class="inline-block text-2xl text-primary text-center font-bold mb-4 rounded-xl relative -top-12 py-2 bg-gray-100 px-6"
-			>
-				Tablero de Pedidos
-			</h1>
-		</div>
+  <div class="w-full min-h-full p-4 mt-10 bg-gray-100 rounded-xl">
+    <div class="flex justify-end">
+      <h1
+        class="relative inline-block px-6 py-2 mb-4 text-2xl font-bold text-center bg-gray-100 text-primary rounded-xl -top-12"
+      >
+        Tablero de Pedidos
+      </h1>
+    </div>
 
-		<ReporteComanda
-			:showComanda="showComanda"
-			@cerrarComanda="showComanda = false"
-			:currentPedido="currentPedido"
-		/>
+    <div
+      class="overlay"
+      v-if="showDetalle || showComanda || showCambiarStatus"
+    ></div>
 
-		<DetallePedido
-			:showDetalle="showDetalle"
-			@cerrarDetalle="showDetalle = false"
-			@emitirComanda="showComanda = true"
-			:currentPedido="currentPedido"
-		/>
+    <ReporteComanda
+      :showComanda="showComanda"
+      @cerrarComanda="showComanda = false"
+      :currentPedido="currentPedido"
+    />
 
-		<div class="flex flex-row justify-evenly items-center -mt-10 mb-4">
-			<div class="flex flex-row">
-				<datepicker
-					v-model="buscadorFecha"
-					name="buscadorFecha"
-					input-class="rounded-l-xl w-28 focus:outline-none p-2 font-bold cursor-pointer"
-					:monday-first="true"
-				/>
-				<button
-					type="button"
-					class="bg-white py-1 px-2 rounded-r-xl font-bold hover:bg-info hover:text-white focus:outline-none"
-					@click="retrievePedidos"
-				>
-					Buscar
-				</button>
-			</div>
+    <DetallePedido
+      :showDetalle="showDetalle"
+      @cerrarDetalle="showDetalle = false"
+      @emitirComanda="showComanda = true"
+      :currentPedido="currentPedido"
+    />
 
-			<div>
-				<input
-					type="text"
-					placeholder="Buscar Pedido..."
-					class="rounded w-48 text-gray-700 focus:outline-none border-b-4 focus:border-info transition duration-500 py-1 px-2"
-					v-model="buscador"
-					@keyup="buscarPedido"
-				/>
-			</div>
+    <CambiarStatusPedido
+      :showCambiarStatus="showCambiarStatus"
+      @cerrarModal="showCambiarStatus = false"
+      @refresh="refreshList"
+      :currentPedido="currentPedido"
+    />
 
-			<router-link
-				to="/pedidos/pedidos-programados"
-				class="bg-indigo-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-indigo-500"
-				custom
-				v-slot="{ navigate }"
-			>
-				<span @click="navigate" role="link" class="text-center cursor-pointer"
-					>Asignar Pedidos</span
-				>
-			</router-link>
+    <div class="flex flex-row items-center mb-4 -mt-10 justify-evenly">
+      <div class="flex flex-row">
+        <datepicker
+          v-model="buscadorFecha"
+          name="buscadorFecha"
+          input-class="w-24 p-2 mb-1 font-bold text-center cursor-pointer rounded-l-xl focus:outline-none text-primary"
+          :monday-first="true"
+          :language="es"
+          format="dd MMM"
+        />
+        <button
+          type="button"
+          class="px-2 py-1 mb-1 font-bold bg-white rounded-r-xl text-secondary hover:bg-info hover:text-white focus:outline-none"
+          @click="retrievePedidos"
+        >
+          Buscar
+        </button>
+      </div>
 
-			<button
-				class="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded-full focus:outline-none"
-				@click="refreshList"
-				title="Actualizar listado"
-			>
-				<font-awesome-icon class="text-white" icon="sync-alt" />
-			</button>
+      <div>
+        <input
+          type="text"
+          placeholder="Buscar Pedido..."
+          class="input"
+          v-model="buscador"
+          @keyup.enter="buscarPedido"
+        />
+      </div>
 
-			<router-link
-				to="/pedidos/nuevo-pedido"
-				class="bg-green-600 rounded-xl px-6 py-2 font-bold text-white focus:outline-none hover:bg-green-500"
-				custom
-				v-slot="{ navigate }"
-			>
-				<span @click="navigate" role="link" class="text-center cursor-pointer"
-					>Crear nuevo Pedido</span
-				>
-			</router-link>
-		</div>
+      <router-link
+        to="/pedidos/pedidos-programados"
+        class="px-6 py-2 font-bold text-white bg-indigo-600 rounded-xl focus:outline-none hover:bg-indigo-500"
+        custom
+        v-slot="{ navigate }"
+      >
+        <span @click="navigate" role="link" class="text-center cursor-pointer"
+          >Asignación</span
+        >
+      </router-link>
 
-		<div class="grid grid-cols-4 gap-2">
-			<div class="flex flex-row justify-center">
-				<p>
-					<span class="resalta">N° de Pedidos del día:</span>
-					{{
-						pedidos.filter((pedido) => pedido.statusId !== (17 && 18 && 19))
-							.length
-					}}
-				</p>
-			</div>
-			<div
-				class="col-span-3 inline-grid grid-cols-7 text-sm text-center text-primary items-center"
-			>
-				<button @click="sortPorId" class="focus:outline-none">
-					<p class="font-bold"># Pedido</p>
-				</button>
-				<button @click="sortPorOrigen" class="focus:outline-none">
-					<p class="font-bold">Origen</p>
-				</button>
-				<button @click="sortPorDestino" class="focus:outline-none">
-					<p class="font-bold">Destino</p>
-				</button>
-				<button @click="sortPorMobiker" class="focus:outline-none">
-					<p class="font-bold">MoBiker</p>
-				</button>
-				<button @click="sortPorEstado" class="focus:outline-none">
-					<p class="font-bold">Estado</p>
-				</button>
-				<button @click="sortPorFecha" class="focus:outline-none">
-					<p class="font-bold">Fecha</p>
-				</button>
-				<div>
-					<p class="font-bold">Acciones</p>
-				</div>
-			</div>
-			<div class="bg-white p-4 border-black border">
-				<h2 class="text-3xl text-primary font-bold mb-4">
-					Cliente
-				</h2>
+      <button class="h-10 refresh-btn" @click="refreshList" title="Actualizar">
+        <font-awesome-icon
+          class="text-white group-hover:animate-spin"
+          icon="sync-alt"
+        />
+      </button>
 
-				<div class="flex flex-col max-h-96 text-sm" v-if="currentPedido">
-					<p class="mb-2">
-						<span class="resalta">Contacto: </span>
-						{{ currentPedido.contactoRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Empresa: </span
-						>{{ currentPedido.empresaRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Dirección: </span
-						>{{ currentPedido.direccionRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Distrito: </span
-						>{{ currentPedido.distritoRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Teléfono: </span
-						>{{ currentPedido.telefonoRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Otro dato: </span
-						>{{ currentPedido.otroDatoRemitente }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Forma de Pago: </span
-						>{{ currentPedido.formaPago }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Tarifa: </span>S/.
-						{{ currentPedido.tarifa }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Modalidad: </span
-						>{{ currentPedido.modalidad.tipo }}
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Rol: </span>{{ currentPedido.rolCliente }}
-					</p>
-				</div>
+      <router-link
+        to="/pedidos/nuevo-pedido"
+        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+        custom
+        v-slot="{ navigate }"
+      >
+        <span @click="navigate" role="link" class="text-center cursor-pointer"
+          >Nuevo Pedido</span
+        >
+      </router-link>
+      <router-link
+        to="/pedidos/ruteo"
+        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+        custom
+        v-slot="{ navigate }"
+      >
+        <span @click="navigate" role="link" class="text-center cursor-pointer"
+          >Nuevo Ruteo</span
+        >
+      </router-link>
+    </div>
 
-				<div class="flex flex-col max-h-96 text-sm" v-else>
-					<p class="mb-2">
-						<span class="resalta">Contacto: </span>
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Empresa: </span>
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Dirección: </span>
-					</p>
-					<p class="mb-2"><span class="resalta">Distrito: </span></p>
-					<p class="mb-2"><span class="resalta">Teléfono: </span></p>
-					<p class="mb-2">
-						<span class="resalta">Otro dato: </span>
-					</p>
-					<p class="mb-2">
-						<span class="resalta">Forma de Pago: </span>
-					</p>
-					<p class="mb-2"><span class="resalta">Tarifa: </span>S/.</p>
-					<p class="mb-2"><span class="resalta">Modalidad: </span></p>
-					<p class="mb-2"><span class="resalta">Rol: </span></p>
-				</div>
-			</div>
+    <div class="grid grid-cols-4 gap-2">
+      <div class="flex flex-row justify-center">
+        <p>
+          <span class="resalta">N° de Pedidos del día:</span>
+          {{ pedidos.filter((pedido) => pedido.statusId !== 6).length }}
+        </p>
+      </div>
 
-			<div
-				class="bg-white col-span-3 max-h-96 overflow-y-auto border-black border pedidos-scroll"
-			>
-				<div
-					class="grid grid-cols-7 gap-x-1 text-center text-sm h-14 py-2 border-b-2 border-primary hover:bg-info hover:text-white items-center cursor-pointer"
-					:class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
-					v-for="pedido in pedidos"
-					:key="pedido.id"
-					@click="setActivePedido(pedido, pedido.id)"
-				>
-					<div>
-						<p>{{ pedido.id }}</p>
-					</div>
-					<div>
-						<p v-if="pedido.rolCliente === 'Remitente'">
-							{{ pedido.distritoRemitente }}
-						</p>
-						<p v-else>{{ pedido.distrito.distrito }}</p>
-					</div>
-					<div>
-						<p v-if="pedido.rolCliente === 'Remitente'">
-							{{ pedido.distrito.distrito }}
-						</p>
-						<p v-else>{{ pedido.distritoRemitente }}</p>
-					</div>
-					<div>
-						<p>{{ pedido.mobiker.fullName }}</p>
-					</div>
-					<div>
-						<p
-							v-if="pedido.status.id === 1"
-							class="bg-purple-400 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="pedido.status.id === 2"
-							class="bg-yellow-400 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="pedido.status.id === 3"
-							class="bg-indigo-400 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="
-								pedido.status.id === 4 ||
-									pedido.status.id === 5 ||
-									pedido.status.id === 6
-							"
-							class="bg-green-700 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="
-								pedido.status.id === 7 ||
-									pedido.status.id === 8 ||
-									pedido.status.id === 9 ||
-									pedido.status.id === 10 ||
-									pedido.status.id === 11 ||
-									pedido.status.id === 12 ||
-									pedido.status.id === 13 ||
-									pedido.status.id === 14 ||
-									pedido.status.id === 15 ||
-									pedido.status.id === 16
-							"
-							class="bg-red-600 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-						<p
-							v-if="
-								pedido.status.id === 17 ||
-									pedido.status.id === 18 ||
-									pedido.status.id === 19
-							"
-							class="bg-yellow-700 rounded-full inline px-2 py-1 font-bold text-white"
-						>
-							{{ pedido.status.tag }}
-						</p>
-					</div>
-					<div>
-						<p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
-					</div>
-					<div class="flex justify-center items-center">
-						<button
-							class="focus:outline-none"
-							@click="showComanda = true"
-							title="Emitir Comanda"
-						>
-							<font-awesome-icon class="text-primary" icon="receipt" />
-						</button>
+      <div
+        class="inline-grid items-center grid-cols-7 col-span-3 text-sm text-center text-primary"
+      >
+        <button @click="sortPorId" class="focus:outline-none">
+          <p class="font-bold"># Pedido</p>
+        </button>
+        <button @click="sortPorOrigen" class="focus:outline-none">
+          <p class="font-bold">Origen</p>
+        </button>
+        <button @click="sortPorDestino" class="focus:outline-none">
+          <p class="font-bold">Destino</p>
+        </button>
+        <button @click="sortPorMobiker" class="focus:outline-none">
+          <p class="font-bold">MoBiker</p>
+        </button>
+        <button @click="sortPorEstado" class="focus:outline-none">
+          <p class="font-bold">Estado</p>
+        </button>
+        <button @click="sortPorFecha" class="focus:outline-none">
+          <p class="font-bold">Fecha</p>
+        </button>
+        <div>
+          <p class="font-bold">Acciones</p>
+        </div>
+      </div>
 
-						<button
-							class="focus:outline-none"
-							@click="showDetalle = true"
-							title="Detalles del Pedido"
-						>
-							<font-awesome-icon
-								class="text-primary ml-6"
-								icon="window-maximize"
-							/>
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
+      <div class="p-4 bg-white border border-black">
+        <h2 class="mb-4 text-3xl font-bold text-primary">
+          Cliente
+        </h2>
 
-		<Pagination
-			:page="page"
-			:cantidadItems="cantidadPedidos"
-			:pageSize="pageSize"
-			@prevPageChange="
-				page--;
-				retrievePedidos();
-			"
-			@nextPageChange="
-				page++;
-				retrievePedidos();
-			"
-			@handlePageChange="handlePageChange"
-		/>
-	</div>
+        <div class="flex flex-col text-sm max-h-96" v-if="currentPedido">
+          <p class="mb-2">
+            <span class="resalta">Contacto: </span>
+            {{ currentPedido.contactoRemitente }}
+          </p>
+          <p class="mb-2">
+            <span class="resalta">Empresa: </span
+            >{{ currentPedido.empresaRemitente }}
+          </p>
+          <p class="mb-2">
+            <span class="resalta">Dirección: </span
+            >{{ currentPedido.direccionRemitente }}
+          </p>
+          <p class="mb-2">
+            <span class="resalta">Distrito: </span
+            >{{ currentPedido.distritoRemitente }}
+          </p>
+          <p class="mb-2">
+            <span class="resalta">Teléfono: </span
+            >{{ currentPedido.telefonoRemitente }}
+          </p>
+          <p class="mb-2">
+            <span class="resalta">Observaciones: </span
+            >{{ currentPedido.otroDatoRemitente }}
+          </p>
+          <p class="mb-2">
+            <span class="resalta">Forma de Pago: </span
+            >{{ currentPedido.formaPago }}
+          </p>
+          <p class="mb-2">
+            <span class="resalta">Tarifa: </span>S/.
+            {{ currentPedido.tarifa }}
+          </p>
+          <p class="mb-2">
+            <span class="resalta">Modalidad: </span
+            >{{ currentPedido.modalidad.tipo }}
+          </p>
+          <p class="mb-2">
+            <span class="resalta">Rol: </span>{{ currentPedido.rolCliente }}
+          </p>
+        </div>
+
+        <div class="flex flex-col text-sm max-h-96" v-else>
+          <p class="mb-2">
+            <span class="resalta">Contacto: </span>
+          </p>
+          <p class="mb-2">
+            <span class="resalta">Empresa: </span>
+          </p>
+          <p class="mb-2">
+            <span class="resalta">Dirección: </span>
+          </p>
+          <p class="mb-2"><span class="resalta">Distrito: </span></p>
+          <p class="mb-2"><span class="resalta">Teléfono: </span></p>
+          <p class="mb-2">
+            <span class="resalta">Observaciones: </span>
+          </p>
+          <p class="mb-2">
+            <span class="resalta">Forma de Pago: </span>
+          </p>
+          <p class="mb-2"><span class="resalta">Tarifa: </span>S/.</p>
+          <p class="mb-2"><span class="resalta">Modalidad: </span></p>
+          <p class="mb-2"><span class="resalta">Rol: </span></p>
+        </div>
+      </div>
+
+      <div
+        class="col-span-3 overflow-y-auto bg-white border border-black max-h-96 pedidos-scroll"
+      >
+        <div
+          class="grid items-center grid-cols-7 py-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info hover:text-white"
+          :class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
+          v-for="pedido in pedidosFiltrados"
+          :key="pedido.id"
+          @click="setActivePedido(pedido, pedido.id)"
+          :title="`Cliente: ${pedido.contactoRemitente}`"
+        >
+          <div>
+            <p>{{ pedido.id }}</p>
+          </div>
+          <div>
+            <p v-if="pedido.rolCliente === 'Remitente'">
+              {{ pedido.distritoRemitente }}
+            </p>
+            <p v-else>{{ pedido.distrito.distrito }}</p>
+          </div>
+          <div>
+            <p v-if="pedido.rolCliente === 'Remitente'">
+              {{ pedido.distrito.distrito }}
+            </p>
+            <p v-else>{{ pedido.distritoRemitente }}</p>
+          </div>
+          <div>
+            <p>{{ pedido.mobiker.fullName }}</p>
+          </div>
+          <div>
+            <p v-if="pedido.status.id === 1" class="tag-programado">
+              {{ pedido.status.tag }}
+            </p>
+            <p v-if="pedido.status.id === 2" class="tag-recoger">
+              {{ pedido.status.tag }}
+            </p>
+            <p v-if="pedido.status.id === 3" class="tag-transito">
+              {{ pedido.status.tag }}
+            </p>
+            <p v-if="pedido.status.id === 4" class="tag-entregado">
+              {{ pedido.status.tag }}
+            </p>
+            <p v-if="pedido.status.id === 5" class="tag-falso-flete">
+              {{ pedido.status.tag }}
+            </p>
+            <p v-if="pedido.status.id === 6" class="tag-anulado">
+              {{ pedido.status.tag }}
+            </p>
+          </div>
+          <div>
+            <p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
+          </div>
+          <div class="flex items-center justify-evenly">
+            <button
+              class="focus:outline-none"
+              @click="showComanda = true"
+              title="Emitir Comanda"
+            >
+              <font-awesome-icon class="text-2xl text-primary" icon="receipt" />
+            </button>
+
+            <button
+              v-if="pedido.status.id !== 1"
+              @click="showCambiarStatus = true"
+              class="focus:outline-none"
+              title="Estado del Pedido"
+            >
+              <font-awesome-icon class="text-2xl text-primary" icon="bicycle" />
+            </button>
+
+            <button
+              class="focus:outline-none"
+              @click="showDetalle = true"
+              title="Detalles del Pedido"
+            >
+              <font-awesome-icon
+                class="text-2xl text-primary"
+                icon="window-maximize"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <Pagination
+      :page="page"
+      :cantidadItems="cantidadPedidos"
+      :pageSize="pageSize"
+      @prevPageChange="
+        page--;
+        retrievePedidos();
+      "
+      @nextPageChange="
+        page++;
+        retrievePedidos();
+      "
+      @handlePageChange="handlePageChange"
+    />
+  </div>
 </template>
 
 <script>
 import PedidoService from "@/services/pedido.service";
 import ReporteComanda from "@/components/ReporteComanda";
 import DetallePedido from "@/components/DetallePedido";
+import CambiarStatusPedido from "@/components/CambiarStatusPedido";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
+import { es } from "vuejs-datepicker/dist/locale";
 
 export default {
-	name: "Pedidos",
-	components: {
-		ReporteComanda,
-		DetallePedido,
-		Datepicker,
-		Pagination,
-	},
-	data() {
-		return {
-			pedidos: [],
-			buscador: "",
-			showComanda: false,
-			showDetalle: false,
-			currentPedido: null,
-			currentIndex: -1,
-			buscadorFecha: new Date(),
+  name: "Pedidos",
+  components: {
+    ReporteComanda,
+    DetallePedido,
+    Datepicker,
+    Pagination,
+    CambiarStatusPedido,
+  },
+  data() {
+    return {
+      pedidos: [],
+      pedidosFiltrados: [],
+      buscador: "",
+      showComanda: false,
+      showDetalle: false,
+      showCambiarStatus: false,
+      currentPedido: null,
+      currentIndex: -1,
+      buscadorFecha: new Date(),
 
-			page: 1,
-			cantidadPedidos: 0,
-			pageSize: 50,
-		};
-	},
-	mounted() {
-		this.retrievePedidos();
-	},
-	methods: {
-		getRequestParams(fecha, page, pageSize) {
-			let params = {};
+      page: 1,
+      cantidadPedidos: 0,
+      pageSize: 200,
+      es: es,
+    };
+  },
+  mounted() {
+    this.retrievePedidos();
+  },
+  methods: {
+    getRequestParams(fecha, page, pageSize) {
+      let params = {};
 
-			if (fecha) {
-				params["fecha"] = fecha;
-			}
+      if (fecha) {
+        params["fecha"] = fecha;
+      }
 
-			if (page) {
-				params["page"] = page - 1;
-			}
+      if (page) {
+        params["page"] = page - 1;
+      }
 
-			if (pageSize) {
-				params["size"] = pageSize;
-			}
+      if (pageSize) {
+        params["size"] = pageSize;
+      }
 
-			return params;
-		},
+      return params;
+    },
 
-		retrievePedidos() {
-			const params = this.getRequestParams(
-				this.$date(this.buscadorFecha).format("YYYY-MM-DD"),
-				this.page,
-				this.pageSize
-			);
+    async retrievePedidos() {
+      try {
+        const params = this.getRequestParams(
+          this.buscadorFecha.toISOString().split("T")[0],
+          this.page,
+          this.pageSize
+        );
 
-			PedidoService.getPedidosPorFecha(params).then(
-				(response) => {
-					const { pedidos, totalPedidos } = response.data;
-					this.pedidos = pedidos; // rows
-					this.cantidadPedidos = totalPedidos; // count
-				},
-				(error) => {
-					console.error("Mensaje de error: ", error);
-				}
-			);
-		},
+        const response = await PedidoService.getPedidosPorFecha(params);
+        const { pedidos, totalPedidos } = response.data;
+        this.pedidos = pedidos; // rows
+        this.pedidosFiltrados = pedidos;
+        this.cantidadPedidos = totalPedidos; // count
+      } catch (error) {
+        console.error(`Error al obtener los Pedidos:`);
+      }
+    },
 
-		buscarPedido() {
-			console.log(typeof this.buscador);
-			const textoCliente = this.buscador.toLowerCase();
-			this.pedidos = this.pedidos.filter((pedido) => {
-				const compararTexto = pedido.contactoRemitente.toLowerCase();
-				const compararId = pedido.id.toString();
-				if (
-					compararTexto.includes(textoCliente) ||
-					compararId.includes(textoCliente)
-				) {
-					return pedido;
-				}
-			});
+    async buscarPedido() {
+      try {
+        const response = await PedidoService.searchPedido(this.buscador);
 
-			if (textoCliente.trim() === "") {
-				this.refreshList();
-			}
-		},
+        this.pedidosFiltrados = response.data;
 
-		handlePageChange(value) {
-			this.page = value;
-			this.retrievePedidos();
-		},
+        if (this.buscador.trim() === "") {
+          this.pedidosFiltrados = this.pedidos;
+        }
+      } catch (error) {
+        console.error(`Error al buscar un Pedido. ${error.message}`);
+      }
+    },
 
-		setActivePedido(pedido, index) {
-			this.currentPedido = pedido;
-			this.currentIndex = index;
-		},
+    handlePageChange(value) {
+      this.page = value;
+      this.retrievePedidos();
+    },
 
-		refreshList() {
-			this.buscadorFecha = new Date();
-			this.page = 1;
-			this.retrievePedidos();
+    setActivePedido(pedido, index) {
+      this.currentPedido = pedido;
+      this.currentIndex = index;
+    },
 
-			this.currentPedido = null;
-			this.currentIndex = -1;
-		},
+    refreshList() {
+      this.buscadorFecha = new Date();
+      this.page = 1;
+      this.retrievePedidos();
+      this.pedidosFiltrados = this.pedidos;
 
-		sortPorId() {
-			this.pedidos.sort((a, b) => {
-				return a.id > b.id ? 1 : -1;
-			});
-		},
+      this.currentPedido = null;
+      this.currentIndex = -1;
+    },
 
-		sortPorOrigen() {
-			this.pedidos.sort((a, b) => {
-				return a.distritoRemitente.toLowerCase() >
-					b.distritoRemitente.toLowerCase()
-					? 1
-					: -1;
-			});
-		},
+    sortPorId() {
+      this.pedidosFiltrados.sort((a, b) => {
+        return a.id > b.id ? 1 : -1;
+      });
+    },
 
-		sortPorDestino() {
-			this.pedidos.sort((a, b) => {
-				return a.distrito.distrito.toLowerCase() >
-					b.distrito.distrito.toLowerCase()
-					? 1
-					: -1;
-			});
-		},
+    sortPorOrigen() {
+      this.pedidosFiltrados.sort((a, b) => {
+        return a.distritoRemitente.toLowerCase() >
+          b.distritoRemitente.toLowerCase()
+          ? 1
+          : -1;
+      });
+    },
 
-		sortPorMobiker() {
-			this.pedidos.sort((a, b) => {
-				return a.mobiker.fullName.toLowerCase() >
-					b.mobiker.fullName.toLowerCase()
-					? 1
-					: -1;
-			});
-		},
+    sortPorDestino() {
+      this.pedidosFiltrados.sort((a, b) => {
+        return a.distrito.distrito.toLowerCase() >
+          b.distrito.distrito.toLowerCase()
+          ? 1
+          : -1;
+      });
+    },
 
-		sortPorEstado() {
-			this.pedidos.sort((a, b) => {
-				return a.status.tag.toLowerCase() > b.status.tag.toLowerCase() ? 1 : -1;
-			});
-		},
+    sortPorMobiker() {
+      this.pedidosFiltrados.sort((a, b) => {
+        return a.mobiker.fullName.toLowerCase() >
+          b.mobiker.fullName.toLowerCase()
+          ? 1
+          : -1;
+      });
+    },
 
-		sortPorFecha() {
-			this.pedidos.sort((a, b) => {
-				return a.fecha > b.fecha ? -1 : 1;
-			});
-		},
-	},
+    sortPorEstado() {
+      this.pedidosFiltrados.sort((a, b) => {
+        return a.status.tag.toLowerCase() > b.status.tag.toLowerCase() ? 1 : -1;
+      });
+    },
+
+    sortPorFecha() {
+      this.pedidosFiltrados.sort((a, b) => {
+        return a.fecha > b.fecha ? -1 : 1;
+      });
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .pedidos-scroll::-webkit-scrollbar {
-	width: 0.5rem;
-	background: white;
+  width: 0.5rem;
+  background: white;
 
-	&-thumb {
-		background: #52678e;
-		border-radius: 1rem;
-	}
+  &-thumb {
+    background: #52678e;
+    border-radius: 1rem;
+  }
 }
 </style>

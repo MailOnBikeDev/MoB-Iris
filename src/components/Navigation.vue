@@ -1,5 +1,5 @@
 <template>
-	<nav class="bg-secondary flex px-6 py-2 text-white items-center z-40">
+	<nav class="z-40 flex items-center px-6 py-2 text-white bg-secondary">
 		<div>
 			<router-link to="/" custom v-slot="{ navigate }">
 				<img
@@ -12,14 +12,14 @@
 			</router-link>
 		</div>
 
-		<div v-if="currentUser" class="flex flex-row ml-auto items-center">
+		<div v-if="currentUser" class="flex flex-row items-center ml-auto">
 			<!-- Navigation -->
 			<div v-for="nav in navigationMenu" :key="nav.title">
 				<router-link
 					:to="nav.link"
 					custom
 					v-slot="{ navigate }"
-					class="link mr-6"
+					class="mr-6 link"
 				>
 					<span @click="navigate" role="link">
 						{{ nav.title }}
@@ -30,7 +30,7 @@
 			<!-- Dropdown Menu -->
 			<div>
 				<button
-					class="py-2 px-4 text-white bg-info rounded-xl font-bold focus:outline-none"
+					class="px-4 py-2 font-bold text-white bg-info rounded-xl focus:outline-none"
 					@click="dropMenu = !dropMenu"
 				>
 					{{ currentUser.username }}
@@ -38,13 +38,13 @@
 
 				<div
 					v-if="dropMenu"
-					class="sub-menu flex flex-col bg-white text-black shadow-xl rounded mt-1 text-sm absolute right-4 z-40"
+					class="absolute z-40 flex flex-col mt-1 text-sm text-black bg-white rounded shadow-xl sub-menu right-4"
 					v-click-outside="clickExterno"
 				>
 					<div
 						v-for="link in linksDropMenu"
 						:key="link.title"
-						class="link px-2 py-2 hover:bg-blue-500 hover:text-white rounded"
+						class="px-2 py-2 rounded link hover:bg-blue-500 hover:text-white"
 					>
 						<router-link :to="link.link" custom v-slot="{ navigate }">
 							<span @click="navigate" role="link">
@@ -52,9 +52,15 @@
 							</span>
 						</router-link>
 					</div>
+					<!-- <div
+						class="px-2 py-2 rounded link hover:bg-info hover:text-white"
+						@click="actualizarDatos"
+					>
+						Actualizar datos
+					</div> -->
 					<div class="divider"></div>
 					<a
-						class="link px-2 py-2 hover:bg-blue-500 hover:text-white rounded"
+						class="px-2 py-2 rounded link hover:bg-blue-500 hover:text-white"
 						href
 						@click.prevent="logOut"
 						>Cerrar Sesión</a
@@ -63,7 +69,7 @@
 			</div>
 		</div>
 
-		<div class="ml-auto mr-4 content-center" v-else>
+		<div class="content-center ml-auto mr-4" v-else>
 			<div class="flex mr-4">
 				<router-link to="/login" custom v-slot="{ navigate }" class="link">
 					<span @click="navigate" role="link">
@@ -86,7 +92,7 @@ export default {
 				{ title: "Mi Perfil", link: "/perfil" },
 				{ title: "Crear usuario", link: "/register" },
 				{ title: "Gestionar usuarios", link: "/register" },
-				{ title: "Mis Estadísticas", link: "/register" },
+				// { title: "Mis Estadísticas", link: "/register" },
 			],
 			navigationMenu: [
 				{
@@ -105,6 +111,10 @@ export default {
 					title: "Pedidos",
 					link: "/pedidos/tablero-pedidos",
 				},
+				// {
+				// 	title: "Testing",
+				// 	link: "/testing",
+				// },
 			],
 		};
 	},
@@ -125,6 +135,18 @@ export default {
 		clickExterno() {
 			this.dropMenu = false;
 		},
+		// async actualizarDatos() {
+		// 	try {
+		// 		console.log("Actualizando datos");
+		// 		// MoBikers
+		// 		await this.$store.dispatch("mobikers/getMobikers");
+		// 		await this.$store.dispatch("clientes/getClientes");
+		// 		this.dropMenu = false;
+		// 		console.log("Datos perfectamente cargados");
+		// 	} catch (error) {
+		// 		console.error(`Error al cargar los datos. ${error.message}`);
+		// 	}
+		// },
 	},
 };
 </script>
