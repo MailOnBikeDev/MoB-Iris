@@ -691,7 +691,7 @@ export default {
             this.pedidos.push(row);
           }
 
-          this.ruteoId = await PedidoService.createRuteo();
+          
 
           this.excelData = "";
           this.showLoading = false;
@@ -744,6 +744,7 @@ export default {
     async handleNuevoPedido() {
       try {
         this.showLoading = true;
+        this.ruteoId = await PedidoService.createRuteo();
         let response = {};
         for (let i = 0; i < this.pedidos.length; i++) {
           this.nuevoPedido.operador = this.$store.getters.operador;
