@@ -1,11 +1,16 @@
 <template>
   <div class="grid grid-cols-2 p-4 bg-white rounded-xl gap-x-8">
     <div
-      class="grid w-full grid-cols-2 col-span-2 mx-auto border-b-2 gap-x-8 border-secondary place-items-center"
+      class="grid w-full grid-cols-3 col-span-2 mx-auto border-b-2 gap-x-8 border-secondary place-items-center"
     >
       <p class="mb-2">
         <span class="resalta">Fecha: </span>
         {{ $date(currentPedido.fecha).format("DD MMM YYYY") }}
+      </p>
+
+      <p class="mb-2 text-center">
+        <span class="resalta">Tipo Envío: </span
+        >{{ currentPedido.tipoDeEnvio.tipo }}
       </p>
 
       <div class="mb-2">

@@ -24,7 +24,7 @@
       :currentPedido="currentPedido"
     />
 
-    <div class="flex flex-row mb-4 -mt-10 justify-evenly">
+    <div class="flex flex-row items-center mb-4 -mt-10 justify-evenly">
       <div class="flex flex-row">
         <datepicker
           v-model="fechaInicio"
@@ -72,7 +72,7 @@
         >
       </router-link>
 
-      <button class="refresh-btn" @click="refreshList">
+      <button class="h-10 refresh-btn" @click="refreshList">
         <font-awesome-icon
           class="text-white group-hover:animate-spin"
           icon="sync-alt"
@@ -86,9 +86,14 @@
       >
         Asignar
       </button>
+
+      <div>
+        <label for="">Ruteos</label>
+        <input type="checkbox" v-model="ruteos" />
+      </div>
     </div>
 
-    <div class="grid grid-cols-4 gap-2">
+    <div class="grid grid-cols-5 gap-2">
       <div class="flex flex-row justify-center">
         <p v-if="pedidos">
           <span class="resalta">Pedidos por asignar:</span>
@@ -97,7 +102,22 @@
       </div>
 
       <div
-        class="inline-grid items-center grid-cols-8 col-span-3 text-sm font-bold text-center text-primary"
+        v-if="ruteos"
+        class="inline-grid items-center grid-cols-8 col-span-4 text-sm font-bold text-center text-primary"
+      >
+        <p class="font-bold">Pedidos</p>
+        <p class="font-bold">Cliente</p>
+        <p class="font-bold">Origen</p>
+        <p class="font-bold">MoBiker</p>
+        <p class="font-bold">Estado</p>
+        <p class="font-bold">Observaciones</p>
+        <p class="font-bold">Fecha</p>
+        <p class="font-bold">Asignar</p>
+      </div>
+
+      <div
+        v-else
+        class="inline-grid items-center grid-cols-8 col-span-4 text-sm font-bold text-center text-primary"
       >
         <button @click="sortPorId" class="focus:outline-none">
           <p class="font-bold"># Pedido</p>
@@ -127,7 +147,6 @@
       <div
         class="overflow-y-auto bg-white border border-black max-h-96 h-96 pedidos-scroll"
       >
-        <!-- v-click-outside="clickExterno" -->
         <div
           class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
           :class="{
@@ -156,7 +175,69 @@
       </div>
 
       <div
-        class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
+        v-if="ruteos"
+        class="col-span-4 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
+      >
+        <div
+          class="grid items-center grid-cols-8 py-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
+          :class="{
+            'bg-info text-white font-bold': ruta.ruta.id == currentRutaIndex,
+          }"
+          v-for="ruta in ruteosFiltrados"
+          :key="ruta.ruta.id"
+        >
+          <p @click="setActiveRuteo(ruta, ruta.ruta.id)">
+            {{ ruta.pedidosRuta.length }}
+          </p>
+
+          <p @click="setActiveRuteo(ruta, ruta.ruta.id)">
+            {{ ruta.pedidosRuta[0].empresaRemitente }}
+          </p>
+
+          <p @click="setActiveRuteo(ruta, ruta.ruta.id)">
+            {{ ruta.pedidosRuta[0].distritoRemitente }}
+          </p>
+
+          <p @click="setActiveRuteo(ruta, ruta.ruta.id)">
+            {{ ruta.pedidosRuta[0].mobiker.fullName }}
+          </p>
+
+          <div @click="setActiveRuteo(ruta, ruta.ruta.id)">
+            <p
+              v-if="ruta.pedidosRuta[0].status.id === 1"
+              class="tag-programado"
+            >
+              {{ ruta.pedidosRuta[0].status.tag }}
+            </p>
+            <p v-if="ruta.pedidosRuta[0].status.id === 2" class="tag-recoger">
+              {{ ruta.pedidosRuta[0].status.tag }}
+            </p>
+          </div>
+
+          <div @click="setActiveRuteo(ruta, ruta.ruta.id)">
+            <font-awesome-icon
+              v-if="
+                ruta.pedidosRuta[0].otroDatoRemitente ||
+                  ruta.pedidosRuta[0].otroDatoConsignado
+              "
+              class="text-2xl font-bold text-red-500"
+              icon="eye"
+            />
+
+            <p v-else></p>
+          </div>
+
+          <p @click="setActiveRuteo(ruta, ruta.ruta.id)">
+            {{ $date(ruta.pedidosRuta[0].fecha).format("DD MMM YYYY") }}
+          </p>
+
+          <button @click="assignRuta(ruta.pedidosRuta)">Asignar</button>
+        </div>
+      </div>
+
+      <div
+        v-else
+        class="col-span-4 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
         <div
           class="grid items-center grid-cols-8 py-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
@@ -260,6 +341,8 @@ export default {
     return {
       pedidos: [],
       pedidosFiltrados: [],
+      ruteosFiltrados: [],
+      totalRuteos: 0,
       pedidosMobiker: [],
       mobikersFiltrados: [],
       showDetalle: false,
@@ -267,10 +350,13 @@ export default {
       currentIndexMobiker: -1,
       currentPedido: null,
       currentIndex: -1,
+      currentRuta: null,
+      currentRutaIndex: -1,
       fechaInicio: new Date(seisDiasAtras),
       fechaFin: new Date(manana),
       pedidosPorAsignar: 0,
       pedidosArray: [],
+      ruteos: false,
 
       buscador: "",
 
@@ -283,6 +369,7 @@ export default {
   mounted() {
     this.retrieveMobikers();
     this.retrievePedidos();
+    this.retrieveRuteos();
   },
   computed: {
     ...mapState("mobikers", ["mobikers"]),
@@ -341,6 +428,7 @@ export default {
         this.pedidos = pedidos; // rows
         this.pedidosFiltrados = pedidos
           .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
+          .filter((pedido) => pedido.isRuteo === false)
           .sort((a, b) => {
             return a.statusId > b.statusId ? 1 : -1;
           }); // rows
@@ -356,7 +444,23 @@ export default {
             pedido.mobiker.fullName === "Asignar MoBiker"
         ).length;
       } catch (error) {
-        console.error(`Error al obtener los Pedidos:`);
+        console.error(`Error al obtener los Pedidos: ${error.message}`);
+      }
+    },
+
+    async retrieveRuteos() {
+      try {
+        const params = {
+          desde: this.fechaInicio.toISOString().split("T")[0],
+          hasta: this.fechaFin.toISOString().split("T")[0],
+        };
+
+        const response = await PedidoService.getRuteos(params);
+        const { pedidos, totalPedidos } = response.data;
+        this.ruteosFiltrados = pedidos;
+        this.totalRuteos = totalPedidos;
+      } catch (error) {
+        console.error(`Error al obtener los Ruteos: ${error.message}`);
       }
     },
 
@@ -401,6 +505,15 @@ export default {
       this.showResumen = true;
     },
 
+    setActiveRuteo(ruta, index) {
+      this.currentRuta = ruta;
+      this.currentRutaIndex = index;
+    },
+
+    assignRuta(pedidos) {
+      this.pedidosArray = pedidos;
+    },
+
     createArrayPedidos() {
       this.showDetalle = true;
     },
@@ -435,9 +548,12 @@ export default {
       this.fechaFin = new Date(new Date().getTime() + 1000 * 60 * 60 * 24); // Mañana
       this.retrievePedidos();
       this.getMobikers();
+      this.retrieveRuteos();
 
       this.currentPedido = null;
       this.currentIndex = -1;
+      this.currentRuta = null;
+      this.currentRutaIndex = -1;
       this.pedidosArray = [];
     },
 

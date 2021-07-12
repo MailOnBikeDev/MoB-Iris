@@ -212,6 +212,19 @@ class PedidoService {
     }
   }
 
+  async getRuteos(params) {
+    try {
+      let pedido = await axios.get(`${API_URL}/ruteos-pedidos`, {
+        params,
+        headers: authHeader(),
+      });
+
+      return pedido;
+    } catch (error) {
+      console.error("Mensaje de error: ", error.message);
+    }
+  }
+
   async procesarCSV(file) {
     try {
       let result = await axios.post(`${API_URL}/procesar-csv`, file, {

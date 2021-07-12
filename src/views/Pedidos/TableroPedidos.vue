@@ -106,7 +106,7 @@
       <div class="flex flex-row justify-center">
         <p>
           <span class="resalta">N° de Pedidos del día:</span>
-          {{ pedidos.filter((pedido) => pedido.statusId !== 6).length }}
+          {{ cantidadPedidos }}
         </p>
       </div>
 
