@@ -17,6 +17,23 @@ class PedidoService {
     }
   }
 
+  async createRuteo() {
+    try {
+      let ruteo = await axios.post(
+        `${API_URL}/pedidos/nueva-ruta`,
+        {},
+        {
+          headers: authHeader(),
+        }
+      );
+      const { id } = ruteo.data;
+
+      return id;
+    } catch (error) {
+      console.error(`Error al crear Ruteo: ${error.message}`);
+    }
+  }
+
   async storageNuevoPedido(nuevoPedido) {
     try {
       let pedido = await axios.post(
@@ -52,6 +69,8 @@ class PedidoService {
           rolCliente: nuevoPedido.rolCliente,
           operador: nuevoPedido.operador,
           viajes: nuevoPedido.viajes,
+          isRuteo: nuevoPedido.isRuteo,
+          ruteo: nuevoPedido.ruteo,
         },
         { headers: authHeader() }
       );

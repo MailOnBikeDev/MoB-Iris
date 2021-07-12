@@ -408,12 +408,26 @@
 
       <!-- Aqui inicia la conversion ctrl-c ctrl-v de Excel -->
       <div class="w-full max-h-screen p-4 mt-5 bg-gray-100 rounded-xl">
-        <textarea v-model="excelData" class="form-control" style="resize: none;" name="" id="" cols="30" rows="10"></textarea>
-        <button type="button" class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 rounded-lg shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none" @click="convertirExcelData">Convertir</button>
+        <textarea
+          v-model="excelData"
+          class="form-control"
+          style="resize: none;"
+          name=""
+          id=""
+          cols="30"
+          rows="10"
+        ></textarea>
+        <button
+          type="button"
+          class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 rounded-lg shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
+          @click="convertirExcelData"
+        >
+          Convertir
+        </button>
         <div id="tablaExcelData">
           <table class="table-auto">
             <tr v-for="(row, index) in tablaExcelData" :key="row[index]">
-              <td v-for="td in row" :key="td">{{td}}</td>
+              <td v-for="td in row" :key="td">{{ td }}</td>
             </tr>
           </table>
         </div>
@@ -489,8 +503,9 @@ export default {
       recaudoTotal: 0,
       tramiteTotal: 0,
       showLoading: false,
-      excelData: '',
+      excelData: "",
       tablaExcelData: [],
+      ruteoId: null,
     };
   },
   async mounted() {
@@ -599,61 +614,66 @@ export default {
       this.tarifaTotal = total;
     },
 
-    async convertirExcelData(){
+    async convertirExcelData() {
       this.showLoading = true;
+
       var rows = this.excelData.split("\n");
-      for(var y in rows) {
-          var cells = rows[y].split("\t");
-          //var row = '<tr>';
-          var row = {};
-          for(let x = 0; x < cells.length; x++) {
-            console.log(x)
-            switch (x){
-              case 0: {
-                row['contactoConsignado'] = cells[x];
-                break;
-              }
-              case 1: {
-                row['direccionConsignado'] = cells[x];
-                break;
-              }
-              case 2: {
-                row['distritoConsignado'] = cells[x];
-                break;
-              }
-              case 3: {
-                row['telefonoConsignado'] = cells[x];
-                break;
-              }
-              case 4: {
-                row['otroDatoConsignado'] = cells[x];
-                break;
-              }
+      for (var y in rows) {
+        var cells = rows[y].split("\t");
+        //var row = '<tr>';
+        var row = {};
+        for (let x = 0; x < cells.length; x++) {
+          console.log(x);
+          switch (x) {
+            case 0: {
+              row["contactoConsignado"] = cells[x];
+              break;
+            }
+            case 1: {
+              row["direccionConsignado"] = cells[x];
+              break;
+            }
+            case 2: {
+              row["distritoConsignado"] = cells[x];
+              break;
+            }
+            case 3: {
+              row["telefonoConsignado"] = cells[x];
+              break;
+            }
+            case 4: {
+              row["otroDatoConsignado"] = cells[x];
+              break;
             }
           }
+        }
 
-          let info = await this.calcularDistancia(
-            row.direccionConsignado,
-            row.distritoConsignado
-          );
-          row["empresaConsignado"] = "";
-          row["distancia"] = info.distancia;
-          row["tarifa"] = info.tarifa;
-          row["tarifaMemoria"] = info.tarifaMemoria;
-          row["tarifaSugerida"] = info.tarifaSugerida;
-          row["CO2Ahorrado"] = info.CO2Ahorrado;
-          row["ruido"] = info.ruido;
-          row["recaudo"] = 0;
-          row["tramite"] = 0;
-          row["modalidad"] = "Una vía";
-          row["viajes"] = 1;
-          this.tarifaTotal = this.tarifaTotal + info.tarifa;
-          this.tarifaTotalSugerida = this.tarifaTotalSugerida + info.tarifaSugerida;
-          this.distancia += info.distancia;
-          this.recaudoTotal = 0;
-          this.tramiteTotal = 0;
-          this.pedidos.push(row);
+        let info = await this.calcularDistancia(
+          row.direccionConsignado,
+          row.distritoConsignado
+        );
+        row["empresaConsignado"] = "";
+        row["distancia"] = info.distancia;
+        row["tarifa"] = info.tarifa;
+        row["tarifaMemoria"] = info.tarifaMemoria;
+        row["tarifaSugerida"] = info.tarifaSugerida;
+        row["CO2Ahorrado"] = info.CO2Ahorrado;
+        row["ruido"] = info.ruido;
+        row["recaudo"] = 0;
+        row["tramite"] = 0;
+        row["modalidad"] = "Una vía";
+        row["viajes"] = 1;
+        this.tarifaTotal = this.tarifaTotal + info.tarifa;
+        this.tarifaTotalSugerida =
+          this.tarifaTotalSugerida + info.tarifaSugerida;
+        this.distancia += info.distancia;
+        this.recaudoTotal = 0;
+        this.tramiteTotal = 0;
+        this.pedidos.push(row);
       }
+
+      this.ruteoId = await PedidoService.createRuteo();
+
       this.showLoading = false;
     },
 
@@ -722,6 +742,8 @@ export default {
             operador: this.nuevoPedido.operador,
             rolCliente: this.nuevoPedido.rolCliente,
             viajes: this.pedidos[i].viajes,
+            isRuteo: true,
+            ruteo: this.ruteoId,
           };
           const isValid = await this.$validator.validateAll();
           // if (this.nuevoPedido.distancia === (null || undefined)) {

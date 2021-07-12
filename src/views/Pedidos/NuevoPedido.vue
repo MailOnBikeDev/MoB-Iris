@@ -672,6 +672,7 @@ export default {
         }
 
         this.nuevoPedido.operador = this.$store.getters.operador;
+        this.nuevoPedido.isRuteo = false;
 
         const response = await PedidoService.storageNuevoPedido(
           this.nuevoPedido
