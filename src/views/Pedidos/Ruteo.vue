@@ -285,15 +285,45 @@
       <div class="flex flex-row justify-between mt-2"></div>
 
       <!-- Aqui va el CSV -->
-      <div class="w-full max-h-screen p-4 mt-5 bg-gray-100 rounded-xl">
+      <div class="w-full p-4 mt-5 bg-gray-100 rounded-xl">
         <div class="px-1 text-3xl font-bold text-center text-primary">
           <h2>
             Destinos
           </h2>
         </div>
-        <input type="file" @change="onFileChanged" multiple />
+        <!-- <input type="file" @change="onFileChanged" multiple /> -->
 
-        <div style="width: 100%; min-height: 250px">
+        <div style="width: 100%; min-height: 650px">
+          <div style="width: 100%; padding: 20px 40px; display:flex; align-items:center; min-height: 250px; justify-content:center;">
+            <textarea
+              v-model="excelData"
+              class="input"
+              style="resize: none; width:80%; height: 100%;"
+              name=""
+              id=""
+              cols="80"
+              rows="8"
+            ></textarea>
+            <div style="display:flex; min-height:200px; padding-left: 20px; flex-direction:column; justify-content: space-around;">
+              <button
+                type="button"
+                class="block px-6 py-2 font-bold text-white transition duration-200 bg-yellow-500 rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl focus:outline-none"
+                @click="convertirExcelData('agregar')"
+              >
+                Agregar al actual
+              </button>
+
+              <button
+                type="button"
+                class="block px-6 py-2 font-bold text-white transition duration-200 bg-green-500 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl focus:outline-none"
+                @click="convertirExcelData('nuevo')"
+              >
+                Nuevo Ruteo
+              </button>
+            </div>
+            
+          </div>
+          
           <div
             v-if="showLoading"
             wire:loading
@@ -324,6 +354,7 @@
                 <th>Recaudo</th>
                 <th>Trámite</th>
                 <th>Modalidad</th>
+                <th><font-awesome-icon class="text-2xl text-primary" icon="trash-alt" /></th>
               </tr>
             </thead>
             <tbody>
@@ -376,6 +407,7 @@
                     @input="changeModalidad(pedido.modalidad, index)"
                   />
                 </td>
+                <td style="text-align:center;"><font-awesome-icon class="text-2xl text-primary" icon="trash-alt" style="cursor:pointer;" @click="removeRuta(index)" /></td>
               </tr>
               <tr class="bg-opacity-25 bg-info">
                 <td class="p-1 text-lg font-bold text-primary">
@@ -406,33 +438,6 @@
       </div>
       <!-- Aqui termina CSV -->
 
-      <!-- Aqui inicia la conversion ctrl-c ctrl-v de Excel -->
-      <div class="w-full max-h-screen p-4 mt-5 bg-gray-100 rounded-xl">
-        <textarea
-          v-model="excelData"
-          class="form-control"
-          style="resize: none;"
-          name=""
-          id=""
-          cols="30"
-          rows="10"
-        ></textarea>
-        <button
-          type="button"
-          class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 rounded-lg shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
-          @click="convertirExcelData"
-        >
-          Convertir
-        </button>
-        <div id="tablaExcelData">
-          <table class="table-auto">
-            <tr v-for="(row, index) in tablaExcelData" :key="row[index]">
-              <td v-for="td in row" :key="td">{{ td }}</td>
-            </tr>
-          </table>
-        </div>
-      </div>
-      <!-- Aqui inicia la conversion ctrl-c ctrl-v de Excel -->
       <div class="flex justify-between w-full">
         <button
           @click="cancelar"
@@ -603,6 +608,11 @@ export default {
       this.changeTarifa();
     },
 
+    removeRuta(pos){
+      this.pedidos.splice(pos,1);
+      this.changeTarifa();
+    },
+
     changeTarifa() {
       let total = 0;
       for (let i in this.pedidos) {
@@ -614,67 +624,93 @@ export default {
       this.tarifaTotal = total;
     },
 
-    async convertirExcelData() {
-      this.showLoading = true;
-
-      var rows = this.excelData.split("\n");
-      for (var y in rows) {
-        var cells = rows[y].split("\t");
-        //var row = '<tr>';
-        var row = {};
-        for (let x = 0; x < cells.length; x++) {
-          console.log(x);
-          switch (x) {
-            case 0: {
-              row["contactoConsignado"] = cells[x];
-              break;
-            }
-            case 1: {
-              row["direccionConsignado"] = cells[x];
-              break;
-            }
-            case 2: {
-              row["distritoConsignado"] = cells[x];
-              break;
-            }
-            case 3: {
-              row["telefonoConsignado"] = cells[x];
-              break;
-            }
-            case 4: {
-              row["otroDatoConsignado"] = cells[x];
-              break;
-            }
+    async convertirExcelData(type) {
+      if(this.nuevoPedido.fecha != "" && 
+          this.nuevoPedido.fecha != null && 
+          this.nuevoPedido.empresaRemitente !="" &&
+          this.nuevoPedido.empresaRemitente != null &&
+          this.nuevoPedido.direccionRemitente !="" &&
+          this.nuevoPedido.direccionRemitente != null){
+        if(this.excelData != ""){
+          if(type === 'nuevo'){
+            this.pedidos = [];
           }
+          this.showLoading = true;
+
+          var rows = this.excelData.split("\n");
+          for (var y in rows) {
+            var cells = rows[y].split("\t");
+            //var row = '<tr>';
+            var row = {};
+            for (let x = 0; x < cells.length; x++) {
+              switch (x) {
+                case 0: {
+                  row["contactoConsignado"] = cells[x];
+                  break;
+                }
+                case 1: {
+                  row["direccionConsignado"] = cells[x];
+                  break;
+                }
+                case 2: {
+                  row["distritoConsignado"] = cells[x];
+                  break;
+                }
+                case 3: {
+                  row["telefonoConsignado"] = cells[x];
+                  break;
+                }
+                case 4: {
+                  row["otroDatoConsignado"] = cells[x];
+                  break;
+                }
+              }
+            }
+
+            let info = await this.calcularDistancia(
+              row.direccionConsignado,
+              row.distritoConsignado
+            );
+            row["empresaConsignado"] = "";
+            row["distancia"] = info.distancia;
+            row["tarifa"] = info.tarifa;
+            row["tarifaMemoria"] = info.tarifaMemoria;
+            row["tarifaSugerida"] = info.tarifaSugerida;
+            row["CO2Ahorrado"] = info.CO2Ahorrado;
+            row["ruido"] = info.ruido;
+            row["recaudo"] = 0;
+            row["tramite"] = 0;
+            row["modalidad"] = "Una vía";
+            row["viajes"] = 1;
+            this.tarifaTotal = this.tarifaTotal + info.tarifa;
+            this.tarifaTotalSugerida =
+              this.tarifaTotalSugerida + info.tarifaSugerida;
+            this.distancia += info.distancia;
+            this.recaudoTotal = 0;
+            this.tramiteTotal = 0;
+            this.pedidos.push(row);
+          }
+
+          this.ruteoId = await PedidoService.createRuteo();
+
+          this.excelData = "";
+          this.showLoading = false;
+        }else{
+          this.alert.message = "Necesitas agregar algo información del pedido";
+          this.alert.success = false;
+          this.alert.show = true;
         }
-
-        let info = await this.calcularDistancia(
-          row.direccionConsignado,
-          row.distritoConsignado
-        );
-        row["empresaConsignado"] = "";
-        row["distancia"] = info.distancia;
-        row["tarifa"] = info.tarifa;
-        row["tarifaMemoria"] = info.tarifaMemoria;
-        row["tarifaSugerida"] = info.tarifaSugerida;
-        row["CO2Ahorrado"] = info.CO2Ahorrado;
-        row["ruido"] = info.ruido;
-        row["recaudo"] = 0;
-        row["tramite"] = 0;
-        row["modalidad"] = "Una vía";
-        row["viajes"] = 1;
-        this.tarifaTotal = this.tarifaTotal + info.tarifa;
-        this.tarifaTotalSugerida =
-          this.tarifaTotalSugerida + info.tarifaSugerida;
-        this.distancia += info.distancia;
-        this.recaudoTotal = 0;
-        this.tramiteTotal = 0;
-        this.pedidos.push(row);
+        
+      }else{
+        const isValid = await this.$validator.validateAll();
+          // if (this.nuevoPedido.distancia === (null || undefined)) {
+          //   this.errorCalcularDistancia = true;
+          //   return;
+          // }
+        if (!isValid) {
+          return;
+        }
       }
-
-      this.ruteoId = await PedidoService.createRuteo();
-
-      this.showLoading = false;
     },
 
     changeRecaudo() {
