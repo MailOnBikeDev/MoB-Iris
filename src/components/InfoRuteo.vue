@@ -1,0 +1,122 @@
+<template>
+  <div class="p-4 bg-white rounded-xl gap-x-8">
+    <!-- Top -->
+    <div
+      class="grid w-full grid-cols-3 mx-auto border-b-2 gap-x-8 border-secondary place-items-center"
+    >
+      <p class="mb-2">
+        <span class="resalta">Fecha: </span>
+        {{ $date(infoRuta.fecha).format("DD MMM YYYY") }}
+      </p>
+
+      <p class="mb-2 text-center">
+        <span class="resalta">Tipo Envío: </span
+        >{{ infoRuta.pedidosRuta[0].tipoDeEnvio.tipo }}
+      </p>
+
+      <div class="mb-2">
+        <p
+          v-if="infoRuta.pedidosRuta[0].status.id === 1"
+          class="tag-programado"
+        >
+          {{ infoRuta.pedidosRuta[0].status.tag }}
+        </p>
+        <p v-if="infoRuta.pedidosRuta[0].status.id === 2" class="tag-recoger">
+          {{ infoRuta.pedidosRuta[0].status.tag }}
+        </p>
+        <p v-if="infoRuta.pedidosRuta[0].status.id === 3" class="tag-transito">
+          {{ infoRuta.pedidosRuta[0].status.tag }}
+        </p>
+        <p v-if="infoRuta.pedidosRuta[0].status.id === 4" class="tag-entregado">
+          {{ infoRuta.pedidosRuta[0].status.tag }}
+        </p>
+        <p
+          v-if="infoRuta.pedidosRuta[0].status.id === 5"
+          class="tag-falso-flete"
+        >
+          {{ infoRuta.pedidosRuta[0].status.tag }}
+        </p>
+        <p v-if="infoRuta.pedidosRuta[0].status.id === 6" class="tag-anulado">
+          {{ infoRuta.pedidosRuta[0].status.tag }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Info Origen -->
+    <div
+      class="flex flex-col justify-center text-sm border-b-2 border-secondary"
+    >
+      <h2 class="my-4 text-3xl font-bold text-center text-primary">
+        Origen
+      </h2>
+
+      <div class="mx-auto mb-4">
+        <p class="mb-2">
+          <span class="resalta">Contacto: </span>
+          {{ infoRuta.pedidosRuta[0].contactoRemitente }}
+        </p>
+        <p class="mb-2">
+          <span class="resalta">Empresa: </span
+          >{{ infoRuta.pedidosRuta[0].empresaRemitente }}
+        </p>
+        <p class="mb-2">
+          <span class="resalta">Dirección: </span
+          >{{ infoRuta.pedidosRuta[0].direccionRemitente }}
+        </p>
+        <p class="mb-2">
+          <span class="resalta">Distrito: </span
+          >{{ infoRuta.pedidosRuta[0].distritoRemitente }}
+        </p>
+        <p class="mb-2">
+          <span class="resalta">Teléfono: </span
+          >{{ infoRuta.pedidosRuta[0].telefonoRemitente }}
+        </p>
+        <p class="mb-2" v-if="infoRuta.pedidosRuta[0].otroDatoRemitente">
+          <span class="font-bold text-red-600">Observaciones del Cliente: </span
+          >{{ infoRuta.pedidosRuta[0].otroDatoRemitente }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Info Pedidos -->
+    <div class="p-4 ">
+      <div
+        class="grid items-center grid-cols-12 pb-2 font-bold text-center border-b-2 text-primary border-secondary"
+      >
+        <p># Pedido</p>
+        <p class="col-span-3">Contacto</p>
+        <p class="col-span-3">Dirección</p>
+        <p class="col-span-3">Distrito</p>
+        <p>Observaciones</p>
+      </div>
+
+      <div
+        class="grid items-center grid-cols-12 py-2 overflow-y-auto text-center max-h-52"
+        v-for="ruta in infoRuta.pedidosRuta"
+        :key="ruta.id"
+      >
+        <div>{{ ruta.id }}</div>
+
+        <div class="col-span-3">{{ ruta.contactoConsignado }}</div>
+
+        <div class="col-span-3 text-left">{{ ruta.direccionConsignado }}</div>
+
+        <div class="col-span-3">{{ ruta.distrito.distrito }}</div>
+
+        <div>
+          <p v-if="ruta.otroDatoConsignado">{{ ruta.otroDatoConsignado }}</p>
+
+          <p v-else></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    infoRuta: { type: Object },
+  },
+};
+</script>

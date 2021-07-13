@@ -8,7 +8,7 @@
       </h1>
     </div>
 
-    <div class="overlay" v-if="showDetalle || showResumen"></div>
+    <div class="overlay" v-if="showDetalle || showResumen || showRuteo"></div>
 
     <DetallePedidoProgramado
       :showDetalle="showDetalle"
@@ -23,6 +23,14 @@
       @cerrarResumen="closeResumen"
       @marcarAsignar="marcarAsignar"
       :currentPedido="currentPedido"
+    />
+
+    <DetalleRuteo
+      v-if="showRuteo"
+      :showRuteo="showRuteo"
+      :currentRuta="currentRuta"
+      @cerrarResumen="closeResumen"
+      @asignarRuteo="marcarRuteo"
     />
 
     <div class="flex flex-row items-center mb-4 -mt-10 justify-evenly">
@@ -329,6 +337,7 @@
 import PedidoService from "@/services/pedido.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
 import ResumenPedido from "@/components/ResumenPedido.vue";
+import DetalleRuteo from "@/components/DetalleRuteo.vue";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { mapState, mapActions } from "vuex";
@@ -344,6 +353,7 @@ export default {
     Datepicker,
     Pagination,
     ResumenPedido,
+    DetalleRuteo,
   },
   data() {
     return {
@@ -356,6 +366,7 @@ export default {
       mobikersFiltrados: [],
       showDetalle: false,
       showResumen: false,
+      showRuteo: false,
       currentIndexMobiker: -1,
       currentPedido: null,
       currentIndex: -1,
@@ -520,6 +531,9 @@ export default {
     setActiveRuteo(ruta, index) {
       this.currentRuta = ruta;
       this.currentRutaIndex = index;
+      console.log(this.currentRuta);
+
+      this.showRuteo = true;
     },
 
     assignRuta(pedidos) {
@@ -533,9 +547,9 @@ export default {
     },
 
     createArrayPedidos() {
-      this.pedidosArray.sort((a, b) => {
-        return a.id - b.id ? 1 : -1;
-      });
+      // this.pedidosArray.sort((a, b) => {
+      //   return a.id - b.id ? 1 : -1;
+      // });
       this.showDetalle = true;
     },
 
@@ -554,6 +568,7 @@ export default {
     closeResumen() {
       this.showDetalle = false;
       this.showResumen = false;
+      this.showRuteo = false;
       this.pedidosArray = [];
 
       this.currentPedido = null;
@@ -566,6 +581,11 @@ export default {
     marcarAsignar() {
       this.showResumen = false;
       this.pedidosArray.push(this.currentPedido);
+    },
+
+    marcarRuteo() {
+      this.showRuteo = false;
+      this.assignRuta(this.currentRuta.pedidosRuta);
     },
 
     refreshList() {
