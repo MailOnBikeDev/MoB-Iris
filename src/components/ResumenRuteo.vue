@@ -36,12 +36,12 @@
         >
       </router-link> -->
 
-      <button
+      <!-- <button
+        @click.prevent="emitirComanda"
         class="px-6 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
-        @click="asignarRuteo"
       >
-        Marcar para Asignar
-      </button>
+        Emitir comanda
+      </button> -->
     </div>
   </div>
 </template>
@@ -59,10 +59,6 @@ export default {
   methods: {
     cerrarResumen() {
       this.$emit("cerrarResumen");
-    },
-
-    asignarRuteo() {
-      this.$emit("asignarRuteo");
     },
   },
 };

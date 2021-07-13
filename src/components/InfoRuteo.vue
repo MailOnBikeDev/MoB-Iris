@@ -78,6 +78,14 @@
       </div>
     </div>
 
+    <!-- Mención del MoBiker Asignado -->
+    <div class="grid w-full col-span-2 py-2 my-2 place-items-center ">
+      <p>
+        <span class="resalta">MoBiker: </span
+        >{{ infoRuta.pedidosRuta[0].mobiker.fullName }}
+      </p>
+    </div>
+
     <!-- Info Pedidos -->
     <div class="p-4 ">
       <div

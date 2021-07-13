@@ -27,7 +27,6 @@
 
     <DetalleRuteo
       v-if="showRuteo"
-      :showRuteo="showRuteo"
       :currentRuta="currentRuta"
       @cerrarResumen="closeResumen"
       @asignarRuteo="marcarRuteo"
@@ -96,7 +95,7 @@
         Asignar
       </button>
 
-      <div class="flex flex-col items-center justify-between">
+      <div class="flex flex-col items-center justify-center ">
         <label for="ruteos" class="resalta">Ruteos</label>
         <input id="ruteos" type="checkbox" v-model="ruteos" />
       </div>
@@ -187,7 +186,7 @@
         class="col-span-4 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
         <div
-          class="grid items-center grid-cols-8 py-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
+          class="grid items-center grid-cols-8 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': ruta.ruta.id == currentRutaIndex,
           }"
@@ -256,7 +255,7 @@
         class="col-span-4 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
         <div
-          class="grid items-center grid-cols-8 py-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
+          class="grid items-center grid-cols-8 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': pedido.id == currentIndex,
           }"
@@ -531,7 +530,6 @@ export default {
     setActiveRuteo(ruta, index) {
       this.currentRuta = ruta;
       this.currentRutaIndex = index;
-      console.log(this.currentRuta);
 
       this.showRuteo = true;
     },

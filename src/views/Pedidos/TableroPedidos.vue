@@ -10,7 +10,7 @@
 
     <div
       class="overlay"
-      v-if="showDetalle || showComanda || showCambiarStatus"
+      v-if="showDetalle || showComanda || showCambiarStatus || showRuteo"
     ></div>
 
     <ReporteComanda
@@ -31,6 +31,12 @@
       @cerrarModal="showCambiarStatus = false"
       @refresh="refreshList"
       :currentPedido="currentPedido"
+    />
+
+    <ResumenRuteo
+      v-if="showRuteo"
+      :currentRuta="currentRuta"
+      @cerrarResumen="showRuteo = false"
     />
 
     <div class="flex flex-row items-center mb-4 -mt-10 justify-evenly">
@@ -100,6 +106,11 @@
           >Nuevo Ruteo</span
         >
       </router-link>
+
+      <div class="flex flex-col items-center justify-center">
+        <label for="ruteos" class="resalta">Ruteos</label>
+        <input id="ruteos" type="checkbox" v-model="ruteos" />
+      </div>
     </div>
 
     <div class="grid grid-cols-4 gap-2">
@@ -111,7 +122,21 @@
       </div>
 
       <div
-        class="inline-grid items-center grid-cols-7 col-span-3 text-sm text-center text-primary"
+        v-if="ruteos"
+        class="inline-grid items-center grid-cols-7 col-span-3 text-sm font-bold text-center text-primary"
+      >
+        <p class="font-bold">Pedidos</p>
+        <p class="font-bold">Cliente</p>
+        <p class="font-bold">Origen</p>
+        <p class="font-bold">MoBiker</p>
+        <p class="font-bold">Estado</p>
+        <p class="font-bold">Fecha</p>
+        <p class="font-bold">Acciones</p>
+      </div>
+
+      <div
+        v-else
+        class="inline-grid items-center grid-cols-8 col-span-3 text-sm text-center text-primary"
       >
         <button @click="sortPorId" class="focus:outline-none">
           <p class="font-bold"># Pedido</p>
@@ -131,6 +156,9 @@
         <button @click="sortPorFecha" class="focus:outline-none">
           <p class="font-bold">Fecha</p>
         </button>
+        <div>
+          <p class="font-bold">Ruteo</p>
+        </div>
         <div>
           <p class="font-bold">Acciones</p>
         </div>
@@ -208,10 +236,82 @@
       </div>
 
       <div
+        v-if="ruteos"
+        class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
+      >
+        <div
+          class="grid items-center grid-cols-7 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
+          :class="{
+            'bg-info text-white font-bold': ruta.ruta.id == currentRutaIndex,
+          }"
+          v-for="ruta in ruteosFiltrados"
+          :key="ruta.ruta.id"
+        >
+          <p>
+            {{ ruta.pedidosRuta.length }}
+          </p>
+
+          <p>
+            {{ ruta.pedidosRuta[0].empresaRemitente }}
+          </p>
+
+          <p>
+            {{ ruta.pedidosRuta[0].distritoRemitente }}
+          </p>
+
+          <p>
+            {{ ruta.pedidosRuta[0].mobiker.fullName }}
+          </p>
+
+          <div>
+            <p
+              v-if="ruta.pedidosRuta[0].status.id === 1"
+              class="tag-programado"
+            >
+              {{ ruta.pedidosRuta[0].status.tag }}
+            </p>
+            <p v-if="ruta.pedidosRuta[0].status.id === 2" class="tag-recoger">
+              {{ ruta.pedidosRuta[0].status.tag }}
+            </p>
+            <p v-if="ruta.pedidosRuta[0].status.id === 3" class="tag-transito">
+              {{ ruta.pedidosRuta[0].status.tag }}
+            </p>
+            <p v-if="ruta.pedidosRuta[0].status.id === 4" class="tag-entregado">
+              {{ ruta.pedidosRuta[0].status.tag }}
+            </p>
+            <p
+              v-if="ruta.pedidosRuta[0].status.id === 5"
+              class="tag-false-flete"
+            >
+              {{ ruta.pedidosRuta[0].status.tag }}
+            </p>
+            <p v-if="ruta.pedidosRuta[0].status.id === 6" class="tag-anulado">
+              {{ ruta.pedidosRuta[0].status.tag }}
+            </p>
+          </div>
+
+          <p>
+            {{ $date(ruta.pedidosRuta[0].fecha).format("DD MMM YYYY") }}
+          </p>
+
+          <button
+            @click="setActiveRuteo(ruta, ruta.ruta.id)"
+            class="focus:outline-none"
+          >
+            <font-awesome-icon
+              class="text-2xl text-primary"
+              icon="window-maximize"
+            />
+          </button>
+        </div>
+      </div>
+
+      <div
+        v-else
         class="col-span-3 overflow-y-auto bg-white border border-black max-h-96 pedidos-scroll"
       >
         <div
-          class="grid items-center grid-cols-7 py-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info hover:text-white"
+          class="grid items-center grid-cols-8 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info hover:text-white"
           :class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
           v-for="pedido in pedidosFiltrados"
           :key="pedido.id"
@@ -259,6 +359,17 @@
           <div>
             <p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
           </div>
+
+          <div>
+            <font-awesome-icon
+              v-if="pedido.isRuteo"
+              class="text-2xl font-bold text-red-500"
+              icon="route"
+            />
+
+            <p v-else></p>
+          </div>
+
           <div class="flex items-center justify-evenly">
             <button
               class="focus:outline-none"
@@ -314,6 +425,7 @@ import PedidoService from "@/services/pedido.service";
 import ReporteComanda from "@/components/ReporteComanda";
 import DetallePedido from "@/components/DetallePedido";
 import CambiarStatusPedido from "@/components/CambiarStatusPedido";
+import ResumenRuteo from "@/components/ResumenRuteo";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { es } from "vuejs-datepicker/dist/locale";
@@ -326,18 +438,25 @@ export default {
     Datepicker,
     Pagination,
     CambiarStatusPedido,
+    ResumenRuteo,
   },
   data() {
     return {
       pedidos: [],
       pedidosFiltrados: [],
+      ruteosFiltrados: [],
+      totalRuteos: 0,
       buscador: "",
       showComanda: false,
       showDetalle: false,
       showCambiarStatus: false,
+      showRuteo: false,
       currentPedido: null,
       currentIndex: -1,
+      currentRuta: null,
+      currentRutaIndex: -1,
       buscadorFecha: new Date(),
+      ruteos: false,
 
       page: 1,
       cantidadPedidos: 0,
@@ -347,6 +466,7 @@ export default {
   },
   mounted() {
     this.retrievePedidos();
+    this.retrieveRuteos();
   },
   methods: {
     getRequestParams(fecha, page, pageSize) {
@@ -385,6 +505,22 @@ export default {
       }
     },
 
+    async retrieveRuteos() {
+      try {
+        const params = {
+          desde: this.$date(this.buscadorFecha).format("YYYY-MM-DD"),
+          hasta: this.$date(this.buscadorFecha).format("YYYY-MM-DD"),
+        };
+
+        const response = await PedidoService.getRuteos(params);
+        const { pedidos, totalPedidos } = response.data;
+        this.ruteosFiltrados = pedidos;
+        this.totalRuteos = totalPedidos;
+      } catch (error) {
+        console.error(`Error al obtener los Ruteos: ${error.message}`);
+      }
+    },
+
     async buscarPedido() {
       try {
         const response = await PedidoService.searchPedido(this.buscador);
@@ -397,6 +533,13 @@ export default {
       } catch (error) {
         console.error(`Error al buscar un Pedido. ${error.message}`);
       }
+    },
+
+    setActiveRuteo(ruta, index) {
+      this.currentRuta = ruta;
+      this.currentRutaIndex = index;
+
+      this.showRuteo = true;
     },
 
     handlePageChange(value) {
