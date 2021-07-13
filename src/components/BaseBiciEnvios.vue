@@ -40,11 +40,7 @@ export default {
       let contadorEcommerce = 0;
 
       this.pedidos.forEach((pedido) => {
-        if (
-          pedido.tipoDeEnvioId === 1 ||
-          pedido.tipoDeEnvioId === 2 ||
-          pedido.tipoDeEnvioId === 4
-        ) {
+        if (pedido.tipoDeEnvioId === 1) {
           contadorEcommerce++;
         }
       });
@@ -56,7 +52,11 @@ export default {
       let contadorExpress = 0;
 
       this.pedidos.forEach((pedido) => {
-        if (pedido.tipoDeEnvioId === 3) {
+        if (
+          pedido.tipoDeEnvioId === 3 ||
+          pedido.tipoDeEnvioId === 2 ||
+          pedido.tipoDeEnvioId === 4
+        ) {
           contadorExpress++;
         }
       });
