@@ -123,6 +123,7 @@ export default {
       try {
         await this.$store.dispatch("auxiliares/getRolesUsuarios");
         await this.$store.dispatch("auxiliares/getDistritosLima");
+        await this.$store.dispatch("auxiliares/getZonaCobertura");
         await this.$store.dispatch("auxiliares/getTiposCarga");
         await this.$store.dispatch("auxiliares/getComprobantes");
         await this.$store.dispatch("auxiliares/getTiposEnvios");
