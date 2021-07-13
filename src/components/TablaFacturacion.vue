@@ -37,7 +37,7 @@
         {{ detalle.tarifa }}
       </td>
       <td class="table-cell px-2 border-2 select-all border-secondary">
-        <span v-if="!detalle.otroDatoConsignado">{{
+        <span v-if="detalle.otroDatoConsignado">{{
           detalle.otroDatoConsignado
         }}</span>
         <span v-else
@@ -98,7 +98,7 @@
         {{ detalle.tarifa }}
       </td>
       <td class="table-cell px-2 border-2 select-all border-secondary">
-        <span v-if="!detalle.otroDatoConsignado">{{
+        <span v-if="detalle.otroDatoConsignado">{{
           detalle.otroDatoConsignado
         }}</span>
         <span v-else

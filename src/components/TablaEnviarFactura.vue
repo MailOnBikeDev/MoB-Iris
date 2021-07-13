@@ -1,6 +1,6 @@
 <template>
   <table v-if="casoEspecial" class="table w-full border-collapse table-auto ">
-    <!-- <tr
+    <tr
       class="table-row text-center text-white border-2 bg-secondary border-secondary"
     >
       <th class="table-cell">Fecha</th>
@@ -9,7 +9,7 @@
       <th class="table-cell">Dirección</th>
       <th class="table-cell">Distrito</th>
       <th class="table-cell">Tarifa</th>
-    </tr> -->
+    </tr>
 
     <tr
       class="table-row border-2 odd:bg-info odd:text-white border-secondary"
@@ -51,7 +51,7 @@
   </table>
 
   <table v-else class="table w-full border-collapse table-auto ">
-    <!-- <tr
+    <tr
       class="table-row text-center text-white border-2 bg-secondary border-secondary"
     >
       <th class="table-cell">Fecha</th>
@@ -59,7 +59,7 @@
       <th class="table-cell">Dirección</th>
       <th class="table-cell">Distrito</th>
       <th class="table-cell">Tarifa</th>
-    </tr> -->
+    </tr>
 
     <tr
       class="table-row border-2 odd:bg-info odd:text-white border-secondary"
