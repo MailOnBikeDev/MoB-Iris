@@ -9,6 +9,8 @@
       <th class="table-cell">Dirección</th>
       <th class="table-cell">Distrito</th>
       <th class="table-cell">Tarifa</th>
+      <th class="table-cell">Tarifa</th>
+      <th class="table-cell">Observaciones</th>
     </tr>
 
     <tr
@@ -33,6 +35,9 @@
       </td>
       <td class="table-cell px-2 text-center border-2 border-secondary">
         {{ detalle.tarifa }}
+      </td>
+      <td class="table-cell px-2 text-center border-2 border-secondary">
+        {{ detalle.otroDatoConsignado }}
       </td>
     </tr>
 
@@ -59,6 +64,7 @@
       <th class="table-cell">Dirección</th>
       <th class="table-cell">Distrito</th>
       <th class="table-cell">Tarifa</th>
+      <th class="table-cell">Observaciones</th>
     </tr>
 
     <tr
@@ -80,6 +86,9 @@
       </td>
       <td class="table-cell px-2 text-center border-2 border-secondary">
         {{ detalle.tarifa }}
+      </td>
+      <td class="table-cell px-2 text-center border-2 border-secondary">
+        {{ detalle.otroDatoConsignado }}
       </td>
     </tr>
 
