@@ -27,6 +27,8 @@
         </button>
       </div>
 
+      <div class="overlay" v-if="showBuscador || showBuscadorDestinos"></div>
+
       <BuscadorCliente
         :showBuscador="showBuscador"
         @cerrarBuscador="showBuscador = false"

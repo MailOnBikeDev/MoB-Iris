@@ -18,6 +18,8 @@
         </button>
       </div>
 
+      <div class="overlay" v-if="showBuscador"></div>
+
       <BuscadorCliente
         :showBuscador="showBuscador"
         @cerrarBuscador="showBuscador = false"
@@ -294,7 +296,9 @@
         <!-- <input type="file" @change="onFileChanged" multiple /> -->
 
         <div style="width: 100%; min-height: 650px">
-          <div style="width: 100%; padding: 20px 40px; display:flex; align-items:center; min-height: 250px; justify-content:center;">
+          <div
+            style="width: 100%; padding: 20px 40px; display:flex; align-items:center; min-height: 250px; justify-content:center;"
+          >
             <textarea
               v-model="excelData"
               class="input"
@@ -304,7 +308,9 @@
               cols="80"
               rows="8"
             ></textarea>
-            <div style="display:flex; min-height:200px; padding-left: 20px; flex-direction:column; justify-content: space-around;">
+            <div
+              style="display:flex; min-height:200px; padding-left: 20px; flex-direction:column; justify-content: space-around;"
+            >
               <button
                 type="button"
                 class="block px-6 py-2 font-bold text-white transition duration-200 bg-yellow-500 rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl focus:outline-none"
@@ -321,9 +327,8 @@
                 Nuevo Ruteo
               </button>
             </div>
-            
           </div>
-          
+
           <div
             v-if="showLoading"
             wire:loading
@@ -354,7 +359,12 @@
                 <th>Recaudo</th>
                 <th>Trámite</th>
                 <th>Modalidad</th>
-                <th><font-awesome-icon class="text-2xl text-primary" icon="trash-alt" /></th>
+                <th>
+                  <font-awesome-icon
+                    class="text-2xl text-primary"
+                    icon="trash-alt"
+                  />
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -407,7 +417,14 @@
                     @input="changeModalidad(pedido.modalidad, index)"
                   />
                 </td>
-                <td style="text-align:center;"><font-awesome-icon class="text-2xl text-primary" icon="trash-alt" style="cursor:pointer;" @click="removeRuta(index)" /></td>
+                <td style="text-align:center;">
+                  <font-awesome-icon
+                    class="text-2xl text-primary"
+                    icon="trash-alt"
+                    style="cursor:pointer;"
+                    @click="removeRuta(index)"
+                  />
+                </td>
               </tr>
               <tr class="bg-opacity-25 bg-info">
                 <td class="p-1 text-lg font-bold text-primary">
@@ -608,8 +625,8 @@ export default {
       this.changeTarifa();
     },
 
-    removeRuta(pos){
-      this.pedidos.splice(pos,1);
+    removeRuta(pos) {
+      this.pedidos.splice(pos, 1);
       this.changeTarifa();
     },
 
@@ -625,14 +642,16 @@ export default {
     },
 
     async convertirExcelData(type) {
-      if(this.nuevoPedido.fecha != "" && 
-          this.nuevoPedido.fecha != null && 
-          this.nuevoPedido.empresaRemitente !="" &&
-          this.nuevoPedido.empresaRemitente != null &&
-          this.nuevoPedido.direccionRemitente !="" &&
-          this.nuevoPedido.direccionRemitente != null){
-        if(this.excelData != ""){
-          if(type === 'nuevo'){
+      if (
+        this.nuevoPedido.fecha != "" &&
+        this.nuevoPedido.fecha != null &&
+        this.nuevoPedido.empresaRemitente != "" &&
+        this.nuevoPedido.empresaRemitente != null &&
+        this.nuevoPedido.direccionRemitente != "" &&
+        this.nuevoPedido.direccionRemitente != null
+      ) {
+        if (this.excelData != "") {
+          if (type === "nuevo") {
             this.pedidos = [];
           }
           this.showLoading = true;
@@ -691,22 +710,19 @@ export default {
             this.pedidos.push(row);
           }
 
-          
-
           this.excelData = "";
           this.showLoading = false;
-        }else{
+        } else {
           this.alert.message = "Necesitas agregar algo información del pedido";
           this.alert.success = false;
           this.alert.show = true;
         }
-        
-      }else{
+      } else {
         const isValid = await this.$validator.validateAll();
-          // if (this.nuevoPedido.distancia === (null || undefined)) {
-          //   this.errorCalcularDistancia = true;
-          //   return;
-          // }
+        // if (this.nuevoPedido.distancia === (null || undefined)) {
+        //   this.errorCalcularDistancia = true;
+        //   return;
+        // }
         if (!isValid) {
           return;
         }
