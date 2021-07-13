@@ -225,6 +225,18 @@ class PedidoService {
     }
   }
 
+  async getRuteoById(id) {
+    try {
+      let ruteo = await axios.get(`${API_URL}/ruteo/${id}`, {
+        headers: authHeader(),
+      });
+
+      return ruteo;
+    } catch (error) {
+      console.error("Mensaje de error: ", error.message);
+    }
+  }
+
   async procesarCSV(file) {
     try {
       let result = await axios.post(`${API_URL}/procesar-csv`, file, {
