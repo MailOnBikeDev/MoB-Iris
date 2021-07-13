@@ -1,0 +1,165 @@
+<template>
+  <div class="w-full max-h-screen p-4 mt-10 bg-gray-100 rounded-xl">
+    <div class="flex justify-end">
+      <h1
+        class="relative inline-block px-6 py-2 mb-4 text-2xl font-bold text-center bg-gray-100 text-primary rounded-xl -top-12"
+      >
+        Recaudos
+      </h1>
+    </div>
+
+    <div class="flex flex-row mb-4 -mt-10 justify-evenly">
+      <div class="flex flex-row">
+        <datepicker
+          v-model="fechaInicio"
+          name="fechaInicio"
+          input-class="w-24 p-2 font-bold text-center cursor-pointer rounded-l-xl focus:outline-none text-primary"
+          :monday-first="true"
+          :language="es"
+          format="dd MMM"
+        />
+        <datepicker
+          v-model="fechaFin"
+          name="fechaFin"
+          input-class="w-24 p-2 font-bold text-center cursor-pointer focus:outline-none text-primary"
+          :monday-first="true"
+          :language="es"
+          format="dd MMM"
+        />
+        <button
+          type="button"
+          class="px-2 py-1 font-bold bg-white rounded-r-xl hover:bg-info hover:text-white focus:outline-none text-secondary"
+          @click="retrievePedidos"
+        >
+          Buscar
+        </button>
+      </div>
+
+      <div>
+        <button
+          v-if="reporteCopiado === false"
+          class="px-4 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
+          @click="copiarReporte"
+        >
+          Copiar reporte
+        </button>
+
+        <button
+          v-else
+          class="px-4 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+          @click="copiarReporte"
+        >
+          Copiado
+        </button>
+      </div>
+    </div>
+
+    <div ref="recaudos">
+      <!-- <TablaTransferencias :pedidos="pedidos" /> -->
+    </div>
+
+    <Pagination
+      :page="page"
+      :cantidadItems="cantidadPedidos"
+      :pageSize="pageSize"
+      @prevPageChange="
+        page--;
+        retrievePedidos();
+      "
+      @nextPageChange="
+        page++;
+        retrievePedidos();
+      "
+      @handlePageChange="handlePageChange"
+    />
+  </div>
+</template>
+
+<script>
+import PedidoService from "@/services/pedido.service";
+import Datepicker from "vuejs-datepicker";
+import { es } from "vuejs-datepicker/dist/locale";
+import Pagination from "@/components/Pagination.vue";
+
+const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
+
+export default {
+  name: "Recaudos",
+  components: {
+    Datepicker,
+    Pagination,
+  },
+  data() {
+    return {
+      pedidos: [],
+      fechaInicio: new Date(seisDiasAtras),
+      fechaFin: new Date(),
+      reporteCopiado: false,
+
+      page: 1,
+      cantidadPedidos: 0,
+      pageSize: 200,
+      es: es,
+    };
+  },
+  methods: {
+    getRequestParams(desde, hasta, page, pageSize) {
+      let params = {};
+
+      if (desde) {
+        params["desde"] = desde;
+      }
+
+      if (hasta) {
+        params["hasta"] = hasta;
+      }
+
+      if (page) {
+        params["page"] = page - 1;
+      }
+
+      if (pageSize) {
+        params["size"] = pageSize;
+      }
+
+      return params;
+    },
+
+    retrievePedidos() {
+      this.reporteCopiado = false;
+      const params = this.getRequestParams(
+        this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+        this.$date(this.fechaFin).format("YYYY-MM-DD"),
+        this.page,
+        this.pageSize
+      );
+
+      PedidoService.historialPedidos(params).then(
+        (response) => {
+          const { pedidos, totalPedidos } = response.data;
+          this.pedidos = pedidos; // rows
+          this.cantidadPedidos = totalPedidos; // count
+        },
+        (error) => {
+          this.pedidos =
+            (error.response && error.response.data) ||
+            error.message ||
+            error.toString();
+        }
+      );
+    },
+
+    handlePageChange(value) {
+      this.page = value;
+      this.retrievePedidos();
+    },
+
+    copiarReporte() {
+      this.$copyText(this.$refs.transferencias.innerText).then(() => {
+        this.reporteCopiado = true;
+        console.log("Texto copiado");
+      });
+    },
+  },
+};
+</script>

@@ -96,6 +96,16 @@ const routes = [
     name: "Facturacion",
     component: () => import("@/views/Finanzas/Facturacion.vue"),
   },
+  {
+    path: "/finanzas/transferencias",
+    name: "Transferencias",
+    component: () => import("@/views/Finanzas/Transferencias.vue"),
+  },
+  {
+    path: "/finanzas/recaudos",
+    name: "Recaudos",
+    component: () => import("@/views/Finanzas/Recaudos.vue"),
+  },
 ];
 
 const router = new VueRouter({
