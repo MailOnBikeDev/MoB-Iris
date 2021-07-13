@@ -10,7 +10,13 @@
 
     <div
       class="overlay"
-      v-if="showDetalle || showComanda || showCambiarStatus || showRuteo"
+      v-if="
+        showDetalle ||
+          showComanda ||
+          showCambiarStatus ||
+          showRuteo ||
+          showComandaRuteo
+      "
     ></div>
 
     <ReporteComanda
@@ -37,6 +43,13 @@
       v-if="showRuteo"
       :currentRuta="currentRuta"
       @cerrarResumen="showRuteo = false"
+      @emitirComandaRuteo="emitirComandaRuteo"
+    />
+
+    <ReporteComandaRuteo
+      v-if="showComandaRuteo"
+      :currentRuta="currentRuta"
+      @cerrarComanda="showComandaRuteo = false"
     />
 
     <div class="flex flex-row items-center mb-4 -mt-10 justify-evenly">
@@ -294,15 +307,25 @@
             {{ $date(ruta.pedidosRuta[0].fecha).format("DD MMM YYYY") }}
           </p>
 
-          <button
-            @click="setActiveRuteo(ruta, ruta.ruta.id)"
-            class="focus:outline-none"
-          >
-            <font-awesome-icon
-              class="text-2xl text-primary"
-              icon="window-maximize"
-            />
-          </button>
+          <div class="flex items-center justify-evenly">
+            <button
+              class="focus:outline-none"
+              @click="openComandaRuteo(ruta)"
+              title="Emitir Comanda"
+            >
+              <font-awesome-icon class="text-2xl text-primary" icon="receipt" />
+            </button>
+
+            <button
+              @click="setActiveRuteo(ruta, ruta.ruta.id)"
+              class="focus:outline-none"
+            >
+              <font-awesome-icon
+                class="text-2xl text-primary"
+                icon="window-maximize"
+              />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -361,11 +384,16 @@
           </div>
 
           <div>
-            <font-awesome-icon
+            <button
               v-if="pedido.isRuteo"
-              class="text-2xl font-bold text-red-500"
-              icon="route"
-            />
+              class="focus:outline-none"
+              @click="getRuteo(pedido.ruteoId)"
+            >
+              <font-awesome-icon
+                class="text-2xl font-bold text-red-500"
+                icon="route"
+              />
+            </button>
 
             <p v-else></p>
           </div>
@@ -425,6 +453,7 @@ import PedidoService from "@/services/pedido.service";
 import ReporteComanda from "@/components/ReporteComanda";
 import DetallePedido from "@/components/DetallePedido";
 import CambiarStatusPedido from "@/components/CambiarStatusPedido";
+import ReporteComandaRuteo from "@/components/ReporteComandaRuteo";
 import ResumenRuteo from "@/components/ResumenRuteo";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
@@ -439,6 +468,7 @@ export default {
     Pagination,
     CambiarStatusPedido,
     ResumenRuteo,
+    ReporteComandaRuteo,
   },
   data() {
     return {
@@ -448,6 +478,7 @@ export default {
       totalRuteos: 0,
       buscador: "",
       showComanda: false,
+      showComandaRuteo: false,
       showDetalle: false,
       showCambiarStatus: false,
       showRuteo: false,
@@ -535,6 +566,17 @@ export default {
       }
     },
 
+    async getRuteo(id) {
+      try {
+        const response = await PedidoService.getRuteoById(id);
+
+        this.currentRuta = response.data;
+        this.showRuteo = true;
+      } catch (error) {
+        console.error(`Error al obtener un Ruteo por Id. ${error.message}`);
+      }
+    },
+
     setActiveRuteo(ruta, index) {
       this.currentRuta = ruta;
       this.currentRutaIndex = index;
@@ -560,6 +602,17 @@ export default {
 
       this.currentPedido = null;
       this.currentIndex = -1;
+    },
+
+    openComandaRuteo(ruta) {
+      this.currentRuta = ruta;
+      this.showComandaRuteo = true;
+    },
+
+    emitirComandaRuteo() {
+      console.log("click");
+      this.showRuteo = false;
+      this.showComandaRuteo = true;
     },
 
     sortPorId() {

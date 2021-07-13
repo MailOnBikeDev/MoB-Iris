@@ -12,17 +12,14 @@
       </router-link>
     </div>
 
-    <div
-      v-if="currentUser"
-      class="flex flex-row items-center ml-auto font-bold"
-    >
+    <div v-if="currentUser" class="flex flex-row items-center ml-auto ">
       <!-- Navigation -->
       <div v-for="nav in navigationMenu" :key="nav.title">
         <router-link
           :to="nav.link"
           custom
           v-slot="{ navigate }"
-          class="mr-6 link"
+          class="mr-6 font-bold link"
         >
           <span @click="navigate" role="link">
             {{ nav.title }}
