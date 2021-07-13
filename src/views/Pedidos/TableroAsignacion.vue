@@ -88,9 +88,9 @@
         Asignar
       </button>
 
-      <div>
-        <label for="">Ruteos</label>
-        <input type="checkbox" v-model="ruteos" />
+      <div class="flex flex-col items-center justify-between">
+        <label for="ruteos" class="resalta">Ruteos</label>
+        <input id="ruteos" type="checkbox" v-model="ruteos" />
       </div>
     </div>
 
@@ -166,9 +166,8 @@
 
           <div>
             {{
-              pedidosMobiker.filter(
-                (pedido) =>
-                  pedido.mobikerId === mobiker.id && pedido.statusId !== 6
+              contadorPedidosMobiker.filter(
+                (pedido) => pedido.mobikerId === mobiker.id
               ).length
             }}
           </div>
@@ -353,6 +352,7 @@ export default {
       ruteosFiltrados: [],
       totalRuteos: 0,
       pedidosMobiker: [],
+      contadorPedidosMobiker: [],
       mobikersFiltrados: [],
       showDetalle: false,
       showResumen: false,
@@ -446,6 +446,9 @@ export default {
           .sort((a, b) => {
             return a.statusId > b.statusId ? 1 : -1;
           });
+        this.contadorPedidosMobiker = pedidos.filter(
+          (pedido) => pedido.statusId !== 6
+        );
         this.cantidadPedidos = totalPedidos; // count
         this.pedidosPorAsignar = pedidos.filter(
           (pedido) =>
