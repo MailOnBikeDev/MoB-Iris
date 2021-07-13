@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="currentPedido">
     <pre>
 Tipo Envío: **{{ formatearTipoEnvio(currentPedido.tipoDeEnvio.tipo) }}**
 __Origen:__ {{ currentPedido.direccionRemitente }} - {{

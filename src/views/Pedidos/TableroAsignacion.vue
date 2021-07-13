@@ -18,6 +18,7 @@
     />
 
     <ResumenPedido
+      v-if="currentPedido"
       :showResumen="showResumen"
       @cerrarResumen="closeResumen"
       @marcarAsignar="marcarAsignar"
@@ -231,7 +232,15 @@
             {{ $date(ruta.pedidosRuta[0].fecha).format("DD MMM YYYY") }}
           </p>
 
-          <button @click="assignRuta(ruta.pedidosRuta)">Asignar</button>
+          <button
+            @click="assignRuta(ruta.pedidosRuta)"
+            class="focus:outline-none"
+          >
+            <font-awesome-icon
+              class="text-2xl text-primary"
+              icon="pencil-alt"
+            />
+          </button>
         </div>
       </div>
 
@@ -511,28 +520,44 @@ export default {
     },
 
     assignRuta(pedidos) {
-      this.pedidosArray = pedidos;
+      if (this.pedidosArray.includes(pedidos[0])) {
+        this.pedidosArray = this.pedidosArray.filter(
+          (pedido) => !pedidos.includes(pedido)
+        );
+      } else {
+        this.pedidosArray = pedidos;
+      }
     },
 
     createArrayPedidos() {
+      this.pedidosArray.sort((a, b) => {
+        return a.id - b.id ? 1 : -1;
+      });
       this.showDetalle = true;
     },
 
     closeModal() {
       this.showDetalle = false;
       this.showResumen = false;
-      this.pedidosArray.length = 0;
+      this.pedidosArray = [];
 
       this.currentPedido = null;
       this.currentIndex = -1;
+
+      this.currentRuta = null;
+      this.currentRutaIndex = -1;
     },
 
     closeResumen() {
       this.showDetalle = false;
       this.showResumen = false;
+      this.pedidosArray = [];
 
       this.currentPedido = null;
       this.currentIndex = -1;
+
+      this.currentRuta = null;
+      this.currentRutaIndex = -1;
     },
 
     marcarAsignar() {

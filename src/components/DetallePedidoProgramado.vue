@@ -180,6 +180,12 @@ export default {
       if (this.showDetalle && this.pedidosArray.length === 1) {
         this.pedidoAsignado.mobiker = this.pedidosArray[0].mobiker.fullName;
       }
+      if (
+        this.pedidosArray[0].mobiker.fullName ===
+        this.pedidosArray[1].mobiker.fullName
+      ) {
+        this.pedidoAsignado.mobiker = this.pedidosArray[0].mobiker.fullName;
+      }
     },
   },
   methods: {
