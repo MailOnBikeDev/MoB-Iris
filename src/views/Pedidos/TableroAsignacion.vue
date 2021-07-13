@@ -417,8 +417,8 @@ export default {
     async retrievePedidos() {
       try {
         const params = this.getRequestParams(
-          this.fechaInicio.toISOString().split("T")[0],
-          this.fechaFin.toISOString().split("T")[0],
+          this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+          this.$date(this.fechaFin).format("YYYY-MM-DD"),
           this.page,
           this.pageSize
         );
@@ -451,8 +451,8 @@ export default {
     async retrieveRuteos() {
       try {
         const params = {
-          desde: this.fechaInicio.toISOString().split("T")[0],
-          hasta: this.fechaFin.toISOString().split("T")[0],
+          desde: this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+          hasta: this.$date(this.fechaFin).format("YYYY-MM-DD"),
         };
 
         const response = await PedidoService.getRuteos(params);

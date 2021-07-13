@@ -370,7 +370,7 @@ export default {
     async retrievePedidos() {
       try {
         const params = this.getRequestParams(
-          this.buscadorFecha.toISOString().split("T")[0],
+          this.$date(this.buscadorFecha).format("YYYY-MM-DD"),
           this.page,
           this.pageSize
         );

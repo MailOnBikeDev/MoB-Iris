@@ -362,8 +362,8 @@ export default {
 
     retrievePedidos() {
       const params = this.getRequestParams(
-        this.fechaInicio.toISOString().split("T")[0],
-        this.fechaFin.toISOString().split("T")[0],
+        this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+        this.$date(this.fechaFin).format("YYYY-MM-DD"),
         this.page,
         this.pageSize
       );

@@ -47,11 +47,19 @@
     </p>
     <p class="mb-2">
       <span class="resalta">Cumpleaños: </span>
-      {{ $date(estadisticas.fechaNacimiento).format("DD MMM YYYY") }}
+      {{
+        $date(
+          new Date(estadisticas.fechaNacimiento).getTime() - 1000 * 60 * 60 * 5
+        ).format("DD MMM YYYY")
+      }}
     </p>
     <p class="mb-2">
       <span class="resalta">Ingreso al equipo: </span>
-      {{ $date(estadisticas.fechaIngreso).format("DD MMM YYYY") }}
+      {{
+        $date(
+          new Date(estadisticas.fechaIngreso).getTime() - 1000 * 60 * 60 * 5
+        ).format("DD MMM YYYY")
+      }}
     </p>
   </div>
 </template>
