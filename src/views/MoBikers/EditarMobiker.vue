@@ -186,7 +186,6 @@
           >
           <datepicker
             v-model="editarMobiker.fechaNacimiento"
-            type="date"
             v-validate="'required'"
             name="fechaNacimiento"
             input-class="input"
@@ -456,8 +455,7 @@ export default {
         this.editarMobiker = response.data;
         this.editarMobiker.rango = response.data.rango.rangoMoBiker;
         this.editarMobiker.fechaNacimiento = this.$date(
-          new Date(this.editarMobiker.fechaNacimiento).getTime() +
-            1000 * 60 * 60 * 5
+          this.editarMobiker.fechaNacimiento
         ).format("YYYY-MM-DD");
         this.editarMobiker.fechaIngreso = this.$date(
           this.editarMobiker.fechaIngreso
@@ -475,12 +473,10 @@ export default {
         }
 
         this.editarMobiker.fechaNacimiento = this.$date(
-          new Date(this.editarMobiker.fechaNacimiento).getTime() +
-            1000 * 60 * 60 * 5
+          this.editarMobiker.fechaNacimiento
         ).format("YYYY-MM-DD");
         this.editarMobiker.fechaIngreso = this.$date(
-          new Date(this.editarMobiker.fechaIngreso).getTime() +
-            1000 * 60 * 60 * 5
+          this.editarMobiker.fechaIngreso
         ).format("YYYY-MM-DD");
         console.log(typeof this.editarMobiker.fechaNacimiento);
         console.log(this.editarMobiker.fechaNacimiento);
