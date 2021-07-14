@@ -67,6 +67,11 @@ const routes = [
     component: () => import("@/views/MoBikers/EditarMobiker.vue"),
   },
   {
+    path: "/mobikers/mobiker-top",
+    name: "MobikerTop",
+    component: () => import("@/views/MoBikers/MobikerTop.vue"),
+  },
+  {
     path: "/clientes/tablero-clientes",
     name: "TableroClientes",
     component: () => import("@/views/Clientes/TableroClientes.vue"),

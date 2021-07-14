@@ -88,6 +88,28 @@
           >Facturacion</span
         >
       </router-link>
+
+      <router-link
+        to="/finanzas/transferencias"
+        class="px-6 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
+        custom
+        v-slot="{ navigate }"
+      >
+        <span @click="navigate" role="link" class="text-center cursor-pointer"
+          >Transferencias</span
+        >
+      </router-link>
+
+      <router-link
+        to="/finanzas/recaudos"
+        class="px-6 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
+        custom
+        v-slot="{ navigate }"
+      >
+        <span @click="navigate" role="link" class="text-center cursor-pointer"
+          >Recaudos</span
+        >
+      </router-link>
     </div>
 
     <div class="grid grid-cols-4 gap-2">

@@ -27,6 +27,17 @@
       </button>
 
       <router-link
+        to="/mobikers/mobiker-top"
+        class="px-6 py-2 font-bold text-white bg-secondary rounded-xl focus:outline-none hover:bg-info"
+        custom
+        v-slot="{ navigate }"
+      >
+        <span @click="navigate" role="link" class="text-center cursor-pointer"
+          >MoBikers Top</span
+        >
+      </router-link>
+
+      <router-link
         to="/mobikers/nuevo-mobiker"
         class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
         custom

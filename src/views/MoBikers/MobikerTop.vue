@@ -4,7 +4,7 @@
       <h1
         class="relative inline-block px-6 py-2 mb-4 text-2xl font-bold text-center bg-gray-100 text-primary rounded-xl -top-12"
       >
-        Recaudos
+        MoBikers Top
       </h1>
     </div>
 
@@ -29,7 +29,7 @@
         <button
           type="button"
           class="px-2 py-1 font-bold bg-white rounded-r-xl hover:bg-info hover:text-white focus:outline-none text-secondary"
-          @click="retrievePedidos"
+          @click="retrieveMoBikersConPedidos"
         >
           Buscar
         </button>
@@ -54,110 +54,56 @@
       </div>
     </div>
 
-    <div ref="recaudos">
-      <TablaRecaudos :pedidos="pedidos" />
+    <div ref="mobikersTop">
+      <TablaMobikerTop :mobikers="mobikers" />
     </div>
-
-    <Pagination
-      :page="page"
-      :cantidadItems="cantidadPedidos"
-      :pageSize="pageSize"
-      @prevPageChange="
-        page--;
-        retrievePedidos();
-      "
-      @nextPageChange="
-        page++;
-        retrievePedidos();
-      "
-      @handlePageChange="handlePageChange"
-    />
   </div>
 </template>
 
 <script>
-import PedidoService from "@/services/pedido.service";
+import MobikerService from "@/services/mobiker.service";
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
-import Pagination from "@/components/Pagination.vue";
-import TablaRecaudos from "@/components/TablaRecaudos.vue";
+import TablaMobikerTop from "@/components/TablaMobikerTop.vue";
 
 const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
 
 export default {
-  name: "Recaudos",
+  name: "MobikerTop",
   components: {
     Datepicker,
-    Pagination,
-    TablaRecaudos,
+    TablaMobikerTop,
   },
   data() {
     return {
-      pedidos: [],
+      mobikers: [],
       fechaInicio: new Date(seisDiasAtras),
       fechaFin: new Date(),
       reporteCopiado: false,
-
-      page: 1,
-      cantidadPedidos: 0,
-      pageSize: 200,
       es: es,
     };
   },
   methods: {
-    getRequestParams(desde, hasta, page, pageSize) {
-      let params = {};
+    async retrieveMoBikersConPedidos() {
+      try {
+        const params = {
+          desde: this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+          hasta: this.$date(this.fechaFin).format("YYYY-MM-DD"),
+        };
 
-      if (desde) {
-        params["desde"] = desde;
+        const response = await MobikerService.getMobikersConPedidos(params);
+
+        this.mobikers = response.data;
+        console.log(response.data);
+      } catch (error) {
+        console.error(
+          `Error al obtener MoBikers con Pedidos: ${error.message}`
+        );
       }
-
-      if (hasta) {
-        params["hasta"] = hasta;
-      }
-
-      if (page) {
-        params["page"] = page - 1;
-      }
-
-      if (pageSize) {
-        params["size"] = pageSize;
-      }
-
-      return params;
-    },
-
-    retrievePedidos() {
-      this.reporteCopiado = false;
-      const params = this.getRequestParams(
-        this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-        this.$date(this.fechaFin).format("YYYY-MM-DD"),
-        this.page,
-        this.pageSize
-      );
-
-      PedidoService.historialPedidos(params).then(
-        (response) => {
-          const { pedidos, totalPedidos } = response.data;
-          this.pedidos = pedidos; // rows
-          this.cantidadPedidos = totalPedidos; // count
-        },
-        (error) => {
-          this.pedidos =
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString();
-        }
-      );
-    },
-
-    handlePageChange(value) {
-      this.page = value;
-      this.retrievePedidos();
     },
 
     copiarReporte() {
-      this.$copyText(this.$refs.recaudos.innerText).then(() => {
+      this.$copyText(this.$refs.mobikersTop.innerText).then(() => {
         this.reporteCopiado = true;
         console.log("Texto copiado");
       });
@@ -165,3 +111,5 @@ export default {
   },
 };
 </script>
+
+<style></style>
