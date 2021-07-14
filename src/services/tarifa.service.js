@@ -1,7 +1,16 @@
-export default function calcularTarifa(distancia, tipoEnvio, modalidad) {
+export default function calcularTarifa(
+  distancia,
+  tipoEnvio,
+  modalidad,
+  distrito
+) {
   let tarifaBase;
   let tarifa;
   let tarifaSugerida;
+
+  const zonaCobertura = JSON.parse(localStorage.getItem("zonaCobertura")).map(
+    (key) => key.distrito.split(" *")[0]
+  );
 
   const distanciaBase = 3.75;
 
@@ -21,6 +30,20 @@ export default function calcularTarifa(distancia, tipoEnvio, modalidad) {
             : +Math.ceil(
                 tarifaBase + (distancia - distanciaBase) * factorKmBase
               );
+        break;
+      }
+      if (zonaCobertura.includes(distrito)) {
+        tarifaBase = 7;
+        tarifa = modalidad === "Con Retorno" ? tarifaBase * 2 : tarifaBase;
+        tarifaSugerida =
+          modalidad === "Con Retorno"
+            ? +Math.ceil(
+                tarifaBase + (distancia - distanciaBase) * factorKmBase
+              ) * 2
+            : +Math.ceil(
+                tarifaBase + (distancia - distanciaBase) * factorKmBase
+              );
+        break;
       }
       if (distancia >= distanciaBase * 3 && distancia < distanciaBase * 3.5) {
         tarifa = modalidad === "Con Retorno" ? 9 * 2 : 9;
@@ -32,6 +55,7 @@ export default function calcularTarifa(distancia, tipoEnvio, modalidad) {
             : +Math.ceil(
                 tarifaBase + (distancia - distanciaBase) * factorKmBase
               );
+        break;
       }
       if (distancia >= distanciaBase * 3.5 && distancia < distanciaBase * 4) {
         tarifa = modalidad === "Con Retorno" ? 12 * 2 : 12;
@@ -43,6 +67,7 @@ export default function calcularTarifa(distancia, tipoEnvio, modalidad) {
             : +Math.ceil(
                 tarifaBase + (distancia - distanciaBase) * factorKmBase
               );
+        break;
       }
       if (distancia >= distanciaBase * 4 && distancia < distanciaBase * 4.5) {
         tarifa = modalidad === "Con Retorno" ? 14 * 2 : 14;
@@ -54,6 +79,7 @@ export default function calcularTarifa(distancia, tipoEnvio, modalidad) {
             : +Math.ceil(
                 tarifaBase + (distancia - distanciaBase) * factorKmBase
               );
+        break;
       }
       if (distancia >= distanciaBase * 4.5 && distancia < distanciaBase * 5) {
         tarifa = modalidad === "Con Retorno" ? 16 * 2 : 16;
@@ -65,6 +91,7 @@ export default function calcularTarifa(distancia, tipoEnvio, modalidad) {
             : +Math.ceil(
                 tarifaBase + (distancia - distanciaBase) * factorKmBase
               );
+        break;
       }
       if (distancia >= distanciaBase * 5 && distancia < distanciaBase * 5.5) {
         tarifa = modalidad === "Con Retorno" ? 18 * 2 : 18;
@@ -76,6 +103,7 @@ export default function calcularTarifa(distancia, tipoEnvio, modalidad) {
             : +Math.ceil(
                 tarifaBase + (distancia - distanciaBase) * factorKmBase
               );
+        break;
       }
       if (distancia >= distanciaBase * 5.5) {
         tarifaBase = 18;
@@ -95,6 +123,7 @@ export default function calcularTarifa(distancia, tipoEnvio, modalidad) {
             : +Math.ceil(
                 tarifaBase + (distancia - distanciaBase * 5.5) * factorKmBase
               );
+        break;
       }
       break;
 

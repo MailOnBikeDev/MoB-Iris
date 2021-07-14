@@ -597,8 +597,6 @@ export default {
     "editarPedido.mobiker": async function() {
       if (this.editarPedido.mobiker.fullName === "Asignar MoBiker") {
         this.editarPedido.statusId = 1;
-      } else {
-        this.editarPedido.statusId = 2;
       }
 
       if (this.editarPedido.mobiker.fullName) {
@@ -740,7 +738,9 @@ export default {
         // Calcular la tarifa
         const response = calcularTarifa(
           this.editarPedido.distancia,
-          this.editarPedido.tipoEnvio
+          this.editarPedido.tipoEnvio,
+          this.editarPedido.modalidad,
+          this.editarPedido.distritoConsignado
         );
 
         this.editarPedido.tarifa = response.tarifa;
