@@ -454,12 +454,6 @@ export default {
 
         this.editarMobiker = response.data;
         this.editarMobiker.rango = response.data.rango.rangoMoBiker;
-        this.editarMobiker.fechaNacimiento = this.$date(
-          this.editarMobiker.fechaNacimiento
-        ).format("YYYY-MM-DD");
-        this.editarMobiker.fechaIngreso = this.$date(
-          this.editarMobiker.fechaIngreso
-        ).format("YYYY-MM-DD");
       } catch (error) {
         console.error(`Error al obtener el MoBiker: ${error}`);
       }
@@ -471,15 +465,6 @@ export default {
         if (!isValid) {
           return;
         }
-
-        this.editarMobiker.fechaNacimiento = this.$date(
-          this.editarMobiker.fechaNacimiento
-        ).format("YYYY-MM-DD");
-        this.editarMobiker.fechaIngreso = this.$date(
-          this.editarMobiker.fechaIngreso
-        ).format("YYYY-MM-DD");
-        console.log(typeof this.editarMobiker.fechaNacimiento);
-        console.log(this.editarMobiker.fechaNacimiento);
 
         const response = await MobikerService.editMobiker(
           this.$route.params.id,
