@@ -857,7 +857,9 @@ export default {
 
           const response = calcularTarifa(
             data.distancia,
-            this.nuevoPedido.tipoEnvio
+            this.nuevoPedido.tipoEnvio,
+            this.nuevoPedido.modalidad,
+            this.nuevoPedido.distritoConsignado
           );
 
           data.tarifa = response.tarifa;
