@@ -91,6 +91,11 @@
             {{ destino.contactoConsignado }}
           </div>
 
+          <div>
+            <span class="resalta">Dirección: </span>
+            {{ destino.direccionConsignado }}
+          </div>
+
           <div v-if="destino.empresaConsignado !== null">
             <span class="resalta">Empresa: </span>
             {{ destino.empresaConsignado }}
@@ -99,6 +104,11 @@
           <div>
             <span class="resalta">Teléfono: </span>
             {{ destino.telefonoConsignado }}
+          </div>
+
+          <div v-if="destino.modalidad === 'Con Retorno'">
+            <span class="resalta">IMPORTANTE: </span
+            >{{ destino.otroDatoConsignado }}
           </div>
 
           <div v-if="destino.otroDatoConsignado">

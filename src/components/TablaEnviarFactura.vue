@@ -9,7 +9,6 @@
       <th class="table-cell">Dirección</th>
       <th class="table-cell">Distrito</th>
       <th class="table-cell">Tarifa</th>
-      <th class="table-cell">Tarifa</th>
       <th class="table-cell">Observaciones</th>
     </tr>
 
@@ -25,7 +24,11 @@
         {{ capitalizar(detalle.contactoRemitente) }}
       </td>
       <td class="table-cell px-2 border-2 border-secondary">
-        {{ capitalizar(detalle.contactoConsignado) }}
+        {{
+          detalle.contactoConsignado.toLowerCase() === "mesa de partes"
+            ? capitalizar(detalle.empresaoConsignado)
+            : capitalizar(detalle.contactoConsignado)
+        }}
       </td>
       <td class="table-cell px-2 border-2 border-secondary">
         {{ capitalizar(detalle.direccionConsignado) }}
@@ -76,7 +79,11 @@
         {{ $date(detalle.fecha).format("DD MMM") }}
       </td>
       <td class="table-cell px-2 border-2 border-secondary">
-        {{ capitalizar(detalle.contactoConsignado) }}
+        {{
+          detalle.contactoConsignado.toLowerCase() === "mesa de partes"
+            ? capitalizar(detalle.empresaoConsignado)
+            : capitalizar(detalle.contactoConsignado)
+        }}
       </td>
       <td class="table-cell px-2 border-2 border-secondary">
         {{ capitalizar(detalle.direccionConsignado) }}
