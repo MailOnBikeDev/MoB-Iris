@@ -401,7 +401,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("mobikers", ["getMobikers", "buscarMobikers"]),
+    ...mapActions("mobikers", ["getMobikers"]),
 
     getRequestParams(desde, hasta, page, pageSize) {
       let params = {};

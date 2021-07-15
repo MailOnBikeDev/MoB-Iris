@@ -14,7 +14,7 @@
           type="search"
           class="input"
           v-model="buscador"
-          @keyup="searchMobiker"
+          @keyup.enter="searchMobiker"
           placeholder="Buscar mobiker..."
         />
       </div>
@@ -218,9 +218,9 @@ export default {
     BaseEcoamigable,
   },
   mounted() {
-    this.mobikersFiltrados = this.mobikers.sort((a, b) => {
-      return a.fullName.localeCompare(b.fullName);
-    });
+    this.mobikersFiltrados = this.mobikers.filter(
+      (mobiker) => mobiker.status === "Activo"
+    );
     this.currentTab = this.tabs[tabNames.detalles];
   },
   methods: {
@@ -245,12 +245,13 @@ export default {
     async refreshList() {
       try {
         await this.getMobikers();
-        this.mobikersFiltrados = this.mobikers.sort((a, b) => {
-          return a.fullName.localeCompare(b.fullName);
-        });
+        this.mobikersFiltrados = this.mobikers.filter(
+          (mobiker) => mobiker.status === "Activo"
+        );
 
         this.currentMobiker = null;
         this.currentIndex = -1;
+        this.buscador = "";
       } catch (error) {
         console.error(`Error al refrescar la lista: ${error.message}`);
       }
@@ -265,10 +266,15 @@ export default {
 
     async searchMobiker() {
       try {
-        this.mobikersFiltrados = await this.buscarMobikers(this.buscador);
+        this.mobikersFiltrados = await MobikerService.searchMobiker(
+          this.buscador
+        );
+        console.log(this.mobikersFiltrados);
 
         if (this.buscador.trim() === "") {
-          this.mobikersFiltrados = this.mobikers;
+          this.mobikersFiltrados = this.mobikers.filter(
+            (mobiker) => mobiker.status === "Activo"
+          );
         }
       } catch (error) {
         console.error(`Error en el buscador de MoBikers: ${error.message}`);
