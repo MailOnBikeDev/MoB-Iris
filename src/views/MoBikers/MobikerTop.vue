@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <div ref="mobikersTop">
+    <div ref="mobikersTop" class="overflow-y-auto max-h-96">
       <TablaMobikerTop :mobikers="mobikers" />
     </div>
   </div>
