@@ -394,7 +394,12 @@ export default {
       this.pagosPorCobrar = this.pedidosCliente.filter(
         (detalle) =>
           detalle.formaPago !== "Efectivo en Origen" &&
-          detalle.formaPago !== "Efectivo en Destino"
+          detalle.formaPago !== "Efectivo en Destino" &&
+          detalle.formaPago !== "Sin Cargo x Canje" &&
+          detalle.formaPago !== "Sin Cargo x Compensación" &&
+          detalle.formaPago !== "Sin Cargo x Cortesía" &&
+          detalle.formaPago !== "Sin Cargo x Envío Propio" &&
+          detalle.formaPago !== "Sin Cargo x Error MoB"
       );
       if (
         this.pagosPorCobrar[0] &&
@@ -409,8 +414,13 @@ export default {
     filtroEfectivo() {
       this.pagosEfectivo = this.pedidosCliente.filter(
         (detalle) =>
-          detalle.formaPago === "Efectivo en Origen" ||
-          detalle.formaPago === "Efectivo en Destino"
+          (detalle.formaPago === "Efectivo en Origen" ||
+            detalle.formaPago === "Efectivo en Destino") &&
+          detalle.formaPago !== "Sin Cargo x Canje" &&
+          detalle.formaPago !== "Sin Cargo x Compensación" &&
+          detalle.formaPago !== "Sin Cargo x Cortesía" &&
+          detalle.formaPago !== "Sin Cargo x Envío Propio" &&
+          detalle.formaPago !== "Sin Cargo x Error MoB"
       );
     },
 
