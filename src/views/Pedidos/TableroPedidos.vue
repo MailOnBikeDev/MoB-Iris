@@ -65,7 +65,7 @@
         <button
           type="button"
           class="px-2 py-1 mb-1 font-bold bg-white rounded-r-xl text-secondary hover:bg-info hover:text-white focus:outline-none"
-          @click="retrievePedidos"
+          @click="getPedidosDelDia"
         >
           Buscar
         </button>
@@ -550,6 +550,11 @@ export default {
       } catch (error) {
         console.error(`Error al obtener los Ruteos: ${error.message}`);
       }
+    },
+
+    getPedidosDelDia() {
+      this.retrievePedidos();
+      this.retrieveRuteos();
     },
 
     async buscarPedido() {

@@ -93,8 +93,9 @@ export default {
 
         const response = await MobikerService.getMobikersConPedidos(params);
 
-        this.mobikers = response.data;
-        console.log(response.data);
+        this.mobikers = response.data.sort((a, b) => {
+          return b.cantidadPedidos - a.cantidadPedidos;
+        });
       } catch (error) {
         console.error(
           `Error al obtener MoBikers con Pedidos: ${error.message}`
