@@ -50,6 +50,11 @@ const routes = [
     name: "Ruteo",
     component: () => import("@/views/Pedidos/Ruteo.vue"),
   },
+  {
+    path: "/pedidos/ruteo/:id",
+    name: "EditarRuteo",
+    component: () => import("@/views/Pedidos/EditarRuteo.vue"),
+  },
 
   {
     path: "/mobikers/equipo-mobiker",
