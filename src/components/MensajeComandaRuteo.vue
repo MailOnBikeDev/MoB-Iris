@@ -25,6 +25,8 @@ __Modalidad:__ RUTEO
 __Tarifa:__ S/. {{ sumarTarifas(currentRuta.pedidosRuta) }} - {{
         formatearFormaPago(currentRuta.pedidosRuta[0].formaPago)
       }}
+__Recaudo:__ S/. {{ sumarRecaudos(currentRuta.pedidosRuta) }}
+__Trámite:__ S/. {{ sumarTramites(currentRuta.pedidosRuta) }}
 __Mi comisión:__ S/. {{ sumarComisiones(currentRuta.pedidosRuta) }}
 __CO2:__ {{ sumarCO2(currentRuta.pedidosRuta) }} Kg
 __Horas de Ruido:__ {{ sumarHorasRuido(currentRuta.pedidosRuta) }} h
@@ -36,6 +38,7 @@ _____________________________________
 
 **Destino {{ idx + 1 }}**
 __Pedido:__ #{{ destino.id }}
+__Modalidad:__ **{{ destino.modalidad.tipo }}**
 __Contacto:__ {{ destino.contactoConsignado }} {{
           destino.empresaConsignado
             ? "- " + destino.empresaConsignado
@@ -94,8 +97,20 @@ export default {
       return nuevoTipoEnvio;
     },
 
-    sumarTarifas(tarifas) {
-      const total = tarifas.reduce((acc, tarifa) => +tarifa.tarifa + acc, 0);
+    sumarTarifas(pedidos) {
+      const total = pedidos.reduce((acc, tarifa) => +tarifa.tarifa + acc, 0);
+
+      return total;
+    },
+
+    sumarRecaudos(pedidos) {
+      const total = pedidos.reduce((acc, recaudo) => +recaudo.recaudo + acc, 0);
+
+      return total;
+    },
+
+    sumarTramites(pedidos) {
+      const total = pedidos.reduce((acc, tramite) => +tramite.tramite + acc, 0);
 
       return total;
     },
