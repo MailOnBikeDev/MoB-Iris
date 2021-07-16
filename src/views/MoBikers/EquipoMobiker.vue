@@ -49,6 +49,18 @@
       </router-link>
     </div>
 
+    <div class="flex justify-around w-1/2 px-2 my-2 ml-4">
+      <button @click="filtrarMobiker('Activo')" class="mob-activo">
+        Activos
+      </button>
+      <button @click="filtrarMobiker('Inactivo')" class="mob-inactivo">
+        Inactivos
+      </button>
+      <button @click="filtrarMobiker('Retirado')" class="mob-retirado">
+        Retirados
+      </button>
+    </div>
+
     <div class="grid grid-cols-5 gap-x-2">
       <div
         class="inline-grid items-center grid-cols-7 col-span-3 mr-2 text-sm font-bold text-center text-primary"
@@ -182,7 +194,6 @@ import MobikerService from "@/services/mobiker.service";
 import MoBDetalles from "@/components/MoBDetalles.vue";
 import BaseBiciEnvios from "@/components/BaseBiciEnvios.vue";
 import BaseEcoamigable from "@/components/BaseEcoamigable.vue";
-import { mapState, mapActions } from "vuex";
 
 const tabNames = {
   detalles: "detalles",
@@ -209,23 +220,17 @@ export default {
       activeTabName: null,
     };
   },
-  computed: {
-    ...mapState("mobikers", ["mobikers"]),
-  },
   components: {
     MoBDetalles,
     BaseBiciEnvios,
     BaseEcoamigable,
   },
-  mounted() {
-    this.mobikersFiltrados = this.mobikers.filter(
-      (mobiker) => mobiker.status === "Activo"
-    );
+  async mounted() {
+    this.mobikersFiltrados = await MobikerService.filterMobikers("Activo");
+
     this.currentTab = this.tabs[tabNames.detalles];
   },
   methods: {
-    ...mapActions("mobikers", ["getMobikers", "buscarMobikers"]),
-
     async retrievePedidosMobikers(id) {
       try {
         const response = await MobikerService.getPedidosDelMobikerById(id);
@@ -244,10 +249,7 @@ export default {
 
     async refreshList() {
       try {
-        await this.getMobikers();
-        this.mobikersFiltrados = this.mobikers.filter(
-          (mobiker) => mobiker.status === "Activo"
-        );
+        this.mobikersFiltrados = await MobikerService.filterMobikers("Activo");
 
         this.currentMobiker = null;
         this.currentIndex = -1;
@@ -264,16 +266,19 @@ export default {
       this.retrievePedidosMobikers(index);
     },
 
+    async filtrarMobiker(status) {
+      this.mobikersFiltrados = await MobikerService.filterMobikers(status);
+    },
+
     async searchMobiker() {
       try {
         this.mobikersFiltrados = await MobikerService.searchMobiker(
           this.buscador
         );
-        console.log(this.mobikersFiltrados);
 
         if (this.buscador.trim() === "") {
-          this.mobikersFiltrados = this.mobikers.filter(
-            (mobiker) => mobiker.status === "Activo"
+          this.mobikersFiltrados = await MobikerService.filterMobikers(
+            "Activo"
           );
         }
       } catch (error) {
