@@ -2,7 +2,7 @@
   <div class="p-4 bg-white rounded-xl gap-x-8">
     <!-- Top -->
     <div
-      class="grid w-full grid-cols-3 mx-auto border-b-2 gap-x-8 border-secondary place-items-center"
+      class="grid w-full grid-cols-3 mx-auto text-sm border-b-2 gap-x-8 border-secondary place-items-center"
     >
       <p class="mb-2">
         <span class="resalta">Fecha: </span>
@@ -44,9 +44,9 @@
 
     <!-- Info Origen -->
     <div
-      class="flex flex-col justify-center text-sm border-b-2 border-secondary"
+      class="flex flex-col justify-center text-xs border-b-2 border-secondary"
     >
-      <h2 class="my-4 text-3xl font-bold text-center text-primary">
+      <h2 class="my-4 text-2xl font-bold text-center text-primary">
         Origen
       </h2>
 
@@ -79,7 +79,7 @@
     </div>
 
     <!-- Mención del MoBiker Asignado -->
-    <div class="grid w-full col-span-2 py-2 my-2 place-items-center ">
+    <div class="grid w-full col-span-2 py-2 my-2 text-xs place-items-center ">
       <p>
         <span class="resalta">MoBiker: </span
         >{{ infoRuta.pedidosRuta[0].mobiker.fullName }}
@@ -89,7 +89,7 @@
     <!-- Info Pedidos -->
     <div class="p-4 ">
       <div
-        class="grid items-center grid-cols-12 pb-2 font-bold text-center border-b-2 text-primary border-secondary"
+        class="grid items-center grid-cols-12 pb-2 text-sm font-bold text-center border-b-2 text-primary border-secondary"
       >
         <p># Pedido</p>
         <p class="col-span-3">Contacto</p>
@@ -99,7 +99,7 @@
       </div>
 
       <div
-        class="grid items-center grid-cols-12 py-2 overflow-y-auto text-center max-h-52"
+        class="grid items-center grid-cols-12 py-2 overflow-y-auto text-xs text-center max-h-52"
         v-for="ruta in infoRuta.pedidosRuta"
         :key="ruta.id"
       >

@@ -16,6 +16,21 @@ class MobikerService {
     }
   }
 
+  async filterMobikers(status) {
+    try {
+      let mobikers = await axios.get(
+        `${API_URL}/mobikers/filter-mobiker?status=${status}`,
+        {
+          headers: authHeader(),
+        }
+      );
+
+      return mobikers.data;
+    } catch (error) {
+      console.error(`Mensaje de error desde MobikerService: ${error.message}`);
+    }
+  }
+
   async storageNuevoMobiker(nuevoMobiker) {
     try {
       let mobiker = await axios.post(

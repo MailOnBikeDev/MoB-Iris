@@ -63,13 +63,6 @@
           format="dd MMM"
           @input="getPedidosDelDia"
         />
-        <!-- <button
-          type="button"
-          class="px-2 py-1 mb-1 font-bold bg-white rounded-r-xl text-secondary hover:bg-info hover:text-white focus:outline-none"
-          @click=""
-        >
-          Buscar
-        </button> -->
       </div>
 
       <div>
@@ -179,74 +172,15 @@
       </div>
 
       <div class="p-4 bg-white border border-black">
-        <h2 class="mb-4 text-3xl font-bold text-primary">
+        <h2 class="mb-2 text-2xl font-bold text-primary">
           Cliente
         </h2>
 
-        <div class="flex flex-col text-sm max-h-96" v-if="currentPedido">
-          <p class="mb-2">
-            <span class="resalta">Contacto: </span>
-            {{ currentPedido.contactoRemitente }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Empresa: </span
-            >{{ currentPedido.empresaRemitente }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Dirección: </span
-            >{{ currentPedido.direccionRemitente }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Distrito: </span
-            >{{ currentPedido.distritoRemitente }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Teléfono: </span
-            >{{ currentPedido.telefonoRemitente }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Observaciones: </span
-            >{{ currentPedido.otroDatoRemitente }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Forma de Pago: </span
-            >{{ currentPedido.formaPago }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Tarifa: </span>S/.
-            {{ currentPedido.tarifa }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Modalidad: </span
-            >{{ currentPedido.modalidad.tipo }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Rol: </span>{{ currentPedido.rolCliente }}
-          </p>
-        </div>
-
-        <div class="flex flex-col text-sm max-h-96" v-else>
-          <p class="mb-2">
-            <span class="resalta">Contacto: </span>
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Empresa: </span>
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Dirección: </span>
-          </p>
-          <p class="mb-2"><span class="resalta">Distrito: </span></p>
-          <p class="mb-2"><span class="resalta">Teléfono: </span></p>
-          <p class="mb-2">
-            <span class="resalta">Observaciones: </span>
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Forma de Pago: </span>
-          </p>
-          <p class="mb-2"><span class="resalta">Tarifa: </span>S/.</p>
-          <p class="mb-2"><span class="resalta">Modalidad: </span></p>
-          <p class="mb-2"><span class="resalta">Rol: </span></p>
-        </div>
+        <ShowClienteRuteo
+          v-if="currentRutaPorMostrar"
+          :currentRuta="currentRutaPorMostrar"
+        />
+        <ShowCliente v-else :currentPedido="currentPedido" />
       </div>
 
       <div
@@ -260,6 +194,7 @@
           }"
           v-for="ruta in ruteosFiltrados"
           :key="ruta.ruta.id"
+          @click="mostrarClienteRuteo(ruta.pedidosRuta, ruta.ruta.id)"
         >
           <p>
             {{ ruta.pedidosRuta.length }}
@@ -455,6 +390,8 @@ import ReporteComanda from "@/components/ReporteComanda";
 import DetallePedido from "@/components/DetallePedido";
 import CambiarStatusPedido from "@/components/CambiarStatusPedido";
 import ReporteComandaRuteo from "@/components/ReporteComandaRuteo";
+import ShowCliente from "@/components/ShowCliente";
+import ShowClienteRuteo from "@/components/ShowClienteRuteo";
 import ResumenRuteo from "@/components/ResumenRuteo";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
@@ -470,6 +407,8 @@ export default {
     CambiarStatusPedido,
     ResumenRuteo,
     ReporteComandaRuteo,
+    ShowCliente,
+    ShowClienteRuteo,
   },
   data() {
     return {
@@ -486,6 +425,7 @@ export default {
       currentPedido: null,
       currentIndex: -1,
       currentRuta: null,
+      currentRutaPorMostrar: null,
       currentRutaIndex: -1,
       buscadorFecha: new Date(),
       ruteos: false,
@@ -590,12 +530,20 @@ export default {
       this.showRuteo = true;
     },
 
+    mostrarClienteRuteo(ruta, index) {
+      this.currentRutaPorMostrar = ruta;
+      this.currentRutaIndex = index;
+    },
+
     handlePageChange(value) {
       this.page = value;
       this.retrievePedidos();
     },
 
     setActivePedido(pedido, index) {
+      this.currentRutaPorMostrar = null;
+      this.currentRutaIndex = null;
+
       this.currentPedido = pedido;
       this.currentIndex = index;
     },

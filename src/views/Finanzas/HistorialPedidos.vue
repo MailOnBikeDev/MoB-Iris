@@ -141,81 +141,18 @@
       </div>
 
       <div class="p-4 bg-white border border-black">
-        <h2 class="mb-4 text-3xl font-bold text-primary">
+        <h2 class="mb-2 text-2xl font-bold text-primary">
           Cliente
         </h2>
 
-        <div class="flex flex-col text-sm max-h-96" v-if="currentPedido">
-          <p class="mb-2">
-            <span class="resalta">Contacto: </span>
-            {{ currentPedido.contactoRemitente }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Empresa: </span
-            >{{ currentPedido.empresaRemitente }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Dirección: </span
-            >{{ currentPedido.direccionRemitente }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Distrito: </span
-            >{{ currentPedido.distritoRemitente }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Teléfono: </span
-            >{{ currentPedido.telefonoRemitente }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Observaciones: </span
-            >{{ currentPedido.otroDatoRemitente }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Forma de Pago: </span
-            >{{ currentPedido.formaPago }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Tarifa: </span>S/.
-            {{ currentPedido.tarifa }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Modalidad: </span
-            >{{ currentPedido.modalidad.tipo }}
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Rol: </span>{{ currentPedido.rolCliente }}
-          </p>
-        </div>
-
-        <div class="flex flex-col text-sm max-h-96" v-else>
-          <p class="mb-2">
-            <span class="resalta">Contacto: </span>
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Empresa: </span>
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Dirección: </span>
-          </p>
-          <p class="mb-2"><span class="resalta">Distrito: </span></p>
-          <p class="mb-2"><span class="resalta">Teléfono: </span></p>
-          <p class="mb-2">
-            <span class="resalta">Observaciones: </span>
-          </p>
-          <p class="mb-2">
-            <span class="resalta">Forma de Pago: </span>
-          </p>
-          <p class="mb-2"><span class="resalta">Tarifa: </span>S/.</p>
-          <p class="mb-2"><span class="resalta">Modalidad: </span></p>
-          <p class="mb-2"><span class="resalta">Rol: </span></p>
-        </div>
+        <ShowCliente :currentPedido="currentPedido" />
       </div>
 
       <div
         class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
         <div
-          class="grid items-center grid-cols-7 py-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
+          class="grid items-center grid-cols-7 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
           :class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
           v-for="pedido in pedidosFiltrados"
           :key="pedido.id"
@@ -305,6 +242,7 @@
 import PedidoService from "@/services/pedido.service";
 import DetalleHistorialPedido from "@/components/DetalleHistorialPedido";
 import CambiarStatusPedido from "@/components/CambiarStatusPedido";
+import ShowCliente from "@/components/ShowCliente";
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
 import Pagination from "@/components/Pagination.vue";
@@ -318,6 +256,7 @@ export default {
     Datepicker,
     Pagination,
     CambiarStatusPedido,
+    ShowCliente,
   },
   data() {
     return {

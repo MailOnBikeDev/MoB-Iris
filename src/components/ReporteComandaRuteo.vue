@@ -1,6 +1,6 @@
 <template>
   <div
-    class="absolute z-40 w-1/2 px-10 py-4 transform -translate-x-1/2 -translate-y-1/2 shadow-xl bg-primary top-2/3 left-1/2 rounded-xl"
+    class="absolute z-40 w-1/2 px-10 py-4 transform -translate-x-1/2 shadow-xl -translate-y-2/3 bg-primary top-3/4 left-1/2 rounded-xl"
   >
     <div class="absolute -top-4 -right-2">
       <button
@@ -29,7 +29,7 @@
       </div>
 
       <!-- Texto de ejemplo para que el operador confirme la comanda -->
-      <div class="p-4 border-b-2 border-secondary">
+      <div class="p-4 text-sm border-b-2 border-secondary">
         <div>
           <span class="resalta">Tipo Envío: </span
           >{{ formatearTipoEnvio(currentRuta.pedidosRuta[0].tipoDeEnvio.tipo) }}
@@ -65,12 +65,20 @@
 
         <div>
           <span class="resalta">Tarifa:</span>
-          {{ sumarTarifas(currentRuta.pedidosRuta) }} -
+          S/. {{ sumarTarifas(currentRuta.pedidosRuta) }} -
           {{ formatearFormaPago(currentRuta.pedidosRuta[0].formaPago) }}
         </div>
         <div>
+          <span class="resalta">Recaudo:</span>
+          S/. {{ sumarRecaudos(currentRuta.pedidosRuta) }}
+        </div>
+        <div>
+          <span class="resalta">Trámite:</span>
+          S/. {{ sumarTramites(currentRuta.pedidosRuta) }}
+        </div>
+        <div>
           <span class="resalta">Comisión:</span>
-          {{ sumarComisiones(currentRuta.pedidosRuta) }}
+          S/. {{ sumarComisiones(currentRuta.pedidosRuta) }}
         </div>
         <div>
           <span class="resalta">CO2:</span>
@@ -82,7 +90,7 @@
         </div>
       </div>
 
-      <div class="px-10 py-4 overflow-y-auto max-h-52">
+      <div class="px-10 py-4 overflow-y-auto text-sm max-h-52">
         <div v-for="(destino, idx) in currentRuta.pedidosRuta" :key="idx">
           <div class="resalta">Destino {{ idx + 1 }}</div>
 
@@ -200,8 +208,20 @@ export default {
       return nuevoTipoEnvio;
     },
 
-    sumarTarifas(tarifas) {
-      const total = tarifas.reduce((acc, tarifa) => +tarifa.tarifa + acc, 0);
+    sumarTarifas(pedidos) {
+      const total = pedidos.reduce((acc, tarifa) => +tarifa.tarifa + acc, 0);
+
+      return total;
+    },
+
+    sumarRecaudos(pedidos) {
+      const total = pedidos.reduce((acc, recaudo) => +recaudo.recaudo + acc, 0);
+
+      return total;
+    },
+
+    sumarTramites(pedidos) {
+      const total = pedidos.reduce((acc, tramite) => +tramite.tramite + acc, 0);
 
       return total;
     },
