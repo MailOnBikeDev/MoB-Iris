@@ -478,7 +478,18 @@ export default {
 
         const response = await PedidoService.getRuteos(params);
         const { pedidos, totalPedidos } = response.data;
-        this.ruteosFiltrados = pedidos;
+        console.log(pedidos);
+        this.ruteosFiltrados = pedidos
+          .filter(
+            (pedido) =>
+              pedido.pedidosRuta[0].statusId === 1 ||
+              pedido.pedidosRuta[0].statusId === 2
+          )
+          .sort((a, b) => {
+            return a.pedidosRuta[0].statusId > b.pedidosRuta[0].statusId
+              ? 1
+              : -1;
+          });
         this.totalRuteos = totalPedidos;
       } catch (error) {
         console.error(`Error al obtener los Ruteos: ${error.message}`);
