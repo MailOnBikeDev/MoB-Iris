@@ -237,15 +237,13 @@
             @click="assignRuta(ruta.pedidosRuta)"
             class="focus:outline-none text-primary"
           >
-            <font-awesome-icon class="text-2xl" icon="pencil-alt" />
-          </button>
-          <!-- <div>
-            <input
-              type="checkbox"
-              v-model="pedidosArray"
-              :value="ruta.pedidosRuta"
+            <font-awesome-icon
+              v-if="!pedidosArray.includes(ruta.pedidosRuta[0])"
+              class="text-2xl text-gray-400"
+              icon="pencil-alt"
             />
-          </div> -->
+            <font-awesome-icon v-else class="text-2xl" icon="pencil-alt" />
+          </button>
         </div>
       </div>
 
@@ -425,11 +423,9 @@ export default {
     },
 
     retrieveMobikers() {
-      this.mobikersFiltrados = this.mobikers
-        .filter((mobiker) => mobiker.status === "Activo")
-        .sort((a, b) => {
-          return a.fullName > b.fullName ? 1 : -1;
-        });
+      this.mobikersFiltrados = this.mobikers.filter(
+        (mobiker) => mobiker.status === "Activo"
+      );
     },
 
     async retrievePedidos() {
@@ -563,8 +559,6 @@ export default {
       // this.pedidosArray.sort((a, b) => {
       //   return a.id - b.id ? 1 : -1;
       // });
-      this.pedidosArray = [...this.pedidosArray];
-      console.log(this.pedidosArray);
       this.showDetalle = true;
     },
 
