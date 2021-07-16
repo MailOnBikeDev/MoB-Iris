@@ -57,18 +57,19 @@
         <datepicker
           v-model="buscadorFecha"
           name="buscadorFecha"
-          input-class="w-24 p-2 mb-1 font-bold text-center cursor-pointer rounded-l-xl focus:outline-none text-primary"
+          input-class="w-24 p-2 mb-1 font-bold text-center cursor-pointer rounded-xl focus:outline-none text-primary"
           :monday-first="true"
           :language="es"
           format="dd MMM"
+          @input="getPedidosDelDia"
         />
-        <button
+        <!-- <button
           type="button"
           class="px-2 py-1 mb-1 font-bold bg-white rounded-r-xl text-secondary hover:bg-info hover:text-white focus:outline-none"
-          @click="getPedidosDelDia"
+          @click=""
         >
           Buscar
-        </button>
+        </button> -->
       </div>
 
       <div>
