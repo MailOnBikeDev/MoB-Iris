@@ -235,13 +235,17 @@
 
           <button
             @click="assignRuta(ruta.pedidosRuta)"
-            class="focus:outline-none"
+            class="focus:outline-none text-primary"
           >
-            <font-awesome-icon
-              class="text-2xl text-primary"
-              icon="pencil-alt"
-            />
+            <font-awesome-icon class="text-2xl" icon="pencil-alt" />
           </button>
+          <!-- <div>
+            <input
+              type="checkbox"
+              v-model="pedidosArray"
+              :value="ruta.pedidosRuta"
+            />
+          </div> -->
         </div>
       </div>
 
@@ -548,6 +552,8 @@ export default {
       // this.pedidosArray.sort((a, b) => {
       //   return a.id - b.id ? 1 : -1;
       // });
+      this.pedidosArray = [...this.pedidosArray];
+      console.log(this.pedidosArray);
       this.showDetalle = true;
     },
 
