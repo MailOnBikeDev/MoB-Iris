@@ -286,7 +286,7 @@
 
       <div class="flex flex-row justify-between mt-2"></div>
 
-      <!-- Aqui va el CSV -->
+      <!-- Aqui va toda la funcionalidad de Destinos -->
       <div class="w-full p-4 mt-5 bg-gray-100 rounded-xl">
         <div class="px-1 text-3xl font-bold text-center text-primary">
           <h2>
@@ -295,37 +295,179 @@
         </div>
         <!-- <input type="file" @change="onFileChanged" multiple /> -->
 
-        <div style="width: 100%; min-height: 650px">
-          <div
-            style="width: 100%; padding: 20px 40px; display:flex; align-items:center; min-height: 250px; justify-content:center;"
-          >
-            <textarea
-              v-model="excelData"
-              class="input"
-              style="resize: none; width:80%; height: 100%;"
-              name=""
-              id=""
-              cols="80"
-              rows="8"
-            ></textarea>
-            <div
-              style="display:flex; min-height:200px; padding-left: 20px; flex-direction:column; justify-content: space-around;"
-            >
-              <button
-                type="button"
-                class="block px-6 py-2 font-bold text-white transition duration-200 bg-yellow-500 rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl focus:outline-none"
-                @click="convertirExcelData('agregar')"
-              >
-                Agregar al actual
-              </button>
+        <!-- FORMULARIO DESTINO -->
+        <div class="grid grid-cols-6 gap-2 p-2">
 
-              <button
-                type="button"
-                class="block px-6 py-2 font-bold text-white transition duration-200 bg-green-500 rounded-lg shadow-lg hover:bg-green-600 hover:shadow-xl focus:outline-none"
-                @click="convertirExcelData('nuevo')"
+          <div>
+            <label for="contactoConsignado" class="label-input">Contacto</label>
+            <input
+              v-model="nuevoDestinoIndividual.contactoConsignado"
+              type="text"
+              name="contactoConsignado"
+              class="input"
+            />
+            <div
+              v-if="errors.has('contactoConsignado')"
+              class="p-2 text-sm text-white bg-red-500 rounded"
+            >
+              <p>El contacto es requerido</p>
+            </div>
+          </div>
+
+          <div>
+            <label for="empresaConsignado" class="label-input">Empresa</label>
+            <input
+              v-model="nuevoDestinoIndividual.empresaConsignado"
+              type="text"
+              name="empresaConsignado"
+              class="input"
+            />
+          </div>
+
+          <div>
+            <label for="telefonoConsignado" class="label-input">Teléfono</label>
+            <input
+              v-model="nuevoDestinoIndividual.telefonoConsignado"
+              type="string"
+              name="telefonoConsignado"
+              class="input"
+            />
+          </div>
+
+          <div class="col-span-2">
+            <label for="direccionConsignado" class="label-input"
+              >Dirección</label
+            >
+            <input
+              v-model="nuevoDestinoIndividual.direccionConsignado"
+              type="text"
+              name="direccionConsignado"
+              class="input"
+            />
+          </div>
+
+          <div>
+            <label for="distritoConsignado" class="label-input">Distrito</label>
+            <model-list-select
+              name="distritoConsignado"
+              v-model="nuevoDestinoIndividual.distritoConsignado"
+              placeholder="Buscar distrito..."
+              :list="distritos"
+              option-text="distrito"
+              option-value="distrito"
+            />
+          </div>
+
+          <div>
+            <label for="tipoEnvio" class="label-input">Tipo de Envío</label>
+            <model-list-select
+              name="tipoEnvio"
+              v-model="nuevoDestinoIndividual.tipoEnvio"
+              :list="tiposDeEnvio"
+              option-text="tipo"
+              option-value="tipo"
+            />
+          </div>
+
+          <div>
+            <label for="modalidad" class="label-input">Modalidad</label>
+            <model-list-select
+              name="modalidad"
+              v-model="nuevoDestinoIndividual.modalidad"
+              :list="modalidades"
+              option-text="tipo"
+              option-value="tipo"
+            />
+          </div>
+          <div class="col-span-3">
+            <label for="otroDatoConsignado" class="label-input"
+              >Otro Dato</label
+            >
+            <input
+              v-model="nuevoDestinoIndividual.otroDatoConsignado"
+              type="text"
+              class="input"
+            />
+          </div>
+          <div></div>
+        </div>
+        <div
+          style="display:flex; padding: 10px 0px 20px; justify-content:center;"
+        >
+          <button
+            type="button"
+            class="block px-6 py-2 font-bold text-white transition duration-200 bg-blue-500 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl focus:outline-none"
+            @click="agregarDestinoManual()"
+          >
+            Agregar Destino
+          </button>
+        </div>
+
+        <!-- Texarea para datos de Excel y lista de pedidos individuales -->
+        <div style="width: 100%; min-height: 650px">
+          <div class="grid grid-cols-2 gap-2 p-2" style="padding-bottom: 10px; border-bottom: 2px solid #ddd; margin-bottom: 30px;">
+            <div
+              style="width: 100%; padding: 20px 40px;min-height: 250px; justify-content:center; border-right: 2px solid #ddd;"
+            >
+              <textarea
+                v-model="excelData"
+                class="input"
+                style="resize: none; width:100%;height: 200px;"
+                name=""
+                id=""
+                cols="80"
+                rows="8"
+                placeholder="Puedes copiar y pegar aquí registros desde excel en el siguiente orden:            Contacto    Direccion     Distrito    Telefono     Observaciones"
+              ></textarea>
+              <div
+                style="display:flex; padding-left: 20px; justify-content:center;"
               >
-                Nuevo Ruteo
-              </button>
+                <button
+                  type="button"
+                  class="block px-6 py-2 font-bold text-white transition duration-200 bg-blue-500 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl focus:outline-none"
+                  @click="convertirExcelData()"
+                >
+                  Convertir
+                </button>
+              </div>
+            </div>
+            <div>
+              <div style="min-height:200px;">
+                <h2 class="text-xl font-bold text-center">Pedidos individuales "Programados"</h2>
+                <hr>
+                <table class="table-auto" style="max-height: 180px;">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>ID</th>
+                      <th>Destino</th>
+                      <th>Contacto</th>
+                      <th>Telefono</th>
+                      <th>fecha</th>
+                    </tr>
+                  </thead>
+                  <tbody style="">
+                    <tr v-for="(pedidoIndividualNoAgregado, index) in pedidosIndividualClienteActual" :key="index">
+                      <td><input type="checkbox" v-model="pedidoIndividualNoAgregado.agregarAlRuteo"></td>
+                      <td>{{pedidoIndividualNoAgregado.id}}</td>
+                      <td>{{pedidoIndividualNoAgregado.direccionConsignado}}, {{pedidoIndividualNoAgregado.distrito.distrito}}</td>
+                      <td>{{pedidoIndividualNoAgregado.contactoConsignado}}</td>
+                      <td>{{pedidoIndividualNoAgregado.telefonoConsignado}}</td>
+                      <td>{{pedidoIndividualNoAgregado.fecha}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <br>
+              <div style="display:flex; justify-content: center;">
+                <button
+                  type="button"
+                  class="block px-6 py-2 font-bold text-white transition duration-200 bg-blue-500 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl focus:outline-none"
+                  @click="agregarPedidoDelListado()"
+                >
+                  Agregar al Ruteo
+                </button>
+              </div>
             </div>
           </div>
 
@@ -369,30 +511,37 @@
             </thead>
             <tbody>
               <tr
-                v-for="(pedido, index) in pedidos"
-                :key="pedido.contactoConsignado"
+                v-for="(pedidoIndividual, index) in pedidos"
+                :key="index"
               >
-                <td>{{ pedido.contactoConsignado }}</td>
-                <td>{{ pedido.telefonoConsignado }}</td>
-                <td>{{ pedido.direccionConsignado }}</td>
-                <td>{{ pedido.distritoConsignado }}</td>
-                <td>{{ pedido.otroDatoConsignado }}</td>
-                <td>{{ pedido.distancia }} km</td>
+                
+                <td>{{ pedidoIndividual.contactoConsignado }}</td>
+                <td>{{ pedidoIndividual.telefonoConsignado }}</td>
+                <td>{{ pedidoIndividual.direccionConsignado }}</td>
+                <td>{{ pedidoIndividual.distritoConsignado }}</td>
+                <td>
+                  <input
+                    class="input input2"
+                    type="text"
+                    v-model="pedidoIndividual.otroDatoConsignado"
+                  />
+                </td>
+                <td>{{ pedidoIndividual.distancia }} km</td>
                 <td>
                   <input
                     class="input input2"
                     type="number"
-                    v-model="pedido.tarifa"
+                    v-model="pedidoIndividual.tarifa"
                     v-on:keyup="changeTarifa"
                     @change="changeTarifa"
                   />
                 </td>
-                <td>{{ pedido.tarifaSugerida }}</td>
+                <td>{{ pedidoIndividual.tarifaSugerida }}</td>
                 <td>
                   <input
                     class="input input2"
                     type="number"
-                    v-model.number="pedido.recaudo"
+                    v-model="pedidoIndividual.recaudo"
                     v-on:keyup="changeRecaudo"
                     @change="changeRecaudo"
                   />
@@ -401,7 +550,7 @@
                   <input
                     class="input input2"
                     type="number"
-                    v-model.number="pedido.tramite"
+                    v-model="pedidoIndividual.tramite"
                     v-on:keyup="changeTramite"
                     @change="changeTramite"
                   />
@@ -409,22 +558,19 @@
                 <td>
                   <model-list-select
                     name="modalidad"
-                    v-model="pedido.modalidad"
-                    v-validate="'required'"
+                    v-model="pedidoIndividual.modalidad"
                     :list="modalidades"
                     option-text="tipo"
                     option-value="tipo"
-                    @input="changeModalidad(pedido.modalidad, index)"
+                    @input="changeModalidad(pedidoIndividual.modalidad, index)"
                   />
                 </td>
                 <td style="text-align:center;">
                   <font-awesome-icon
                     class="text-2xl text-primary"
                     icon="trash-alt"
-                    style="cursor:pointer;"
-                    @click="removeRuta(index)"
-                  />
-                </td>
+                    @click="removeDestino(index)"
+                  /></td>
               </tr>
               <tr class="bg-opacity-25 bg-info">
                 <td class="p-1 text-lg font-bold text-primary">
@@ -434,7 +580,9 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
+                <td class="p-1 text-lg font-bold text-center text-primary">
+                  <span>{{ +distanciaTotal.toFixed(2) }}</span> km.
+                </td>
                 <td class="p-1 text-lg font-bold text-center text-primary">
                   S/. <span>{{ tarifaTotal }}</span>
                 </td>
@@ -448,12 +596,13 @@
                   S/. <span>{{ tramiteTotal }}</span>
                 </td>
                 <td></td>
+                <td></td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      <!-- Aqui termina CSV -->
+      <!-- Aqui va toda la funcionalidad de Destinos -->
 
       <div class="flex justify-between w-full">
         <button
@@ -505,6 +654,7 @@ import { es } from "vuejs-datepicker/dist/locale";
 import consultarApi from "@/services/maps.service";
 import calcularTarifa from "@/services/tarifa.service";
 import calcularEstadisticas from "@/services/ecoamigable.service";
+import ClienteService from '@/services/cliente.service';
 
 export default {
   name: "Ruteo",
@@ -524,6 +674,7 @@ export default {
       es: es,
       file: null,
       pedidos: [],
+      pedidosIndividualClienteActual: [],
       tarifaTotal: 0,
       tarifaTotalSugerida: 0,
       distanciaTotal: 0,
@@ -532,6 +683,15 @@ export default {
       showLoading: false,
       excelData: "",
       tablaExcelData: [],
+      nuevoDestinoIndividual: {
+        contactoConsignado: '',
+        direccionConsignado: '',
+        telefonoConsignado: '',
+        empresaConsignado: '',
+        distritoConsignado: '',
+        tipoEnvio: 'E-Commerce',
+        modalidad: 'Una vía'
+      },
       ruteoId: null,
     };
   },
@@ -630,9 +790,21 @@ export default {
       this.changeTarifa();
     },
 
-    removeRuta(pos) {
+    removeDestino(pos) {
+      if(this.pedidos[pos].id){
+        this.pedidos[pos].agregarAlRuteo = false;
+        this.pedidosIndividualClienteActual.push(this.pedidos[pos])
+      }
       this.pedidos.splice(pos, 1);
+      this.actualizarSumas();
+    },
+
+    actualizarSumas(){
       this.changeTarifa();
+			this.changeRecaudo();
+			this.changeTramite();
+			this.changeTarifaSugerida();
+			this.changeDistancia();
     },
 
     changeTarifa() {
@@ -646,7 +818,57 @@ export default {
       this.tarifaTotal = total;
     },
 
-    async convertirExcelData(type) {
+		changeTarifaSugerida() {
+      let total = 0;
+      for (let i in this.pedidos) {
+        if (this.pedidos[i].tarifaSugerida === "" || this.pedidos[i].tarifaSugerida === null) {
+          this.pedidos[i].tarifaSugerida = 0;
+        }
+        total += parseFloat(this.pedidos[i].tarifa);
+      }
+      this.tarifaTotalSugerida = total;
+    },
+
+		changeDistancia() {
+      let total = 0;
+      for (let i in this.pedidos) {
+        if (this.pedidos[i].distancia === "" || this.pedidos[i].distancia === null) {
+          this.pedidos[i].distancia = 0;
+        }
+        total += parseFloat(this.pedidos[i].distancia);
+      }
+      this.distanciaTotal = total;
+    },
+
+    changeRecaudo() {
+      let total = 0;
+      for (let i in this.pedidos) {
+        if (
+          this.pedidos[i].recaudo === "" ||
+          this.pedidos[i].recaudo === null
+        ) {
+          this.pedidos[i].recaudo = 0;
+        }
+        total += parseFloat(this.pedidos[i].recaudo);
+      }
+      this.recaudoTotal = total;
+    },
+
+    changeTramite() {
+      let total = 0;
+      for (let i in this.pedidos) {
+        if (
+          this.pedidos[i].tramite === "" ||
+          this.pedidos[i].tramite === null
+        ) {
+          this.pedidos[i].tramite = 0;
+        }
+        total += parseFloat(this.pedidos[i].tramite);
+      }
+      this.tramiteTotal = total;
+    },
+
+    async convertirExcelData() {
       if (
         this.nuevoPedido.fecha != "" &&
         this.nuevoPedido.fecha != null &&
@@ -656,9 +878,6 @@ export default {
         this.nuevoPedido.direccionRemitente != null
       ) {
         if (this.excelData != "") {
-          if (type === "nuevo") {
-            this.pedidos = [];
-          }
           this.showLoading = true;
 
           var rows = this.excelData.split("\n");
@@ -718,7 +937,7 @@ export default {
           this.excelData = "";
           this.showLoading = false;
         } else {
-          this.alert.message = "Necesitas agregar algo información del pedido";
+          this.alert.message = "Necesitas agregar información del pedido en el campo de texto";
           this.alert.success = false;
           this.alert.show = true;
         }
@@ -734,92 +953,141 @@ export default {
       }
     },
 
-    changeRecaudo() {
-      let total = 0;
-      for (let i in this.pedidos) {
-        if (
-          this.pedidos[i].recaudo === "" ||
-          this.pedidos[i].recaudo === null
-        ) {
-          this.pedidos[i].recaudo = 0;
-        }
-        total += parseFloat(this.pedidos[i].recaudo);
-
-        if (this.pedidos[i].recaudo !== 0) {
-          this.pedidos[i].tarifa = this.pedidos[i].tarifaMemoria + 2;
-        }
-        if (this.pedidos[i].recaudo === 0) {
-          this.pedidos[i].tarifa = this.pedidos[i].tarifaMemoria;
-        }
+    async agregarDestinoManual(){
+      const isValid = await this.$validator.validateAll();
+        // if (this.nuevoPedido.distancia === (null || undefined)) {
+        //   this.errorCalcularDistancia = true;
+        //   return;
+        // }
+      if (!isValid) {
+        return;
       }
-      this.recaudoTotal = total;
-    },
+      if(this.nuevoDestinoIndividual.contacto != "" &&
+        this.nuevoDestinoIndividual.telefonoConsignado != "" &&
+        this.nuevoDestinoIndividual.direccionConsignado != "" &&
+        this.nuevoDestinoIndividual.distritoConsignado != "" &&
+        this.nuevoDestinoIndividual.tipoDeEnvio != ""){
+          console.log("LLEGA")
+          this.showLoading= true;
+          let destino = this.nuevoDestinoIndividual;
 
-    changeTramite() {
-      let total = 0;
-      for (let i in this.pedidos) {
-        if (
-          this.pedidos[i].tramite === "" ||
-          this.pedidos[i].tramite === null
-        ) {
-          this.pedidos[i].tramite = 0;
-        }
-        total += parseFloat(this.pedidos[i].tramite);
+          let info = await this.calcularDistancia(
+            this.nuevoDestinoIndividual.direccionConsignado,
+            this.nuevoDestinoIndividual.distritoConsignado
+          );
+          destino["empresaConsignado"] = "";
+          destino["distancia"] = info.distancia;
+          destino["tarifa"] = info.tarifa;
+          destino["tarifaMemoria"] = info.tarifaMemoria;
+          destino["tarifaSugerida"] = info.tarifaSugerida;
+          destino["CO2Ahorrado"] = info.CO2Ahorrado;
+          destino["ruido"] = info.ruido;
+          destino["recaudo"] = 0;
+          destino["tramite"] = 0;
+          destino["modalidad"] = "Una vía";
+          destino["viajes"] = 1;
+          this.pedidos.push(destino);
+          this.actualizarSumas();
+          this.showLoading= false;
+      }else{
+        this.alert.message = "Debes de llenar todos los campos del destino!";
+        this.alert.show = true;
+        this.alert.success = false;
+
+        setTimeout(() => (this.alert.show = false), 2000);
       }
-      this.tramiteTotal = total;
     },
 
     async handleNuevoPedido() {
       try {
+        const isValid = await this.$validator.validateAll();
+        if (!isValid) {
+          return;
+        }
+
         this.bloquearBtn = true;
         this.showLoading = true;
         this.ruteoId = await PedidoService.createRuteo();
         let response = {};
         for (let i = 0; i < this.pedidos.length; i++) {
           this.nuevoPedido.operador = this.$store.getters.operador;
-          let pedido = {
-            fecha: this.nuevoPedido.fecha,
-            contactoRemitente: this.nuevoPedido.contactoRemitente,
-            empresaRemitente: this.nuevoPedido.empresaRemitente,
-            direccionRemitente: this.nuevoPedido.direccionRemitente,
-            distritoRemitente: this.nuevoPedido.distritoRemitente,
-            telefonoRemitente: this.nuevoPedido.telefonoRemitente,
-            otroDatoRemitente: this.nuevoPedido.otroDatoRemitente,
-            contactoConsignado: this.pedidos[i].contactoConsignado,
-            empresaConsignado: this.pedidos[i].empresaConsignado,
-            direccionConsignado: this.pedidos[i].direccionConsignado,
-            telefonoConsignado: this.pedidos[i].telefonoConsignado,
-            otroDatoConsignado: this.pedidos[i].otroDatoConsignado,
-            distritoConsignado: this.pedidos[i].distritoConsignado,
-            tipoCarga: this.nuevoPedido.tipoCarga,
-            formaPago: this.nuevoPedido.formaPago,
-            tarifa: this.pedidos[i].tarifa,
-            tarifaSugerida: this.pedidos[i].tarifaSugerida,
-            recaudo: this.pedidos[i].recaudo,
-            tramite: this.pedidos[i].tramite,
-            comision: this.nuevoPedido.comision,
-            distancia: this.pedidos[i].distancia,
-            CO2Ahorrado: this.pedidos[i].CO2Ahorrado,
-            ruido: this.pedidos[i].ruido,
-            status: this.nuevoPedido.status,
-            mobiker: this.nuevoPedido.mobiker,
-            tipoEnvio: this.nuevoPedido.tipoEnvio,
-            modalidad: this.pedidos[i].modalidad,
-            operador: this.nuevoPedido.operador,
-            rolCliente: this.nuevoPedido.rolCliente,
-            viajes: this.pedidos[i].viajes,
-            isRuteo: true,
-            ruteo: this.ruteoId,
-          };
-          const isValid = await this.$validator.validateAll();
-          // if (this.nuevoPedido.distancia === (null || undefined)) {
-          //   this.errorCalcularDistancia = true;
-          //   return;
-          // }
-          if (!isValid) {
-            return;
+          if(this.pedidos[i].id){
+            let pedidoExtendido = {
+              fecha: this.nuevoPedido.fecha,
+              contactoRemitente: this.nuevoPedido.contactoRemitente,
+              empresaRemitente: this.nuevoPedido.empresaRemitente,
+              direccionRemitente: this.nuevoPedido.direccionRemitente,
+              distritoRemitente: this.nuevoPedido.distritoRemitente,
+              telefonoRemitente: this.nuevoPedido.telefonoRemitente,
+              otroDatoRemitente: this.nuevoPedido.otroDatoRemitente,
+              contactoConsignado: this.pedidos[i].contactoConsignado,
+              empresaConsignado: this.pedidos[i].empresaConsignado,
+              direccionConsignado: this.pedidos[i].direccionConsignado,
+              telefonoConsignado: this.pedidos[i].telefonoConsignado,
+              otroDatoConsignado: this.pedidos[i].otroDatoConsignado,
+              distrito: {distrito: this.pedidos[i].distritoConsignado},
+              tipoCarga: this.nuevoPedido.tipoCarga,
+              formaPago: this.nuevoPedido.formaPago,
+              tarifa: this.pedidos[i].tarifa,
+              tarifaSugerida: this.pedidos[i].tarifaSugerida,
+              recaudo: this.pedidos[i].recaudo,
+              tramite: this.pedidos[i].tramite,
+              comision: this.nuevoPedido.comision,
+              distancia: this.pedidos[i].distancia,
+              CO2Ahorrado: this.pedidos[i].CO2Ahorrado,
+              ruido: this.pedidos[i].ruido,
+              status: this.nuevoPedido.status,
+              mobiker: {fullName: this.nuevoPedido.mobiker},
+              tipoDeEnvio: {tipo: this.nuevoPedido.tipoEnvio},
+              modalidad: {tipo: this.pedidos[i].modalidad},
+              operador: this.nuevoPedido.operador,
+              rolCliente: this.nuevoPedido.rolCliente,
+              viajes: this.pedidos[i].viajes,
+              isRuteo: true,
+              ruteo: this.ruteoId,
+            };
+
+            response = await PedidoService.editPedido(this.pedidos[i].id, pedidoExtendido);
+          }else{
+            let pedidoExtendido = {
+              fecha: this.nuevoPedido.fecha,
+              contactoRemitente: this.nuevoPedido.contactoRemitente,
+              empresaRemitente: this.nuevoPedido.empresaRemitente,
+              direccionRemitente: this.nuevoPedido.direccionRemitente,
+              distritoRemitente: this.nuevoPedido.distritoRemitente,
+              telefonoRemitente: this.nuevoPedido.telefonoRemitente,
+              otroDatoRemitente: this.nuevoPedido.otroDatoRemitente,
+              contactoConsignado: this.pedidos[i].contactoConsignado,
+              empresaConsignado: this.pedidos[i].empresaConsignado,
+              direccionConsignado: this.pedidos[i].direccionConsignado,
+              telefonoConsignado: this.pedidos[i].telefonoConsignado,
+              otroDatoConsignado: this.pedidos[i].otroDatoConsignado,
+              distritoConsignado: this.pedidos[i].distritoConsignado,
+              tipoCarga: this.nuevoPedido.tipoCarga,
+              formaPago: this.nuevoPedido.formaPago,
+              tarifa: this.pedidos[i].tarifa,
+              tarifaSugerida: this.pedidos[i].tarifaSugerida,
+              recaudo: this.pedidos[i].recaudo,
+              tramite: this.pedidos[i].tramite,
+              comision: this.nuevoPedido.comision,
+              distancia: this.pedidos[i].distancia,
+              CO2Ahorrado: this.pedidos[i].CO2Ahorrado,
+              ruido: this.pedidos[i].ruido,
+              status: this.nuevoPedido.status,
+              mobiker: this.nuevoPedido.mobiker,
+              tipoEnvio: this.nuevoPedido.tipoEnvio,
+              modalidad: this.pedidos[i].modalidad,
+              operador: this.nuevoPedido.operador,
+              rolCliente: this.nuevoPedido.rolCliente,
+              viajes: this.pedidos[i].viajes,
+              isRuteo: true,
+              ruteo: this.ruteoId,
+            };
+            
+            response = await PedidoService.storageNuevoPedido(pedidoExtendido);
           }
-          response = await PedidoService.storageNuevoPedido(pedido);
+          
+          
         }
         this.showLoading = false;
         this.alert.message = response.data.message;
@@ -916,6 +1184,8 @@ export default {
 
         this.memoriaCliente = cliente;
         this.memoriaCliente.fecha = new Date();
+
+        this.getPedidosByCliente(cliente.id);
       }
     },
 
@@ -973,6 +1243,34 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+
+    async getPedidosByCliente(id){
+      let response = await ClienteService.getPedidosDelClienteById(id);
+      
+      for(let i = 0; i < response.data.length; i++){
+        if(!response.data[i].isRuteo && response.data[i].statusId === 1 && 
+            response.data[i].direccionRemitente === this.nuevoPedido.direccionRemitente &&
+            response.data[i].distritoRemitente === this.nuevoPedido.distritoRemitente &&
+            response.data[i].tipoDeEnvio.tipo === this.nuevoPedido.tipoEnvio){
+          response.data[i]['agregarAlRuteo'] = false;
+          response.data[i]['distritoConsignado'] = response.data[i].distrito.distrito;
+          let modalidad = response.data[i].modalidad.tipo;
+          response.data[i].modalidad = modalidad;
+          this.pedidosIndividualClienteActual.push(response.data[i]);
+        }
+      }
+    },
+
+    agregarPedidoDelListado(){
+      for(let i = this.pedidosIndividualClienteActual.length-1; i >= 0; i--){
+        if(this.pedidosIndividualClienteActual[i].agregarAlRuteo){
+          this.pedidosIndividualClienteActual[i]['seleccionado'] = false;
+          this.pedidos.push(this.pedidosIndividualClienteActual[i]);
+          this.pedidosIndividualClienteActual.splice(i, 1)
+        }
+      }
+      this.actualizarSumas();
     },
   },
   components: {

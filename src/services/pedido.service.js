@@ -188,11 +188,7 @@ class PedidoService {
     try {
       let pedidoEditado = await axios.put(
         `${API_URL}/pedidos/cambiar-estado/${id}`,
-        {
-          status: pedidoCambiado.statusId,
-          comentario: pedidoCambiado.comentario,
-          mobiker: pedidoCambiado.mobiker,
-        },
+        pedidoCambiado,
         { headers: authHeader() }
       );
 

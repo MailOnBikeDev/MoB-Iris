@@ -4,7 +4,7 @@
       <h1
         class="relative inline-block px-6 py-2 mb-4 text-2xl font-bold text-center bg-gray-100 text-primary rounded-xl -top-12"
       >
-        Nuevo Ruteo
+        Editar Ruteo
       </h1>
     </div>
 
@@ -288,7 +288,7 @@
 
       <div class="flex flex-row justify-between mt-2"></div>
 
-      <!-- Aqui va el CSV -->
+      <!-- Aqui va toda la funcionalidad de Destinos -->
       <div class="w-full p-4 mt-5 bg-gray-100 rounded-xl">
         <div class="px-1 text-3xl font-bold text-center text-primary">
           <h2>
@@ -430,7 +430,13 @@
                 <td>{{ pedidoIndividual.telefonoConsignado }}</td>
                 <td>{{ pedidoIndividual.direccionConsignado }}</td>
                 <td>{{ pedidoIndividual.distrito.distrito }}</td>
-                <td>{{ pedidoIndividual.otroDatoConsignado }}</td>
+                <td>
+                  <input
+                    class="input input2"
+                    type="text"
+                    v-model="pedidoIndividual.otroDatoConsignado"
+                  />
+                </td>
                 <td>{{ pedidoIndividual.distancia }} km</td>
                 <td>
                   <input
@@ -502,7 +508,7 @@
           </table>
         </div>
       </div>
-      <!-- Aqui termina CSV -->
+      <!-- Aqui va toda la funcionalidad de Destinos -->
 
       <div class="flex justify-between w-full">
         <button
@@ -517,7 +523,7 @@
 
         <button
           type="submit"
-          @click.prevent="handleEditarRuteo"
+          @click.prevent="handelActualizarRuteo"
           class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 rounded-lg shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
         >
           Actualizar Ruteo
@@ -525,7 +531,54 @@
       </div>
     </form>
 
+    <div v-if="showModalComentarioAnulados" style="position:fixed; display:flex; align-items:center; justify-content:center; width:100vw; height: 100vh; top:0; bottom:0; left: 0;background: #00000070;">
+      <div style="width: 30%; height: auto;" class="px-10 py-4 bg-primary rounded-xl">
+        <div style="height: 40px; text-align:end;">
+          <button
+            style="position: absolute; "
+            class="px-2 text-2xl text-white rounded-full bg-info hover:bg-secondary focus:outline-none"
+            @click.prevent="cerrarModal"
+          >
+            <font-awesome-icon icon="times" />
+          </button>
+        </div>
+
+        <form class="flex flex-col items-center p-4 bg-white rounded-xl">
+          <div>
+            <label
+              for="comentario"
+              class="block mb-1 ml-1 text-sm font-bold text-primary"
+              >Ingres algun comentario del por que se estan anulando los pedidos (Opcional)</label
+            >
+            <textarea
+              class="input"
+              name="comentario"
+              id="comentario"
+              cols="26"
+              rows="3"
+              v-model="comentarioAnulados"
+              style="resize:none"
+            ></textarea>
+          </div>
+        </form>
+
+        <div class="flex justify-center mt-6">
+          <button
+            type="submit"
+            class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+            @click="handleAgregarComentarioAnulacion"
+          >
+              Confimar Anulacion
+          </button>
+        </div>
+      </div>
+    </div>
+    
+      
+
     <BaseAlerta v-if="alert.show" :alert="alert" />
+
+  
   </div>
 </template>
 
@@ -576,6 +629,8 @@ export default {
       pedidosParaQuitar: [],
       pedidosParaAnular: [],
       seleccionarTodosLosPedidos: false,
+      comentarioAnulados: '',
+      showModalComentarioAnulados: false
     };
   },
   async mounted() {
@@ -680,6 +735,18 @@ export default {
       this.changeTarifa();
     },
 
+    actualizarSumas(){
+      this.changeTarifa();
+			this.changeRecaudo();
+			this.changeTramite();
+			this.changeTarifaSugerida();
+			this.changeDistancia();
+    },
+    
+    cerrarModal(){
+      this.showModalComentarioAnulados = false;
+    },
+
     removeRuta(pos, action) {
       if(action === "quitar"){
         this.pedidosParaQuitar.push(this.pedidos[pos]);
@@ -688,11 +755,9 @@ export default {
       }
       
       this.pedidos.splice(pos, 1);
-      this.changeTarifa();
-			this.changeRecaudo();
-			this.changeTramite();
-			this.changeTarifaSugerida();
-			this.changeDistancia();
+      this.actualizarSumas();
+
+      return true;
     },
 
     changeTarifa() {
@@ -796,6 +861,7 @@ export default {
             this.tramiteTotal = 0;
             this.pedidos.push(row);
           }
+          this.actualizarSumas();
 
           this.excelData = "";
           this.showLoading = false;
@@ -844,10 +910,57 @@ export default {
       this.tramiteTotal = total;
     },
 
+    handelActualizarRuteo(){
+      if(this.pedidosParaAnular.length > 0){
+        this.showModalComentarioAnulados = true;
+      }else{
+        this.handleEditarRuteo();
+      }      
+    },
+
+    handleAgregarComentarioAnulacion(){
+      for(let i = 0; i < this.pedidosParaAnular.length; i++){
+        this.pedidosParaAnular[i]['comentario'] = this.comentarioAnulados;
+      }
+      this.cerrarModal();
+      this.handleEditarRuteo();
+    },
+
 		async handleEditarRuteo() {
       try {
         this.showLoading = true;
         let response = {};
+
+        if(this.pedidosParaAnular.length > 0){
+          for(let i = 0; i < this.pedidosParaAnular.length; i++){
+            const pedidoCambiado = {
+              status: 6,
+              mobiker: this.pedido.mobiker,
+              comentario: this.pedidosParaAnular[i].comentario,
+              isRuteo: false,
+              ruteoId: null
+            };
+            response = await PedidoService.cambiarEstadoPedido(
+              this.pedidosParaAnular[i].id,
+              pedidoCambiado
+            );
+          }
+        }
+
+        if(this.pedidosParaQuitar.length > 0){
+          for(let i = 0; i < this.pedidosParaQuitar.length; i++){
+            const pedidoCambiado = {
+              status: this.pedidosParaQuitar[i].statusId,
+              mobiker: this.pedido.mobiker,
+              isRuteo: false,
+              ruteoId: null
+            };
+            response = await PedidoService.cambiarEstadoPedido(
+              this.pedidosParaQuitar[i].id,
+              pedidoCambiado
+            );
+          }
+        }
 
 				for (let i = 0; i < this.pedidos.length; i++) {
 					if(this.pedidos[i].id){
@@ -892,7 +1005,6 @@ export default {
 							this.showLoading = false;
 							return;
 						}
-            console.log(pedidoExtendido);
 						response = await PedidoService.editPedido(this.pedidos[i].id, pedidoExtendido);
 
 					}else{
@@ -946,7 +1058,7 @@ export default {
         this.alert.success = true;
 
         // setTimeout(() => {
-        //   this.$router.push("tablero-pedidos");
+        //   location.reload();  
         // }, 1500);
       } catch (error) {
         console.log(`Error al Editar Pedido: ${error.response.data.message}`);
@@ -1011,8 +1123,7 @@ export default {
     },
 
     cancelar() {
-      console.log("Creación de Pedido cancelada");
-      history.go(-1);
+      this.$router.push('/pedidos/tablero-pedidos');
     },
 
     activarCliente(cliente) {
@@ -1138,19 +1249,17 @@ export default {
           this.pedidosIndividualClienteActual.push(response.data[i]);
         }
       }
-
-      console.log(this.pedido.fecha);
     },
 
     agregarPedidoDelListado(){
-      for(let i = 0; i < this.pedidosIndividualClienteActual.length; i++){
+      for(let i = this.pedidosIndividualClienteActual.length-1; i >= 0; i--){
         if(this.pedidosIndividualClienteActual[i].agregarAlRuteo){
           this.pedidosIndividualClienteActual[i]['seleccionado'] = false;
           this.pedidos.push(this.pedidosIndividualClienteActual[i]);
           this.pedidosIndividualClienteActual.splice(i, 1)
         }
       }
-      console.log(this.pedidos);
+      this.actualizarSumas();
     },
 
     seleccionarTodos(e){
@@ -1161,24 +1270,20 @@ export default {
     },
 
     anularPedidoDeRuteo(){
-      for(let i = 0; i < this.pedidos.length; i++){
+      for(let i = this.pedidos.length-1; i >= 0; i--){
         if(this.pedidos[i].seleccionado){
           this.removeRuta(i, "anular")
         }
       }
-      console.log(this.pedidosParaAnular)
     },
 
     quitarPedidoDeRuteo(){
-      for(let i = 0; i < this.pedidos.length; i++){
+      for(let i = this.pedidos.length-1; i >= 0; i--){
         if(this.pedidos[i].seleccionado){
           this.removeRuta(i, "quitar")
         }
       }
-      console.log(this.pedidosParaQuitar)
     }
-
-    
   },
   components: {
     ModelListSelect,
