@@ -231,6 +231,7 @@
               v-validate="'required'"
               name="tarifa"
               class="input"
+              min="0"
             />
             <div
               v-if="errors.has('tarifa')"
@@ -483,6 +484,9 @@
               v-model.number="nuevoPedido.recaudo"
               type="number"
               class="input"
+              @input="changeRecaudo"
+              @change="changeRecaudo"
+              min="0"
             />
           </div>
 
@@ -492,6 +496,7 @@
               v-model.number="nuevoPedido.tramite"
               type="number"
               class="input"
+              min="0"
             />
           </div>
         </div>
@@ -630,15 +635,6 @@ export default {
       }
     },
 
-    "nuevoPedido.recaudo": function() {
-      if (this.nuevoPedido.recaudo !== 0) {
-        this.nuevoPedido.tarifa = +(this.tarifaMemoria + 2);
-      }
-      if (this.nuevoPedido.recaudo === 0) {
-        this.nuevoPedido.tarifa = this.tarifaMemoria;
-      }
-    },
-
     "nuevoPedido.modalidad": function() {
       if (this.nuevoPedido.modalidad === "Con Retorno") {
         this.nuevoPedido.viajes = 2;
@@ -661,6 +657,15 @@ export default {
   },
   methods: {
     ...mapActions("mobikers", ["obtenerComision"]),
+
+    changeRecaudo() {
+      if (this.nuevoPedido.recaudo !== 0) {
+        this.nuevoPedido.tarifa = +(this.tarifaMemoria + 2);
+      }
+      if (this.nuevoPedido.recaudo === 0) {
+        this.nuevoPedido.tarifa = +this.tarifaMemoria;
+      }
+    },
 
     async handleNuevoPedido() {
       try {

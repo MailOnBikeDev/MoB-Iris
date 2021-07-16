@@ -392,7 +392,7 @@
                   <input
                     class="input input2"
                     type="number"
-                    v-model="pedido.recaudo"
+                    v-model.number="pedido.recaudo"
                     v-on:keyup="changeRecaudo"
                     @change="changeRecaudo"
                   />
@@ -401,7 +401,7 @@
                   <input
                     class="input input2"
                     type="number"
-                    v-model="pedido.tramite"
+                    v-model.number="pedido.tramite"
                     v-on:keyup="changeTramite"
                     @change="changeTramite"
                   />
@@ -469,6 +469,8 @@
           type="submit"
           @click.prevent="handleNuevoPedido"
           class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 bg-yellow-500 rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl focus:outline-none"
+          :class="{ 'opacity-50': bloquearBtn === true }"
+          :disabled="bloquearBtn"
         >
           Programar Pedido
         </button>
@@ -478,6 +480,8 @@
           type="submit"
           @click.prevent="handleNuevoPedido"
           class="block px-6 py-2 mx-auto font-bold text-white transition duration-200 rounded-lg shadow-lg bg-info hover:bg-secondary hover:shadow-xl focus:outline-none"
+          :class="{ 'opacity-50': bloquearBtn === true }"
+          :disabled="bloquearBtn"
         >
           Asignar Pedido
         </button>
@@ -514,6 +518,7 @@ export default {
         success: false,
         show: false,
       },
+      bloquearBtn: false,
       errorCalcularDistancia: false,
       memoriaCliente: null,
       es: es,
@@ -739,6 +744,13 @@ export default {
           this.pedidos[i].recaudo = 0;
         }
         total += parseFloat(this.pedidos[i].recaudo);
+
+        if (this.pedidos[i].recaudo !== 0) {
+          this.pedidos[i].tarifa = this.pedidos[i].tarifaMemoria + 2;
+        }
+        if (this.pedidos[i].recaudo === 0) {
+          this.pedidos[i].tarifa = this.pedidos[i].tarifaMemoria;
+        }
       }
       this.recaudoTotal = total;
     },
@@ -759,6 +771,7 @@ export default {
 
     async handleNuevoPedido() {
       try {
+        this.bloquearBtn = true;
         this.showLoading = true;
         this.ruteoId = await PedidoService.createRuteo();
         let response = {};
@@ -791,7 +804,7 @@ export default {
             status: this.nuevoPedido.status,
             mobiker: this.nuevoPedido.mobiker,
             tipoEnvio: this.nuevoPedido.tipoEnvio,
-            modalidad: this.nuevoPedido.modalidad,
+            modalidad: this.pedidos[i].modalidad,
             operador: this.nuevoPedido.operador,
             rolCliente: this.nuevoPedido.rolCliente,
             viajes: this.pedidos[i].viajes,
