@@ -108,7 +108,7 @@
         class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
         <div
-          class="grid items-center grid-cols-7 py-2 text-sm text-center border-b-2 cursor-default h-14 hover:bg-info border-primary"
+          class="grid items-center grid-cols-7 py-2 text-xs text-center border-b-2 cursor-default h-14 hover:bg-info border-primary"
           :class="{
             'bg-info text-white font-bold': mobiker.id == currentIndex,
           }"
