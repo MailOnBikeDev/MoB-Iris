@@ -129,11 +129,11 @@ class PedidoService {
           rolCliente: editarPedido.rolCliente,
           operador: editarPedido.operador,
           viajes: editarPedido.viajes,
+          isRuteo: editarPedido.isRuteo,
+          ruteoId: editarPedido.ruteo
         },
         { headers: authHeader() }
       );
-
-      
 
       return pedidoEditado;
     } catch (error) {

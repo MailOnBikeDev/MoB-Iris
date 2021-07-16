@@ -10,12 +10,12 @@
 
     <div class="flex flex-row justify-center px-4 -mt-12">
       <div>
-        <button
+        <!-- <button
           class="px-4 py-1 font-bold text-white bg-primary rounded-xl focus:outline-none"
           @click="showBuscador = true"
         >
           Buscar cliente
-        </button>
+        </button> -->
       </div>
 
       <div class="overlay" v-if="showBuscador"></div>
@@ -66,6 +66,7 @@
               placeholder="Fecha del Pedido"
               format="dd MMMM yyyy"
               :language="es"
+              :useUtc="true"
             />
             <div
               v-if="errors.has('fecha')"
@@ -95,6 +96,7 @@
           <div>
             <label for="empresaRemitente" class="label-input">Empresa</label>
             <input
+              readonly
               v-model="pedido.empresaRemitente"
               type="text"
               v-validate="'required'"
@@ -296,28 +298,65 @@
         <!-- <input type="file" @change="onFileChanged" multiple /> -->
 
         <div style="width: 100%; min-height: 650px">
-          <div
-            style="width: 100%; padding: 20px 40px; display:flex; align-items:center; min-height: 250px; justify-content:center;"
-          >
-            <textarea
-              v-model="excelData"
-              class="input"
-              style="resize: none; width:80%; height: 100%;"
-              name=""
-              id=""
-              cols="80"
-              rows="8"
-            ></textarea>
+          <div class="grid grid-cols-2 gap-2 p-2" style="padding-bottom: 10px; border-bottom: 2px solid #ddd; margin-bottom: 30px;">
             <div
-              style="display:flex; min-height:200px; padding-left: 20px; flex-direction:column; justify-content: space-around;"
+              style="width: 100%; padding: 20px 40px;min-height: 250px; justify-content:center; border-right: 2px solid #ddd;"
             >
-              <button
-                type="button"
-                class="block px-6 py-2 font-bold text-white transition duration-200 bg-yellow-500 rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl focus:outline-none"
-                @click="convertirExcelData('agregar')"
+              <textarea
+                v-model="excelData"
+                class="input"
+                style="resize: none; width:100%;height: 200px;"
+                name=""
+                id=""
+                cols="80"
+                rows="8"
+                placeholder="Puedes copiar y pegar aquí registros desde excel en el siguiente orden:            Contacto    Direccion     Distrito    Telefono     Observaciones"
+              ></textarea>
+              <div
+                style="display:flex; padding-left: 20px; justify-content:center;"
               >
-                Agregar Pedido
-              </button>
+                <button
+                  type="button"
+                  class="block px-6 py-2 font-bold text-white transition duration-200 bg-blue-500 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl focus:outline-none"
+                  @click="convertirExcelData('agregar')"
+                >
+                  Convertir
+                </button>
+              </div>
+            </div>
+            <div>
+              <div style="min-height:200px;">
+                <table class="table-auto" style="max-height: 200px;">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>ID Pedido</th>
+                      <th>Destino</th>
+                      <th>Contacto</th>
+                      <th>Telefono</th>
+                    </tr>
+                  </thead>
+                  <tbody style="">
+                    <tr v-for="(pedidoIndividualNoAgregado, index) in pedidosIndividualClienteActual" :key="index">
+                      <td><input type="checkbox" v-model="pedidoIndividualNoAgregado.agregarAlRuteo"></td>
+                      <td>{{pedidoIndividualNoAgregado.id}}</td>
+                      <td>{{pedidoIndividualNoAgregado.direccionConsignado}}, {{pedidoIndividualNoAgregado.distrito.distrito}}</td>
+                      <td>{{pedidoIndividualNoAgregado.contactoConsignado}}</td>
+                      <td>{{pedidoIndividualNoAgregado.telefonoConsignado}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <br>
+              <div style="display:flex; justify-content: center;">
+                <button
+                  type="button"
+                  class="block px-6 py-2 font-bold text-white transition duration-200 bg-blue-500 rounded-lg shadow-lg hover:bg-blue-600 hover:shadow-xl focus:outline-none"
+                  @click="agregarPedidoDelListado()"
+                >
+                  Agregar al Ruteo
+                </button>
+              </div>
             </div>
           </div>
 
@@ -337,9 +376,37 @@
               :D.
             </p>
           </div>
+          <div style="display:flex; align-items:center; ">
+            <!-- <div style="">
+              <input type="checkbox" name="" id="seleccionarTodos"  v-model="seleccionarTodosLosPedidos" @change="seleccionarTodos($event)"> 
+              <label style="margin-left:5px; cursor:pointer" for="seleccionarTodos"> Seleccionar todos</label>
+            </div> -->
+            <button
+                type="button"
+                style="margin-left: 20px"
+                class="block px-6 py-2 font-bold text-white transition duration-200 bg-red-500 rounded-lg shadow-lg hover:bg-red-600 hover:shadow-xl focus:outline-none"
+                @click="anularPedidoDeRuteo()"
+              >
+                Anular
+              </button>
+              <button
+                type="button"
+                style="margin-left: 20px"
+                class="block px-6 py-2 font-bold text-white transition duration-200 bg-yellow-500 rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl focus:outline-none"
+                @click="quitarPedidoDeRuteo()"
+              >
+                Quitar
+              </button>
+          </div>
           <table class="table-auto">
             <thead class="text-primary">
               <tr>
+                <th>
+                  <font-awesome-icon
+                    class="text-2xl text-primary"
+                    icon="trash-alt"
+                  />
+                </th>
                 <th>Contacto</th>
                 <th>Teléfono</th>
                 <th>Dirección</th>
@@ -351,12 +418,6 @@
                 <th>Recaudo</th>
                 <th>Trámite</th>
                 <th>Modalidad</th>
-                <th>
-                  <font-awesome-icon
-                    class="text-2xl text-primary"
-                    icon="trash-alt"
-                  />
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -364,6 +425,7 @@
                 v-for="(pedidoIndividual, index) in pedidos"
                 :key="index"
               >
+                <td> <input type="checkbox" name="" v-model="pedidoIndividual.seleccionado"> </td>
                 <td>{{ pedidoIndividual.contactoConsignado }}</td>
                 <td>{{ pedidoIndividual.telefonoConsignado }}</td>
                 <td>{{ pedidoIndividual.direccionConsignado }}</td>
@@ -409,19 +471,12 @@
                     @input="changeModalidad(pedidoIndividual.modalidad, index)"
                   />
                 </td>
-                <td style="text-align:center;">
-                  <font-awesome-icon
-                    class="text-2xl text-primary"
-                    icon="trash-alt"
-                    style="cursor:pointer;"
-                    @click="removeRuta(index)"
-                  />
-                </td>
               </tr>
               <tr class="bg-opacity-25 bg-info">
                 <td class="p-1 text-lg font-bold text-primary">
                   Total:
                 </td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -487,6 +542,7 @@ import { es } from "vuejs-datepicker/dist/locale";
 import consultarApi from "@/services/maps.service";
 import calcularTarifa from "@/services/tarifa.service";
 import calcularEstadisticas from "@/services/ecoamigable.service";
+import ClienteService from '@/services/cliente.service';
 
 export default {
   name: "EditarRuteo",
@@ -505,6 +561,7 @@ export default {
       es: es,
       file: null,
       pedidos: [],
+      pedidosIndividualClienteActual: [],
       tarifaTotal: 0,
       tarifaTotalSugerida: 0,
       distanciaTotal: 0,
@@ -514,11 +571,17 @@ export default {
       excelData: "",
       tablaExcelData: [],
       ruteoId: null,
+      pedidosRuteoSeleccionados: [],
+      pedidosParaAgregar: [],
+      pedidosParaQuitar: [],
+      pedidosParaAnular: [],
+      seleccionarTodosLosPedidos: false,
     };
   },
   async mounted() {
     try {
       this.getRuteo(this.$route.params.id);
+      
 
       this.mobikersFiltrados = this.mobikers.filter(
         (mobiker) => mobiker.status === "Activo"
@@ -617,7 +680,13 @@ export default {
       this.changeTarifa();
     },
 
-    removeRuta(pos) {
+    removeRuta(pos, action) {
+      if(action === "quitar"){
+        this.pedidosParaQuitar.push(this.pedidos[pos]);
+      }else if(action === "anular"){
+        this.pedidosParaAnular.push(this.pedidos[pos]);
+      }
+      
       this.pedidos.splice(pos, 1);
       this.changeTarifa();
 			this.changeRecaudo();
@@ -719,6 +788,7 @@ export default {
             row["tramite"] = 0;
             row["modalidad"] = {tipo: "Una vía"};
             row["viajes"] = 1;
+            row["seleccionado"] = false;
             this.tarifaTotal = this.tarifaTotal + info.tarifa;
             this.tarifaTotalSugerida = this.tarifaTotalSugerida + info.tarifaSugerida;
             this.distanciaTotal += +info.distancia.toFixed(1);
@@ -782,7 +852,7 @@ export default {
 				for (let i = 0; i < this.pedidos.length; i++) {
 					if(this.pedidos[i].id){
 						this.pedido.operador = this.$store.getters.operador;
-						let pedido = {
+						let pedidoExtendido = {
 							fecha: this.pedido.fecha,
 							contactoRemitente: this.pedido.contactoRemitente,
 							empresaRemitente: this.pedido.empresaRemitente,
@@ -822,11 +892,12 @@ export default {
 							this.showLoading = false;
 							return;
 						}
-						response = await PedidoService.editPedido(this.pedidos[i].id, pedido);
+            console.log(pedidoExtendido);
+						response = await PedidoService.editPedido(this.pedidos[i].id, pedidoExtendido);
 
 					}else{
 						this.pedido.operador = this.$store.getters.operador;
-						let pedido = {
+						let pedidoExtendido = {
 							fecha: this.pedido.fecha,
 							contactoRemitente: this.pedido.contactoRemitente,
 							empresaRemitente: this.pedido.empresaRemitente,
@@ -866,7 +937,7 @@ export default {
 							this.showLoading = false;
 							return;
 						}
-						response = await PedidoService.storageNuevoPedido(pedido);
+						response = await PedidoService.storageNuevoPedido(pedidoExtendido);
 					}
         }
         this.showLoading = false;
@@ -1024,8 +1095,7 @@ export default {
     async getRuteo(id) {
       try {
         const response = await PedidoService.getRuteoById(id);
-
-				this.pedido.fecha = response.data.pedidosRuta[0].fecha;
+        this.pedido.fecha = response.data.pedidosRuta[0].fecha;
 
 				this.pedido.contactoRemitente = response.data.pedidosRuta[0].contactoRemitente;
 				this.pedido.empresaRemitente = response.data.pedidosRuta[0].empresaRemitente;
@@ -1041,16 +1111,74 @@ export default {
 				this.pedido.rolCliente = response.data.pedidosRuta[0].rolCliente;
 
 				for(let i = 0; i < response.data.pedidosRuta.length; i++){
+          response.data.pedidosRuta[i]['seleccionado']=false;
 					this.tarifaTotal = this.tarifaTotal + response.data.pedidosRuta[i].tarifa;
 					this.tarifaTotalSugerida = this.tarifaTotalSugerida + response.data.pedidosRuta[i].tarifaSugerida;
 					this.distanciaTotal += response.data.pedidosRuta[i].distancia;
 				}
 
 				this.pedidos = response.data.pedidosRuta;
+
+        this.getPedidosByCliente(response.data.pedidosRuta[0].clienteId);
       } catch (error) {
         console.error(`Error al obtener un Ruteo por Id. ${error.message}`);
       }
     },
+
+    async getPedidosByCliente(id){
+      let response = await ClienteService.getPedidosDelClienteById(id);
+      
+      for(let i = 0; i < response.data.length; i++){
+        if(!response.data[i].isRuteo && response.data[i].statusId === 1 && 
+            response.data[i].direccionRemitente === this.pedido.direccionRemitente &&
+            response.data[i].distritoRemitente === this.pedido.distritoRemitente &&
+            response.data[i].fecha === this.pedido.fecha &&
+            response.data[i].tipoDeEnvio.tipo === this.pedido.tipoEnvio){
+          response.data[i]['agregarAlRuteo'] = false;
+          this.pedidosIndividualClienteActual.push(response.data[i]);
+        }
+      }
+
+      console.log(this.pedido.fecha);
+    },
+
+    agregarPedidoDelListado(){
+      for(let i = 0; i < this.pedidosIndividualClienteActual.length; i++){
+        if(this.pedidosIndividualClienteActual[i].agregarAlRuteo){
+          this.pedidosIndividualClienteActual[i]['seleccionado'] = false;
+          this.pedidos.push(this.pedidosIndividualClienteActual[i]);
+          this.pedidosIndividualClienteActual.splice(i, 1)
+        }
+      }
+      console.log(this.pedidos);
+    },
+
+    seleccionarTodos(e){
+      console.log(e)
+      for(let i = 0; i < this.pedidosRuteoSeleccionados.length;i++){
+        console.log(this.pedidosRuteoSeleccionados);
+      }
+    },
+
+    anularPedidoDeRuteo(){
+      for(let i = 0; i < this.pedidos.length; i++){
+        if(this.pedidos[i].seleccionado){
+          this.removeRuta(i, "anular")
+        }
+      }
+      console.log(this.pedidosParaAnular)
+    },
+
+    quitarPedidoDeRuteo(){
+      for(let i = 0; i < this.pedidos.length; i++){
+        if(this.pedidos[i].seleccionado){
+          this.removeRuta(i, "quitar")
+        }
+      }
+      console.log(this.pedidosParaQuitar)
+    }
+
+    
   },
   components: {
     ModelListSelect,

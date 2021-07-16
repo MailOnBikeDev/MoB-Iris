@@ -6,7 +6,7 @@
     >
       <p class="mb-2">
         <span class="resalta">Fecha: </span>
-        {{ $date(infoRuta.fecha).format("DD MMM YYYY") }}
+        {{ $date(infoRuta.pedidosRuta[0].fecha).format("DD MMM YYYY") }}
       </p>
 
       <p class="mb-2 text-center">
@@ -125,6 +125,6 @@
 export default {
   props: {
     infoRuta: { type: Object },
-  },
+  }
 };
 </script>

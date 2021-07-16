@@ -83,3 +83,7 @@ body {
 .tag-anulado {
   @apply inline px-2 py-1 text-xs font-bold text-white bg-yellow-700 rounded-full;
 }
+
+input[type=checkbox]{
+  cursor: pointer;
+}
