@@ -11,13 +11,11 @@
       </tr>
 
       <tr
-        class="table-row max-h-full overflow-y-auto border-2 odd:bg-info odd:text-white border-secondary"
+        class="table-row border-2 odd:bg-info odd:text-white border-secondary"
         v-for="(mobiker, idx) in mobikers"
         :key="idx"
       >
-        <td
-          class="table-cell px-2 font-bold text-center border-2 border-secondary"
-        >
+        <td class="table-cell px-2 text-center border-2 border-secondary">
           {{ idx + 1 }}
         </td>
         <td class="table-cell px-2 text-center border-2 border-secondary">

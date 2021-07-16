@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <div ref="mobikersTop">
+    <div ref="mobikersTop" class="overflow-y-auto max-h-96">
       <TablaMobikerTop :mobikers="mobikers" />
     </div>
   </div>
@@ -93,8 +93,9 @@ export default {
 
         const response = await MobikerService.getMobikersConPedidos(params);
 
-        this.mobikers = response.data;
-        console.log(response.data);
+        this.mobikers = response.data.sort((a, b) => {
+          return b.cantidadPedidos - a.cantidadPedidos;
+        });
       } catch (error) {
         console.error(
           `Error al obtener MoBikers con Pedidos: ${error.message}`

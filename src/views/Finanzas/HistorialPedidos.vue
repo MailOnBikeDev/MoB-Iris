@@ -32,22 +32,17 @@
           :monday-first="true"
           :language="es"
           format="dd MMM"
+          @input="retrievePedidos"
         />
         <datepicker
           v-model="fechaFin"
           name="fechaFin"
-          input-class="w-24 p-2 font-bold text-center cursor-pointer focus:outline-none text-primary"
+          input-class="w-24 p-2 font-bold text-center cursor-pointer rounded-r-xl focus:outline-none text-primary"
           :monday-first="true"
           :language="es"
           format="dd MMM"
+          @input="retrievePedidos"
         />
-        <button
-          type="button"
-          class="px-2 py-1 mb-1 font-bold bg-white rounded-r-xl hover:bg-info hover:text-white focus:outline-none text-secondary"
-          @click="retrievePedidos"
-        >
-          Buscar
-        </button>
       </div>
 
       <div>

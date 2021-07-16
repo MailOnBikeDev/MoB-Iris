@@ -27,7 +27,7 @@
       <div v-for="detalle in detalles" :key="detalle.id">
         <span>
           {{ $date(detalle.fecha).format("DD/MM") }}: {{ detalle.id }} - [{{
-            detalle.empresaRemitente.toUpperCase().split(" ")[0]
+            detalle.empresaRemitente.toUpperCase()
           }}] = {{ detalle.tarifa }} {{ detalle.formaPago.split(" ")[0] }}
         </span>
       </div>

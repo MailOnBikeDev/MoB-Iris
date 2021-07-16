@@ -41,22 +41,17 @@
           :monday-first="true"
           :language="es"
           format="dd MMM"
+          @input="getPedidosAsignar"
         />
         <datepicker
           v-model="fechaFin"
           name="fechaFin"
-          input-class="w-20 p-2 mb-1 font-bold text-center cursor-pointer focus:outline-none text-primary"
+          input-class="w-20 p-2 mb-1 font-bold text-center cursor-pointer rounded-r-xl focus:outline-none text-primary"
           :monday-first="true"
           :language="es"
           format="dd MMM"
+          @input="getPedidosAsignar"
         />
-        <button
-          type="button"
-          class="px-2 py-1 mb-1 font-bold bg-white rounded-r-xl hover:bg-info hover:text-white focus:outline-none text-secondary"
-          @click="retrievePedidos"
-        >
-          Buscar
-        </button>
       </div>
 
       <div>
@@ -240,13 +235,17 @@
 
           <button
             @click="assignRuta(ruta.pedidosRuta)"
-            class="focus:outline-none"
+            class="focus:outline-none text-primary"
           >
-            <font-awesome-icon
-              class="text-2xl text-primary"
-              icon="pencil-alt"
-            />
+            <font-awesome-icon class="text-2xl" icon="pencil-alt" />
           </button>
+          <!-- <div>
+            <input
+              type="checkbox"
+              v-model="pedidosArray"
+              :value="ruta.pedidosRuta"
+            />
+          </div> -->
         </div>
       </div>
 
@@ -401,7 +400,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("mobikers", ["getMobikers", "buscarMobikers"]),
+    ...mapActions("mobikers", ["getMobikers"]),
 
     getRequestParams(desde, hasta, page, pageSize) {
       let params = {};
@@ -486,6 +485,11 @@ export default {
       }
     },
 
+    getPedidosAsignar() {
+      this.retrievePedidos();
+      this.retrieveRuteos();
+    },
+
     checkPedidosMobikers(mobiker, index) {
       this.buscador = mobiker.fullName;
       this.currentIndexMobiker = index;
@@ -548,6 +552,8 @@ export default {
       // this.pedidosArray.sort((a, b) => {
       //   return a.id - b.id ? 1 : -1;
       // });
+      this.pedidosArray = [...this.pedidosArray];
+      console.log(this.pedidosArray);
       this.showDetalle = true;
     },
 

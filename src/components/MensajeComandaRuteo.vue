@@ -41,6 +41,7 @@ __Contacto:__ {{ destino.contactoConsignado }} {{
             ? "- " + destino.empresaConsignado
             : undefined
         }}
+__Dirección:__ {{ destino.direccionConsignado }}
 __Teléfono:__ {{ destino.telefonoConsignado }}
 {{
           destino.otroDatoConsignado

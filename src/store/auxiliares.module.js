@@ -49,7 +49,7 @@ export const auxiliares = {
       localStorage.setItem("distritos", JSON.stringify(payload));
     },
     setZonaCobertura(state, payload) {
-      state.distritos = payload;
+      state.zonaCobertura = payload;
       localStorage.setItem("zonaCobertura", JSON.stringify(payload));
     },
     setTiposCarga(state, payload) {

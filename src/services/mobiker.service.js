@@ -153,7 +153,7 @@ class MobikerService {
         headers: authHeader(),
       });
 
-      return mobiker;
+      return mobiker.data;
     } catch (error) {
       console.error("Mensaje de error: ", error.message);
     }
