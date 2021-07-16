@@ -526,6 +526,8 @@ export default {
     setActiveRuteo(ruta, index) {
       this.currentRuta = ruta;
       this.currentRutaIndex = index;
+
+      this.showRuteo = true;
     },
 
     mostrarClienteRuteo(ruta, index) {
