@@ -143,14 +143,20 @@
 
       <div
         v-else
-        class="inline-grid items-center grid-cols-8 col-span-3 text-sm text-center text-primary"
+        class="inline-grid items-center grid-cols-10 col-span-3 mr-2 text-sm text-center text-primary"
       >
         <button @click="sortPorId" class="focus:outline-none">
           <p class="font-bold"># Pedido</p>
         </button>
+        <div>
+          <p class="font-bold">Cliente</p>
+        </div>
         <button @click="sortPorOrigen" class="focus:outline-none">
           <p class="font-bold">Origen</p>
         </button>
+        <div>
+          <p class="font-bold">Cosignado</p>
+        </div>
         <button @click="sortPorDestino" class="focus:outline-none">
           <p class="font-bold">Destino</p>
         </button>
@@ -270,7 +276,7 @@
         class="col-span-3 overflow-y-auto bg-white border border-black max-h-96 pedidos-scroll"
       >
         <div
-          class="grid items-center grid-cols-8 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info hover:text-white"
+          class="grid items-center h-auto grid-cols-10 py-2 overflow-hidden text-xs text-center border-b-2 cursor-pointer gap-x-1 border-primary hover:bg-info hover:text-white"
           :class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
           v-for="pedido in pedidosFiltrados"
           :key="pedido.id"
@@ -281,10 +287,19 @@
             <p>{{ pedido.id }}</p>
           </div>
           <div>
+            <p>{{ pedido.empresaRemitente }}</p>
+          </div>
+          <div>
             <p v-if="pedido.rolCliente === 'Remitente'">
               {{ pedido.distritoRemitente }}
             </p>
             <p v-else>{{ pedido.distrito.distrito }}</p>
+          </div>
+          <div>
+            <p v-if="pedido.contactoConsignado == 'Mesa de Partes'">
+              {{ pedido.empresaConsignado }}
+            </p>
+            <p v-else>{{ pedido.contactoConsignado }}</p>
           </div>
           <div>
             <p v-if="pedido.rolCliente === 'Remitente'">

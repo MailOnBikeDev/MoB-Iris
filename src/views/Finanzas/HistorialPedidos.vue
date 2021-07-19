@@ -115,14 +115,20 @@
       </div>
 
       <div
-        class="inline-grid items-center grid-cols-7 col-span-3 text-sm font-bold text-center text-primary"
+        class="inline-grid items-center grid-cols-9 col-span-3 text-sm font-bold text-center text-primary"
       >
         <button @click="sortPorId" class="focus:outline-none">
           <p class="font-bold"># Pedido</p>
         </button>
+        <div>
+          <p class="font-bold">Cliente</p>
+        </div>
         <button @click="sortPorOrigen" class="focus:outline-none">
           <p class="font-bold">Origen</p>
         </button>
+        <div>
+          <p class="font-bold">Consignado</p>
+        </div>
         <button @click="sortPorDestino" class="focus:outline-none">
           <p class="font-bold">Destino</p>
         </button>
@@ -152,7 +158,7 @@
         class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
         <div
-          class="grid items-center grid-cols-7 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
+          class="grid items-center h-auto grid-cols-9 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 border-primary hover:bg-info"
           :class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
           v-for="pedido in pedidosFiltrados"
           :key="pedido.id"
@@ -162,10 +168,16 @@
             <p>{{ pedido.id }}</p>
           </div>
           <div>
+            <p>{{ pedido.empresaRemitente }}</p>
+          </div>
+          <div>
             <p v-if="pedido.rolCliente === 'Remitente'">
               {{ pedido.distritoRemitente }}
             </p>
             <p v-else>{{ pedido.distrito.distrito }}</p>
+          </div>
+          <div>
+            <p>{{ pedido.contactoConsignado }}</p>
           </div>
           <div>
             <p v-if="pedido.rolCliente === 'Remitente'">
