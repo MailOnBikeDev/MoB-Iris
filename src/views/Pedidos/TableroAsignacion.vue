@@ -153,25 +153,22 @@
         <div
           class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
           :class="{
-            'bg-info text-white font-bold': mobiker.id == currentIndexMobiker,
+            'bg-info text-white font-bold':
+              mobiker.mobiker.id == currentIndexMobiker,
           }"
           v-for="mobiker in mobikersFiltrados"
           :title="
-            `Bicicleta: ${mobiker.tipoBicicleta} - Equipo: ${mobiker.equipo}`
+            `Bicicleta: ${mobiker.mobiker.tipoBicicleta} - Equipo: ${mobiker.mobiker.equipo}`
           "
           :key="mobiker.id"
-          @click="checkPedidosMobikers(mobiker, mobiker.id)"
+          @click="checkPedidosMobikers(mobiker.mobiker, mobiker.mobiker.id)"
         >
           <div class="col-span-2">
-            {{ mobiker.fullName }}
+            {{ mobiker.mobiker.fullName }}
           </div>
 
           <div>
-            {{
-              contadorPedidosMobiker.filter(
-                (pedido) => pedido.mobikerId === mobiker.id
-              ).length
-            }}
+            {{ mobiker.cantidadPedidos }}
           </div>
         </div>
       </div>
@@ -331,12 +328,12 @@
 
 <script>
 import PedidoService from "@/services/pedido.service";
+import MobikerService from "@/services/mobiker.service";
 import DetallePedidoProgramado from "@/components/DetallePedidoProgramado.vue";
 import ResumenPedido from "@/components/ResumenPedido.vue";
 import DetalleRuteo from "@/components/DetalleRuteo.vue";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
-import { mapState, mapActions } from "vuex";
 import { es } from "vuejs-datepicker/dist/locale";
 
 const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
@@ -358,7 +355,6 @@ export default {
       ruteosFiltrados: [],
       totalRuteos: 0,
       pedidosMobiker: [],
-      contadorPedidosMobiker: [],
       mobikersFiltrados: [],
       showDetalle: false,
       showResumen: false,
@@ -383,12 +379,11 @@ export default {
     };
   },
   mounted() {
-    this.retrieveMobikers();
     this.retrievePedidos();
     this.retrieveRuteos();
+    this.retrieveMobikers();
   },
   computed: {
-    ...mapState("mobikers", ["mobikers"]),
     emptyArray() {
       if (this.pedidosArray.length === 0) {
         return true;
@@ -398,8 +393,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions("mobikers", ["getMobikers"]),
-
     getRequestParams(desde, hasta, page, pageSize) {
       let params = {};
 
@@ -422,10 +415,22 @@ export default {
       return params;
     },
 
-    retrieveMobikers() {
-      this.mobikersFiltrados = this.mobikers.filter(
-        (mobiker) => mobiker.status === "Activo"
-      );
+    async retrieveMobikers() {
+      try {
+        const params = {
+          desde: this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+          hasta: this.$date(this.fechaFin).format("YYYY-MM-DD"),
+        };
+
+        const response = await MobikerService.getMobikersConPedidos(params);
+        this.mobikersFiltrados = response.data.sort((a, b) => {
+          return a.cantidadPedidos - b.cantidadPedidos;
+        });
+      } catch (error) {
+        console.error(
+          `Error al obtener MoBikers con Pedidos: ${error.message}`
+        );
+      }
     },
 
     async retrievePedidos() {
@@ -451,9 +456,6 @@ export default {
           .sort((a, b) => {
             return a.statusId > b.statusId ? 1 : -1;
           });
-        this.contadorPedidosMobiker = pedidos.filter(
-          (pedido) => pedido.statusId !== 6
-        );
         this.cantidadPedidos = totalPedidos; // count
         this.pedidosPorAsignar = pedidos.filter(
           (pedido) =>
@@ -474,7 +476,6 @@ export default {
 
         const response = await PedidoService.getRuteos(params);
         const { pedidos, totalPedidos } = response.data;
-        console.log(pedidos);
         this.ruteosFiltrados = pedidos
           .filter(
             (pedido) =>
@@ -495,6 +496,7 @@ export default {
     getPedidosAsignar() {
       this.retrievePedidos();
       this.retrieveRuteos();
+      this.retrieveMobikers();
     },
 
     checkPedidosMobikers(mobiker, index) {
@@ -600,8 +602,8 @@ export default {
     refreshList() {
       this.buscador = "";
       this.retrievePedidos();
-      this.getMobikers();
       this.retrieveRuteos();
+      this.retrieveMobikers();
 
       this.currentPedido = null;
       this.currentIndex = -1;

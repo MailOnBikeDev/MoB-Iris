@@ -16,8 +16,9 @@ export const mobikers = {
   actions: {
     async getMobikers({ commit }) {
       try {
-        const response = await MobikerService.getMobikers();
-        commit("setMobikersArray", response.data);
+        const response = await MobikerService.filterMobikers("Activo");
+        console.log(response);
+        commit("setMobikersArray", response);
       } catch (error) {
         console.error(`Mensaje de error desde la Store: ${error.message}`);
       }
