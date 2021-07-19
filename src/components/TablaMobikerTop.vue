@@ -2,7 +2,7 @@
   <div>
     <table class="table w-full border-collapse table-auto">
       <tr
-        class="table-row text-center text-white border-2 bg-secondary border-secondary"
+        class="table-row text-sm text-center text-white border-2 bg-secondary border-secondary"
       >
         <th class="table-cell">Puesto</th>
         <th class="table-cell">MoBiker</th>
@@ -11,7 +11,7 @@
       </tr>
 
       <tr
-        class="table-row border-2 odd:bg-info odd:text-white border-secondary"
+        class="table-row text-sm border-2 odd:bg-info odd:text-white border-secondary"
         v-for="(mobiker, idx) in mobikers"
         :key="idx"
       >

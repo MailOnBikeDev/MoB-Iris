@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <div ref="recaudos">
+    <div ref="recaudos" class="my-4 overflow-y-auto max-h-96">
       <TablaRecaudos :pedidos="pedidos" />
     </div>
 

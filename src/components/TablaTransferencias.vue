@@ -2,7 +2,7 @@
   <div>
     <table class="table w-full border-collapse table-auto">
       <tr
-        class="table-row text-center text-white border-2 bg-secondary border-secondary"
+        class="table-row text-sm text-center text-white border-2 bg-secondary border-secondary"
       >
         <th class="table-cell">Fecha</th>
         <th class="table-cell"># Pedido</th>
@@ -14,7 +14,7 @@
       </tr>
 
       <tr
-        class="table-row max-h-full overflow-y-auto border-2 odd:bg-info odd:text-white border-secondary"
+        class="table-row max-h-full overflow-y-auto text-xs border-2 odd:bg-info odd:text-white border-secondary"
         v-for="pedido in pedidos"
         :key="pedido.id"
       >

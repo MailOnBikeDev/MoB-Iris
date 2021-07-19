@@ -599,10 +599,6 @@ export default {
 
     refreshList() {
       this.buscador = "";
-      this.fechaInicio = new Date(
-        new Date().getTime() - 1000 * 60 * 60 * 24 * 6 // 6 días
-      );
-      this.fechaFin = new Date(new Date().getTime() + 1000 * 60 * 60 * 24); // Mañana
       this.retrievePedidos();
       this.getMobikers();
       this.retrieveRuteos();

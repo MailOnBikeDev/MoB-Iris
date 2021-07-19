@@ -125,6 +125,6 @@
 export default {
   props: {
     infoRuta: { type: Object },
-  }
+  },
 };
 </script>

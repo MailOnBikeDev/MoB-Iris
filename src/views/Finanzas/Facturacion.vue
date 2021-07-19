@@ -148,7 +148,7 @@
         class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
         <div
-          class="grid items-center grid-cols-6 py-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
+          class="grid items-center grid-cols-6 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': pedido.id == currentPedidoIndex,
           }"
@@ -356,9 +356,6 @@ export default {
       this.cantidadPedidos = 0;
 
       this.clientesFiltrados = this.clientes;
-
-      this.fechaInicio = new Date(seisDiasAtras);
-      this.fechaFin = new Date();
 
       this.currentCliente = null;
       this.currentIndex = -1;

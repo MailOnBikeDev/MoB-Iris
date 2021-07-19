@@ -1,7 +1,7 @@
 <template>
   <table v-if="casoEspecial" class="table w-full border-collapse table-auto ">
     <tr
-      class="table-row text-center text-white border-2 bg-secondary border-secondary"
+      class="table-row text-sm text-center text-white border-2 bg-secondary border-secondary"
     >
       <th class="table-cell">Fecha</th>
       <th class="table-cell">Solicitante</th>
@@ -13,7 +13,7 @@
     </tr>
 
     <tr
-      class="table-row border-2 odd:bg-info odd:text-white border-secondary"
+      class="table-row text-xs border-2 odd:bg-info odd:text-white border-secondary"
       v-for="detalle in info"
       :key="detalle.id"
     >
@@ -60,7 +60,7 @@
 
   <table v-else class="table w-full border-collapse table-auto ">
     <tr
-      class="table-row text-center text-white border-2 bg-secondary border-secondary"
+      class="table-row text-sm text-center text-white border-2 bg-secondary border-secondary"
     >
       <th class="table-cell">Fecha</th>
       <th class="table-cell">Consignado</th>
@@ -71,7 +71,7 @@
     </tr>
 
     <tr
-      class="table-row border-2 odd:bg-info odd:text-white border-secondary"
+      class="table-row text-xs border-2 odd:bg-info odd:text-white border-secondary"
       v-for="detalle in info"
       :key="detalle.id"
     >
@@ -81,7 +81,7 @@
       <td class="table-cell px-2 border-2 border-secondary">
         {{
           detalle.contactoConsignado.toLowerCase() === "mesa de partes"
-            ? capitalizar(detalle.empresaoConsignado)
+            ? capitalizar(detalle.empresaConsignado)
             : capitalizar(detalle.contactoConsignado)
         }}
       </td>

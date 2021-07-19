@@ -351,8 +351,6 @@ export default {
     },
 
     refreshList() {
-      this.fechaInicio = new Date(seisDiasAtras);
-      this.fechaFin = new Date();
       this.retrievePedidos();
 
       this.currentPedido = null;

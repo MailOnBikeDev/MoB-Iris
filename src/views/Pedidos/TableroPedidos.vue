@@ -549,7 +549,6 @@ export default {
     },
 
     refreshList() {
-      this.buscadorFecha = new Date();
       this.page = 1;
       this.retrievePedidos();
       this.pedidosFiltrados = this.pedidos;

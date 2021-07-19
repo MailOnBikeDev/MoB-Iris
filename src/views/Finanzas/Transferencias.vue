@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <div ref="transferencias">
+    <div ref="transferencias" class="my-4 overflow-y-auto max-h-96">
       <TablaTransferencias :pedidos="pedidos" />
     </div>
 

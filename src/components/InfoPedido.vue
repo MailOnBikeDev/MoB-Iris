@@ -166,8 +166,7 @@
 
     <div class="grid w-full col-span-2 py-2 mb-2 text-xs place-items-center ">
       <p>
-        <span class="resalta">Mensaje del MoBiker: </span
-        >{{ currentPedido.comentario }}
+        <span class="resalta">Comentario: </span>{{ currentPedido.comentario }}
       </p>
     </div>
 
