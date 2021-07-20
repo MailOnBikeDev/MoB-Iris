@@ -157,7 +157,10 @@
       <div
         class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
+        <Loading v-if="loading" />
+
         <div
+          v-else
           class="grid items-center h-auto grid-cols-9 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 border-primary hover:bg-info"
           :class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
           v-for="pedido in pedidosFiltrados"
@@ -254,6 +257,7 @@
 import PedidoService from "@/services/pedido.service";
 import DetalleHistorialPedido from "@/components/DetalleHistorialPedido";
 import CambiarStatusPedido from "@/components/CambiarStatusPedido";
+import Loading from "@/components/Loading";
 import ShowCliente from "@/components/ShowCliente";
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
@@ -269,6 +273,7 @@ export default {
     Pagination,
     CambiarStatusPedido,
     ShowCliente,
+    Loading,
   },
   data() {
     return {
@@ -281,6 +286,8 @@ export default {
       fechaInicio: new Date(seisDiasAtras),
       fechaFin: new Date(),
       buscador: "",
+
+      loading: false,
 
       page: 1,
       cantidadPedidos: 0,
@@ -316,6 +323,7 @@ export default {
 
     async buscarPedido() {
       try {
+        this.loading = true;
         const response = await PedidoService.searchPedido(this.buscador);
 
         this.pedidosFiltrados = response.data;
@@ -323,33 +331,33 @@ export default {
         if (this.buscador.trim() === "") {
           this.pedidosFiltrados = this.pedidos;
         }
+        this.loading = false;
       } catch (error) {
         console.error(`Error al buscar un Pedido. ${error.message}`);
       }
     },
 
-    retrievePedidos() {
-      const params = this.getRequestParams(
-        this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-        this.$date(this.fechaFin).format("YYYY-MM-DD"),
-        this.page,
-        this.pageSize
-      );
+    async retrievePedidos() {
+      try {
+        this.loading = true;
+        const params = this.getRequestParams(
+          this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+          this.$date(this.fechaFin).format("YYYY-MM-DD"),
+          this.page,
+          this.pageSize
+        );
 
-      PedidoService.historialPedidos(params).then(
-        (response) => {
-          const { pedidos, totalPedidos } = response.data;
-          this.pedidos = pedidos; // rows
-          this.pedidosFiltrados = pedidos; // rows
-          this.cantidadPedidos = totalPedidos; // count
-        },
-        (error) => {
-          this.pedidos =
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString();
-        }
-      );
+        const response = await PedidoService.historialPedidos(params);
+
+        const { pedidos, totalPedidos } = response.data;
+        this.pedidos = pedidos; // rows
+        this.pedidosFiltrados = pedidos; // rows
+        this.cantidadPedidos = totalPedidos; // count
+
+        this.loading = false;
+      } catch (error) {
+        console.error(`Error al obtener Pedidos. ${error.message}`);
+      }
     },
 
     handlePageChange(value) {

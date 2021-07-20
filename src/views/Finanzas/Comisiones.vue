@@ -114,13 +114,7 @@
       <div
         class="overflow-y-auto bg-white border border-black max-h-96 h-96 pedidos-scroll"
       >
-        <div v-if="loading" class="text-center mt-36">
-          <font-awesome-icon
-            size="5x"
-            class="animate-spin text-primary"
-            icon="spinner"
-          />
-        </div>
+        <Loading v-if="loading" />
 
         <div
           v-else
@@ -218,6 +212,7 @@
 import DetallePedidoComisiones from "@/components/DetallePedidoComisiones";
 import MobikerService from "@/services/mobiker.service";
 import ReporteComisiones from "@/components/ReporteComisiones";
+import Loading from "@/components/Loading";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { es } from "vuejs-datepicker/dist/locale";
@@ -231,6 +226,7 @@ export default {
     Datepicker,
     Pagination,
     DetallePedidoComisiones,
+    Loading,
   },
   data() {
     return {

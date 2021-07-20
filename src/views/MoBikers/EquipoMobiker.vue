@@ -107,7 +107,9 @@
       <div
         class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
+        <Loading v-if="loading" />
         <div
+          v-else
           class="grid items-center grid-cols-7 py-2 text-xs text-center border-b-2 cursor-default h-14 hover:bg-info border-primary"
           :class="{
             'bg-info text-white font-bold': mobiker.id == currentIndex,
@@ -194,6 +196,7 @@ import MobikerService from "@/services/mobiker.service";
 import MoBDetalles from "@/components/MoBDetalles.vue";
 import BaseBiciEnvios from "@/components/BaseBiciEnvios.vue";
 import BaseEcoamigable from "@/components/BaseEcoamigable.vue";
+import Loading from "@/components/Loading";
 
 const tabNames = {
   detalles: "detalles",
@@ -218,12 +221,14 @@ export default {
         [tabNames.ecoamigable]: BaseEcoamigable,
       },
       activeTabName: null,
+      loading: false,
     };
   },
   components: {
     MoBDetalles,
     BaseBiciEnvios,
     BaseEcoamigable,
+    Loading,
   },
   async mounted() {
     this.mobikersFiltrados = await MobikerService.filterMobikers("Activo");
@@ -249,11 +254,13 @@ export default {
 
     async refreshList() {
       try {
+        this.loading = true;
         this.mobikersFiltrados = await MobikerService.filterMobikers("Activo");
 
         this.currentMobiker = null;
         this.currentIndex = -1;
         this.buscador = "";
+        this.loading = false;
       } catch (error) {
         console.error(`Error al refrescar la lista: ${error.message}`);
       }
@@ -267,11 +274,14 @@ export default {
     },
 
     async filtrarMobiker(status) {
+      this.loading = true;
       this.mobikersFiltrados = await MobikerService.filterMobikers(status);
+      this.loading = false;
     },
 
     async searchMobiker() {
       try {
+        this.loading = true;
         this.mobikersFiltrados = await MobikerService.searchMobiker(
           this.buscador
         );
@@ -281,6 +291,7 @@ export default {
             "Activo"
           );
         }
+        this.loading = false;
       } catch (error) {
         console.error(`Error en el buscador de MoBikers: ${error.message}`);
       }

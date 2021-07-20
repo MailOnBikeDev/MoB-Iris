@@ -116,13 +116,7 @@
       <div
         class="overflow-y-auto bg-white border border-black max-h-96 h-96 pedidos-scroll"
       >
-        <div v-if="loading" class="text-center mt-36">
-          <font-awesome-icon
-            size="5x"
-            class="animate-spin text-primary"
-            icon="spinner"
-          />
-        </div>
+        <Loading v-if="loading" />
 
         <div
           v-else
@@ -228,6 +222,7 @@
 <script>
 import DetallePedidoComisiones from "@/components/DetallePedidoComisiones";
 import ReporteFacturacion from "@/components/ReporteFacturacion";
+import Loading from "@/components/Loading";
 import ClienteService from "@/services/cliente.service";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
@@ -242,6 +237,7 @@ export default {
     Pagination,
     DetallePedidoComisiones,
     ReporteFacturacion,
+    Loading,
   },
   data() {
     return {

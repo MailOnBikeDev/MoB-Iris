@@ -55,7 +55,8 @@
     </div>
 
     <div ref="recaudos" class="my-4 overflow-y-auto max-h-96">
-      <TablaRecaudos :pedidos="pedidos" />
+      <Loading v-if="loading" />
+      <TablaRecaudos v-else :pedidos="pedidos" />
     </div>
 
     <Pagination
@@ -80,6 +81,7 @@ import PedidoService from "@/services/pedido.service";
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
 import Pagination from "@/components/Pagination.vue";
+import Loading from "@/components/Loading";
 import TablaRecaudos from "@/components/TablaRecaudos.vue";
 
 const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
@@ -90,6 +92,7 @@ export default {
     Datepicker,
     Pagination,
     TablaRecaudos,
+    Loading,
   },
   data() {
     return {
@@ -97,6 +100,8 @@ export default {
       fechaInicio: new Date(seisDiasAtras),
       fechaFin: new Date(),
       reporteCopiado: false,
+
+      loading: false,
 
       page: 1,
       cantidadPedidos: 0,
@@ -127,37 +132,37 @@ export default {
       return params;
     },
 
-    retrievePedidos() {
-      this.reporteCopiado = false;
-      const params = this.getRequestParams(
-        this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-        this.$date(this.fechaFin).format("YYYY-MM-DD"),
-        this.page,
-        this.pageSize
-      );
+    async retrievePedidos() {
+      try {
+        this.loading = true;
+        this.reporteCopiado = false;
 
-      PedidoService.historialPedidos(params).then(
-        (response) => {
-          const { pedidos, totalPedidos } = response.data;
-          this.pedidos = pedidos.filter(
-            (detalle) =>
-              detalle.formaPago !== "Efectivo en Origen" &&
-              detalle.formaPago !== "Efectivo en Destino" &&
-              detalle.formaPago !== "Sin Cargo x Canje" &&
-              detalle.formaPago !== "Sin Cargo x Compensación" &&
-              detalle.formaPago !== "Sin Cargo x Cortesía" &&
-              detalle.formaPago !== "Sin Cargo x Envío Propio" &&
-              detalle.formaPago !== "Sin Cargo x Error MoB"
-          ); // rows
-          this.cantidadPedidos = totalPedidos; // count
-        },
-        (error) => {
-          this.pedidos =
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString();
-        }
-      );
+        const params = this.getRequestParams(
+          this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+          this.$date(this.fechaFin).format("YYYY-MM-DD"),
+          this.page,
+          this.pageSize
+        );
+
+        const response = await PedidoService.historialPedidos(params);
+        const { pedidos, totalPedidos } = response.data;
+        this.pedidos = pedidos.filter(
+          (detalle) =>
+            detalle.formaPago !== "Efectivo en Origen" &&
+            detalle.formaPago !== "Efectivo en Destino" &&
+            detalle.formaPago !== "Sin Cargo x Canje" &&
+            detalle.formaPago !== "Sin Cargo x Compensación" &&
+            detalle.formaPago !== "Sin Cargo x Cortesía" &&
+            detalle.formaPago !== "Sin Cargo x Envío Propio" &&
+            detalle.formaPago !== "Sin Cargo x Error MoB" &&
+            detalle.recaudo > 0
+        ); // rows
+        this.cantidadPedidos = totalPedidos; // count
+
+        this.loading = false;
+      } catch (error) {
+        console.error(`Error al obtener Pedidos. ${error.message}`);
+      }
     },
 
     handlePageChange(value) {
