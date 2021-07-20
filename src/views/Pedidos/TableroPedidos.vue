@@ -193,7 +193,9 @@
         v-if="ruteos"
         class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
+        <Loading v-if="loading" />
         <div
+          v-else
           class="grid items-center grid-cols-7 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': ruta.ruta.id == currentRutaIndex,
@@ -275,7 +277,9 @@
         v-else
         class="col-span-3 overflow-y-auto bg-white border border-black max-h-96 pedidos-scroll"
       >
+        <Loading v-if="loading" />
         <div
+          v-else
           class="grid items-center h-auto grid-cols-10 py-2 overflow-hidden text-xs text-center border-b-2 cursor-pointer gap-x-1 border-primary hover:bg-info hover:text-white"
           :class="{ 'bg-info text-white font-bold': pedido.id == currentIndex }"
           v-for="pedido in pedidosFiltrados"
@@ -408,6 +412,7 @@ import ReporteComandaRuteo from "@/components/ReporteComandaRuteo";
 import ShowCliente from "@/components/ShowCliente";
 import ShowClienteRuteo from "@/components/ShowClienteRuteo";
 import ResumenRuteo from "@/components/ResumenRuteo";
+import Loading from "@/components/Loading";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
 import { es } from "vuejs-datepicker/dist/locale";
@@ -424,6 +429,7 @@ export default {
     ReporteComandaRuteo,
     ShowCliente,
     ShowClienteRuteo,
+    Loading,
   },
   data() {
     return {
@@ -444,6 +450,8 @@ export default {
       currentRutaIndex: -1,
       buscadorFecha: new Date(),
       ruteos: false,
+
+      loading: false,
 
       page: 1,
       cantidadPedidos: 0,
@@ -476,6 +484,7 @@ export default {
 
     async retrievePedidos() {
       try {
+        this.loading = true;
         const params = this.getRequestParams(
           this.$date(this.buscadorFecha).format("YYYY-MM-DD"),
           this.page,
@@ -487,6 +496,7 @@ export default {
         this.pedidos = pedidos; // rows
         this.pedidosFiltrados = pedidos;
         this.cantidadPedidos = totalPedidos; // count
+        this.loading = false;
       } catch (error) {
         console.error(`Error al obtener los Pedidos:`);
       }
@@ -494,6 +504,7 @@ export default {
 
     async retrieveRuteos() {
       try {
+        this.loading = true;
         const params = {
           desde: this.$date(this.buscadorFecha).format("YYYY-MM-DD"),
           hasta: this.$date(this.buscadorFecha).format("YYYY-MM-DD"),
@@ -503,18 +514,22 @@ export default {
         const { pedidos, totalPedidos } = response.data;
         this.ruteosFiltrados = pedidos;
         this.totalRuteos = totalPedidos;
+        this.loading = false;
       } catch (error) {
         console.error(`Error al obtener los Ruteos: ${error.message}`);
       }
     },
 
-    getPedidosDelDia() {
-      this.retrievePedidos();
-      this.retrieveRuteos();
+    async getPedidosDelDia() {
+      this.loading = true;
+      await this.retrievePedidos();
+      await this.retrieveRuteos();
+      this.loading = false;
     },
 
     async buscarPedido() {
       try {
+        this.loading = true;
         const response = await PedidoService.searchPedido(this.buscador);
 
         this.pedidosFiltrados = response.data;
@@ -522,6 +537,7 @@ export default {
         if (this.buscador.trim() === "") {
           this.pedidosFiltrados = this.pedidos;
         }
+        this.loading = false;
       } catch (error) {
         console.error(`Error al buscar un Pedido. ${error.message}`);
       }

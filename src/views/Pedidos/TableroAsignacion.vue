@@ -156,7 +156,9 @@
       <div
         class="overflow-y-auto bg-white border border-black max-h-96 h-96 pedidos-scroll"
       >
+        <Loading v-if="loading" />
         <div
+          v-else
           class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold':
@@ -183,7 +185,9 @@
         v-if="ruteos"
         class="col-span-4 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
+        <Loading v-if="loading" />
         <div
+          v-else
           class="grid items-center grid-cols-8 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': ruta.ruta.id == currentRutaIndex,
@@ -254,7 +258,9 @@
         v-else
         class="col-span-4 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
+        <Loading v-if="loading" />
         <div
+          v-else
           class="grid items-center grid-cols-10 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': pedido.id == currentIndex,
@@ -348,6 +354,7 @@ import ResumenPedido from "@/components/ResumenPedido.vue";
 import DetalleRuteo from "@/components/DetalleRuteo.vue";
 import Datepicker from "vuejs-datepicker";
 import Pagination from "@/components/Pagination.vue";
+import Loading from "@/components/Loading";
 import { es } from "vuejs-datepicker/dist/locale";
 
 const seisDiasAtras = new Date().getTime() - 1000 * 60 * 60 * 24 * 6;
@@ -361,6 +368,7 @@ export default {
     Pagination,
     ResumenPedido,
     DetalleRuteo,
+    Loading,
   },
   data() {
     return {
@@ -383,6 +391,7 @@ export default {
       pedidosPorAsignar: 0,
       pedidosArray: [],
       ruteos: false,
+      loading: false,
 
       buscador: "",
 
@@ -431,6 +440,7 @@ export default {
 
     async retrieveMobikers() {
       try {
+        this.loading = true;
         const params = {
           desde: this.$date(this.fechaInicio).format("YYYY-MM-DD"),
           hasta: this.$date(this.fechaFin).format("YYYY-MM-DD"),
@@ -440,6 +450,7 @@ export default {
         this.mobikersFiltrados = response.data.sort((a, b) => {
           return a.cantidadPedidos - b.cantidadPedidos;
         });
+        this.loading = false;
       } catch (error) {
         console.error(
           `Error al obtener MoBikers con Pedidos: ${error.message}`
@@ -449,6 +460,7 @@ export default {
 
     async retrievePedidos() {
       try {
+        this.loading = true;
         const params = this.getRequestParams(
           this.$date(this.fechaInicio).format("YYYY-MM-DD"),
           this.$date(this.fechaFin).format("YYYY-MM-DD"),
@@ -476,6 +488,7 @@ export default {
             pedido.statusId === 1 &&
             pedido.mobiker.fullName === "Asignar MoBiker"
         ).length;
+        this.loading = false;
       } catch (error) {
         console.error(`Error al obtener los Pedidos: ${error.message}`);
       }
@@ -483,6 +496,7 @@ export default {
 
     async retrieveRuteos() {
       try {
+        this.loading = true;
         const params = {
           desde: this.$date(this.fechaInicio).format("YYYY-MM-DD"),
           hasta: this.$date(this.fechaFin).format("YYYY-MM-DD"),
@@ -502,15 +516,18 @@ export default {
               : -1;
           });
         this.totalRuteos = totalPedidos;
+        this.loading = false;
       } catch (error) {
         console.error(`Error al obtener los Ruteos: ${error.message}`);
       }
     },
 
-    getPedidosAsignar() {
-      this.retrievePedidos();
-      this.retrieveRuteos();
-      this.retrieveMobikers();
+    async getPedidosAsignar() {
+      this.loading = true;
+      await this.retrievePedidos();
+      await this.retrieveRuteos();
+      await this.retrieveMobikers();
+      this.loading = false;
     },
 
     checkPedidosMobikers(mobiker, index) {
@@ -521,6 +538,7 @@ export default {
     },
 
     buscarPedido() {
+      this.loading = true;
       this.pedidosFiltrados = this.pedidos
         .filter((pedido) => {
           if (
@@ -540,6 +558,7 @@ export default {
       if (this.buscador.trim() === "") {
         this.pedidosFiltrados = this.pedidos;
       }
+      this.loading = false;
     },
 
     handlePageChange(value) {
