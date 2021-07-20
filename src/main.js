@@ -19,6 +19,7 @@ import {
   faSpinner,
   faTrashAlt,
   faRoute,
+  faCheckCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import VueDayjs from "vue-dayjs-plugin";
 import VueClipboard from "vue-clipboard2";
@@ -35,7 +36,8 @@ library.add(
   faBicycle,
   faSpinner,
   faTrashAlt,
-  faRoute
+  faRoute,
+  faCheckCircle
 );
 
 Vue.config.productionTip = false;

@@ -247,9 +247,9 @@
             <font-awesome-icon
               v-if="!pedidosArray.includes(ruta.pedidosRuta[0])"
               class="text-2xl text-gray-400"
-              icon="pencil-alt"
+              icon="check-circle"
             />
-            <font-awesome-icon v-else class="text-2xl" icon="pencil-alt" />
+            <font-awesome-icon v-else class="text-2xl" icon="check-circle" />
           </button>
         </div>
       </div>
@@ -322,9 +322,17 @@
             <p>{{ $date(pedido.fecha).format("DD MMM YYYY") }}</p>
           </div>
 
-          <div class="flex justify-center">
-            <input type="checkbox" v-model="pedidosArray" :value="pedido" />
-          </div>
+          <button
+            @click="assignPedido(pedido)"
+            class="focus:outline-none text-primary"
+          >
+            <font-awesome-icon
+              v-if="!pedidosArray.includes(pedido)"
+              class="text-2xl text-gray-400"
+              icon="check-circle"
+            />
+            <font-awesome-icon v-else class="text-2xl" icon="check-circle" />
+          </button>
         </div>
       </div>
     </div>
@@ -472,8 +480,11 @@ export default {
         const { pedidos, totalPedidos } = response.data;
         this.pedidos = pedidos; // rows
         this.pedidosFiltrados = pedidos
-          .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2)
-          .filter((pedido) => pedido.isRuteo === false)
+          .filter(
+            (pedido) =>
+              (pedido.statusId === 1 || pedido.statusId === 2) &&
+              pedido.isRuteo === false
+          )
           .sort((a, b) => {
             return a.statusId > b.statusId ? 1 : -1;
           }); // rows
@@ -553,10 +564,18 @@ export default {
             return pedido;
           }
         })
-        .filter((pedido) => pedido.statusId === 1 || pedido.statusId === 2);
+        .filter(
+          (pedido) =>
+            (pedido.statusId === 1 || pedido.statusId === 2) &&
+            pedido.isRuteo === false
+        );
 
       if (this.buscador.trim() === "") {
-        this.pedidosFiltrados = this.pedidos;
+        this.pedidosFiltrados = this.pedidos.filter(
+          (pedido) =>
+            (pedido.statusId === 1 || pedido.statusId === 2) &&
+            pedido.isRuteo === false
+        );
       }
       this.loading = false;
     },
@@ -580,20 +599,25 @@ export default {
       this.showRuteo = true;
     },
 
+    assignPedido(pedido) {
+      if (this.pedidosArray.includes(pedido)) {
+        this.pedidosArray = this.pedidosArray.filter((item) => item !== pedido);
+      } else {
+        this.pedidosArray.push(pedido);
+      }
+    },
+
     assignRuta(pedidos) {
       if (this.pedidosArray.includes(pedidos[0])) {
         this.pedidosArray = this.pedidosArray.filter(
           (pedido) => !pedidos.includes(pedido)
         );
       } else {
-        this.pedidosArray = pedidos;
+        this.pedidosArray = [...this.pedidosArray, ...pedidos];
       }
     },
 
     createArrayPedidos() {
-      // this.pedidosArray.sort((a, b) => {
-      //   return a.id - b.id ? 1 : -1;
-      // });
       this.showDetalle = true;
     },
 
@@ -640,6 +664,7 @@ export default {
 
       this.currentPedido = null;
       this.currentIndex = -1;
+      this.currentIndexMobiker = -1;
       this.currentRuta = null;
       this.currentRutaIndex = -1;
       this.pedidosArray = [];
