@@ -144,19 +144,9 @@ export default {
           this.pageSize
         );
 
-        const response = await PedidoService.historialPedidos(params);
+        const response = await PedidoService.getPedidosRecaudo(params);
         const { pedidos, totalPedidos } = response.data;
-        this.pedidos = pedidos.filter(
-          (detalle) =>
-            detalle.formaPago !== "Efectivo en Origen" &&
-            detalle.formaPago !== "Efectivo en Destino" &&
-            detalle.formaPago !== "Sin Cargo x Canje" &&
-            detalle.formaPago !== "Sin Cargo x Compensación" &&
-            detalle.formaPago !== "Sin Cargo x Cortesía" &&
-            detalle.formaPago !== "Sin Cargo x Envío Propio" &&
-            detalle.formaPago !== "Sin Cargo x Error MoB" &&
-            detalle.recaudo > 0
-        ); // rows
+        this.pedidos = pedidos; // rows
         this.cantidadPedidos = totalPedidos; // count
 
         this.loading = false;

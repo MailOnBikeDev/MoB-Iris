@@ -35,7 +35,7 @@ class PedidoService {
   }
 
   async storageNuevoPedido(nuevoPedido) {
-    console.log(nuevoPedido)
+    console.log(nuevoPedido);
     try {
       let pedido = await axios.post(
         `${API_URL}/pedidos/crear-nuevo-pedido`,
@@ -130,7 +130,7 @@ class PedidoService {
           operador: editarPedido.operador,
           viajes: editarPedido.viajes,
           isRuteo: editarPedido.isRuteo,
-          ruteoId: editarPedido.ruteo
+          ruteoId: editarPedido.ruteo,
         },
         { headers: authHeader() }
       );
@@ -201,6 +201,32 @@ class PedidoService {
   async historialPedidos(params) {
     try {
       let pedido = await axios.get(`${API_URL}/historial-pedidos`, {
+        params,
+        headers: authHeader(),
+      });
+
+      return pedido;
+    } catch (error) {
+      console.error("Mensaje de error: ", error.message);
+    }
+  }
+
+  async getPedidosTransferencia(params) {
+    try {
+      let pedido = await axios.get(`${API_URL}/pedidos-transferencia`, {
+        params,
+        headers: authHeader(),
+      });
+
+      return pedido;
+    } catch (error) {
+      console.error("Mensaje de error: ", error.message);
+    }
+  }
+
+  async getPedidosRecaudo(params) {
+    try {
+      let pedido = await axios.get(`${API_URL}/pedidos-recaudo`, {
         params,
         headers: authHeader(),
       });

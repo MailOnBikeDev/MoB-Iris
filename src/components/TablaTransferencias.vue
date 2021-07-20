@@ -11,6 +11,7 @@
         <th class="table-cell">Tarifa</th>
         <th class="table-cell">Destinatario</th>
         <th class="table-cell">Recaudo</th>
+        <th class="table-cell">Trámite</th>
       </tr>
 
       <tr
@@ -38,6 +39,9 @@
         </td>
         <td class="table-cell px-2 text-center border-2 border-secondary">
           {{ pedido.recaudo }}
+        </td>
+        <td class="table-cell px-2 text-center border-2 border-secondary">
+          {{ pedido.tramite }}
         </td>
       </tr>
     </table>
