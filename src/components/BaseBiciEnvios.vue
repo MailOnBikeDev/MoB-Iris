@@ -10,12 +10,12 @@
 
     <div class="mb-2 text-center">
       <span class="resalta">E-Commerce: </span>
-      <span class="select-all">{{ contarEcommerce }}</span>
+      <span class="select-all">{{ contarEcommerce(pedidos) }}</span>
     </div>
 
     <div class="mb-2 text-center">
       <span class="resalta">Express: </span>
-      <span class="select-all">{{ contarExpress }}</span>
+      <span class="select-all">{{ contarExpress(pedidos) }}</span>
     </div>
 
     <div class="mb-2 text-center">
@@ -35,33 +35,33 @@ export default {
   data() {
     return {};
   },
-  computed: {
-    contarEcommerce() {
-      let contadorEcommerce = 0;
-
-      this.pedidos.forEach((pedido) => {
+  methods: {
+    contarEcommerce(pedidos) {
+      let contadorEcommerce = pedidos.reduce((acc, pedido) => {
         if (pedido.tipoDeEnvioId === 1) {
-          contadorEcommerce++;
+          return acc + pedido.viajes;
+        } else {
+          return acc;
         }
-      });
+      }, 0);
 
       return contadorEcommerce;
     },
 
-    contarExpress() {
-      let contadorExpress = 0;
-
-      this.pedidos.forEach((pedido) => {
+    contarExpress(pedidos) {
+      let contadorEcommerce = pedidos.reduce((acc, pedido) => {
         if (
           pedido.tipoDeEnvioId === 3 ||
           pedido.tipoDeEnvioId === 2 ||
           pedido.tipoDeEnvioId === 4
         ) {
-          contadorExpress++;
+          return acc + pedido.viajes;
+        } else {
+          return acc;
         }
-      });
+      }, 0);
 
-      return contadorExpress;
+      return contadorEcommerce;
     },
   },
 };
