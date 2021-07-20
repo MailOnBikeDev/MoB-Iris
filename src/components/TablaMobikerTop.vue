@@ -8,6 +8,7 @@
         <th class="table-cell">MoBiker</th>
         <th class="table-cell">Nivel MoB</th>
         <th class="table-cell">Cantidad de Pedidos</th>
+        <th class="table-cell">Kilómetros Recorridos</th>
       </tr>
 
       <tr
@@ -26,6 +27,9 @@
         </td>
         <td class="table-cell px-2 text-center border-2 border-secondary">
           {{ mobiker.cantidadPedidos }}
+        </td>
+        <td class="table-cell px-2 text-center border-2 border-secondary">
+          {{ mobiker.mobiker.kilometros }} Km
         </td>
       </tr>
     </table>
