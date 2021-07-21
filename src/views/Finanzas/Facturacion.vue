@@ -265,6 +265,9 @@ export default {
       es: es,
     };
   },
+  mounted() {
+    this.retrieveClientesConPedidos();
+  },
   methods: {
     getRequestParams(desde, hasta, id, page, pageSize) {
       let params = {};
@@ -292,28 +295,26 @@ export default {
       return params;
     },
 
-    retrievePedidosClientes() {
-      const params = this.getRequestParams(
-        this.$date(this.fechaInicio).format("YYYY-MM-DD"),
-        this.$date(this.fechaFin).format("YYYY-MM-DD"),
-        this.currentIndex,
-        this.page,
-        this.pageSize
-      );
+    async retrievePedidosClientes() {
+      try {
+        const params = this.getRequestParams(
+          this.$date(this.fechaInicio).format("YYYY-MM-DD"),
+          this.$date(this.fechaFin).format("YYYY-MM-DD"),
+          this.currentIndex,
+          this.page,
+          this.pageSize
+        );
 
-      ClienteService.getPedidosDelCliente(params).then(
-        (response) => {
-          const { pedidos, totalPedidos } = response.data;
-          this.pedidosCliente = pedidos; // rows
-          this.cantidadPedidos = totalPedidos; // count
-        },
-        (error) => {
-          this.pedidosMobiker =
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString();
-        }
-      );
+        const response = await ClienteService.getPedidosDelCliente(params);
+
+        const { pedidos, totalPedidos } = response.data;
+        this.pedidosCliente = pedidos; // rows
+        this.cantidadPedidos = totalPedidos; // count
+      } catch (error) {
+        console.error(
+          `Error al obtener los Pedidos del Cliente: ${error.message}`
+        );
+      }
     },
 
     async retrieveClientesConPedidos() {

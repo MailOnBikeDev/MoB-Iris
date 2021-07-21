@@ -251,6 +251,9 @@ export default {
       es: es,
     };
   },
+  mounted() {
+    this.retrieveMoBikersConPedidos();
+  },
   methods: {
     getRequestParams(desde, hasta, id, page, pageSize) {
       let params = {};
