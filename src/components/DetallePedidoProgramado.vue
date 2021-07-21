@@ -13,7 +13,8 @@
     </div>
 
     <div class="hidden" ref="comanda">
-      <MensajeComanda :currentPedido="currentComanda" />
+      <MensajeComandaRuteo v-if="mensajeRuteo" :currentRuta="arrayRuteos" />
+      <MensajeComanda v-else :currentPedido="currentComanda" />
     </div>
 
     <form class="grid grid-cols-2 p-4 bg-white gap-x-4 rounded-t-xl">
@@ -121,6 +122,7 @@
 
 <script>
 import MensajeComanda from "./MensajeComanda.vue";
+import MensajeComandaRuteo from "./MensajeComandaRuteo.vue";
 import PedidoService from "@/services/pedido.service";
 import { ModelListSelect } from "vue-search-select";
 import { mapState } from "vuex";
@@ -139,6 +141,7 @@ export default {
   components: {
     ModelListSelect,
     MensajeComanda,
+    MensajeComandaRuteo,
   },
   data() {
     return {
@@ -152,6 +155,8 @@ export default {
       currentComanda: null,
       currentComandaIdx: -1,
       comandasEnviadas: [],
+      arrayRuteos: [],
+      mensajeRuteo: false,
     };
   },
   computed: {
@@ -201,7 +206,6 @@ export default {
             parseFloat(mobikerAsignado[0].rango.comision)
           ).toFixed(2);
 
-          console.log(this.pedidoAsignado);
           const response = await PedidoService.asignarPedido(
             pedido.id,
             this.pedidoAsignado
@@ -227,6 +231,13 @@ export default {
       this.currentComanda = comanda;
       this.currentComandaIdx = index;
       this.comandaCopiada = false;
+
+      if (comanda.isRuteo) {
+        this.arrayRuteos = this.pedidosArray.filter(
+          (pedido) => comanda.ruteoId === pedido.ruteoId
+        );
+        this.mensajeRuteo = true;
+      }
     },
 
     copiarComanda() {
@@ -234,7 +245,12 @@ export default {
       this.$copyText(this.$refs.comanda.innerText).then(() => {
         this.comandaCopiada = true;
         console.log("Texto copiado");
-        this.comandasEnviadas.push(this.currentComandaIdx);
+        if (this.mensajeRuteo) {
+          let ruteos = this.arrayRuteos.map((pedido) => pedido.id);
+          this.comandasEnviadas = [...this.comandasEnviadas, ...ruteos];
+        } else {
+          this.comandasEnviadas.push(this.currentComandaIdx);
+        }
       });
     },
 

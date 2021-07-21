@@ -25,7 +25,10 @@
     <div class="justify-center bg-white rounded-xl">
       <!-- Texto formateado como mensaje de Telegram a copiar -->
       <div class="hidden" ref="comanda">
-        <MensajeComandaRuteo v-if="currentRuta" :currentRuta="currentRuta" />
+        <MensajeComandaRuteo
+          v-if="currentRuta"
+          :currentRuta="currentRuta.pedidosRuta"
+        />
       </div>
 
       <!-- Texto de ejemplo para que el operador confirme la comanda -->
@@ -241,13 +244,13 @@ export default {
         0
       );
 
-      return total;
+      return +total.toFixed(1);
     },
 
     sumarHorasRuido(horas) {
       const total = horas.reduce((acc, hora) => +hora.ruido + acc, 0);
 
-      return total;
+      return +total.toFixed(1);
     },
   },
 };

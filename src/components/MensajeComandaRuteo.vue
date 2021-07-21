@@ -1,39 +1,36 @@
 <template>
   <div>
     <pre>
-Tipo Envío: **{{
-        formatearTipoEnvio(currentRuta.pedidosRuta[0].tipoDeEnvio.tipo)
-      }}**
-__Origen:__ {{ currentRuta.pedidosRuta[0].direccionRemitente }} - {{
-        currentRuta.pedidosRuta[0].distritoRemitente
+Tipo Envío: **{{ formatearTipoEnvio(currentRuta[0].tipoDeEnvio.tipo) }}**
+__Origen:__ {{ currentRuta[0].direccionRemitente }} - {{
+        currentRuta[0].distritoRemitente
       }}
-__Empresa:__ {{ currentRuta.pedidosRuta[0].empresaRemitente }}
-__Contacto:__ {{ currentRuta.pedidosRuta[0].contactoRemitente }} - {{
-        currentRuta.pedidosRuta[0].telefonoRemitente
+__Empresa:__ {{ currentRuta[0].empresaRemitente }}
+__Contacto:__ {{ currentRuta[0].contactoRemitente }} - {{
+        currentRuta[0].telefonoRemitente
       }}
 {{
-        currentRuta.pedidosRuta[0].otroDatoRemitente
-          ? "**IMPORTANTE: " +
-            currentRuta.pedidosRuta[0].otroDatoRemitente +
-            "**"
+        currentRuta[0].otroDatoRemitente
+          ? "**IMPORTANTE: " + currentRuta[0].otroDatoRemitente + "**"
           : undefined
       }}
-**{{ currentRuta.pedidosRuta.length }} DESTINOS**
-__Llevar:__ {{ currentRuta.pedidosRuta[0].tipoCarga }}
+
+**{{ currentRuta.length }} DESTINOS**
+__Llevar:__ {{ currentRuta[0].tipoCarga }}
 __Modalidad:__ RUTEO
 
-__Tarifa:__ S/. {{ sumarTarifas(currentRuta.pedidosRuta) }} - {{
-        formatearFormaPago(currentRuta.pedidosRuta[0].formaPago)
+__Tarifa:__ S/. {{ sumarTarifas(currentRuta) }} - {{
+        formatearFormaPago(currentRuta[0].formaPago)
       }}
-__Recaudo:__ S/. {{ sumarRecaudos(currentRuta.pedidosRuta) }}
-__Trámite:__ S/. {{ sumarTramites(currentRuta.pedidosRuta) }}
-__Mi comisión:__ S/. {{ sumarComisiones(currentRuta.pedidosRuta) }}
-__CO2:__ {{ sumarCO2(currentRuta.pedidosRuta) }} Kg
-__Horas de Ruido:__ {{ sumarHorasRuido(currentRuta.pedidosRuta) }} h
+__Recaudo:__ S/. {{ sumarRecaudos(currentRuta) }}
+__Trámite:__ S/. {{ sumarTramites(currentRuta) }}
+__Mi comisión:__ S/. {{ sumarComisiones(currentRuta) }}
+__CO2:__ {{ sumarCO2(currentRuta) }} Kg
+__Horas de Ruido:__ {{ sumarHorasRuido(currentRuta) }} h
 _____________________________________
 </pre
     >
-    <div v-for="(destino, idx) in currentRuta.pedidosRuta" :key="idx">
+    <div v-for="(destino, idx) in currentRuta" :key="idx">
       <pre>
 
 **Destino {{ idx + 1 }}**
@@ -67,7 +64,7 @@ _____________________________________
 export default {
   props: {
     currentRuta: {
-      type: Object,
+      type: Array,
     },
   },
   methods: {
