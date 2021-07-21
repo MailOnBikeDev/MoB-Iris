@@ -120,8 +120,8 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-4 gap-2">
-      <div class="flex flex-row justify-center">
+    <div class="grid grid-cols-10 gap-2">
+      <div class="flex flex-row justify-center col-span-2">
         <p>
           <span class="resalta">N° de Pedidos del día:</span>
           {{ totalPedidosDelDia }}
@@ -130,7 +130,7 @@
 
       <div
         v-if="ruteos"
-        class="inline-grid items-center grid-cols-7 col-span-3 text-sm font-bold text-center text-primary"
+        class="inline-grid items-center grid-cols-7 col-span-8 text-sm font-bold text-center text-primary"
       >
         <p class="font-bold">Pedidos</p>
         <p class="font-bold">Cliente</p>
@@ -143,7 +143,7 @@
 
       <div
         v-else
-        class="inline-grid items-center grid-cols-10 col-span-3 mr-2 text-sm text-center text-primary"
+        class="inline-grid items-center grid-cols-10 col-span-8 mr-2 text-sm text-center text-primary"
       >
         <button @click="sortPorId" class="focus:outline-none">
           <p class="font-bold"># Pedido</p>
@@ -177,7 +177,7 @@
         </div>
       </div>
 
-      <div class="p-4 bg-white border border-black">
+      <div class="col-span-2 p-4 bg-white border border-black">
         <h2 class="mb-2 text-2xl font-bold text-primary">
           Cliente
         </h2>
@@ -191,7 +191,7 @@
 
       <div
         v-if="ruteos"
-        class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
+        class="col-span-8 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
         <Loading v-if="loading" />
         <div
@@ -275,7 +275,7 @@
 
       <div
         v-else
-        class="col-span-3 overflow-y-auto bg-white border border-black max-h-96 pedidos-scroll"
+        class="col-span-8 overflow-y-auto bg-white border border-black max-h-96 pedidos-scroll"
       >
         <Loading v-if="loading" />
         <div

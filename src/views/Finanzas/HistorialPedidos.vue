@@ -107,15 +107,15 @@
       </router-link>
     </div>
 
-    <div class="grid grid-cols-4 gap-2">
-      <div class="flex flex-row justify-center">
+    <div class="grid grid-cols-10 gap-2">
+      <div class="flex flex-row justify-center col-span-2">
         <p>
           <span class="resalta">Número de Pedidos:</span> {{ cantidadPedidos }}
         </p>
       </div>
 
       <div
-        class="inline-grid items-center grid-cols-9 col-span-3 text-sm font-bold text-center text-primary"
+        class="inline-grid items-center grid-cols-9 col-span-8 text-sm font-bold text-center text-primary"
       >
         <button @click="sortPorId" class="focus:outline-none">
           <p class="font-bold"># Pedido</p>
@@ -146,7 +146,7 @@
         </div>
       </div>
 
-      <div class="p-4 bg-white border border-black">
+      <div class="col-span-2 p-4 bg-white border border-black">
         <h2 class="mb-2 text-2xl font-bold text-primary">
           Cliente
         </h2>
@@ -155,7 +155,7 @@
       </div>
 
       <div
-        class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
+        class="col-span-8 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
         <Loading v-if="loading" />
 
