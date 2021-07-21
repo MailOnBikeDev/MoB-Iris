@@ -55,7 +55,8 @@
     </div>
 
     <div ref="mobikersTop" class="overflow-y-auto max-h-96">
-      <TablaMobikerTop :mobikers="mobikers" />
+      <Loading v-if="loading" />
+      <TablaMobikerTop v-else :mobikers="mobikers" />
     </div>
   </div>
 </template>
@@ -65,6 +66,7 @@ import MobikerService from "@/services/mobiker.service";
 import Datepicker from "vuejs-datepicker";
 import { es } from "vuejs-datepicker/dist/locale";
 import TablaMobikerTop from "@/components/TablaMobikerTop.vue";
+import Loading from "@/components/Loading";
 
 const primerDia = new Date();
 
@@ -73,6 +75,7 @@ export default {
   components: {
     Datepicker,
     TablaMobikerTop,
+    Loading,
   },
   data() {
     return {
@@ -81,6 +84,7 @@ export default {
       fechaFin: new Date(),
       reporteCopiado: false,
       es: es,
+      loading: false,
     };
   },
   mounted() {
@@ -89,6 +93,7 @@ export default {
   methods: {
     async retrieveMoBikersConPedidos() {
       try {
+        this.loading = true;
         const params = {
           desde: this.$date(this.fechaInicio).format("YYYY-MM-DD"),
           hasta: this.$date(this.fechaFin).format("YYYY-MM-DD"),
@@ -99,6 +104,7 @@ export default {
         this.mobikers = response.data.sort((a, b) => {
           return b.cantidadPedidos - a.cantidadPedidos;
         });
+        this.loading = false;
       } catch (error) {
         console.error(
           `Error al obtener MoBikers con Pedidos: ${error.message}`
