@@ -108,9 +108,11 @@ export default {
     async handleCambiarStatusPedido() {
       try {
         const pedidoCambiado = {
-          statusId: this.currentPedido.statusId,
+          status: this.currentPedido.statusId,
           mobiker: this.currentPedido.mobiker.fullName,
           comentario: this.currentPedido.comentario,
+          isRuteo: this.currentPedido.isRuteo,
+          ruteoId: this.currentPedido.ruteoId,
         };
 
         const response = await PedidoService.cambiarEstadoPedido(
