@@ -115,12 +115,10 @@ export default {
           ruteoId: this.currentPedido.ruteoId,
         };
 
-        const response = await PedidoService.cambiarEstadoPedido(
+        await PedidoService.cambiarEstadoPedido(
           this.currentPedido.id,
           pedidoCambiado
         );
-
-        console.log(response.data.message);
 
         if (this.currentPedido.statusId !== 1) {
           this.statusAsignado = true;
