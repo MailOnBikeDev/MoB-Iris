@@ -124,7 +124,7 @@
       <div class="flex flex-row justify-center">
         <p>
           <span class="resalta">N° de Pedidos del día:</span>
-          {{ cantidadPedidos }}
+          {{ totalPedidosDelDia }}
         </p>
       </div>
 
@@ -462,6 +462,17 @@ export default {
   mounted() {
     this.retrievePedidos();
     this.retrieveRuteos();
+  },
+  computed: {
+    totalPedidosDelDia() {
+      let total = this.pedidos.reduce((acc, pedido) => {
+        if (pedido.statusId !== 6) {
+          return acc + pedido.viajes;
+        }
+      }, 0);
+
+      return total;
+    },
   },
   methods: {
     getRequestParams(fecha, page, pageSize) {
