@@ -27,7 +27,8 @@
       </div>
 
       <!-- Texto de ejemplo para que el operador confirme la comanda -->
-      <div class="p-4">
+      <!-- Caso en que el Cliente sea Remitente -->
+      <div v-if="currentPedido.rolCliente === 'Remitente'" class="p-4">
         <div>
           <span class="resalta">Tipo Envío: </span
           >{{ formatearTipoEnvio(currentPedido.tipoDeEnvio.tipo) }}
@@ -83,6 +84,87 @@
         <div v-if="currentPedido.otroDatoConsignado !== null">
           <span class="resalta">IMPORTANTE: </span
           >{{ currentPedido.otroDatoConsignado }}
+        </div>
+        <div>
+          <span class="resalta">Recaudo: </span>
+          S/. {{ currentPedido.recaudo }}
+        </div>
+        <br />
+        <div>
+          <span class="resalta">Tarifa: </span> S/. {{ currentPedido.tarifa }} -
+          {{ formatearFormaPago(currentPedido.formaPago) }}
+        </div>
+        <div>
+          <span class="resalta">Mi comisión: </span> S/.
+          {{ currentPedido.comision }}
+        </div>
+        <div><span class="resalta">Pedido: </span> #{{ currentPedido.id }}</div>
+        <div>
+          <span class="resalta">CO2: </span> {{ currentPedido.CO2Ahorrado }} Kg
+        </div>
+        <div>
+          <span class="resalta">Horas de Ruido: </span>
+          {{ currentPedido.ruido }} h
+        </div>
+      </div>
+
+      <!-- Caso el Cliente es Destinatario -->
+      <div v-else class="p-4">
+        <div>
+          <span class="resalta">Tipo Envío: </span
+          >{{ formatearTipoEnvio(currentPedido.tipoDeEnvio.tipo) }}
+        </div>
+        <div>
+          <span class="resalta">
+            Origen:
+          </span>
+          {{ currentPedido.direccionConsignado }} -
+          {{ currentPedido.distrito.distrito }}
+        </div>
+        <div>
+          <span class="resalta">Empresa: </span
+          >{{ currentPedido.empresaConsignado }}
+        </div>
+        <div>
+          <span class="resalta">
+            Contacto:
+          </span>
+          {{ currentPedido.contactoConsignado }} -
+          {{ currentPedido.telefonoConsignado }}
+        </div>
+        <div v-if="currentPedido.otroDatoConsignado !== null">
+          <span class="resalta">IMPORTANTE: </span
+          >{{ currentPedido.otroDatoConsignado }}
+        </div>
+        <br />
+        <div>
+          <span class="resalta"> Destino: </span
+          >{{ currentPedido.direccionRemitente }} -
+
+          {{ currentPedido.distritoRemitente }}
+        </div>
+        <div>
+          <span class="resalta">Contacto: </span>
+          {{ currentPedido.contactoRemitente }}
+        </div>
+        <div v-if="currentPedido.empresaRemitente !== null">
+          <span class="resalta">Empresa: </span>
+          {{ currentPedido.empresaRemitente }}
+        </div>
+        <div>
+          <span class="resalta">Teléfono: </span>
+          {{ currentPedido.telefonoRemitente }}
+        </div>
+        <div>
+          <span class="resalta">Llevar: </span> {{ currentPedido.tipoCarga }}
+        </div>
+        <div>
+          <span class="resalta">Modalidad: </span>
+          {{ currentPedido.modalidad.tipo }}
+        </div>
+        <div v-if="currentPedido.otroDatoRemitente !== null">
+          <span class="resalta">IMPORTANTE: </span
+          >{{ currentPedido.otroDatoRemitente }}
         </div>
         <div>
           <span class="resalta">Recaudo: </span>
