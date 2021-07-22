@@ -92,30 +92,39 @@
         class="grid items-center grid-cols-12 pb-2 text-sm font-bold text-center border-b-2 text-primary border-secondary"
       >
         <p># Pedido</p>
-        <p class="col-span-3">Contacto</p>
-        <p class="col-span-3">Dirección</p>
-        <p class="col-span-3">Distrito</p>
-        <p>Observaciones</p>
+        <p class="col-span-2">Contacto</p>
+        <p class="col-span-2">Dirección</p>
+        <p>Distrito</p>
+        <p class="col-span-3">Observaciones</p>
+        <p>Tarifa</p>
+        <p>Recaudo</p>
+        <p>Trámite</p>
       </div>
 
       <div
-        class="grid items-center grid-cols-12 py-2 overflow-y-auto text-xs text-center max-h-52"
+        class="grid items-center grid-cols-12 py-2 overflow-y-auto text-xs text-center border-b max-h-52 border-primary"
         v-for="ruta in infoRuta.pedidosRuta"
         :key="ruta.id"
       >
         <div>{{ ruta.id }}</div>
 
-        <div class="col-span-3">{{ ruta.contactoConsignado }}</div>
+        <div class="col-span-2">{{ ruta.contactoConsignado }}</div>
 
-        <div class="col-span-3 text-left">{{ ruta.direccionConsignado }}</div>
+        <div class="col-span-2 text-left">{{ ruta.direccionConsignado }}</div>
 
-        <div class="col-span-3">{{ ruta.distrito.distrito }}</div>
+        <div>{{ ruta.distrito.distrito }}</div>
 
-        <div>
+        <div class="col-span-3">
           <p v-if="ruta.otroDatoConsignado">{{ ruta.otroDatoConsignado }}</p>
 
           <p v-else></p>
         </div>
+
+        <div>S/. {{ ruta.tarifa }}</div>
+
+        <div>S/. {{ ruta.recaudo }}</div>
+
+        <div>S/. {{ ruta.tramite }}</div>
       </div>
     </div>
   </div>

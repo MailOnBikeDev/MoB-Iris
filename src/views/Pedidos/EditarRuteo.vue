@@ -298,7 +298,10 @@
         <!-- <input type="file" @change="onFileChanged" multiple /> -->
 
         <div style="width: 100%; min-height: 650px">
-          <div class="grid grid-cols-2 gap-2 p-2" style="padding-bottom: 10px; border-bottom: 2px solid #ddd; margin-bottom: 30px;">
+          <div
+            class="grid grid-cols-2 gap-2 p-2"
+            style="padding-bottom: 10px; border-bottom: 2px solid #ddd; margin-bottom: 30px;"
+          >
             <div
               style="width: 100%; padding: 20px 40px;min-height: 250px; justify-content:center; border-right: 2px solid #ddd;"
             >
@@ -337,17 +340,33 @@
                     </tr>
                   </thead>
                   <tbody style="">
-                    <tr v-for="(pedidoIndividualNoAgregado, index) in pedidosIndividualClienteActual" :key="index">
-                      <td><input type="checkbox" v-model="pedidoIndividualNoAgregado.agregarAlRuteo"></td>
-                      <td>{{pedidoIndividualNoAgregado.id}}</td>
-                      <td>{{pedidoIndividualNoAgregado.direccionConsignado}}, {{pedidoIndividualNoAgregado.distrito.distrito}}</td>
-                      <td>{{pedidoIndividualNoAgregado.contactoConsignado}}</td>
-                      <td>{{pedidoIndividualNoAgregado.telefonoConsignado}}</td>
+                    <tr
+                      v-for="(pedidoIndividualNoAgregado,
+                      index) in pedidosIndividualClienteActual"
+                      :key="index"
+                    >
+                      <td>
+                        <input
+                          type="checkbox"
+                          v-model="pedidoIndividualNoAgregado.agregarAlRuteo"
+                        />
+                      </td>
+                      <td>{{ pedidoIndividualNoAgregado.id }}</td>
+                      <td>
+                        {{ pedidoIndividualNoAgregado.direccionConsignado }},
+                        {{ pedidoIndividualNoAgregado.distrito.distrito }}
+                      </td>
+                      <td>
+                        {{ pedidoIndividualNoAgregado.contactoConsignado }}
+                      </td>
+                      <td>
+                        {{ pedidoIndividualNoAgregado.telefonoConsignado }}
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <br>
+              <br />
               <div style="display:flex; justify-content: center;">
                 <button
                   type="button"
@@ -382,21 +401,21 @@
               <label style="margin-left:5px; cursor:pointer" for="seleccionarTodos"> Seleccionar todos</label>
             </div> -->
             <button
-                type="button"
-                style="margin-left: 20px"
-                class="block px-6 py-2 font-bold text-white transition duration-200 bg-red-500 rounded-lg shadow-lg hover:bg-red-600 hover:shadow-xl focus:outline-none"
-                @click="anularPedidoDeRuteo()"
-              >
-                Anular
-              </button>
-              <button
-                type="button"
-                style="margin-left: 20px"
-                class="block px-6 py-2 font-bold text-white transition duration-200 bg-yellow-500 rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl focus:outline-none"
-                @click="quitarPedidoDeRuteo()"
-              >
-                Quitar
-              </button>
+              type="button"
+              style="margin-left: 20px"
+              class="block px-6 py-2 font-bold text-white transition duration-200 bg-red-500 rounded-lg shadow-lg hover:bg-red-600 hover:shadow-xl focus:outline-none"
+              @click="anularPedidoDeRuteo()"
+            >
+              Anular
+            </button>
+            <button
+              type="button"
+              style="margin-left: 20px"
+              class="block px-6 py-2 font-bold text-white transition duration-200 bg-yellow-500 rounded-lg shadow-lg hover:bg-yellow-600 hover:shadow-xl focus:outline-none"
+              @click="quitarPedidoDeRuteo()"
+            >
+              Quitar
+            </button>
           </div>
           <table class="table-auto">
             <thead class="text-primary">
@@ -421,11 +440,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="(pedidoIndividual, index) in pedidos"
-                :key="index"
-              >
-                <td> <input type="checkbox" name="" v-model="pedidoIndividual.seleccionado"> </td>
+              <tr v-for="(pedidoIndividual, index) in pedidos" :key="index">
+                <td>
+                  <input
+                    type="checkbox"
+                    name=""
+                    v-model="pedidoIndividual.seleccionado"
+                  />
+                </td>
                 <td>{{ pedidoIndividual.contactoConsignado }}</td>
                 <td>{{ pedidoIndividual.telefonoConsignado }}</td>
                 <td>{{ pedidoIndividual.direccionConsignado }}</td>
@@ -519,8 +541,6 @@
           Cancelar
         </button>
 
-        
-
         <button
           type="submit"
           @click.prevent="handelActualizarRuteo"
@@ -531,8 +551,14 @@
       </div>
     </form>
 
-    <div v-if="showModalComentarioAnulados" style="position:fixed; display:flex; align-items:center; justify-content:center; width:100vw; height: 100vh; top:0; bottom:0; left: 0;background: #00000070;">
-      <div style="width: 30%; height: auto;" class="px-10 py-4 bg-primary rounded-xl">
+    <div
+      v-if="showModalComentarioAnulados"
+      style="position:fixed; display:flex; align-items:center; justify-content:center; width:100vw; height: 100vh; top:0; bottom:0; left: 0;background: #00000070;"
+    >
+      <div
+        style="width: 30%; height: auto;"
+        class="px-10 py-4 bg-primary rounded-xl"
+      >
         <div style="height: 40px; text-align:end;">
           <button
             style="position: absolute; "
@@ -548,7 +574,8 @@
             <label
               for="comentario"
               class="block mb-1 ml-1 text-sm font-bold text-primary"
-              >Ingres algun comentario del por que se estan anulando los pedidos (Opcional)</label
+              >Ingres algun comentario del por que se estan anulando los pedidos
+              (Opcional)</label
             >
             <textarea
               class="input"
@@ -568,17 +595,13 @@
             class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
             @click="handleAgregarComentarioAnulacion"
           >
-              Confimar Anulacion
+            Confimar Anulacion
           </button>
         </div>
       </div>
     </div>
-    
-      
 
     <BaseAlerta v-if="alert.show" :alert="alert" />
-
-  
   </div>
 </template>
 
@@ -595,7 +618,7 @@ import { es } from "vuejs-datepicker/dist/locale";
 import consultarApi from "@/services/maps.service";
 import calcularTarifa from "@/services/tarifa.service";
 import calcularEstadisticas from "@/services/ecoamigable.service";
-import ClienteService from '@/services/cliente.service';
+import ClienteService from "@/services/cliente.service";
 
 export default {
   name: "EditarRuteo",
@@ -629,24 +652,23 @@ export default {
       pedidosParaQuitar: [],
       pedidosParaAnular: [],
       seleccionarTodosLosPedidos: false,
-      comentarioAnulados: '',
-      showModalComentarioAnulados: false
+      comentarioAnulados: "",
+      showModalComentarioAnulados: false,
     };
   },
   async mounted() {
     try {
       this.getRuteo(this.$route.params.id);
-      
 
       this.mobikersFiltrados = this.mobikers.filter(
         (mobiker) => mobiker.status === "Activo"
       );
 
-			this.pedido.tarifa = 0;
-			this.pedido.tarifaSugerida = 0;
-			this.pedido.comision = 0.0;
-			this.pedido.recaudo = 0;
-			this.pedido.tramite = 0;
+      this.pedido.tarifa = 0;
+      this.pedido.tarifaSugerida = 0;
+      this.pedido.comision = 0.0;
+      this.pedido.recaudo = 0;
+      this.pedido.tramite = 0;
     } catch (error) {
       console.error("Mensaje de error:", error);
     }
@@ -735,25 +757,25 @@ export default {
       this.changeTarifa();
     },
 
-    actualizarSumas(){
+    actualizarSumas() {
       this.changeTarifa();
-			this.changeRecaudo();
-			this.changeTramite();
-			this.changeTarifaSugerida();
-			this.changeDistancia();
+      this.changeRecaudo();
+      this.changeTramite();
+      this.changeTarifaSugerida();
+      this.changeDistancia();
     },
-    
-    cerrarModal(){
+
+    cerrarModal() {
       this.showModalComentarioAnulados = false;
     },
 
     removeRuta(pos, action) {
-      if(action === "quitar"){
+      if (action === "quitar") {
         this.pedidosParaQuitar.push(this.pedidos[pos]);
-      }else if(action === "anular"){
+      } else if (action === "anular") {
         this.pedidosParaAnular.push(this.pedidos[pos]);
       }
-      
+
       this.pedidos.splice(pos, 1);
       this.actualizarSumas();
 
@@ -771,10 +793,13 @@ export default {
       this.tarifaTotal = total;
     },
 
-		changeTarifaSugerida() {
+    changeTarifaSugerida() {
       let total = 0;
       for (let i in this.pedidos) {
-        if (this.pedidos[i].tarifaSugerida === "" || this.pedidos[i].tarifaSugerida === null) {
+        if (
+          this.pedidos[i].tarifaSugerida === "" ||
+          this.pedidos[i].tarifaSugerida === null
+        ) {
           this.pedidos[i].tarifaSugerida = 0;
         }
         total += parseFloat(this.pedidos[i].tarifa);
@@ -782,10 +807,13 @@ export default {
       this.tarifaTotalSugerida = total;
     },
 
-		changeDistancia() {
+    changeDistancia() {
       let total = 0;
       for (let i in this.pedidos) {
-        if (this.pedidos[i].distancia === "" || this.pedidos[i].distancia === null) {
+        if (
+          this.pedidos[i].distancia === "" ||
+          this.pedidos[i].distancia === null
+        ) {
           this.pedidos[i].distancia = 0;
         }
         total += parseFloat(this.pedidos[i].distancia);
@@ -825,7 +853,7 @@ export default {
                 }
                 case 2: {
                   row["distrito"] = {};
-									row["distrito"]['distrito'] = cells[x];
+                  row["distrito"]["distrito"] = cells[x];
                   break;
                 }
                 case 3: {
@@ -851,11 +879,12 @@ export default {
             row["ruido"] = info.ruido;
             row["recaudo"] = 0;
             row["tramite"] = 0;
-            row["modalidad"] = {tipo: "Una vía"};
+            row["modalidad"] = { tipo: "Una vía" };
             row["viajes"] = 1;
             row["seleccionado"] = false;
             this.tarifaTotal = this.tarifaTotal + info.tarifa;
-            this.tarifaTotalSugerida = this.tarifaTotalSugerida + info.tarifaSugerida;
+            this.tarifaTotalSugerida =
+              this.tarifaTotalSugerida + info.tarifaSugerida;
             this.distanciaTotal += +info.distancia.toFixed(1);
             this.recaudoTotal = 0;
             this.tramiteTotal = 0;
@@ -910,35 +939,35 @@ export default {
       this.tramiteTotal = total;
     },
 
-    handelActualizarRuteo(){
-      if(this.pedidosParaAnular.length > 0){
+    handelActualizarRuteo() {
+      if (this.pedidosParaAnular.length > 0) {
         this.showModalComentarioAnulados = true;
-      }else{
+      } else {
         this.handleEditarRuteo();
-      }      
+      }
     },
 
-    handleAgregarComentarioAnulacion(){
-      for(let i = 0; i < this.pedidosParaAnular.length; i++){
-        this.pedidosParaAnular[i]['comentario'] = this.comentarioAnulados;
+    handleAgregarComentarioAnulacion() {
+      for (let i = 0; i < this.pedidosParaAnular.length; i++) {
+        this.pedidosParaAnular[i]["comentario"] = this.comentarioAnulados;
       }
       this.cerrarModal();
       this.handleEditarRuteo();
     },
 
-		async handleEditarRuteo() {
+    async handleEditarRuteo() {
       try {
         this.showLoading = true;
         let response = {};
 
-        if(this.pedidosParaAnular.length > 0){
-          for(let i = 0; i < this.pedidosParaAnular.length; i++){
+        if (this.pedidosParaAnular.length > 0) {
+          for (let i = 0; i < this.pedidosParaAnular.length; i++) {
             const pedidoCambiado = {
               status: 6,
               mobiker: this.pedido.mobiker,
               comentario: this.pedidosParaAnular[i].comentario,
               isRuteo: false,
-              ruteoId: null
+              ruteoId: null,
             };
             response = await PedidoService.cambiarEstadoPedido(
               this.pedidosParaAnular[i].id,
@@ -947,13 +976,13 @@ export default {
           }
         }
 
-        if(this.pedidosParaQuitar.length > 0){
-          for(let i = 0; i < this.pedidosParaQuitar.length; i++){
+        if (this.pedidosParaQuitar.length > 0) {
+          for (let i = 0; i < this.pedidosParaQuitar.length; i++) {
             const pedidoCambiado = {
               status: this.pedidosParaQuitar[i].statusId,
               mobiker: this.pedido.mobiker,
               isRuteo: false,
-              ruteoId: null
+              ruteoId: null,
             };
             response = await PedidoService.cambiarEstadoPedido(
               this.pedidosParaQuitar[i].id,
@@ -962,95 +991,97 @@ export default {
           }
         }
 
-				for (let i = 0; i < this.pedidos.length; i++) {
-					if(this.pedidos[i].id){
-						this.pedido.operador = this.$store.getters.operador;
-						let pedidoExtendido = {
-							fecha: this.pedido.fecha,
-							contactoRemitente: this.pedido.contactoRemitente,
-							empresaRemitente: this.pedido.empresaRemitente,
-							direccionRemitente: this.pedido.direccionRemitente,
-							distritoRemitente: this.pedido.distritoRemitente,
-							telefonoRemitente: this.pedido.telefonoRemitente,
-							otroDatoRemitente: this.pedido.otroDatoRemitente,
-							contactoConsignado: this.pedidos[i].contactoConsignado,
-							empresaConsignado: this.pedidos[i].empresaConsignado,
-							direccionConsignado: this.pedidos[i].direccionConsignado,
-							telefonoConsignado: this.pedidos[i].telefonoConsignado,
-							otroDatoConsignado: this.pedidos[i].otroDatoConsignado,
-							distrito: { distrito: this.pedidos[i].distrito.distrito},
-							tipoCarga: this.pedido.tipoCarga,
-							formaPago: this.pedido.formaPago,
-							tarifa: this.pedidos[i].tarifa,
-							tarifaSugerida: this.pedidos[i].tarifaSugerida,
-							recaudo: this.pedidos[i].recaudo,
-							tramite: this.pedidos[i].tramite,
-							comision: this.pedido.comision,
-							distancia: this.pedidos[i].distancia,
-							CO2Ahorrado: this.pedidos[i].CO2Ahorrado,
-							ruido: this.pedidos[i].ruido,
-							status: this.pedido.status,
-							mobiker: {fullName: this.pedidos[i].mobiker.fullName},
-							tipoDeEnvio: {tipo: this.pedido.tipoEnvio},
-							modalidad: {tipo: this.pedidos[i].modalidad.tipo},
-							operador: this.pedido.operador,
-							rolCliente: this.pedido.rolCliente,
-							viajes: this.pedidos[i].viajes,
-							isRuteo: true,
-							ruteo: this.$route.params.id,
-						};
+        for (let i = 0; i < this.pedidos.length; i++) {
+          if (this.pedidos[i].id) {
+            this.pedido.operador = this.$store.getters.operador;
+            let pedidoExtendido = {
+              fecha: this.pedido.fecha,
+              contactoRemitente: this.pedido.contactoRemitente,
+              empresaRemitente: this.pedido.empresaRemitente,
+              direccionRemitente: this.pedido.direccionRemitente,
+              distritoRemitente: this.pedido.distritoRemitente,
+              telefonoRemitente: this.pedido.telefonoRemitente,
+              otroDatoRemitente: this.pedido.otroDatoRemitente,
+              contactoConsignado: this.pedidos[i].contactoConsignado,
+              empresaConsignado: this.pedidos[i].empresaConsignado,
+              direccionConsignado: this.pedidos[i].direccionConsignado,
+              telefonoConsignado: this.pedidos[i].telefonoConsignado,
+              otroDatoConsignado: this.pedidos[i].otroDatoConsignado,
+              distrito: { distrito: this.pedidos[i].distrito.distrito },
+              tipoCarga: this.pedido.tipoCarga,
+              formaPago: this.pedido.formaPago,
+              tarifa: this.pedidos[i].tarifa,
+              tarifaSugerida: this.pedidos[i].tarifaSugerida,
+              recaudo: this.pedidos[i].recaudo,
+              tramite: this.pedidos[i].tramite,
+              comision: this.pedido.comision,
+              distancia: this.pedidos[i].distancia,
+              CO2Ahorrado: this.pedidos[i].CO2Ahorrado,
+              ruido: this.pedidos[i].ruido,
+              status: this.pedido.status,
+              mobiker: { fullName: this.pedidos[i].mobiker.fullName },
+              tipoDeEnvio: { tipo: this.pedido.tipoEnvio },
+              modalidad: { tipo: this.pedidos[i].modalidad.tipo },
+              operador: this.pedido.operador,
+              rolCliente: this.pedido.rolCliente,
+              viajes: this.pedidos[i].viajes,
+              isRuteo: true,
+              ruteo: this.$route.params.id,
+            };
 
-						const isValid = await this.$validator.validateAll();
-						if (!isValid) {
-							this.showLoading = false;
-							return;
-						}
-						response = await PedidoService.editPedido(this.pedidos[i].id, pedidoExtendido);
+            const isValid = await this.$validator.validateAll();
+            if (!isValid) {
+              this.showLoading = false;
+              return;
+            }
+            response = await PedidoService.editPedido(
+              this.pedidos[i].id,
+              pedidoExtendido
+            );
+          } else {
+            this.pedido.operador = this.$store.getters.operador;
+            let pedidoExtendido = {
+              fecha: this.pedido.fecha,
+              contactoRemitente: this.pedido.contactoRemitente,
+              empresaRemitente: this.pedido.empresaRemitente,
+              direccionRemitente: this.pedido.direccionRemitente,
+              distritoRemitente: this.pedido.distritoRemitente,
+              telefonoRemitente: this.pedido.telefonoRemitente,
+              otroDatoRemitente: this.pedido.otroDatoRemitente,
+              contactoConsignado: this.pedidos[i].contactoConsignado,
+              empresaConsignado: this.pedidos[i].empresaConsignado,
+              direccionConsignado: this.pedidos[i].direccionConsignado,
+              telefonoConsignado: this.pedidos[i].telefonoConsignado,
+              otroDatoConsignado: this.pedidos[i].otroDatoConsignado,
+              distritoConsignado: this.pedidos[i].distrito.distrito,
+              tipoCarga: this.pedido.tipoCarga,
+              formaPago: this.pedido.formaPago,
+              tarifa: this.pedidos[i].tarifa,
+              tarifaSugerida: this.pedidos[i].tarifaSugerida,
+              recaudo: this.pedidos[i].recaudo,
+              tramite: this.pedidos[i].tramite,
+              comision: this.pedido.comision,
+              distancia: this.pedidos[i].distancia,
+              CO2Ahorrado: this.pedidos[i].CO2Ahorrado,
+              ruido: this.pedidos[i].ruido,
+              status: this.pedido.status,
+              mobiker: this.pedido.mobiker,
+              tipoEnvio: this.pedido.tipoEnvio,
+              modalidad: this.pedidos[i].modalidad.tipo,
+              operador: this.pedido.operador,
+              rolCliente: this.pedido.rolCliente,
+              viajes: this.pedidos[i].viajes,
+              isRuteo: true,
+              ruteo: this.$route.params.id,
+            };
 
-					}else{
-						this.pedido.operador = this.$store.getters.operador;
-						let pedidoExtendido = {
-							fecha: this.pedido.fecha,
-							contactoRemitente: this.pedido.contactoRemitente,
-							empresaRemitente: this.pedido.empresaRemitente,
-							direccionRemitente: this.pedido.direccionRemitente,
-							distritoRemitente: this.pedido.distritoRemitente,
-							telefonoRemitente: this.pedido.telefonoRemitente,
-							otroDatoRemitente: this.pedido.otroDatoRemitente,
-							contactoConsignado: this.pedidos[i].contactoConsignado,
-							empresaConsignado: this.pedidos[i].empresaConsignado,
-							direccionConsignado: this.pedidos[i].direccionConsignado,
-							telefonoConsignado: this.pedidos[i].telefonoConsignado,
-							otroDatoConsignado: this.pedidos[i].otroDatoConsignado,
-							distritoConsignado: this.pedidos[i].distrito.distrito,
-							tipoCarga: this.pedido.tipoCarga,
-							formaPago: this.pedido.formaPago,
-							tarifa: this.pedidos[i].tarifa,
-							tarifaSugerida: this.pedidos[i].tarifaSugerida,
-							recaudo: this.pedidos[i].recaudo,
-							tramite: this.pedidos[i].tramite,
-							comision: this.pedido.comision,
-							distancia: this.pedidos[i].distancia,
-							CO2Ahorrado: this.pedidos[i].CO2Ahorrado,
-							ruido: this.pedidos[i].ruido,
-							status: this.pedido.status,
-							mobiker: this.pedido.mobiker,
-							tipoEnvio: this.pedido.tipoEnvio,
-							modalidad: this.pedidos[i].modalidad.tipo,
-							operador: this.pedido.operador,
-							rolCliente: this.pedido.rolCliente,
-							viajes: this.pedidos[i].viajes,
-							isRuteo: true,
-							ruteo: this.$route.params.id,
-						};
-
-						const isValid = await this.$validator.validateAll();
-						if (!isValid) {
-							this.showLoading = false;
-							return;
-						}
-						response = await PedidoService.storageNuevoPedido(pedidoExtendido);
-					}
+            const isValid = await this.$validator.validateAll();
+            if (!isValid) {
+              this.showLoading = false;
+              return;
+            }
+            response = await PedidoService.storageNuevoPedido(pedidoExtendido);
+          }
         }
         this.showLoading = false;
         this.alert.message = response.data.message;
@@ -1058,7 +1089,7 @@ export default {
         this.alert.success = true;
 
         // setTimeout(() => {
-        //   location.reload();  
+        //   location.reload();
         // }, 1500);
       } catch (error) {
         console.log(`Error al Editar Pedido: ${error.response.data.message}`);
@@ -1101,7 +1132,7 @@ export default {
             data.distancia,
             this.pedido.tipoEnvio,
             this.pedido.modalidad,
-            this.pedido.distritoConsignado
+            distrito
           );
 
           data.tarifa = response.tarifa;
@@ -1123,7 +1154,7 @@ export default {
     },
 
     cancelar() {
-      this.$router.push('/pedidos/tablero-pedidos');
+      this.$router.push("/pedidos/tablero-pedidos");
     },
 
     activarCliente(cliente) {
@@ -1208,27 +1239,36 @@ export default {
         const response = await PedidoService.getRuteoById(id);
         this.pedido.fecha = response.data.pedidosRuta[0].fecha;
 
-				this.pedido.contactoRemitente = response.data.pedidosRuta[0].contactoRemitente;
-				this.pedido.empresaRemitente = response.data.pedidosRuta[0].empresaRemitente;
-				this.pedido.telefonoRemitente = response.data.pedidosRuta[0].telefonoRemitente;
-				this.pedido.direccionRemitente = response.data.pedidosRuta[0].direccionRemitente;
-				this.pedido.distritoRemitente = response.data.pedidosRuta[0].distritoRemitente;
-				this.pedido.otroDatoRemitente = response.data.pedidosRuta[0].otroDatoRemitente;
+        this.pedido.contactoRemitente =
+          response.data.pedidosRuta[0].contactoRemitente;
+        this.pedido.empresaRemitente =
+          response.data.pedidosRuta[0].empresaRemitente;
+        this.pedido.telefonoRemitente =
+          response.data.pedidosRuta[0].telefonoRemitente;
+        this.pedido.direccionRemitente =
+          response.data.pedidosRuta[0].direccionRemitente;
+        this.pedido.distritoRemitente =
+          response.data.pedidosRuta[0].distritoRemitente;
+        this.pedido.otroDatoRemitente =
+          response.data.pedidosRuta[0].otroDatoRemitente;
 
-				this.pedido.tipoEnvio = response.data.pedidosRuta[0].tipoDeEnvio.tipo;
-				this.pedido.tipoCarga = response.data.pedidosRuta[0].tipoCarga;
-				this.pedido.formaPago = response.data.pedidosRuta[0].formaPago;
-				this.pedido.mobiker = response.data.pedidosRuta[0].mobiker.fullName;
-				this.pedido.rolCliente = response.data.pedidosRuta[0].rolCliente;
+        this.pedido.tipoEnvio = response.data.pedidosRuta[0].tipoDeEnvio.tipo;
+        this.pedido.tipoCarga = response.data.pedidosRuta[0].tipoCarga;
+        this.pedido.formaPago = response.data.pedidosRuta[0].formaPago;
+        this.pedido.mobiker = response.data.pedidosRuta[0].mobiker.fullName;
+        this.pedido.rolCliente = response.data.pedidosRuta[0].rolCliente;
 
-				for(let i = 0; i < response.data.pedidosRuta.length; i++){
-          response.data.pedidosRuta[i]['seleccionado']=false;
-					this.tarifaTotal = this.tarifaTotal + response.data.pedidosRuta[i].tarifa;
-					this.tarifaTotalSugerida = this.tarifaTotalSugerida + response.data.pedidosRuta[i].tarifaSugerida;
-					this.distanciaTotal += response.data.pedidosRuta[i].distancia;
-				}
+        for (let i = 0; i < response.data.pedidosRuta.length; i++) {
+          response.data.pedidosRuta[i]["seleccionado"] = false;
+          this.tarifaTotal =
+            this.tarifaTotal + response.data.pedidosRuta[i].tarifa;
+          this.tarifaTotalSugerida =
+            this.tarifaTotalSugerida +
+            response.data.pedidosRuta[i].tarifaSugerida;
+          this.distanciaTotal += response.data.pedidosRuta[i].distancia;
+        }
 
-				this.pedidos = response.data.pedidosRuta;
+        this.pedidos = response.data.pedidosRuta;
 
         this.getPedidosByCliente(response.data.pedidosRuta[0].clienteId);
       } catch (error) {
@@ -1236,54 +1276,63 @@ export default {
       }
     },
 
-    async getPedidosByCliente(id){
+    async getPedidosByCliente(id) {
       let response = await ClienteService.getPedidosDelClienteById(id);
-      
-      for(let i = 0; i < response.data.length; i++){
-        if(!response.data[i].isRuteo && response.data[i].statusId === 1 && 
-            response.data[i].direccionRemitente === this.pedido.direccionRemitente &&
-            response.data[i].distritoRemitente === this.pedido.distritoRemitente &&
-            response.data[i].fecha === this.pedido.fecha &&
-            response.data[i].tipoDeEnvio.tipo === this.pedido.tipoEnvio){
-          response.data[i]['agregarAlRuteo'] = false;
+
+      for (let i = 0; i < response.data.length; i++) {
+        if (
+          !response.data[i].isRuteo &&
+          response.data[i].statusId === 1 &&
+          response.data[i].direccionRemitente ===
+            this.pedido.direccionRemitente &&
+          response.data[i].distritoRemitente ===
+            this.pedido.distritoRemitente &&
+          response.data[i].fecha === this.pedido.fecha &&
+          response.data[i].tipoDeEnvio.tipo === this.pedido.tipoEnvio
+        ) {
+          response.data[i]["agregarAlRuteo"] = false;
           this.pedidosIndividualClienteActual.push(response.data[i]);
         }
       }
     },
 
-    agregarPedidoDelListado(){
-      for(let i = this.pedidosIndividualClienteActual.length-1; i >= 0; i--){
-        if(this.pedidosIndividualClienteActual[i].agregarAlRuteo){
-          this.pedidosIndividualClienteActual[i]['seleccionado'] = false;
+    agregarPedidoDelListado() {
+      for (
+        let i = this.pedidosIndividualClienteActual.length - 1;
+        i >= 0;
+        i--
+      ) {
+        if (this.pedidosIndividualClienteActual[i].agregarAlRuteo) {
+          this.pedidosIndividualClienteActual[i]["seleccionado"] = false;
           this.pedidos.push(this.pedidosIndividualClienteActual[i]);
-          this.pedidosIndividualClienteActual.splice(i, 1)
+          this.pedidosIndividualClienteActual.splice(i, 1);
         }
       }
       this.actualizarSumas();
     },
 
-    seleccionarTodos(e){
-      console.log(e)
-      for(let i = 0; i < this.pedidosRuteoSeleccionados.length;i++){
+    seleccionarTodos(e) {
+      console.log(e);
+      for (let i = 0; i < this.pedidosRuteoSeleccionados.length; i++) {
         console.log(this.pedidosRuteoSeleccionados);
       }
     },
 
-    anularPedidoDeRuteo(){
-      for(let i = this.pedidos.length-1; i >= 0; i--){
-        if(this.pedidos[i].seleccionado){
-          this.removeRuta(i, "anular")
+    anularPedidoDeRuteo() {
+      for (let i = this.pedidos.length - 1; i >= 0; i--) {
+        if (this.pedidos[i].seleccionado) {
+          this.removeRuta(i, "anular");
         }
       }
     },
 
-    quitarPedidoDeRuteo(){
-      for(let i = this.pedidos.length-1; i >= 0; i--){
-        if(this.pedidos[i].seleccionado){
-          this.removeRuta(i, "quitar")
+    quitarPedidoDeRuteo() {
+      for (let i = this.pedidos.length - 1; i >= 0; i--) {
+        if (this.pedidos[i].seleccionado) {
+          this.removeRuta(i, "quitar");
         }
       }
-    }
+    },
   },
   components: {
     ModelListSelect,

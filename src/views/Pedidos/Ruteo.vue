@@ -1150,7 +1150,7 @@ export default {
             data.distancia,
             this.nuevoPedido.tipoEnvio,
             this.nuevoPedido.modalidad,
-            this.nuevoPedido.distritoConsignado
+            distrito
           );
 
           data.tarifa = response.tarifa;
