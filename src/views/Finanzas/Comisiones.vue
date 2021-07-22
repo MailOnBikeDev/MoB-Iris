@@ -139,8 +139,10 @@
       <div
         class="col-span-3 overflow-y-auto bg-white border border-black pedidos-scroll max-h-96"
       >
+        <Loading v-if="loading" />
         <div
-          class="grid items-center grid-cols-6 py-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
+          v-else
+          class="grid items-center h-auto grid-cols-6 py-2 text-sm text-center border-b-2 cursor-pointer gap-x-1 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': pedido.id == currentPedidoIndex,
           }"
@@ -330,6 +332,7 @@ export default {
       this.retrieveMoBikersConPedidos();
       this.currentMobiker = null;
       this.currentIndex = -1;
+      this.pedidosMobiker = [];
     },
 
     handlePageChange(value) {

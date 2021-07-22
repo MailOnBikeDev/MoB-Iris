@@ -109,6 +109,9 @@ export default {
       es: es,
     };
   },
+  mounted() {
+    this.retrievePedidos();
+  },
   methods: {
     getRequestParams(desde, hasta, page, pageSize) {
       let params = {};
