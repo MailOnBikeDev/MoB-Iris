@@ -998,6 +998,16 @@ export default {
         this.pedidos.push(destino);
         this.actualizarSumas();
         this.showLoading = false;
+
+        this.nuevoDestinoIndividual = {
+          contactoConsignado: "",
+          direccionConsignado: "",
+          telefonoConsignado: "",
+          empresaConsignado: "",
+          distritoConsignado: "",
+          tipoEnvio: "E-Commerce",
+          modalidad: "Una vía",
+        };
       } else {
         this.alert.message = "Debes de llenar todos los campos del destino!";
         this.alert.show = true;
