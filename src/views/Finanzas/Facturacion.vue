@@ -76,8 +76,9 @@
       </button>
 
       <button
-        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500"
+        class="px-6 py-2 font-bold text-white bg-green-600 rounded-xl focus:outline-none hover:bg-green-500 disabled:bg-green-900"
         @click="openDetalle"
+        :disabled="!currentCliente"
       >
         Enviar reporte
       </button>
@@ -120,7 +121,7 @@
 
         <div
           v-else
-          class="grid items-center grid-cols-3 px-2 text-sm text-center border-b-2 cursor-pointer h-14 border-primary hover:bg-info hover:text-white"
+          class="grid items-center grid-cols-3 px-2 text-xs text-center border-b-2 cursor-pointer h-14 border-primary hover:bg-info hover:text-white"
           :class="{
             'bg-info text-white font-bold': cliente.cliente.id == currentIndex,
           }"
@@ -145,7 +146,7 @@
 
         <div
           v-else
-          class="grid items-center grid-cols-6 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 h-14 border-primary hover:bg-info"
+          class="grid items-center h-auto grid-cols-6 py-2 text-xs text-center border-b-2 cursor-pointer gap-x-1 border-primary hover:bg-info"
           :class="{
             'bg-info text-white font-bold': pedido.id == currentPedidoIndex,
           }"
@@ -157,10 +158,9 @@
           </div>
 
           <div @click="setActivePedido(pedido, pedido.id)">
-            <p v-if="pedido.rolCliente === 'Remitente'">
+            <p>
               {{ pedido.empresaRemitente }}
             </p>
-            <p v-else>{{ pedido.empresaConsignado }}</p>
           </div>
 
           <div @click="setActivePedido(pedido, pedido.id)">
