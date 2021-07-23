@@ -155,7 +155,7 @@
           <p class="font-bold">Origen</p>
         </button>
         <div>
-          <p class="font-bold">Cosignado</p>
+          <p class="font-bold">Consignado</p>
         </div>
         <button @click="sortPorDestino" class="focus:outline-none">
           <p class="font-bold">Destino</p>

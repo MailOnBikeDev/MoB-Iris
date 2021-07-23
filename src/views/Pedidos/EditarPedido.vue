@@ -157,7 +157,7 @@
 
           <div class="col-span-2 ">
             <label for="direccionRemitente" class="label-input"
-              >Direccion</label
+              >Dirección</label
             >
             <input
               v-model="editarPedido.direccionRemitente"
